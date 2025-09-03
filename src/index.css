@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-feature-settings: "liga", "kern";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    font-family: 'DM Sans', 'Inter', sans-serif;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  
+  p {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.005em;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-blue text-white px-8 py-4 rounded-2xl font-medium hover:bg-primary-blue/90 hover:shadow-xl transition-all duration-500 tracking-wide;
+  }
+  
+  .btn-secondary {
+    @apply text-primary-blue px-8 py-4 rounded-2xl font-medium bg-transparent hover:bg-primary-blue/10 transition-all duration-500 tracking-wide;
+  }
+  
+  .btn-accent {
+    @apply bg-gradient-to-r from-primary-yellow to-primary-orange text-white px-8 py-4 rounded-2xl font-medium hover:shadow-xl transition-all duration-500 tracking-wide;
+  }
+  
+  .card {
+    @apply bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 p-8 backdrop-blur-sm;
+  }
+  
+  .hero-text {
+    @apply text-5xl md:text-7xl lg:text-8xl font-light font-display text-primary-black tracking-tight;
+  }
+  
+  .section-title {
+    @apply text-4xl md:text-5xl font-semibold font-display text-primary-black mb-6 tracking-tight;
+  }
+  
+  .text-accent {
+    @apply text-primary-yellow font-medium;
+  }
+  
+  .elegant-card {
+    @apply bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 p-10 border border-white/20;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .glass {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
