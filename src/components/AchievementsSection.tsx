@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Medal, Users, Calendar, Star, Target } from 'lucide-react';
 
 const AchievementsSection: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const pathRef = useRef<SVGPathElement | null>(null);
+  const shuttleRef = useRef<SVGGElement | null>(null);
+
   const achievements = [
     {
       icon: <Trophy className="w-8 h-8" />,
@@ -62,6 +66,38 @@ const AchievementsSection: React.FC = () => {
     }
   ];
 
+  useEffect(() => {
+    const updatePosition = () => {
+      if (!containerRef.current || !pathRef.current || !shuttleRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const viewportH = window.innerHeight || document.documentElement.clientHeight;
+      // Прогресс анимации от 0 до 1, пока секция прокручивается через вьюпорт
+      let progress = (viewportH - rect.top) / (rect.height + viewportH);
+      progress = Math.max(0, Math.min(1, progress));
+
+      const path = pathRef.current;
+      const total = path.getTotalLength();
+      const len = total * progress;
+      const pt = path.getPointAtLength(len);
+      const next = path.getPointAtLength(Math.min(total, len + 1));
+      const angle = Math.atan2(next.y - pt.y, next.x - pt.x) * (180 / Math.PI);
+
+      // Центруем 40x40 воланчик относительно точки
+      shuttleRef.current.setAttribute(
+        'transform',
+        `translate(${pt.x}, ${pt.y}) rotate(${angle}) translate(-20, -20)`
+      );
+    };
+
+    updatePosition();
+    window.addEventListener('scroll', updatePosition, { passive: true });
+    window.addEventListener('resize', updatePosition);
+    return () => {
+      window.removeEventListener('scroll', updatePosition as any);
+      window.removeEventListener('resize', updatePosition as any);
+    };
+  }, []);
+
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,7 +140,7 @@ const AchievementsSection: React.FC = () => {
 
         {/* Timeline */}
         <motion.div
-          className="bg-white rounded-2xl p-8"
+          className="bg-white rounded-2xl p-8 relative overflow-hidden"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -114,11 +150,39 @@ const AchievementsSection: React.FC = () => {
             История развития клуба
           </h3>
           
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary-blue to-primary-yellow"></div>
-            
-            <div className="space-y-8">
+          <div className="relative min-h-[620px]" ref={containerRef}>
+            {/* Wavy timeline path */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 620" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="tlGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#1e3a8a" />
+                  <stop offset="100%" stopColor="#f59e0b" />
+                </linearGradient>
+                <linearGradient id="shuttleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#1e3a8a" />
+                  <stop offset="100%" stopColor="#3b82f6" />
+                </linearGradient>
+              </defs>
+              {/* Извилистый путь, проходящий через всю высоту */}
+              <path ref={pathRef} id="timelinePath" d="M 50 40 C 250 80, 200 160, 420 200 S 620 320, 820 300 S 700 440, 500 480 S 300 560, 150 600" fill="none" stroke="url(#tlGrad)" strokeWidth="4" strokeLinecap="round" strokeDasharray="10 14" />
+
+              {/* Воланчик (большего размера), двигается по пути при скролле */}
+              <g ref={shuttleRef}>
+                {/* размер ~40x40, центрируется translate(-20,-20) в JS */}
+                <g>
+                  {/* Корк */}
+                  <circle cx="20" cy="28" r="6" fill="#111827" />
+                  {/* Оперение */}
+                  <path d="M5 10 L12 24 L28 24 L35 10" fill="white" stroke="url(#shuttleGrad)" strokeWidth="2" />
+                  <path d="M9 12 L14 24" stroke="#93c5fd" strokeWidth="1.5" />
+                  <path d="M16 12 L18 24" stroke="#93c5fd" strokeWidth="1.5" />
+                  <path d="M23 12 L22 24" stroke="#93c5fd" strokeWidth="1.5" />
+                  <path d="M30 12 L26 24" stroke="#93c5fd" strokeWidth="1.5" />
+                </g>
+              </g>
+            </svg>
+
+            <div className="space-y-8 relative">
               {milestones.map((milestone, index) => (
                 <motion.div
                   key={index}
@@ -127,6 +191,7 @@ const AchievementsSection: React.FC = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
+                  style={{ marginTop: index === 0 ? '20px' : undefined }}
                 >
                   <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
                     <div className="bg-white rounded-lg p-4">
@@ -136,10 +201,8 @@ const AchievementsSection: React.FC = () => {
                     </div>
                   </div>
                   
-                  {/* Timeline dot */}
-                  <div className="relative flex items-center justify-center w-4 h-4 bg-primary-yellow rounded-full z-10">
-                    <div className="w-2 h-2 bg-primary-blue rounded-full"></div>
-                  </div>
+                  {/* Соединительная точка заменена на пустое пространство (путь проходит позади) */}
+                  <div className="w-4" />
                   
                   <div className="w-1/2"></div>
                 </motion.div>
