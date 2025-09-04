@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": "20"
+  },
   "dependencies": {
     "@sanity/client": "^6.29.1",
     "@types/node": "^20.0.0",
@@ -25,7 +28,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build:studio": "npm install --prefix altius --no-audit --no-fund && SANITY_STUDIO_BASE_PATH=/admin npx --yes sanity build --cwd altius && rm -rf public/admin && mkdir -p public && cp -R altius/dist public/admin",
+    "build:studio": "npm install --prefix altius --no-audit --no-fund && SANITY_STUDIO_BASE_PATH=/admin npm run build --prefix altius && rm -rf public/admin && mkdir -p public && cp -R altius/dist public/admin",
     "build": "npm run build:studio && vite build",
     "preview": "vite preview"
   },
