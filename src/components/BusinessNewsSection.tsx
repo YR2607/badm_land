@@ -91,21 +91,26 @@ const BusinessNewsSection: React.FC = () => {
     return (
       <article className="group cursor-pointer mb-8 break-inside-avoid">
         <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden">
-          <div className={`${heightClass} bg-gradient-to-br ${getCategoryGradient(category)} flex items-center justify-center text-white relative overflow-hidden`}>
+          <div className={`${heightClass} relative overflow-hidden`}>
+            {news.image ? (
+              <img src={news.image} alt={news.title} className="absolute inset-0 w-full h-full object-cover" />
+            ) : (
+              <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryGradient(category)}`} />
+            )}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-4 left-4 w-16 h-16 rounded-full"></div>
               <div className="absolute bottom-4 right-4 w-12 h-12 rounded-full"></div>
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full"></div>
             </div>
-            <div className="relative z-10 opacity-90">
-              {getCategoryIcon(category)}
+            <div className="relative z-10 opacity-90 flex items-center justify-center h-full">
+              {!news.image && getCategoryIcon(category)}
             </div>
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center hover:bg:white/30 transition-colors">
                 <ExternalLink className="w-5 h-5 text:white" />
               </div>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
           </div>
           <div className="p-7">
             <div className="flex items-center justify-between mb-4">
