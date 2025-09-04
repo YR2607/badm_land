@@ -6,7 +6,6 @@ const galleryGroup = (S: any) =>
         .title('Галерея')
         .items([
           S.listItem().title('Разделы').child(S.documentTypeList('gallerySection').title('Разделы галереи')),
-          S.listItem().title('Альбомы').child(S.documentTypeList('galleryAlbum').title('Альбомы галереи')),
         ])
     )
 

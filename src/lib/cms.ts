@@ -24,11 +24,7 @@ export async function fetchGallerySections(): Promise<Record<string, string[]>> 
   }`;
   const res = await sanityClient.fetch(query);
   const toList = (arr?: CmsImage[]) => (arr || []).map((i) => i.url);
-  return {
-    hall: toList(res?.hall),
-    coaches: toList(res?.coaches),
-    trainings: toList(res?.trainings),
-  };
+  return { hall: toList(res?.hall), coaches: toList(res?.coaches), trainings: toList(res?.trainings) };
 }
 
 export type TournamentCategoryCms = {
