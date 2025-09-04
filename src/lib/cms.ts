@@ -81,3 +81,26 @@ export async function fetchPosts(): Promise<CmsPost[]> {
   const posts = await sanityClient.fetch(query);
   return posts as CmsPost[];
 }
+
+export type CmsPage = {
+  slug: string;
+  title: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  heroImage?: string;
+  sections?: Array<{ heading?: string; body?: any[] }>;
+};
+
+export async function fetchPage(slug: string): Promise<CmsPage | null> {
+  if (!sanityClient) return null;
+  const query = groq`*[_type == "page" && slug.current == $slug][0]{
+    "slug": slug.current,
+    title,
+    heroTitle,
+    heroSubtitle,
+    "heroImage": heroImage.asset->url,
+    sections[]{ heading, body }
+  }`;
+  const page = await sanityClient.fetch(query, { slug });
+  return page || null;
+}
