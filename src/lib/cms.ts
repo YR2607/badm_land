@@ -18,9 +18,9 @@ export type CmsMedia = { type: 'image' | 'video'; url: string; alt?: string };
 export async function fetchGallerySections(): Promise<Record<string, string[]>> {
   if (!sanityClient) return {};
   const query = groq`{
-    "hall": *[_type == "gallerySection" && slug.current == "hall"][0].images[]->{"url": asset->url, alt},
-    "coaches": *[_type == "gallerySection" && slug.current == "coaches"][0].images[]->{"url": asset->url, alt},
-    "trainings": *[_type == "gallerySection" && slug.current == "trainings"][0].images[]->{"url": asset->url, alt}
+    "hall": *[_type == "gallerySection" && slug.current == "hall"][0].images[]{"url": asset->url, alt},
+    "coaches": *[_type == "gallerySection" && slug.current == "coaches"][0].images[]{"url": asset->url, alt},
+    "trainings": *[_type == "gallerySection" && slug.current == "trainings"][0].images[]{"url": asset->url, alt}
   }`;
   const res = await sanityClient.fetch(query);
   const toList = (arr?: CmsImage[]) => (arr || []).map((i) => i.url);
