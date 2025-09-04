@@ -2,7 +2,31 @@ const galleryGroup = (S: any) =>
   S.listItem()
     .title('Галерея')
     .child(
-      S.documentTypeList('gallerySection').title('Галерея')
+      S.list()
+        .title('Галерея')
+        .items([
+          S.listItem()
+            .title('Наш зал')
+            .child(
+              S.documentList()
+                .title('Наш зал')
+                .filter('_type == "gallerySection" && key == "hall"')
+            ),
+          S.listItem()
+            .title('Наши тренера')
+            .child(
+              S.documentList()
+                .title('Наши тренера')
+                .filter('_type == "gallerySection" && key == "coaches"')
+            ),
+          S.listItem()
+            .title('Наши тренировки')
+            .child(
+              S.documentList()
+                .title('Наши тренировки')
+                .filter('_type == "gallerySection" && key == "trainings"')
+            ),
+        ])
     )
 
 const byTypeList = (S: any, type: string, title: string) =>
