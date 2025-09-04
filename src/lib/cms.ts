@@ -75,7 +75,8 @@ export async function fetchPosts(): Promise<CmsPost[]> {
     "image": image.asset->url,
     "date": coalesce(date, _createdAt),
     category,
-    author,
+    "categorySlug": select(defined(category->slug.current), category->slug.current, category),
+    "author": select(defined(author->name), author->name, author),
     featured
   }`;
   const posts = await sanityClient.fetch(query);
