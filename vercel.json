@@ -1,6 +1,10 @@
 {
   "routes": [
     { "handle": "filesystem" },
+    { "src": "/static/(.*)", "dest": "/admin/static/$1" },
+    { "src": "/vendor/(.*)", "dest": "/admin/vendor/$1" },
+    { "src": "/manifest\.webmanifest", "dest": "/admin/manifest.webmanifest" },
+    { "src": "/favicon\.(ico|svg)", "dest": "/admin/favicon.$1" },
     { "src": "/admin(?:/.*)?", "dest": "/admin/index.html" },
     { "src": "/.*", "dest": "/index.html" }
   ]
