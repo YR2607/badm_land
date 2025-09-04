@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '../lib/cms';
+import { fetchGalleryAlbums, fetchTournamentCategories, isCmsEnabled, CmsAlbum } from '../lib/cms';
 
 const sections = [
   { id: 'hall', title: 'Наш зал', gradient: 'from-blue-500 to-blue-600' },
@@ -10,12 +10,7 @@ const sections = [
 
 type TournamentCategory = { id: string; name: string; gradient: string; photos: string[]; videos: string[] };
 
-function slugToName(slug: string): string {
-  return slug
-    .split('-')
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-    .join(' ');
-}
+function slugToName(slug: string): string { return slug.split('-').map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join(' '); }
 
 const Gallery: React.FC = () => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
@@ -25,24 +20,19 @@ const Gallery: React.FC = () => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [tabByCat, setTabByCat] = useState<Record<string, 'photo'|'video'>>({});
 
-  const [sectionImages, setSectionImages] = useState<Record<string, string[]>>({ hall: [], coaches: [], trainings: [] });
+  const [albums, setAlbums] = useState<CmsAlbum[]>([]);
   const [categories, setCategories] = useState<TournamentCategory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const load = async () => {
-      if (!isCmsEnabled) {
-        setSectionImages({ hall: [], coaches: [], trainings: [] });
-        setCategories([]);
-        setLoading(false);
-        return;
-      }
-      const [sec, cats] = await Promise.all([
-        fetchGallerySections(),
+      if (!isCmsEnabled) { setAlbums([]); setCategories([]); setLoading(false); return; }
+      const [alb, cats] = await Promise.all([
+        fetchGalleryAlbums(),
         fetchTournamentCategories(),
       ]);
-      setSectionImages({ hall: sec.hall || [], coaches: sec.coaches || [], trainings: sec.trainings || [] });
       const gradients = ['from-blue-500 to-blue-600','from-yellow-500 to-orange-500','from-purple-500 to-indigo-500','from-green-500 to-teal-500','from-orange-500 to-red-500'];
+      setAlbums(alb || []);
       setCategories((cats || []).map((c, idx) => ({ ...c, gradient: gradients[idx % gradients.length] })));
       setLoading(false);
     };
@@ -59,31 +49,22 @@ const Gallery: React.FC = () => {
     if (observerRef.current) observerRef.current.disconnect();
     observerRef.current = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = (entry.target as HTMLElement).id;
-          if (id) setActiveSection(id);
-        }
+        if (entry.isIntersecting) { const id = (entry.target as HTMLElement).id; if (id) setActiveSection(id); }
       });
     }, { rootMargin: '-40% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
-    sections.forEach((s) => {
-      const el = sectionRefs.current[s.id];
-      if (el) observerRef.current?.observe(el);
-    });
+    sections.forEach((s) => { const el = sectionRefs.current[s.id]; if (el) observerRef.current?.observe(el); });
     return () => observerRef.current?.disconnect();
   }, []);
 
-  const openLightbox = (items: { type: 'image'|'video'; src: string; alt?: string }[], index: number) => {
-    setLightbox({ items, index });
-  };
+  const openLightbox = (items: { type: 'image'|'video'; src: string; alt?: string }[], index: number) => setLightbox({ items, index });
   const closeLightbox = () => setLightbox(null);
   const nextItem = () => setLightbox((lb) => lb ? { ...lb, index: (lb.index + 1) % lb.items.length } : lb);
   const prevItem = () => setLightbox((lb) => lb ? { ...lb, index: (lb.index - 1 + lb.items.length) % lb.items.length } : lb);
 
   const pillClasses = (id: string) => `px-4 py-2 rounded-full text-sm font-medium transition-all ${activeSection === id ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 hover:bg-primary-blue/10'}`;
+  const Empty: React.FC<{ text: string }> = ({ text }) => (<div className="text-center text-gray-500 py-8">{text}</div>);
 
-  const Empty: React.FC<{ text: string }> = ({ text }) => (
-    <div className="text-center text-gray-500 py-8">{text}</div>
-  );
+  const sectionAlbums = (slug: string) => albums.filter(a => a.sectionSlug === slug);
 
   return (
     <div className="min-h-screen bg-white">
@@ -111,21 +92,28 @@ const Gallery: React.FC = () => {
             {s.id !== 'tournaments' && (
               loading ? (
                 <Empty text="Загрузка..." />
-              ) : (sectionImages[s.id] || []).length === 0 ? (
-                <Empty text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
+              ) : sectionAlbums(s.id).length === 0 ? (
+                <Empty text={isCmsEnabled ? 'Нет альбомов' : 'CMS не настроена'} />
               ) : (
-                <div className="columns-1 sm:columns-2 md:columns-3 gap-5 space-y-5">
-                  {(sectionImages[s.id] || []).map((src, i) => (
-                    <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid">
-                      <img 
-                        src={src} 
-                        alt={s.title}
-                        loading="lazy"
-                        className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        onClick={() => openLightbox([{ type: 'image', src, alt: s.title }], 0)}
-                      />
-                      <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </figure>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {sectionAlbums(s.id).map((alb) => (
+                    <div key={alb.id} className="group rounded-2xl overflow-hidden bg-white">
+                      <div className="relative h-56">
+                        {alb.cover ? (
+                          <img src={alb.cover} alt={alb.title} className="absolute inset-0 w-full h-full object-cover" />
+                        ) : (
+                          <div className={`absolute inset-0 bg-gradient-to-r ${s.gradient}`} />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                      </div>
+                      <div className="p-4 flex items-center justify-between">
+                        <div>
+                          <div className="text-lg font-semibold text-gray-900">{alb.title}</div>
+                          <div className="text-xs text-gray-500">{alb.images.length} фото</div>
+                        </div>
+                        <button className="text-primary-blue text-sm font-medium" onClick={() => openLightbox(alb.images.map(src => ({ type: 'image' as const, src, alt: alb.title })), 0)}>Открыть</button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               )
@@ -140,10 +128,7 @@ const Gallery: React.FC = () => {
                 <div className="space-y-8">
                   {categories.map((cat) => (
                     <div key={cat.id} className="bg-white rounded-2xl">
-                      <button
-                        className="w-full flex items-center justify-between px-6 py-4"
-                        onClick={() => setOpenCategory(openCategory === cat.id ? null : cat.id)}
-                      >
+                      <button className="w-full flex items-center justify-between px-6 py-4" onClick={() => setOpenCategory(openCategory === cat.id ? null : cat.id)}>
                         <div className="flex items-center space-x-4">
                           <div className={`w-14 h-14 rounded-2xl bg-gradient-to-r ${cat.gradient}`}></div>
                           <span className="text-xl font-semibold text-gray-900">{cat.name}</span>
@@ -154,11 +139,7 @@ const Gallery: React.FC = () => {
                         <div className="px-6 pb-6">
                           <div className="flex items-center gap-2 mb-4">
                             {(['photo','video'] as const).map((t) => (
-                              <button
-                                key={t}
-                                className={`px-4 py-2 rounded-full text-sm font-medium ${ (tabByCat[cat.id] ?? 'photo') === (t === 'photo' ? 'photo' : 'video') ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 hover:bg-primary-blue/10'}`}
-                                onClick={() => setTabByCat((prev) => ({ ...prev, [cat.id]: t === 'photo' ? 'photo' : 'video' }))}
-                              >
+                              <button key={t} className={`px-4 py-2 rounded-full text-sm font-medium ${ (tabByCat[cat.id] ?? 'photo') === (t === 'photo' ? 'photo' : 'video') ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 hover:bg-primary-blue/10'}`} onClick={() => setTabByCat((prev) => ({ ...prev, [cat.id]: t === 'photo' ? 'photo' : 'video' }))}>
                                 {t === 'photo' ? 'Фото' : 'Видео'}
                               </button>
                             ))}
@@ -170,13 +151,7 @@ const Gallery: React.FC = () => {
                               <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
                                 {cat.photos.map((src, i) => (
                                   <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid">
-                                    <img
-                                      src={src}
-                                      alt={cat.name}
-                                      loading="lazy"
-                                      className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                                      onClick={() => openLightbox(cat.photos.map(p => ({ type: 'image' as const, src: p, alt: cat.name })), i)}
-                                    />
+                                    <img src={src} alt={cat.name} loading="lazy" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03]" onClick={() => openLightbox(cat.photos.map(p => ({ type: 'image' as const, src: p, alt: cat.name })), i)} />
                                     <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                   </figure>
                                 ))}

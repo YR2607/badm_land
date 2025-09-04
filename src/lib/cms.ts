@@ -105,3 +105,18 @@ export async function fetchPage(slug: string): Promise<CmsPage | null> {
   const page = await sanityClient.fetch(query, { slug });
   return page || null;
 }
+
+export type CmsAlbum = { id: string; title: string; sectionSlug: string; cover?: string; images: string[] };
+
+export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
+  if (!sanityClient) return [];
+  const query = groq`*[_type == "galleryAlbum"] | order(_createdAt desc) {
+    "id": slug.current,
+    title,
+    "sectionSlug": section->slug.current,
+    "cover": cover.asset->url,
+    "images": images[].asset->url
+  }`;
+  const albums = await sanityClient.fetch(query);
+  return albums as CmsAlbum[];
+}
