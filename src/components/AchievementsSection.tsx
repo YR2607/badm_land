@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Medal, Users, Calendar, Star, Target } from 'lucide-react';
 
@@ -6,6 +6,7 @@ const AchievementsSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pathRef = useRef<SVGPathElement | null>(null);
   const shuttleRef = useRef<SVGGElement | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const achievements = [
     {
@@ -65,6 +66,7 @@ const AchievementsSection: React.FC = () => {
       description: 'Полное обновление оборудования и инфраструктуры'
     }
   ];
+  const milestoneProgressPoints = milestones.map((_, i) => (i + 1) / (milestones.length + 1));
 
   useEffect(() => {
     const updatePosition = () => {
@@ -74,6 +76,7 @@ const AchievementsSection: React.FC = () => {
       // Прогресс анимации от 0 до 1, пока секция прокручивается через вьюпорт
       let progress = (viewportH - rect.top) / (rect.height + viewportH);
       progress = Math.max(0, Math.min(1, progress));
+      setScrollProgress(progress);
 
       const path = pathRef.current;
       const total = path.getTotalLength();
@@ -82,10 +85,10 @@ const AchievementsSection: React.FC = () => {
       const next = path.getPointAtLength(Math.min(total, len + 1));
       const angle = Math.atan2(next.y - pt.y, next.x - pt.x) * (180 / Math.PI);
 
-      // Центруем 40x40 воланчик относительно точки
+      // Центруем 44x44 воланчик относительно точки
       shuttleRef.current.setAttribute(
         'transform',
-        `translate(${pt.x}, ${pt.y}) rotate(${angle}) translate(-20, -20)`
+        `translate(${pt.x}, ${pt.y}) rotate(${angle}) translate(-22, -22)`
       );
     };
 
@@ -166,24 +169,18 @@ const AchievementsSection: React.FC = () => {
               {/* Извилистый путь, проходящий через всю высоту */}
               <path ref={pathRef} id="timelinePath" d="M 50 40 C 250 80, 200 160, 420 200 S 620 320, 820 300 S 700 440, 500 480 S 300 560, 150 600" fill="none" stroke="url(#tlGrad)" strokeWidth="4" strokeLinecap="round" strokeDasharray="10 14" />
 
-              {/* Воланчик (большего размера), двигается по пути при скролле */}
+              {/* Воланчик-изображение, двигается по пути при скролле */}
               <g ref={shuttleRef}>
-                {/* размер ~40x40, центрируется translate(-20,-20) в JS */}
-                <g>
-                  {/* Корк */}
-                  <circle cx="20" cy="28" r="6" fill="#111827" />
-                  {/* Оперение */}
-                  <path d="M5 10 L12 24 L28 24 L35 10" fill="white" stroke="url(#shuttleGrad)" strokeWidth="2" />
-                  <path d="M9 12 L14 24" stroke="#93c5fd" strokeWidth="1.5" />
-                  <path d="M16 12 L18 24" stroke="#93c5fd" strokeWidth="1.5" />
-                  <path d="M23 12 L22 24" stroke="#93c5fd" strokeWidth="1.5" />
-                  <path d="M30 12 L26 24" stroke="#93c5fd" strokeWidth="1.5" />
-                </g>
+                <image href="/shuttle.png" width="44" height="44" x="0" y="0" preserveAspectRatio="xMidYMid meet" />
               </g>
             </svg>
 
             <div className="space-y-8 relative">
-              {milestones.map((milestone, index) => (
+              {milestones.map((milestone, index) => {
+                const mp = milestoneProgressPoints[index];
+                const isActive = scrollProgress >= mp - 0.02;
+                const isLeft = index % 2 === 0;
+                return (
                 <motion.div
                   key={index}
                   className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
@@ -193,11 +190,21 @@ const AchievementsSection: React.FC = () => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   style={{ marginTop: index === 0 ? '20px' : undefined }}
                 >
-                  <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
-                    <div className="bg-white rounded-lg p-4">
-                      <div className="text-2xl font-bold text-primary-blue mb-1">{milestone.year}</div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">{milestone.title}</h4>
+                  <div className={`w-1/2 ${isLeft ? 'pl-8 text-left' : 'pr-8 text-right'} relative`}>
+                    {isActive && (
+                      <>
+                        {/* Тонкая вертикальная полоса у края (не рамка) */}
+                        <div className={`absolute top-3 bottom-3 ${isLeft ? 'left-0' : 'right-0'} w-[2px] bg-gradient-to-b from-primary-yellow/60 to-primary-blue/60`}></div>
+                        {/* Деликатное свечение позади карточки */}
+                        <div className="absolute -inset-2 bg-gradient-to-r from-primary-yellow/10 to-primary-blue/10 blur-xl rounded-2xl"></div>
+                      </>
+                    )}
+                    <div className={`relative bg-white rounded-lg p-4 transition-transform duration-300 ${isActive ? 'scale-[1.02]' : ''}`}>
+                      <div className={`text-2xl font-bold mb-1 ${isActive ? 'text-primary-yellow' : 'text-primary-blue'}`}>{milestone.year}</div>
+                      <h4 className={`text-lg font-semibold mb-2 ${isActive ? 'text-primary-blue' : 'text-gray-900'}`}>{milestone.title}</h4>
                       <p className="text-gray-600">{milestone.description}</p>
+                      {/* Аккуратная линия-подчеркивание снизу */}
+                      <div className={`absolute left-0 bottom-0 h-[2px] bg-gradient-to-r from-primary-yellow to-primary-blue transition-all duration-500 ${isActive ? 'w-full' : 'w-0'}`}></div>
                     </div>
                   </div>
                   
@@ -206,7 +213,7 @@ const AchievementsSection: React.FC = () => {
                   
                   <div className="w-1/2"></div>
                 </motion.div>
-              ))}
+              );})}
             </div>
           </div>
         </motion.div>

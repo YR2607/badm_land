@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Logo from './Logo';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +11,7 @@ const Header: React.FC = () => {
   const navItems = [
     { path: '/', label: 'Главная' },
     { path: '/about', label: 'О клубе' },
+    { path: '/gallery', label: 'Галерея' },
     { path: '/services', label: 'Услуги' },
     { path: '/blog', label: 'Новости' },
     { path: '/contact', label: 'Контакты' }
@@ -30,7 +30,7 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <Logo size="md" />
+            <img src="/altLGOO.jpg" alt="Altius" className="h-8 w-8 rounded-lg object-cover" />
             <span className="text-2xl font-display font-semibold text-primary-black tracking-tight">Altius</span>
           </Link>
 

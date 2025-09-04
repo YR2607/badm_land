@@ -12,20 +12,20 @@
   }
   
   body {
-    font-family: 'DM Sans', 'Inter', sans-serif;
+    font-family: 'Exo 2', ui-sans-serif, system-ui, sans-serif;
     line-height: 1.7;
     letter-spacing: -0.01em;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Oswald', system-ui, sans-serif;
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.2;
   }
   
   p {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Exo 2', ui-sans-serif, system-ui, sans-serif;
     letter-spacing: -0.005em;
   }
 }

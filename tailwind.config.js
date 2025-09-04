@@ -27,9 +27,9 @@ export default {
         }
       },
       fontFamily: {
-        'sans': ['DM Sans', 'Inter', 'ui-sans-serif', 'system-ui'],
-        'display': ['Playfair Display', 'Georgia', 'serif'],
-        'body': ['Inter', 'ui-sans-serif', 'system-ui']
+        'sans': ['"Exo 2"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'display': ['Oswald', 'Impact', 'system-ui', 'sans-serif'],
+        'body': ['"Exo 2"', 'ui-sans-serif', 'system-ui', 'sans-serif']
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

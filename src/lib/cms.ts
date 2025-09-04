@@ -1,0 +1,56 @@
+import { createClient } from '@sanity/client';
+import groq from 'groq';
+
+const projectId = import.meta.env.VITE_SANITY_PROJECT_ID as string | undefined;
+const dataset = import.meta.env.VITE_SANITY_DATASET as string | undefined;
+const apiVersion = import.meta.env.VITE_SANITY_API_VERSION as string | undefined;
+const useCdn = true;
+
+export const isCmsEnabled = Boolean(projectId && dataset && apiVersion);
+
+export const sanityClient = isCmsEnabled
+  ? createClient({ projectId, dataset, apiVersion, useCdn })
+  : null;
+
+export type CmsImage = { url: string; alt?: string };
+export type CmsMedia = { type: 'image' | 'video'; url: string; alt?: string };
+
+export async function fetchGallerySections(): Promise<Record<string, string[]>> {
+  if (!sanityClient) return {};
+  const query = groq`{
+    "hall": *[_type == "gallerySection" && slug.current == "hall"][0].images[]->{"url": asset->url, alt},
+    "coaches": *[_type == "gallerySection" && slug.current == "coaches"][0].images[]->{"url": asset->url, alt},
+    "trainings": *[_type == "gallerySection" && slug.current == "trainings"][0].images[]->{"url": asset->url, alt}
+  }`;
+  const res = await sanityClient.fetch(query);
+  const toList = (arr?: CmsImage[]) => (arr || []).map((i) => i.url);
+  return {
+    hall: toList(res?.hall),
+    coaches: toList(res?.coaches),
+    trainings: toList(res?.trainings),
+  };
+}
+
+export type TournamentCategoryCms = {
+  id: string;
+  name: string;
+  photos: string[];
+  videos: string[];
+};
+
+export async function fetchTournamentCategories(): Promise<TournamentCategoryCms[]> {
+  if (!sanityClient) return [];
+  const query = groq`*[_type == "tournamentCategory"]{
+    "id": slug.current,
+    name,
+    "photos": photos[].asset->url,
+    "videos": videos[].asset->url
+  }`;
+  const list = await sanityClient.fetch(query);
+  return (list || []).map((i: any) => ({
+    id: i.id,
+    name: i.name,
+    photos: i.photos || [],
+    videos: i.videos || [],
+  }));
+}
