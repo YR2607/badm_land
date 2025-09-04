@@ -1,13 +1,16 @@
 {
   "rewrites": [
     { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/static/:path*", "destination": "/admin/static/:path*" },
-    { "source": "/vendor/:path*", "destination": "/admin/vendor/:path*" },
+    { "source": "/admin/(.*)", "destination": "/admin/index.html" },
+    { "source": "/static/(.*)", "destination": "/admin/static/$1" },
+    { "source": "/vendor/(.*)", "destination": "/admin/vendor/$1" },
     { "source": "/manifest.webmanifest", "destination": "/admin/manifest.webmanifest" },
     { "source": "/favicon.ico", "destination": "/admin/favicon.ico" },
-    { "source": "/favicon.svg", "destination": "/admin/favicon.svg" },
-    { "source": "/admin/:path*", "destination": "/admin/index.html" },
-    { "source": "/((?!admin|static|vendor).*)", "destination": "/index.html" }
+    { "source": "/favicon.svg", "destination": "/admin/favicon.svg" }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "cleanUrls": true
 }
