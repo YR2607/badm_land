@@ -2,11 +2,7 @@ const galleryGroup = (S: any) =>
   S.listItem()
     .title('Галерея')
     .child(
-      S.list()
-        .title('Галерея')
-        .items([
-          S.listItem().title('Разделы').child(S.documentTypeList('gallerySection').title('Разделы галереи')),
-        ])
+      S.documentTypeList('gallerySection').title('Галерея')
     )
 
 const byTypeList = (S: any, type: string, title: string) =>
