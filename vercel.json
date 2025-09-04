@@ -6,7 +6,8 @@
     { "source": "/manifest.webmanifest", "destination": "/admin/manifest.webmanifest" },
     { "source": "/favicon.ico", "destination": "/admin/favicon.ico" },
     { "source": "/favicon.svg", "destination": "/admin/favicon.svg" },
-    { "source": "/admin/:path*", "destination": "/admin/index.html" }
+    { "source": "/admin/:path*", "destination": "/admin/index.html" },
+    { "source": "/((?!admin|static|vendor).*)", "destination": "/index.html" }
   ],
   "cleanUrls": true
 }

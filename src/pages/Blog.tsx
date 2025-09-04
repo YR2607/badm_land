@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Globe, Zap, Search, Filter, ArrowRight } from 'lucide-react';
 import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
+import { Link } from 'react-router-dom';
 
 const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -109,11 +110,15 @@ const Blog: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredNews.map((news, index) => (
                 <motion.article key={news.id} className="bg-white rounded-3xl p-6 group transition-transform duration-300" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.05 }}>
-                  <div className="h-48 bg-gradient-to-br from-primary-blue to-primary-orange rounded-lg mb-4 flex items-center justify-center text-white text-4xl overflow-hidden">
-                    {news.category === 'news' && '📰'}
-                    {news.category === 'event' && '📅'}
-                    {news.category === 'world' && '🌍'}
-                  </div>
+                  <Link to={`/blog/${news.id}`} className="block">
+                    <div className="h-48 rounded-lg mb-4 overflow-hidden bg-gray-100">
+                      {news.image ? (
+                        <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
+                      )}
+                    </div>
+                  </Link>
                   <div className="flex items-center justify-between mb-3">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColor(news.category)}`}>{getCategoryLabel(news.category)}</span>
                     <span className="text-sm text-gray-500">{formatDate(news.date)}</span>
@@ -122,10 +127,10 @@ const Blog: React.FC = () => {
                   <p className="text-gray-600 mb-4 line-clamp-3">{news.excerpt}</p>
                   <div className="flex items-center justify-between">
                     {news.author && (<span className="text-sm text-gray-500">{news.author}</span>)}
-                    <div className="flex items-center text-primary-blue group-hover:translate-x-2 transition-transform">
+                    <Link to={`/blog/${news.id}`} className="flex items-center text-primary-blue group-hover:translate-x-2 transition-transform">
                       <span className="mr-2 text-sm font-medium">Читать</span>
                       <ArrowRight size={16} />
-                    </div>
+                    </Link>
                   </div>
                 </motion.article>
               ))}
