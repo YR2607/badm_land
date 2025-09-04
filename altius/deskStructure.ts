@@ -1,3 +1,15 @@
+const galleryGroup = (S: any) =>
+  S.listItem()
+    .title('Галерея')
+    .child(
+      S.list()
+        .title('Галерея')
+        .items([
+          S.listItem().title('Разделы').child(S.documentTypeList('gallerySection').title('Разделы галереи')),
+          S.listItem().title('Альбомы').child(S.documentTypeList('galleryAlbum').title('Альбомы галереи')),
+        ])
+    )
+
 const byTypeList = (S: any, type: string, title: string) =>
   S.listItem().title(title).child(
     S.documentTypeList(type).title(title)
@@ -50,7 +62,7 @@ const deskStructure = (S: any) =>
         ])
       ),
       S.divider(),
-      byTypeList(S, 'gallerySection', 'Галерея'),
+      galleryGroup(S),
       byTypeList(S, 'tournamentCategory', 'Турниры'),
       S.divider(),
       byTypeList(S, 'author', 'Авторы'),
