@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Play, Award, Users, MapPin } from 'lucide-react';
+import { ArrowRight, Play, Award } from 'lucide-react';
+import { fetchPage, isCmsEnabled, CmsPage } from '../lib/cms';
 
 const Hero: React.FC = () => {
+  const [page, setPage] = useState<CmsPage | null>(null);
+  useEffect(() => {
+    (async () => {
+      if (!isCmsEnabled) return;
+      const data = await fetchPage('home');
+      setPage(data);
+    })();
+  }, []);
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image/Video Placeholder */}
@@ -45,10 +55,10 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            <span className="text-white">ALTIUS</span>
+            <span className="text-white">{page?.heroTitle || 'ALTIUS'}</span>
             <br />
             <span className="text-2xl md:text-3xl lg:text-4xl font-light text-primary-yellow italic font-display">
-              Бадминтонный клуб
+              {page?.heroSubtitle || 'Бадминтонный клуб'}
             </span>
           </motion.h1>
 

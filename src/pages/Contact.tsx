@@ -1,82 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, Send, User, MessageSquare } from 'lucide-react';
+import { fetchPage, isCmsEnabled, CmsPage } from '../lib/cms';
 
 const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-    service: ''
-  });
+  const [page, setPage] = useState<CmsPage | null>(null);
+  useEffect(() => {
+    (async () => {
+      if (!isCmsEnabled) return;
+      const data = await fetchPage('contact');
+      setPage(data);
+    })();
+  }, []);
 
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '', service: '' });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      message: '',
-      service: ''
-    });
-  };
+  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); console.log('Form submitted:', formData); setFormData({ name: '', email: '', phone: '', message: '', service: '' }); };
 
   const contactInfo = [
-    {
-      icon: <MapPin className="w-6 h-6" />,
-      title: 'Адрес',
-      content: 'ул. Примерная 123, Кишинев, Молдова',
-      color: 'from-primary-blue to-blue-600'
-    },
-    {
-      icon: <Phone className="w-6 h-6" />,
-      title: 'Телефон',
-      content: '+373 60 123 456',
-      color: 'from-primary-orange to-orange-600'
-    },
-    {
-      icon: <Mail className="w-6 h-6" />,
-      title: 'Email',
-      content: 'info@altius.md',
-      color: 'from-primary-yellow to-yellow-600'
-    },
-    {
-      icon: <Clock className="w-6 h-6" />,
-      title: 'Часы работы',
-      content: 'Пн-Пт: 06:00-22:00\nСб-Вс: 08:00-20:00',
-      color: 'from-gray-600 to-gray-800'
-    }
+    { icon: <MapPin className="w-6 h-6" />, title: 'Адрес', content: 'ул. Примерная 123, Кишинев, Молдова', color: 'from-primary-blue to-blue-600' },
+    { icon: <Phone className="w-6 h-6" />, title: 'Телефон', content: '+373 60 123 456', color: 'from-primary-orange to-orange-600' },
+    { icon: <Mail className="w-6 h-6" />, title: 'Email', content: 'info@altius.md', color: 'from-primary-yellow to-yellow-600' },
+    { icon: <Clock className="w-6 h-6" />, title: 'Часы работы', content: 'Пн-Пт: 06:00-22:00\nСб-Вс: 08:00-20:00', color: 'from-gray-600 to-gray-800' }
   ];
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
       <section className="bg-gradient-to-r from-primary-blue to-primary-orange text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-4xl md:text-6xl font-bold font-display mb-6">
-              Свяжитесь с нами
-            </h1>
-            <p className="text-xl md:text-2xl max-w-3xl mx-auto">
-              Готовы начать свой путь в бадминтоне? Мы ждем вас!
-            </p>
+          <motion.div className="text-center" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <h1 className="text-4xl md:text-6xl font-bold font-display mb-6">{page?.heroTitle || 'Свяжитесь с нами'}</h1>
+            <p className="text-xl md:text-2xl max-w-3xl mx-auto">{page?.heroSubtitle || 'Готовы начать свой путь в бадминтоне? Мы ждем вас!'}</p>
           </motion.div>
         </div>
       </section>
