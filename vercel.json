@@ -1,6 +1,6 @@
 {
   "rewrites": [
     { "source": "/admin", "destination": "https://badm-admin.vercel.app" },
-    { "source": "/admin/(.*)", "destination": "https://badm-admin.vercel.app/$1" }
+    { "source": "/admin/:path*", "destination": "https://badm-admin.vercel.app/:path*" }
   ]
 }
