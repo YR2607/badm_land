@@ -1,11 +1,11 @@
 import React from 'react';
 import { Calendar, ArrowRight, Globe, Clock, ExternalLink, Newspaper, Award } from 'lucide-react';
 import { NewsItem } from '../types';
-import { mockNews } from '../data/mockData';
 import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
 
 const BusinessNewsSection: React.FC = () => {
   const [posts, setPosts] = React.useState<CmsPost[] | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     let mounted = true;
@@ -14,25 +14,32 @@ const BusinessNewsSection: React.FC = () => {
         try {
           const p = await fetchPosts();
           if (mounted) setPosts(p);
-        } catch {}
+        } catch {
+          if (mounted) setPosts([]);
+        } finally {
+          if (mounted) setLoading(false);
+        }
+      } else {
+        if (mounted) {
+          setPosts([]);
+          setLoading(false);
+        }
       }
     })();
     return () => { mounted = false };
   }, []);
 
-  const source = posts && posts.length > 0
-    ? posts.map((p) => ({
-        id: p.id,
-        title: p.title,
-        content: '',
-        excerpt: p.excerpt || '',
-        image: p.image,
-        date: p.date,
-        category: p.category,
-        author: p.author,
-        featured: p.featured,
-      })) as NewsItem[]
-    : mockNews;
+  const source: NewsItem[] = (posts || []).map((p) => ({
+    id: p.id,
+    title: p.title,
+    content: '',
+    excerpt: p.excerpt || '',
+    image: p.image,
+    date: p.date,
+    category: p.category,
+    author: p.author,
+    featured: p.featured,
+  }));
 
   const clubNews = source.filter(news => news.category === 'news');
   const worldNews = source.filter(news => news.category === 'world');
@@ -165,6 +172,10 @@ const BusinessNewsSection: React.FC = () => {
     </div>
   );
 
+  const EmptyBlock: React.FC<{ text: string }> = ({ text }) => (
+    <div className="text-center text-gray-500 py-8">{text}</div>
+  );
+
   return (
     <div className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -174,11 +185,17 @@ const BusinessNewsSection: React.FC = () => {
             icon={<Newspaper className="w-8 h-8 stroke-1" />}
             gradient="from-blue-500 to-blue-600"
           />
-          <div className="columns-1 md:columns-2 lg:columns-3">
-            {clubNews.slice(0, 6).map((news, index) => (
-              <NewsCard key={(news as any).id ?? index} news={news} index={index} category="news" />
-            ))}
-          </div>
+          {loading ? (
+            <EmptyBlock text="Загрузка..." />
+          ) : clubNews.length === 0 ? (
+            <EmptyBlock text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
+          ) : (
+            <div className="columns-1 md:columns-2 lg:columns-3">
+              {clubNews.slice(0, 6).map((news, index) => (
+                <NewsCard key={(news as any).id ?? index} news={news} index={index} category="news" />
+              ))}
+            </div>
+          )}
         </section>
         <section className="mb-24">
           <SectionHeader
@@ -186,11 +203,17 @@ const BusinessNewsSection: React.FC = () => {
             icon={<Globe className="w-8 h-8 stroke-1" />}
             gradient="from-orange-500 to-red-500"
           />
-          <div className="columns-1 md:columns-2 lg:columns-3">
-            {worldNews.slice(0, 6).map((news, index) => (
-              <NewsCard key={(news as any).id ?? index} news={news} index={index} category="world" />
-            ))}
-          </div>
+          {loading ? (
+            <EmptyBlock text="Загрузка..." />
+          ) : worldNews.length === 0 ? (
+            <EmptyBlock text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
+          ) : (
+            <div className="columns-1 md:columns-2 lg:columns-3">
+              {worldNews.slice(0, 6).map((news, index) => (
+                <NewsCard key={(news as any).id ?? index} news={news} index={index} category="world" />
+              ))}
+            </div>
+          )}
         </section>
         <section className="mb-24">
           <SectionHeader
@@ -198,11 +221,17 @@ const BusinessNewsSection: React.FC = () => {
             icon={<Award className="w-8 h-8 stroke-1" />}
             gradient="from-yellow-500 to-orange-500"
           />
-          <div className="columns-1 md:columns-2 lg:columns-3">
-            {events.slice(0, 6).map((event, index) => (
-              <NewsCard key={(event as any).id ?? index} news={event} index={index} category="event" />
-            ))}
-          </div>
+          {loading ? (
+            <EmptyBlock text="Загрузка..." />
+          ) : events.length === 0 ? (
+            <EmptyBlock text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
+          ) : (
+            <div className="columns-1 md:columns-2 lg:columns-3">
+              {events.slice(0, 6).map((event, index) => (
+                <NewsCard key={(event as any).id ?? index} news={event} index={index} category="event" />
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </div>
