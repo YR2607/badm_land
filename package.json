@@ -25,7 +25,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build:studio": "npm ci --prefix altius && SANITY_STUDIO_BASE_PATH=/admin npx --yes sanity build --cwd altius && rm -rf public/admin && mkdir -p public && cp -R altius/dist public/admin",
+    "build:studio": "npm install --prefix altius --no-audit --no-fund && SANITY_STUDIO_BASE_PATH=/admin npx --yes sanity build --cwd altius && rm -rf public/admin && mkdir -p public && cp -R altius/dist public/admin",
     "build": "npm run build:studio && vite build",
     "preview": "vite preview"
   },
