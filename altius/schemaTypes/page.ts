@@ -2,26 +2,27 @@ import {defineType, defineField} from 'sanity'
 
 export default defineType({
   name: 'page',
-  title: 'Page',
+  title: 'Страница',
   type: 'document',
+  description: 'Управляемые страницы сайта (home, about, services, contact)',
   fields: [
-    defineField({ name: 'title', title: 'Title', type: 'string', validation: r => r.required() }),
+    defineField({ name: 'title', title: 'Название', type: 'string', validation: r => r.required() }),
     defineField({ name: 'slug', title: 'Slug', type: 'slug', options: { source: 'title', maxLength: 96 }, validation: r => r.required() }),
-    defineField({ name: 'heroTitle', title: 'Hero Title', type: 'string' }),
-    defineField({ name: 'heroSubtitle', title: 'Hero Subtitle', type: 'text' }),
-    defineField({ name: 'heroImage', title: 'Hero Image', type: 'image', options: { hotspot: true } }),
+    defineField({ name: 'heroTitle', title: 'Заголовок Hero', type: 'string' }),
+    defineField({ name: 'heroSubtitle', title: 'Подзаголовок Hero', type: 'text' }),
+    defineField({ name: 'heroImage', title: 'Изображение Hero', type: 'image', options: { hotspot: true } }),
     defineField({
       name: 'sections',
-      title: 'Sections',
+      title: 'Секции контента',
       type: 'array',
       of: [
         {
           type: 'object',
           name: 'textSection',
-          title: 'Text Section',
+          title: 'Текстовая секция',
           fields: [
-            { name: 'heading', title: 'Heading', type: 'string' },
-            { name: 'body', title: 'Body', type: 'array', of: [{ type: 'block' }] }
+            { name: 'heading', title: 'Заголовок', type: 'string' },
+            { name: 'body', title: 'Текст', type: 'array', of: [{ type: 'block' }] }
           ]
         }
       ]
