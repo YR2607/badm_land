@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '../lib/cms';
+import { Image as ImageIcon, Video as VideoIcon, ChevronDown } from 'lucide-react';
 
 const sections = [
   { id: 'hall', title: 'Наш зал', gradient: 'from-blue-500 to-blue-600' },
@@ -9,8 +10,6 @@ const sections = [
 ];
 
 type TournamentCategory = { id: string; name: string; gradient: string; photos: string[]; videos: string[] };
-
-function slugToName(slug: string): string { return slug.split('-').map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join(' '); }
 
 const Gallery: React.FC = () => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
@@ -106,56 +105,95 @@ const Gallery: React.FC = () => {
               ) : categories.length === 0 ? (
                 <Empty text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
               ) : (
-                <div className="space-y-8">
-                  {categories.map((cat) => (
-                    <div key={cat.id} className="bg-white rounded-2xl">
-                      <button className="w-full flex items-center justify-between px-6 py-4" onClick={() => setOpenCategory(openCategory === cat.id ? null : cat.id)}>
-                        <div className="flex items-center space-x-4">
-                          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-r ${cat.gradient}`}></div>
-                          <span className="text-xl font-semibold text-gray-900">{cat.name}</span>
-                        </div>
-                        <span className="text-primary-blue font-medium">{openCategory === cat.id ? 'Скрыть' : 'Показать'}</span>
-                      </button>
-                      {openCategory === cat.id && (
-                        <div className="px-6 pb-6">
-                          <div className="flex items-center gap-2 mb-4">
-                            {(['photo','video'] as const).map((t) => (
-                              <button key={t} className={`px-4 py-2 rounded-full text-sm font-medium ${ (tabByCat[cat.id] ?? 'photo') === (t === 'photo' ? 'photo' : 'video') ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 hover:bg-primary-blue/10'}`} onClick={() => setTabByCat((prev) => ({ ...prev, [cat.id]: t === 'photo' ? 'photo' : 'video' }))}>
-                                {t === 'photo' ? 'Фото' : 'Видео'}
-                              </button>
-                            ))}
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {categories.map((cat) => {
+                      const preview = (cat.photos || []).slice(0, 3);
+                      const isOpen = openCategory === cat.id;
+                      return (
+                        <button
+                          key={cat.id}
+                          className={`group relative rounded-2xl text-left overflow-hidden bg-white transition-all ${isOpen ? 'ring-2 ring-primary-blue' : 'hover:ring-2 hover:ring-primary-blue/30'}`}
+                          onClick={() => setOpenCategory(isOpen ? null : cat.id)}
+                        >
+                          {/* folder tab */}
+                          <div className={`absolute -top-3 left-6 w-20 h-6 rounded-t-md bg-gradient-to-r ${cat.gradient}`} />
+                          {/* preview body */}
+                          <div className="p-4 pt-6">
+                            <div className="h-28 rounded-xl overflow-hidden bg-gray-50">
+                              {preview.length > 0 ? (
+                                <div className="grid grid-cols-3 gap-1 h-full">
+                                  {preview.map((src, i) => (
+                                    <img key={i} src={src} alt={cat.name} className="w-full h-full object-cover" />
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className={`w-full h-full bg-gradient-to-r ${cat.gradient}`} />
+                              )}
+                            </div>
+                            <div className="mt-4 flex items-center justify-between">
+                              <div>
+                                <div className="text-base font-semibold text-gray-900">{cat.name}</div>
+                                <div className="text-xs text-gray-500 flex items-center gap-3 mt-1">
+                                  <span className="inline-flex items-center gap-1"><ImageIcon className="w-4 h-4" />{cat.photos?.length || 0}</span>
+                                  <span className="inline-flex items-center gap-1"><VideoIcon className="w-4 h-4" />{cat.videos?.length || 0}</span>
+                                </div>
+                              </div>
+                              <ChevronDown className={`w-5 h-5 text-primary-blue transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                            </div>
                           </div>
-                          {(tabByCat[cat.id] ?? 'photo') === 'photo' ? (
-                            cat.photos.length === 0 ? (
-                              <Empty text="Фото скоро появятся" />
-                            ) : (
-                              <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
-                                {cat.photos.map((src, i) => (
-                                  <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid">
-                                    <img src={src} alt={cat.name} loading="lazy" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03]" onClick={() => openLightbox(cat.photos.map(p => ({ type: 'image' as const, src: p, alt: cat.name })), i)} />
-                                    <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                  </figure>
-                                ))}
-                              </div>
-                            )
-                          ) : (
-                            cat.videos.length === 0 ? (
-                              <Empty text="Видео скоро появятся" />
-                            ) : (
-                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                {cat.videos.map((src, i) => (
-                                  <div key={i} className="rounded-2xl overflow-hidden">
-                                    <video src={src} className="w-full" controls />
-                                  </div>
-                                ))}
-                              </div>
-                            )
-                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* opened album content */}
+                  {openCategory && (() => {
+                    const cat = categories.find(c => c.id === openCategory);
+                    if (!cat) return null;
+                    return (
+                      <div className="mt-8 bg-white rounded-2xl p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-xl font-semibold text-gray-900">{cat.name}</h3>
+                          <button className="text-primary-blue text-sm" onClick={() => setOpenCategory(null)}>Свернуть</button>
                         </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                        <div className="flex items-center gap-2 mb-4">
+                          {(['photo','video'] as const).map((t) => (
+                            <button key={t} className={`px-4 py-2 rounded-full text-sm font-medium ${ (tabByCat[cat.id] ?? 'photo') === (t === 'photo' ? 'photo' : 'video') ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 hover:bg-primary-blue/10'}`} onClick={() => setTabByCat((prev) => ({ ...prev, [cat.id]: t === 'photo' ? 'photo' : 'video' }))}>
+                              {t === 'photo' ? 'Фото' : 'Видео'}
+                            </button>
+                          ))}
+                        </div>
+                        {(tabByCat[cat.id] ?? 'photo') === 'photo' ? (
+                          cat.photos.length === 0 ? (
+                            <Empty text="Фото скоро появятся" />
+                          ) : (
+                            <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
+                              {cat.photos.map((src, i) => (
+                                <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid">
+                                  <img src={src} alt={cat.name} loading="lazy" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03]" onClick={() => openLightbox(cat.photos.map(p => ({ type: 'image' as const, src: p, alt: cat.name })), i)} />
+                                  <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </figure>
+                              ))}
+                            </div>
+                          )
+                        ) : (
+                          cat.videos.length === 0 ? (
+                            <Empty text="Видео скоро появятся" />
+                          ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                              {cat.videos.map((src, i) => (
+                                <div key={i} className="rounded-2xl overflow-hidden">
+                                  <video src={src} className="w-full" controls />
+                                </div>
+                              ))}
+                            </div>
+                          )
+                        )}
+                      </div>
+                    );
+                  })()}
+                </>
               )
             )}
           </section>
