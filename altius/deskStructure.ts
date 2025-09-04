@@ -7,24 +7,36 @@ const galleryGroup = (S: any) =>
         .items([
           S.listItem()
             .title('Наш зал')
+            .schemaType('gallerySection')
             .child(
-              S.documentList()
+              S.documentTypeList('gallerySection')
                 .title('Наш зал')
                 .filter('_type == "gallerySection" && key == "hall"')
+                .initialValueTemplates([
+                  S.initialValueTemplateItem('gallerySection-hall')
+                ])
             ),
           S.listItem()
             .title('Наши тренера')
+            .schemaType('gallerySection')
             .child(
-              S.documentList()
+              S.documentTypeList('gallerySection')
                 .title('Наши тренера')
                 .filter('_type == "gallerySection" && key == "coaches"')
+                .initialValueTemplates([
+                  S.initialValueTemplateItem('gallerySection-coaches')
+                ])
             ),
           S.listItem()
             .title('Наши тренировки')
+            .schemaType('gallerySection')
             .child(
-              S.documentList()
+              S.documentTypeList('gallerySection')
                 .title('Наши тренировки')
                 .filter('_type == "gallerySection" && key == "trainings"')
+                .initialValueTemplates([
+                  S.initialValueTemplateItem('gallerySection-trainings')
+                ])
             ),
         ])
     )

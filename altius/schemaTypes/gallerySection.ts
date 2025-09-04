@@ -17,7 +17,8 @@ export default defineType({
           { title: 'Наши тренировки', value: 'trainings' },
         ]
       },
-      description: 'Выберите раздел — остальное настроится автоматически',
+      hidden: true,
+      readOnly: true,
       validation: (r) => r.required()
     }),
     defineField({
