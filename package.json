@@ -25,7 +25,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build:studio": "cd altius && SANITY_STUDIO_BASE_PATH=/admin npx sanity build && rm -rf ../public/admin && mkdir -p ../public && cp -R dist ../public/admin",
+    "build": "npm run build:studio && vite build",
     "preview": "vite preview"
   },
   "browserslist": {
