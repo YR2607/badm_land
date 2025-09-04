@@ -1,6 +1,4 @@
-import S from 'sanity/desk'
-
-const byTypeList = (type: string, title: string) =>
+const byTypeList = (S: any, type: string, title: string) =>
   S.listItem().title(title).child(
     S.documentTypeList(type).title(title)
   )
@@ -10,33 +8,35 @@ const draftsList = (type: string, title: string) =>
     S.documentList().title(title).filter('_type == $type && !_id in path("drafts.**") == false').params({ type })
   )
 
-const featuredPosts = S.listItem()
-  .title('Избранные посты')
-  .child(
-    S.documentList()
-      .title('Избранные посты')
-      .filter('_type == "post" && featured == true')
-  )
+const featuredPosts = (S: any) =>
+  S.listItem()
+    .title('Избранные посты')
+    .child(
+      S.documentList()
+        .title('Избранные посты')
+        .filter('_type == "post" && featured == true')
+    )
 
-const postsByCategory = S.listItem()
-  .title('Новости по категориям')
-  .child(
-    S.list()
-      .title('Категории')
-      .items([
-        S.listItem().title('Новости клуба').child(
-          S.documentList().title('Новости клуба').filter('_type == "post" && (category->slug.current == "news" || category == "news")')
-        ),
-        S.listItem().title('Мировые новости').child(
-          S.documentList().title('Мировые новости').filter('_type == "post" && (category->slug.current == "world" || category == "world")')
-        ),
-        S.listItem().title('События').child(
-          S.documentList().title('События').filter('_type == "post" && (category->slug.current == "event" || category == "event")')
-        ),
-      ])
-  )
+const postsByCategory = (S: any) =>
+  S.listItem()
+    .title('Новости по категориям')
+    .child(
+      S.list()
+        .title('Категории')
+        .items([
+          S.listItem().title('Новости клуба').child(
+            S.documentList().title('Новости клуба').filter('_type == "post" && (category->slug.current == "news" || category == "news")')
+          ),
+          S.listItem().title('Мировые новости').child(
+            S.documentList().title('Мировые новости').filter('_type == "post" && (category->slug.current == "world" || category == "world")')
+          ),
+          S.listItem().title('События').child(
+            S.documentList().title('События').filter('_type == "post" && (category->slug.current == "event" || category == "event")')
+          ),
+        ])
+    )
 
-const deskStructure = () =>
+const deskStructure = (S: any) =>
   S.list()
     .title('Контент')
     .items([
@@ -45,16 +45,16 @@ const deskStructure = () =>
       S.listItem().title('Новости').child(
         S.list().title('Новости').items([
           S.listItem().title('Все посты').child(S.documentTypeList('post').title('Все посты')),
-          postsByCategory,
-          featuredPosts,
+          postsByCategory(S),
+          featuredPosts(S),
         ])
       ),
       S.divider(),
-      byTypeList('gallerySection', 'Галерея'),
-      byTypeList('tournamentCategory', 'Турниры'),
+      byTypeList(S, 'gallerySection', 'Галерея'),
+      byTypeList(S, 'tournamentCategory', 'Турниры'),
       S.divider(),
-      byTypeList('author', 'Авторы'),
-      byTypeList('category', 'Категории'),
+      byTypeList(S, 'author', 'Авторы'),
+      byTypeList(S, 'category', 'Категории'),
     ])
 
 export default deskStructure
