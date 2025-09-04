@@ -12,7 +12,13 @@ export default defineType({
     defineField({name: 'tags', title: 'Теги', type: 'array', of: [{type: 'string'}], description: 'Ключевые слова для фильтра'}),
     defineField({name: 'featured', title: 'Избранное', type: 'boolean'}),
     defineField({name: 'cover', title: 'Обложка', type: 'image', options: {hotspot: true}, description: 'Если не указана — возьмётся первое фото'}),
-    defineField({name: 'photos', title: 'Фотографии', type: 'array', of: [{type: 'image', options: {hotspot: true}}]}),
-    defineField({name: 'videos', title: 'Видео', type: 'array', of: [{type: 'file'}]}),
+    defineField({
+      name: 'photos', title: 'Фотографии', type: 'array', options: { layout: 'grid', sortable: true },
+      of: [{type: 'image', options: {hotspot: true}}]
+    }),
+    defineField({
+      name: 'videos', title: 'Видео', type: 'array', options: { layout: 'grid', sortable: true },
+      of: [{type: 'file'}]
+    }),
   ]
 })
