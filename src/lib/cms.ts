@@ -68,14 +68,14 @@ export type CmsPost = {
 
 export async function fetchPosts(): Promise<CmsPost[]> {
   if (!sanityClient) return [];
-  const query = groq`*[_type == "post"] | order(date desc) {
+  const query = groq`*[_type == "post"] | order(publishedAt desc) {
     "id": slug.current,
     title,
     excerpt,
-    "image": image.asset->url,
-    "date": coalesce(date, _createdAt),
+    "image": mainImage.asset->url,
+    "date": coalesce(publishedAt, _createdAt),
     category,
-    author,
+    "author": author->name,
     featured
   }`;
   const posts = await sanityClient.fetch(query);
