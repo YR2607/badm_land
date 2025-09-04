@@ -54,3 +54,30 @@ export async function fetchTournamentCategories(): Promise<TournamentCategoryCms
     videos: i.videos || [],
   }));
 }
+
+export type CmsPost = {
+  id: string;
+  title: string;
+  excerpt: string;
+  image?: string;
+  date: string;
+  category: 'news' | 'world' | 'event';
+  author?: string;
+  featured?: boolean;
+};
+
+export async function fetchPosts(): Promise<CmsPost[]> {
+  if (!sanityClient) return [];
+  const query = groq`*[_type == "post"] | order(date desc) {
+    "id": slug.current,
+    title,
+    excerpt,
+    "image": image.asset->url,
+    "date": coalesce(date, _createdAt),
+    category,
+    author,
+    featured
+  }`;
+  const posts = await sanityClient.fetch(query);
+  return posts as CmsPost[];
+}
