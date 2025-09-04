@@ -33,13 +33,20 @@ export type TournamentCategoryCms = {
   name: string;
   photos: string[];
   videos: string[];
+  year?: number;
+  tags?: string[];
+  cover?: string;
 };
 
 export async function fetchTournamentCategories(): Promise<TournamentCategoryCms[]> {
   if (!sanityClient) return [];
-  const query = groq`*[_type == "tournamentCategory"]{
+  const query = groq`*[_type == "tournamentCategory"] | order(coalesce(year, 0) desc, _createdAt desc){
     "id": slug.current,
     name,
+    year,
+    tags,
+    featured,
+    "cover": coalesce(cover.asset->url, photos[0].asset->url),
     "photos": photos[].asset->url,
     "videos": videos[].asset->url
   }`;
@@ -47,6 +54,9 @@ export async function fetchTournamentCategories(): Promise<TournamentCategoryCms
   return (list || []).map((i: any) => ({
     id: i.id,
     name: i.name,
+    year: i.year,
+    tags: i.tags || [],
+    cover: i.cover,
     photos: i.photos || [],
     videos: i.videos || [],
   }));

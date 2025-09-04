@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '../lib/cms';
-import { Image as ImageIcon, Video as VideoIcon, ChevronDown } from 'lucide-react';
+import { Image as ImageIcon, Video as VideoIcon, ChevronDown, X } from 'lucide-react';
 
 const sections = [
   { id: 'hall', title: 'Наш зал', gradient: 'from-blue-500 to-blue-600' },
@@ -9,7 +9,7 @@ const sections = [
   { id: 'tournaments', title: 'Наши турниры', gradient: 'from-purple-500 to-indigo-500' },
 ];
 
-type TournamentCategory = { id: string; name: string; gradient: string; photos: string[]; videos: string[] };
+type TournamentCategory = { id: string; name: string; gradient: string; photos: string[]; videos: string[]; year?: number; tags?: string[]; cover?: string };
 
 const Gallery: React.FC = () => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
@@ -18,6 +18,8 @@ const Gallery: React.FC = () => {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [tabByCat, setTabByCat] = useState<Record<string, 'photo'|'video'>>({});
+  const [filters, setFilters] = useState<{ q: string; year: number | 'all'; tags: string[] }>({ q: '', year: 'all', tags: [] });
+  const [visibleByCat, setVisibleByCat] = useState<Record<string, number>>({});
 
   const [sectionImages, setSectionImages] = useState<Record<string, string[]>>({ hall: [], coaches: [], trainings: [] });
   const [categories, setCategories] = useState<TournamentCategory[]>([]);
@@ -60,6 +62,30 @@ const Gallery: React.FC = () => {
 
   const pillClasses = (id: string) => `px-4 py-2 rounded-full text-sm font-medium transition-all ${activeSection === id ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 hover:bg-primary-blue/10'}`;
   const Empty: React.FC<{ text: string }> = ({ text }) => (<div className="text-center text-gray-500 py-8">{text}</div>);
+
+  const applyFilters = (list: TournamentCategory[]) => {
+    return list.filter(cat => {
+      const qok = filters.q.trim() === '' || cat.name.toLowerCase().includes(filters.q.toLowerCase());
+      const yok = filters.year === 'all' || (cat as any).year === filters.year;
+      const tok = filters.tags.length === 0 || filters.tags.every(t => ((cat as any).tags || []).includes(t));
+      return qok && yok && tok;
+    });
+  };
+
+  const years = Array.from(new Set(categories.map((c: any) => c.year).filter(Boolean))).sort((a, b) => b - a);
+  const allTags = Array.from(new Set(categories.flatMap((c: any) => c.tags || [])));
+
+  const filteredCats = applyFilters(categories);
+  const groupedByYear = filteredCats.reduce<Record<string, TournamentCategory[]>>((acc, c: any) => {
+    const y = c.year ? String(c.year) : 'Другое';
+    acc[y] = acc[y] || [];
+    acc[y].push(c);
+    return acc;
+  }, {});
+
+  const loadMore = (catId: string) => {
+    setVisibleByCat(v => ({ ...v, [catId]: Math.min((v[catId] ?? 30) + 30, (categories.find(c => c.id === catId)?.photos.length || 0)) }));
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -106,55 +132,74 @@ const Gallery: React.FC = () => {
                 <Empty text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
               ) : (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {categories.map((cat) => {
-                      const preview = (cat.photos || []).slice(0, 3);
-                      const isOpen = openCategory === cat.id;
-                      return (
-                        <button
-                          key={cat.id}
-                          className={`group relative rounded-2xl text-left overflow-hidden bg-white transition-all ${isOpen ? 'ring-2 ring-primary-blue' : 'hover:ring-2 hover:ring-primary-blue/30'}`}
-                          onClick={() => setOpenCategory(isOpen ? null : cat.id)}
-                        >
-                          {/* folder tab */}
-                          <div className={`absolute -top-3 left-6 w-20 h-6 rounded-t-md bg-gradient-to-r ${cat.gradient}`} />
-                          {/* preview body */}
-                          <div className="p-4 pt-6">
-                            <div className="h-28 rounded-xl overflow-hidden bg-gray-50">
-                              {preview.length > 0 ? (
-                                <div className="grid grid-cols-3 gap-1 h-full">
-                                  {preview.map((src, i) => (
-                                    <img key={i} src={src} alt={cat.name} className="w-full h-full object-cover" />
-                                  ))}
-                                </div>
-                              ) : (
-                                <div className={`w-full h-full bg-gradient-to-r ${cat.gradient}`} />
-                              )}
-                            </div>
-                            <div className="mt-4 flex items-center justify-between">
-                              <div>
-                                <div className="text-base font-semibold text-gray-900">{cat.name}</div>
-                                <div className="text-xs text-gray-500 flex items-center gap-3 mt-1">
-                                  <span className="inline-flex items-center gap-1"><ImageIcon className="w-4 h-4" />{cat.photos?.length || 0}</span>
-                                  <span className="inline-flex items-center gap-1"><VideoIcon className="w-4 h-4" />{cat.videos?.length || 0}</span>
-                                </div>
-                              </div>
-                              <ChevronDown className={`w-5 h-5 text-primary-blue transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                            </div>
-                          </div>
-                        </button>
-                      );
-                    })}
+                  <div className="sticky top-16 z-10 mb-6 bg-white/80 backdrop-blur rounded-xl p-3 flex flex-wrap items-center gap-3">
+                    <input value={filters.q} onChange={e => setFilters(f => ({ ...f, q: e.target.value }))} placeholder="Поиск турнира..." className="px-3 py-2 border rounded-lg text-sm" />
+                    <select value={String(filters.year)} onChange={e => setFilters(f => ({ ...f, year: e.target.value === 'all' ? 'all' : Number(e.target.value) }))} className="px-3 py-2 border rounded-lg text-sm">
+                      <option value="all">Все годы</option>
+                      {years.map(y => (<option key={y} value={y}>{y}</option>))}
+                    </select>
+                    <div className="flex flex-wrap gap-2">
+                      {allTags.map(tag => (
+                        <button key={tag} className={`px-3 py-1 rounded-full text-xs border ${filters.tags.includes(tag) ? 'bg-primary-blue text-white border-primary-blue' : 'bg-white text-gray-700'}`} onClick={() => setFilters(f => ({ ...f, tags: f.tags.includes(tag) ? f.tags.filter(t => t !== tag) : [...f.tags, tag] }))}>{tag}</button>
+                      ))}
+                    </div>
+                    {(filters.q || filters.year !== 'all' || filters.tags.length) ? (
+                      <button className="ml-auto text-sm text-gray-600 inline-flex items-center" onClick={() => setFilters({ q: '', year: 'all', tags: [] })}><X className="w-4 h-4 mr-1" />Сбросить</button>
+                    ) : null}
                   </div>
 
-                  {/* opened album content */}
+                  {Object.entries(groupedByYear).sort((a, b) => (b[0] > a[0] ? 1 : -1)).map(([year, cats]) => (
+                    <div key={year} className="mb-10">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">{year}</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {cats.map((cat: any) => {
+                          const preview = (cat.photos || []).slice(0, 3);
+                          const isOpen = openCategory === cat.id;
+                          return (
+                            <button key={cat.id} className={`group relative rounded-2xl text-left overflow-hidden bg-white transition-all ${isOpen ? 'ring-2 ring-primary-blue' : 'hover:ring-2 hover:ring-primary-blue/30'}`} onClick={() => setOpenCategory(isOpen ? null : cat.id)}>
+                              <div className={`absolute -top-3 left-6 w-20 h-6 rounded-t-md bg-gradient-to-r ${cat.gradient}`} />
+                              <div className="p-4 pt-6">
+                                <div className="h-28 rounded-xl overflow-hidden bg-gray-50">
+                                  {cat.cover ? (
+                                    <img src={cat.cover} alt={cat.name} className="w-full h-full object-cover" />
+                                  ) : preview.length > 0 ? (
+                                    <div className="grid grid-cols-3 gap-1 h-full">
+                                      {preview.map((src: string, i: number) => (<img key={i} src={src} alt={cat.name} className="w-full h-full object-cover" />))}
+                                    </div>
+                                  ) : (
+                                    <div className={`w-full h-full bg-gradient-to-r ${cat.gradient}`} />
+                                  )}
+                                </div>
+                                <div className="mt-4 flex items-center justify-between">
+                                  <div>
+                                    <div className="text-base font-semibold text-gray-900">{cat.name}</div>
+                                    <div className="text-xs text-gray-500 flex items-center gap-3 mt-1">
+                                      {cat.year && <span>{cat.year}</span>}
+                                      {cat.tags && cat.tags.slice(0, 2).map((t: string) => (<span key={t} className="px-2 py-0.5 rounded-full bg-gray-100">{t}</span>))}
+                                      <span className="inline-flex items-center gap-1"><ImageIcon className="w-4 h-4" />{cat.photos?.length || 0}</span>
+                                      <span className="inline-flex items-center gap-1"><VideoIcon className="w-4 h-4" />{cat.videos?.length || 0}</span>
+                                    </div>
+                                  </div>
+                                  <ChevronDown className={`w-5 h-5 text-primary-blue transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                                </div>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+
                   {openCategory && (() => {
-                    const cat = categories.find(c => c.id === openCategory);
+                    const cat: any = categories.find(c => c.id === openCategory);
                     if (!cat) return null;
+                    const visible = visibleByCat[cat.id] ?? 30;
+                    const photos = cat.photos.slice(0, visible);
+                    const canMore = visible < cat.photos.length;
                     return (
                       <div className="mt-8 bg-white rounded-2xl p-6">
                         <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-xl font-semibold text-gray-900">{cat.name}</h3>
+                          <h3 className="text-xl font-semibold text-gray-900">{cat.name}{cat.year ? ` • ${cat.year}` : ''}</h3>
                           <button className="text-primary-blue text-sm" onClick={() => setOpenCategory(null)}>Свернуть</button>
                         </div>
                         <div className="flex items-center gap-2 mb-4">
@@ -165,24 +210,31 @@ const Gallery: React.FC = () => {
                           ))}
                         </div>
                         {(tabByCat[cat.id] ?? 'photo') === 'photo' ? (
-                          cat.photos.length === 0 ? (
+                          photos.length === 0 ? (
                             <Empty text="Фото скоро появятся" />
                           ) : (
-                            <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
-                              {cat.photos.map((src, i) => (
-                                <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid">
-                                  <img src={src} alt={cat.name} loading="lazy" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03]" onClick={() => openLightbox(cat.photos.map(p => ({ type: 'image' as const, src: p, alt: cat.name })), i)} />
-                                  <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </figure>
-                              ))}
-                            </div>
+                            <>
+                              <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
+                                {photos.map((src: string, i: number) => (
+                                  <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid">
+                                    <img src={src} alt={cat.name} loading="lazy" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03]" onClick={() => openLightbox(cat.photos.map((p: string) => ({ type: 'image' as const, src: p, alt: cat.name })), i)} />
+                                    <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                  </figure>
+                                ))}
+                              </div>
+                              {canMore && (
+                                <div className="mt-6 text-center">
+                                  <button className="px-5 py-2 rounded-lg border text-sm" onClick={() => loadMore(cat.id)}>Показать ещё</button>
+                                </div>
+                              )}
+                            </>
                           )
                         ) : (
                           cat.videos.length === 0 ? (
                             <Empty text="Видео скоро появятся" />
                           ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                              {cat.videos.map((src, i) => (
+                              {cat.videos.map((src: string, i: number) => (
                                 <div key={i} className="rounded-2xl overflow-hidden">
                                   <video src={src} className="w-full" controls />
                                 </div>
