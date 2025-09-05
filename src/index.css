@@ -87,4 +87,10 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* custom utilities */
+  .video-shift-mobile { object-position: calc(50% + 170px) center; }
+  @media (min-width: 768px) {
+    .video-shift-mobile { object-position: center center; }
+  }
 }

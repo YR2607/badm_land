@@ -59,7 +59,7 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0">
         <video
           ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover video-shift-mobile"
           src="/jump.MP4"
           autoPlay
           muted
