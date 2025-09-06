@@ -53,71 +53,130 @@ async function fetchViaJina(url: string): Promise<string> {
 
 async function fetchText(url: string): Promise<string> {
   const host = new URL(url).hostname
-  const isBwf = /(\.|^)bwfbadminton\.com$/i.test(host)
+  const isBwf = host === 'bwfbadminton.com'
   if (isBwf && (SCRAPERAPI_KEY || SCRAPINGBEE_KEY)) {
     return fetchViaProxy(url)
   }
   return fetchDirect(url)
 }
 
-async function scrapeFromBases(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
-  const bases = [
-    'https://bwfbadminton.com',
-    'https://corporate.bwfbadminton.com',
-    'https://bwfworldtour.bwfbadminton.com'
-  ]
-  const allTargets: string[] = []
-  for (const base of bases) {
-    try {
-      const html = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchText(`${base}/news/`) : await fetchViaJina(`${base}/news/`)
-      const $ = cheerio.load(html)
-      $('a').each((_, a) => {
-        const href = $(a).attr('href') || ''
-        const abs = href.startsWith('http') ? href : new URL(href, base).href
-        if (/\/news\//.test(abs) && !/\/news\/$/.test(abs)) allTargets.push(abs)
-      })
-    } catch {
-      // ignore
+function pickTag(block: string, tag: string): string {
+  const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
+  return m ? m[1].trim() : ''
+}
+
+function pickCdata(block: string, tag: string): string {
+  const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
+  if (!m) return ''
+  const val = m[1]
+  const cdata = val.match(/<!\[CDATA\[([\s\S]*?)\]\]>/)
+  return (cdata ? cdata[1] : val).trim()
+}
+
+function parseRssItems(xml: string): Array<{ title: string; href: string; img?: string; preview?: string; date?: string }> {
+  const list: Array<{ title: string; href: string; img?: string; preview?: string; date?: string }> = []
+  const blocks = xml.split(/<item>/i).slice(1)
+  for (const raw of blocks) {
+    const block = raw.split(/<\/item>/i)[0]
+
+    const rawTitle = pickCdata(block, 'title') || pickTag(block, 'title')
+    const title = decodeHtml(stripTags(rawTitle))
+    let link = decodeHtml(stripTags(pickTag(block, 'link')))
+    const pubDate = decodeHtml(stripTags(pickTag(block, 'pubDate')))
+    const description = pickCdata(block, 'description')
+
+    if (/news\.google\.com\//i.test(link)) {
+      const hrefInDesc = description.match(/href=\"(https?:[^\"]+)\"/i)?.[1]
+      if (hrefInDesc) link = decodeURIComponent(hrefInDesc)
+    }
+
+    if (title && link) {
+      list.push({ title, href: link, date: pubDate })
     }
   }
-  const seen = new Set<string>()
-  const targets = allTargets.filter(h => {
-    if (seen.has(h)) return false
-    seen.add(h)
-    return true
-  }).slice(0, 24)
+  return list
+}
 
+async function scrapeArticle(url: string) {
+  const page = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchText(url) : await fetchViaJina(url)
+  if (page.startsWith('Title:')) {
+    const title = (page.match(/^Title:\s*(.*)$/m)?.[1] || '').trim()
+    const img = page.match(/https?:[^\s')"]+\.(?:jpg|jpeg|png|webp)/i)?.[0]
+    const preview = (page.match(/\n\n([^\n].{40,200})/s)?.[1] || '').replace(/\s+/g, ' ').trim()
+    const date = ''
+    return title ? { title, href: url, img, preview, date } : null
+  } else {
+    const $p = cheerio.load(page)
+    const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
+    const img = $p('meta[property="og:image"]').attr('content') || $p('img').first().attr('src')
+    const date = $p('time').first().attr('datetime') || ''
+    const preview = ($p('meta[name="description"]').attr('content') || $p('p').first().text() || '').trim()
+    return title ? { title, href: url, img, preview, date } : null
+  }
+}
+
+async function scrapeFromList(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
+  const base = 'https://bwfbadminton.com'
+  const html = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchText(`${base}/news/`) : await fetchViaJina(`${base}/news/`)
+  const $ = cheerio.load(html)
+  const links: string[] = []
+  $('a').each((_, a) => {
+    const href = $(a).attr('href') || ''
+    const abs = href.startsWith('http') ? href : new URL(href, base).href
+    try {
+      const u = new URL(abs)
+      if (u.hostname === 'bwfbadminton.com' && /\/news\//.test(u.pathname) && !/\/news\/$/.test(u.pathname)) links.push(u.href)
+    } catch {}
+  })
+  const seen = new Set<string>()
+  const targets = links.filter(h => { if (seen.has(h)) return false; seen.add(h); return true }).slice(0, 24)
+  const results: any[] = []
   const concurrency = 5
   let idx = 0
-  const results: any[] = []
   async function worker() {
     while (idx < targets.length) {
       const i = idx++
       const url = targets[i]
       try {
-        const page = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchText(url) : await fetchViaJina(url)
-        if (!/bwfbadminton\.com/i.test(url)) continue
-        if (page.startsWith('Title:')) {
-          const title = (page.match(/^Title:\s*(.*)$/m)?.[1] || '').trim()
-          const img = page.match(/https?:[^\s')"]+\.(?:jpg|jpeg|png|webp)/i)?.[0]
-          const preview = (page.match(/\n\n([^\n].{40,200})/s)?.[1] || '').replace(/\s+/g, ' ').trim()
-          const date = ''
-          if (title) results.push({ title, href: url, img, preview, date })
-        } else {
-          const $p = cheerio.load(page)
-          const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
-          const img = $p('meta[property="og:image"]').attr('content') || $p('img').first().attr('src')
-          const date = $p('time').first().attr('datetime') || ''
-          const preview = ($p('meta[name="description"]').attr('content') || $p('p').first().text() || '').trim()
-          if (title) results.push({ title, href: url, img, preview, date })
-        }
-      } catch {
-        // ignore
-      }
+        const art = await scrapeArticle(url)
+        if (art) results.push(art)
+      } catch {}
     }
   }
   await Promise.all(Array.from({ length: concurrency }).map(() => worker()))
   return results
+}
+
+async function discoverViaGoogleAndScrape(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
+  // Используем только для обнаружения ссылок. Контент берём с официального сайта.
+  const query = 'site:bwfbadminton.com/news when:365d'
+  const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent(query) + '&hl=en-US&gl=US&ceid=US:en'
+  const xml = await fetchDirect(gUrl)
+  if (!xml || !xml.includes('<rss')) return []
+  const items = parseRssItems(xml)
+  const links = items.map(i => i.href).filter(h => {
+    try {
+      const u = new URL(h)
+      return u.hostname === 'bwfbadminton.com' && /\/news\//.test(u.pathname)
+    } catch { return false }
+  }).slice(0, 24)
+  const seen = new Set<string>()
+  const uniq = links.filter(h => { if (seen.has(h)) return false; seen.add(h); return true })
+  const out: any[] = []
+  const concurrency = 5
+  let idx = 0
+  async function worker() {
+    while (idx < uniq.length) {
+      const i = idx++
+      const url = uniq[i]
+      try {
+        const art = await scrapeArticle(url)
+        if (art) out.push(art)
+      } catch {}
+    }
+  }
+  await Promise.all(Array.from({ length: concurrency }).map(() => worker()))
+  return out
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -127,7 +186,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ cached: true, items: cache.data })
     }
 
-    const items = await scrapeFromBases()
+    // 1) Сначала пытаемся со списка /news/
+    let items = await scrapeFromList()
+
+    // 2) Если пусто — ищем ссылки через Google News (только ссылки), затем парсим страницы с bwfbadminton.com
+    if (items.length === 0) {
+      const viaGoogle = await discoverViaGoogleAndScrape()
+      if (viaGoogle.length > 0) items = viaGoogle
+    }
 
     // Дедупликация и ограничение
     const seen = new Set<string>()
