@@ -27,13 +27,30 @@ jobs:
           SCRAPINGBEE_KEY: ${{ secrets.SCRAPINGBEE_KEY }}
         run: |
           python scripts/bwf_scrape.py
-      - name: Commit and push
+      - name: Commit and push (skip if empty)
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git add public/data/bwf_news.json
-          git commit -m "chore(scrape): update BWF news JSON" || echo "No changes"
-          git push
+          ITEMS_COUNT=$(python - <<'PY'
+import json
+import sys
+try:
+  with open('public/data/bwf_news.json','r',encoding='utf-8') as f:
+    j=json.load(f)
+  print(len(j.get('items',[]) or []))
+except Exception:
+  print(0)
+PY
+          )
+          echo "items: $ITEMS_COUNT"
+          if [ "$ITEMS_COUNT" -gt 0 ]; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@users.noreply.github.com"
+            git add public/data/bwf_news.json
+            git commit -m "chore(scrape): update BWF news JSON" || echo "No changes"
+            git push
+            echo "Pushed updated JSON"
+          else
+            echo "Skip commit: items==0 (keeping previous JSON)"
+          fi
       - name: Trigger Vercel deploy (optional)
         env:
           VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
