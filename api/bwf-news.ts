@@ -59,8 +59,21 @@ function parseRssItems(xml: string): Array<{ title: string; href: string; img?: 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const bypass = req.query?.refresh === '1'
-    if (!bypass && cache && Date.now() - cache.timestamp < TTL_MS) {
+    const forceGoogle = req.query?.google === '1' || req.query?.source === 'google'
+    if (!bypass && !forceGoogle && cache && Date.now() - cache.timestamp < TTL_MS) {
       return res.status(200).json({ cached: true, items: cache.data })
+    }
+
+    const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent('site:bwfbadminton.com') + '&hl=ru&gl=RU&ceid=RU:ru'
+
+    if (forceGoogle) {
+      const gXml = await fetchText(gUrl)
+      if (req.query?.debug === '1') {
+        res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+        return res.status(200).send(gXml.slice(0, 20000))
+      }
+      const gItems = parseRssItems(gXml)
+      return res.status(200).json({ cached: false, items: gItems.slice(0, 24) })
     }
 
     const bwfXml = await fetchText('https://bwfbadminton.com/feed/')
@@ -76,13 +89,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (items.length === 0) {
-      // Fallback: Google News RSS for site:bwfbadminton.com
-      const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent('site:bwfbadminton.com') + '&hl=ru&gl=RU&ceid=RU:ru'
       const gXml = await fetchText(gUrl)
-      const gItems = parseRssItems(gXml).map((it) => {
-        // Some Google links include a redirect param. Keep as-is; browsers will follow.
-        return { ...it, preview: it.preview, img: it.img }
-      })
+      const gItems = parseRssItems(gXml)
       items = gItems
     }
 
