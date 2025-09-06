@@ -12,6 +12,50 @@ function extractFirstImageFromContent(content: string): string | undefined {
   return undefined
 }
 
+async function fetchText(url: string): Promise<string> {
+  const r = await fetch(url, {
+    cache: 'no-store',
+    headers: {
+      'Accept': 'application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.5',
+      'User-Agent': 'Mozilla/5.0 (compatible; AltiusSiteBot/1.0; +https://badm-land-main.vercel.app)'
+    }
+  })
+  return r.text()
+}
+
+function parseRssItems(xml: string): Array<{ title: string; href: string; img?: string; preview?: string; date?: string }> {
+  const list: Array<{ title: string; href: string; img?: string; preview?: string; date?: string }> = []
+  const blocks = xml.split(/<item>/i).slice(1)
+  for (const raw of blocks) {
+    const block = raw.split(/<\/item>/i)[0]
+    const pick = (tag: string) => {
+      const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
+      return m ? m[1].trim() : ''
+    }
+    const pickCdata = (tag: string) => {
+      const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
+      if (!m) return ''
+      const val = m[1]
+      const cdata = val.match(/<!\[CDATA\[([\s\S]*?)\]\]>/)
+      return (cdata ? cdata[1] : val).trim()
+    }
+
+    const title = pickCdata('title') || pick('title')
+    const link = pick('link')
+    const pubDate = pick('pubDate')
+    const description = pickCdata('description')
+    const content = pickCdata('content:encoded') || description
+    const enclosure = block.match(/<enclosure[^>]+url=["']([^"']+)["']/i)?.[1]
+    const media = block.match(/<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
+    const img = enclosure || media || extractFirstImageFromContent(content)
+
+    if (title && link) {
+      list.push({ title, href: link, img, preview: description.replace(/<[^>]*>/g, '').slice(0, 240), date: pubDate })
+    }
+  }
+  return list
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const bypass = req.query?.refresh === '1'
@@ -19,52 +63,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ cached: true, items: cache.data })
     }
 
-    const feedUrl = 'https://bwfbadminton.com/feed/'
-    const xml = await fetch(feedUrl, {
-      cache: 'no-store',
-      headers: {
-        'Accept': 'application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.5',
-        'User-Agent': 'Mozilla/5.0 (compatible; AltiusSiteBot/1.0; +https://badm-land-main.vercel.app)'
-      }
-    }).then(r => r.text())
+    const bwfXml = await fetchText('https://bwfbadminton.com/feed/')
 
     if (req.query?.debug === '1') {
       res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-      return res.status(200).send(xml.slice(0, 20000))
+      return res.status(200).send(bwfXml.slice(0, 20000))
     }
 
-    if (!xml || (!xml.includes('<rss') && !xml.includes('<feed') && !xml.includes('<channel>'))) {
-      throw new Error('invalid rss response')
+    let items: any[] = []
+    if (bwfXml && (bwfXml.includes('<rss') || bwfXml.includes('<feed') || bwfXml.includes('<channel>'))) {
+      items = parseRssItems(bwfXml)
     }
 
-    const items: any[] = []
-    const blocks = xml.split(/<item>/i).slice(1)
-    for (const raw of blocks) {
-      const block = raw.split(/<\/item>/i)[0]
-      const pick = (tag: string) => {
-        const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
-        return m ? m[1].trim() : ''
-      }
-      const pickCdata = (tag: string) => {
-        const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
-        if (!m) return ''
-        const val = m[1]
-        const cdata = val.match(/<!\[CDATA\[([\s\S]*?)\]\]>/)
-        return (cdata ? cdata[1] : val).trim()
-      }
-
-      const title = pickCdata('title') || pick('title')
-      const link = pick('link')
-      const pubDate = pick('pubDate')
-      const description = pickCdata('description')
-      const content = pickCdata('content:encoded') || description
-      const enclosure = block.match(/<enclosure[^>]+url=["']([^"']+)["']/i)?.[1]
-      const media = block.match(/<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
-      const img = enclosure || media || extractFirstImageFromContent(content)
-
-      if (title && link) {
-        items.push({ title, href: link, img, preview: description.replace(/<[^>]*>/g, '').slice(0, 240), date: pubDate })
-      }
+    if (items.length === 0) {
+      // Fallback: Google News RSS for site:bwfbadminton.com
+      const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent('site:bwfbadminton.com') + '&hl=ru&gl=RU&ceid=RU:ru'
+      const gXml = await fetchText(gUrl)
+      const gItems = parseRssItems(gXml).map((it) => {
+        // Some Google links include a redirect param. Keep as-is; browsers will follow.
+        return { ...it, preview: it.preview, img: it.img }
+      })
+      items = gItems
     }
 
     const dedupSeen = new Set<string>()
