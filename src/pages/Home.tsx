@@ -3,6 +3,7 @@ import Hero from '../components/Hero';
 import BusinessNewsSection from '../components/BusinessNewsSection';
 import ServicesSection from '../components/ServicesSection';
 import AchievementsSection from '../components/AchievementsSection';
+import BWFNewsSection from '../components/BWFNewsSection';
 
 const Home: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const Home: React.FC = () => {
       <AchievementsSection />
       <ServicesSection />
       <BusinessNewsSection />
+      <BWFNewsSection />
     </div>
   );
 };
