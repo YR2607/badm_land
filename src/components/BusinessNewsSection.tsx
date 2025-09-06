@@ -34,8 +34,31 @@ const BusinessNewsSection: React.FC = () => {
     let alive = true;
     (async () => {
       try {
-        const r = await fetch('/api/bwf-news');
-        const data = await r.json();
+        // Try static JSON first
+        const r1 = await fetch('/data/bwf_news.json', { cache: 'no-store' });
+        if (r1.ok) {
+          const j = await r1.json();
+          const items: any[] = j?.items || [];
+          if (items.length > 0) {
+            const mapped = items.map((it) => ({
+              id: it.href,
+              title: it.title,
+              content: '',
+              excerpt: it.preview || '',
+              image: it.img,
+              date: it.date || new Date().toISOString(),
+              category: 'world',
+              url: it.href,
+            })) as NewsItem[];
+            if (alive) setBwf(mapped);
+            return;
+          }
+        }
+      } catch {}
+      try {
+        // Fallback to API
+        const r2 = await fetch('/api/bwf-news');
+        const data = await r2.json();
         const items = (data?.items || []).map((it: any): NewsItem => ({
           id: it.href,
           title: it.title,
@@ -47,9 +70,7 @@ const BusinessNewsSection: React.FC = () => {
           url: it.href,
         }));
         if (alive) setBwf(items);
-      } catch {
-        if (alive) setBwf([]);
-      }
+      } catch {}
     })();
     return () => { alive = false };
   }, []);
@@ -67,8 +88,7 @@ const BusinessNewsSection: React.FC = () => {
   }));
 
   const clubNews = source.filter(news => news.category === 'news');
-  const worldFromCms = source.filter(news => news.category === 'world');
-  const worldDisplay = bwf.length > 0 ? bwf : worldFromCms;
+  const worldDisplay = bwf.length > 0 ? bwf : source.filter(news => news.category === 'world');
   const events = source.filter(news => news.category === 'event');
 
   const formatDate = (dateString: string) => {
@@ -107,12 +127,7 @@ const BusinessNewsSection: React.FC = () => {
       }
     };
 
-    const getHeightClass = (i: number) => {
-      const heights = ['h-72', 'h-56', 'h-80', 'h-64'];
-      return heights[i % heights.length];
-    };
-
-    const heightClass = getHeightClass(index);
+    const heightClass = ['h-72', 'h-56', 'h-80', 'h-64'][index % 4];
 
     const Card = (
       <article className="group cursor-pointer mb-8 break-inside-avoid">
@@ -123,28 +138,13 @@ const BusinessNewsSection: React.FC = () => {
             ) : (
               <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryGradient(category)}`} />
             )}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-4 left-4 w-16 h-16 rounded-full"></div>
-              <div className="absolute bottom-4 right-4 w-12 h-12 rounded-full"></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full"></div>
-            </div>
-            <div className="relative z-10 opacity-90 flex items-center justify-center h-full">
-              {!news.image && getCategoryIcon(category)}
-            </div>
-            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center hover:bg:white/30 transition-colors">
-                <ExternalLink className="w-5 h-5 text:white" />
-              </div>
-            </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
           </div>
           <div className="p-7">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-2 text-gray-500">
                 <Clock className="w-4 h-4" />
-                <span className="text-sm font-medium">
-                  {formatDate(news.date)}
-                </span>
+                <span className="text-sm font-medium">{formatDate(news.date)}</span>
               </div>
               <div className={`px-3 py-1.5 rounded-full text-xs font-semibold text-white ${
                 category === 'news' ? 'bg-gradient-to-r from-blue-500 to-blue-600' :
@@ -154,30 +154,12 @@ const BusinessNewsSection: React.FC = () => {
                 {category === 'news' ? '🏢 Клуб' : category === 'world' ? '🌍 Мир' : '🎉 Событие'}
               </div>
             </div>
-            <h3 className="font-bold text-xl text-gray-900 leading-tight mb-4 line-clamp-2">
-              {news.title}
-            </h3>
-            <p className="text-gray-600 text-sm line-clamp-3 mb-6 leading-relaxed">
-              {news.excerpt}
-            </p>
-            <div className="flex items-center justify-between pt-4">
-              {news.author && (
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-semibold text-gray-600">
-                      {news.author.charAt(0)}
-                    </span>
-                  </div>
-                  <span className="text-xs text-gray-500 font-medium">
-                    {news.author}
-                  </span>
-                </div>
-              )}
-              <div className="flex items-center space-x-2 text-primary-blue transition-all duration-300 cursor-pointer">
-                <span className="text-sm font-semibold">Читать далее</span>
-                <div className="w-6 h-6 bg-primary-blue/10 rounded-full flex items-center justify-center">
-                  <ArrowRight className="w-3 h-3" />
-                </div>
+            <h3 className="font-bold text-xl text-gray-900 leading-tight mb-4 line-clamp-2">{news.title}</h3>
+            <p className="text-gray-600 text-sm line-clamp-3 mb-6 leading-relaxed">{news.excerpt}</p>
+            <div className="flex items-center space-x-2 text-primary-blue transition-all duration-300 cursor-pointer">
+              <span className="text-sm font-semibold">Читать далее</span>
+              <div className="w-6 h-6 bg-primary-blue/10 rounded-full flex items-center justify-center">
+                <ArrowRight className="w-3 h-3" />
               </div>
             </div>
           </div>
@@ -185,18 +167,14 @@ const BusinessNewsSection: React.FC = () => {
       </article>
     );
 
-    return news.url ? (
-      <a href={news.url} target="_blank" rel="noreferrer">{Card}</a>
+    return (news as any).url ? (
+      <a href={(news as any).url} target="_blank" rel="noreferrer">{Card}</a>
     ) : (
       Card
     );
   };
 
-  const SectionHeader: React.FC<{ 
-    title: string; 
-    icon: React.ReactNode; 
-    gradient: string;
-  }> = ({ title, icon, gradient }) => (
+  const SectionHeader: React.FC<{ title: string; icon: React.ReactNode; gradient: string; }> = ({ title, icon, gradient }) => (
     <div className="text-center mb-16">
       <div className="inline-flex items-center space-x-6 mb-8">
         <div className={`w-20 h-20 bg-gradient-to-r ${gradient} rounded-3xl flex items-center justify-center text-white`}>
@@ -217,11 +195,7 @@ const BusinessNewsSection: React.FC = () => {
     <div className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <section className="mb-24">
-          <SectionHeader
-            title="Новости клуба"
-            icon={<Newspaper className="w-8 h-8 stroke-1" />}
-            gradient="from-blue-500 to-blue-600"
-          />
+          <SectionHeader title="Новости клуба" icon={<Newspaper className="w-8 h-8 stroke-1" />} gradient="from-blue-500 to-blue-600" />
           {loading ? (
             <EmptyBlock text="Загрузка..." />
           ) : clubNews.length === 0 ? (
@@ -235,29 +209,19 @@ const BusinessNewsSection: React.FC = () => {
           )}
         </section>
         <section className="mb-24">
-          <SectionHeader
-            title="Мировые новости"
-            icon={<Globe className="w-8 h-8 stroke-1" />}
-            gradient="from-orange-500 to-red-500"
-          />
-          {loading && worldDisplay.length === 0 ? (
-            <EmptyBlock text="Загрузка..." />
-          ) : worldDisplay.length === 0 ? (
-            <EmptyBlock text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
+          <SectionHeader title="Мировые новости" icon={<Globe className="w-8 h-8 stroke-1" />} gradient="from-orange-500 to-red-500" />
+          {bwf.length === 0 ? (
+            <EmptyBlock text="Нет материалов" />
           ) : (
             <div className="columns-1 md:columns-2 lg:columns-3">
-              {worldDisplay.slice(0, 6).map((news, index) => (
+              {bwf.slice(0, 6).map((news, index) => (
                 <NewsCard key={(news as any).id ?? index} news={news} index={index} category="world" />
               ))}
             </div>
           )}
         </section>
         <section className="mb-24">
-          <SectionHeader
-            title="События"
-            icon={<Award className="w-8 h-8 stroke-1" />}
-            gradient="from-yellow-500 to-orange-500"
-          />
+          <SectionHeader title="События" icon={<Award className="w-8 h-8 stroke-1" />} gradient="from-yellow-500 to-orange-500" />
           {loading ? (
             <EmptyBlock text="Загрузка..." />
           ) : events.length === 0 ? (
