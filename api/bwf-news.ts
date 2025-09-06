@@ -3,6 +3,19 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 let cache: { timestamp: number; data: any[] } | null = null
 const TTL_MS = 10 * 60 * 1000
 
+function decodeHtml(input: string): string {
+  return input
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+}
+
+function stripTags(input: string): string {
+  return input.replace(/<[^>]*>/g, '')
+}
+
 function extractFirstImageFromContent(content: string): string | undefined {
   if (!content) return undefined
   const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i)
@@ -40,9 +53,10 @@ function parseRssItems(xml: string): Array<{ title: string; href: string; img?: 
       return (cdata ? cdata[1] : val).trim()
     }
 
-    const title = pickCdata('title') || pick('title')
-    const link = pick('link')
-    const pubDate = pick('pubDate')
+    const rawTitle = pickCdata('title') || pick('title')
+    const title = decodeHtml(stripTags(rawTitle))
+    const link = decodeHtml(stripTags(pick('link')))
+    const pubDate = decodeHtml(stripTags(pick('pubDate')))
     const description = pickCdata('description')
     const content = pickCdata('content:encoded') || description
     const enclosure = block.match(/<enclosure[^>]+url=["']([^"']+)["']/i)?.[1]
@@ -50,7 +64,8 @@ function parseRssItems(xml: string): Array<{ title: string; href: string; img?: 
     const img = enclosure || media || extractFirstImageFromContent(content)
 
     if (title && link) {
-      list.push({ title, href: link, img, preview: description.replace(/<[^>]*>/g, '').slice(0, 240), date: pubDate })
+      const clean = decodeHtml(stripTags(description)).replace(/\s+/g, ' ').trim()
+      list.push({ title, href: link, img, preview: clean.slice(0, 220), date: pubDate })
     }
   }
   return list
@@ -64,34 +79,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ cached: true, items: cache.data })
     }
 
+    // Primary: Google News RSS
     const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent('site:bwfbadminton.com') + '&hl=ru&gl=RU&ceid=RU:ru'
-
-    if (forceGoogle) {
-      const gXml = await fetchText(gUrl)
-      if (req.query?.debug === '1') {
-        res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-        return res.status(200).send(gXml.slice(0, 20000))
-      }
-      const gItems = parseRssItems(gXml)
-      return res.status(200).json({ cached: false, items: gItems.slice(0, 24) })
-    }
-
-    const bwfXml = await fetchText('https://bwfbadminton.com/feed/')
-
-    if (req.query?.debug === '1') {
+    const gXml = await fetchText(gUrl)
+    if (req.query?.debug === '1' && forceGoogle) {
       res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-      return res.status(200).send(bwfXml.slice(0, 20000))
+      return res.status(200).send(gXml.slice(0, 20000))
     }
+    let items = parseRssItems(gXml)
 
-    let items: any[] = []
-    if (bwfXml && (bwfXml.includes('<rss') || bwfXml.includes('<feed') || bwfXml.includes('<channel>'))) {
-      items = parseRssItems(bwfXml)
-    }
-
-    if (items.length === 0) {
-      const gXml = await fetchText(gUrl)
-      const gItems = parseRssItems(gXml)
-      items = gItems
+    // Fallback: BWF RSS if Google empty
+    if (items.length === 0 || forceGoogle === false) {
+      const bwfXml = await fetchText('https://bwfbadminton.com/feed/')
+      if (req.query?.debug === '1' && !forceGoogle) {
+        res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+        return res.status(200).send(bwfXml.slice(0, 20000))
+      }
+      if (bwfXml && (bwfXml.includes('<rss') || bwfXml.includes('<feed') || bwfXml.includes('<channel>'))) {
+        const bwfItems = parseRssItems(bwfXml)
+        if (bwfItems.length > 0) items = bwfItems
+      }
     }
 
     const dedupSeen = new Set<string>()
