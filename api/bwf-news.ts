@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 
 let cache: { timestamp: number; data: any[] } | null = null
-const TTL_MS = 10 * 60 * 1000
+const TTL_MS = 24 * 60 * 60 * 1000
 
 function decodeHtml(input: string): string {
   return input
@@ -106,7 +106,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (dedupSeen.has(it.href)) return false
       dedupSeen.add(it.href)
       return true
-    }).slice(0, 24)
+    }).slice(0, 20)
 
     if (dedup.length > 0) {
       cache = { timestamp: Date.now(), data: dedup }

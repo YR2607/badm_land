@@ -8,5 +8,8 @@
     { "src": "^/admin$", "dest": "/admin/index.html" },
     { "src": "^/admin/.*$", "dest": "/admin/index.html" },
     { "src": ".*", "dest": "/index.html" }
+  ],
+  "crons": [
+    { "path": "/api/bwf-news?refresh=1", "schedule": "0 5 * * *" }
   ]
 }

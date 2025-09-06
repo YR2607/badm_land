@@ -1,14 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Globe, Zap, Search, Filter, ArrowRight } from 'lucide-react';
+import { Calendar, Globe, Zap, Search, Filter, ArrowRight, ExternalLink } from 'lucide-react';
 import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
 import { Link } from 'react-router-dom';
+
+type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
 
 const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [posts, setPosts] = useState<CmsPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [bwf, setBwf] = useState<BwfItem[] | null>(null);
+  const [bwfError, setBwfError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -20,6 +24,22 @@ const Blog: React.FC = () => {
         setLoading(false);
       }
     })();
+  }, []);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const r = await fetch('/api/bwf-news');
+        const data = await r.json();
+        if (!alive) return;
+        setBwf((data?.items || []) as BwfItem[]);
+      } catch (e: any) {
+        if (!alive) return;
+        setBwfError(e?.message || 'Ошибка загрузки мировых новостей');
+      }
+    })();
+    return () => { alive = false };
   }, []);
 
   const categories = [
@@ -99,6 +119,47 @@ const Blog: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* BWF World News Section */}
+      {(selectedCategory === 'all' || selectedCategory === 'world') && (
+        <section className="py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 flex items-center">
+                <Globe className="w-6 h-6 text-primary-orange mr-2" />
+                Мировые новости (BWF)
+              </h3>
+            </div>
+            {!bwf ? (
+              <Empty text="Загрузка мировых новостей..." />
+            ) : bwfError ? (
+              <div className="text-center text-red-500 py-6">{bwfError}</div>
+            ) : bwf.length === 0 ? (
+              <Empty text="Нет материалов" />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {bwf.map((it) => (
+                  <a key={it.href} href={it.href} target="_blank" rel="noreferrer" className="group rounded-2xl bg-white overflow-hidden border border-gray-100 hover:shadow-md transition-all">
+                    <div className="h-48 bg-gray-100 overflow-hidden">
+                      {it.img ? (
+                        <img src={it.img} alt={it.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform" />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <div className="text-xs text-gray-500 mb-2">{it.date ? formatDate(it.date) : ''}</div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{it.title}</h4>
+                      {it.preview && <p className="text-sm text-gray-600 line-clamp-3">{it.preview}</p>}
+                      <div className="mt-4 text-primary-blue text-sm font-medium inline-flex items-center">Открыть источник <ExternalLink className="w-4 h-4 ml-1" /></div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
