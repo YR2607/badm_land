@@ -63,7 +63,8 @@ async function fetchViaJina(url: string): Promise<string> {
 }
 
 async function fetchText(url: string): Promise<string> {
-  const isBwf = /(^|\.)bwfbadminton\.com$/i.test(new URL(url).hostname)
+  const host = new URL(url).hostname
+  const isBwf = /(\.|^)bwfbadminton\.com$/i.test(host)
   if (isBwf && (SCRAPERAPI_KEY || SCRAPINGBEE_KEY)) {
     return fetchViaProxy(url)
   }
@@ -96,7 +97,6 @@ function parseRssItems(xml: string): Array<{ title: string; href: string; img?: 
     const description = pickCdata(block, 'description')
     const content = pickCdata(block, 'content:encoded') || description
 
-    // Try to extract real link from Google description if present
     if (/news\.google\.com\//i.test(link)) {
       const hrefInDesc = description.match(/href=\"(https?:[^\"]+)\"/i)?.[1]
       if (hrefInDesc) link = decodeURIComponent(hrefInDesc)
@@ -116,28 +116,34 @@ function parseRssItems(xml: string): Array<{ title: string; href: string; img?: 
   return list
 }
 
-async function scrapeNewsList(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
-  const base = 'https://bwfbadminton.com'
-  const html = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY)
-    ? await fetchText(`${base}/news/`)
-    : await fetchViaJina(`${base}/news/`)
-  const $ = cheerio.load(html)
-  const links: string[] = []
-
-  $('a').each((_, a) => {
-    const href = $(a).attr('href') || ''
-    const abs = href.startsWith('http') ? href : new URL(href, base).href
-    if (/\/news\//.test(abs)) links.push(abs)
-  })
-
+async function scrapeFromBases(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
+  const bases = [
+    'https://bwfbadminton.com',
+    'https://corporate.bwfbadminton.com',
+    'https://bwfworldtour.bwfbadminton.com'
+  ]
+  const allTargets: string[] = []
+  for (const base of bases) {
+    try {
+      const html = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchText(`${base}/news/`) : await fetchViaJina(`${base}/news/`)
+      const $ = cheerio.load(html)
+      $('a').each((_, a) => {
+        const href = $(a).attr('href') || ''
+        const abs = href.startsWith('http') ? href : new URL(href, base).href
+        if (/\/news\//.test(abs) && !/\/news\/$/.test(abs)) allTargets.push(abs)
+      })
+    } catch {
+      // ignore this base
+    }
+  }
   const seen = new Set<string>()
-  const targets = links.filter(h => {
+  const targets = allTargets.filter(h => {
     if (seen.has(h)) return false
     seen.add(h)
     return true
   }).slice(0, 24)
 
-  const concurrency = 3
+  const concurrency = 5
   let idx = 0
   const results: any[] = []
   async function worker() {
@@ -151,7 +157,8 @@ async function scrapeNewsList(): Promise<Array<{ title: string; href: string; im
             const title = (page.match(/^Title:\s*(.*)$/m)?.[1] || '').trim()
             const img = page.match(/https?:[^\s')"]+\.(?:jpg|jpeg|png|webp)/i)?.[0]
             const preview = (page.match(/\n\n([^\n].{40,200})/s)?.[1] || '').replace(/\s+/g, ' ').trim()
-            if (title) results.push({ title, href: url, img, preview, date: '' })
+            const date = ''
+            if (title) results.push({ title, href: url, img, preview, date })
           } else {
             const $p = cheerio.load(page)
             const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
@@ -162,7 +169,7 @@ async function scrapeNewsList(): Promise<Array<{ title: string; href: string; im
           }
         }
       } catch {
-        // ignore
+        // ignore this target
       }
     }
   }
@@ -173,8 +180,6 @@ async function scrapeNewsList(): Promise<Array<{ title: string; href: string; im
 async function fetchNitterTweets(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
   const hosts = [
     'https://nitter.net',
-    'https://nitter.fdn.fr',
-    'https://nitter.poast.org',
     'https://ntrqq.com'
   ]
   for (const host of hosts) {
@@ -204,24 +209,16 @@ async function fetchGoogleNewsUS(): Promise<Array<{ title: string; href: string;
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const bypass = req.query?.refresh === '1'
-    const forceGoogle = req.query?.google === '1' || req.query?.source === 'google'
-
-    if (!bypass && !forceGoogle && cache && Date.now() - cache.timestamp < TTL_MS) {
+    if (!bypass && cache && Date.now() - cache.timestamp < TTL_MS) {
       return res.status(200).json({ cached: true, items: cache.data })
     }
 
     let items: any[] = []
 
-    // 1) Nitter (X) first for recency and reliability
-    items = await fetchNitterTweets()
+    // 1) PRIMARY: Web-scraping official BWF sites (/news/ + article pages)
+    items = await scrapeFromBases()
 
-    // 2) Google News (US locale) if nothing
-    if (items.length === 0 || forceGoogle) {
-      const gItems = await fetchGoogleNewsUS()
-      if (gItems.length > 0) items = gItems
-    }
-
-    // 3) BWF RSS feeds
+    // 2) RSS feeds
     if (items.length === 0) {
       const bwfXml = await fetchText('https://bwfbadminton.com/news/feed/')
       if (bwfXml && (bwfXml.includes('<rss') || bwfXml.includes('<channel>'))) {
@@ -235,14 +232,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    // 4) HTML scrape as last resort
+    // 3) Google News (US)
     if (items.length === 0) {
-      try {
-        const scraped = await scrapeNewsList()
-        if (scraped.length > 0) items = scraped
-      } catch {
-        // ignore
-      }
+      const gItems = await fetchGoogleNewsUS()
+      if (gItems.length > 0) items = gItems
+    }
+
+    // 4) X via Nitter
+    if (items.length === 0) {
+      const tweets = await fetchNitterTweets()
+      if (tweets.length > 0) items = tweets
     }
 
     const dedupSeen = new Set<string>()
