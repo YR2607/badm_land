@@ -8,6 +8,7 @@ export interface NewsItem {
   category: 'news' | 'event' | 'world';
   author?: string;
   featured?: boolean;
+  url?: string;
 }
 
 export interface Event {

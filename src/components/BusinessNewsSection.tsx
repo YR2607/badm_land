@@ -6,6 +6,7 @@ import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
 const BusinessNewsSection: React.FC = () => {
   const [posts, setPosts] = React.useState<CmsPost[] | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [bwf, setBwf] = React.useState<NewsItem[]>([]);
 
   React.useEffect(() => {
     let mounted = true;
@@ -29,6 +30,30 @@ const BusinessNewsSection: React.FC = () => {
     return () => { mounted = false };
   }, []);
 
+  React.useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const r = await fetch('/api/bwf-news');
+        const data = await r.json();
+        const items = (data?.items || []).map((it: any): NewsItem => ({
+          id: it.href,
+          title: it.title,
+          content: '',
+          excerpt: it.preview || '',
+          image: it.img,
+          date: it.date || new Date().toISOString(),
+          category: 'world',
+          url: it.href,
+        }));
+        if (alive) setBwf(items);
+      } catch {
+        if (alive) setBwf([]);
+      }
+    })();
+    return () => { alive = false };
+  }, []);
+
   const source: NewsItem[] = (posts || []).map((p) => ({
     id: p.id,
     title: p.title,
@@ -42,7 +67,8 @@ const BusinessNewsSection: React.FC = () => {
   }));
 
   const clubNews = source.filter(news => news.category === 'news');
-  const worldNews = source.filter(news => news.category === 'world');
+  const worldFromCms = source.filter(news => news.category === 'world');
+  const worldDisplay = bwf.length > 0 ? bwf : worldFromCms;
   const events = source.filter(news => news.category === 'event');
 
   const formatDate = (dateString: string) => {
@@ -88,7 +114,7 @@ const BusinessNewsSection: React.FC = () => {
 
     const heightClass = getHeightClass(index);
 
-    return (
+    const Card = (
       <article className="group cursor-pointer mb-8 break-inside-avoid">
         <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden">
           <div className={`${heightClass} relative overflow-hidden`}>
@@ -158,6 +184,12 @@ const BusinessNewsSection: React.FC = () => {
         </div>
       </article>
     );
+
+    return news.url ? (
+      <a href={news.url} target="_blank" rel="noreferrer">{Card}</a>
+    ) : (
+      Card
+    );
   };
 
   const SectionHeader: React.FC<{ 
@@ -208,13 +240,13 @@ const BusinessNewsSection: React.FC = () => {
             icon={<Globe className="w-8 h-8 stroke-1" />}
             gradient="from-orange-500 to-red-500"
           />
-          {loading ? (
+          {loading && worldDisplay.length === 0 ? (
             <EmptyBlock text="Загрузка..." />
-          ) : worldNews.length === 0 ? (
+          ) : worldDisplay.length === 0 ? (
             <EmptyBlock text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
           ) : (
             <div className="columns-1 md:columns-2 lg:columns-3">
-              {worldNews.slice(0, 6).map((news, index) => (
+              {worldDisplay.slice(0, 6).map((news, index) => (
                 <NewsCard key={(news as any).id ?? index} news={news} index={index} category="world" />
               ))}
             </div>
