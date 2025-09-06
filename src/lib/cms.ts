@@ -75,19 +75,31 @@ export type CmsPost = {
 
 export async function fetchPosts(): Promise<CmsPost[]> {
   if (!sanityClient) return [];
-  const query = groq`*[_type == "post"] | order(date desc) {
+  const query = groq`*[_type == "post"] | order(coalesce(date, _createdAt) desc) {
     "id": slug.current,
     title,
     excerpt,
     "image": image.asset->url,
     "date": coalesce(date, _createdAt),
-    category,
-    "categorySlug": select(defined(category->slug.current), category->slug.current, category),
-    "author": select(defined(author->name), author->name, author),
+    // Возвращаем строковый слаг категории или строковое поле category, иначе 'news'
+    "category": select(defined(category->slug.current) => category->slug.current, defined(category) => category, "news"),
+    // Имя автора из ссылки или строковое поле author, иначе null
+    "author": select(defined(author->name) => author->name, defined(author) => author, null),
     featured
   }`;
   const posts = await sanityClient.fetch(query);
-  return posts as CmsPost[];
+  // Приводим к допустимым категориям
+  const allowed = new Set(['news', 'world', 'event']);
+  return (posts as any[]).map((p) => ({
+    id: p.id,
+    title: p.title,
+    excerpt: p.excerpt,
+    image: p.image,
+    date: p.date,
+    category: allowed.has(p.category) ? p.category : 'news',
+    author: p.author || undefined,
+    featured: Boolean(p.featured),
+  }));
 }
 
 export type CmsPage = {
