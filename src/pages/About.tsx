@@ -21,16 +21,16 @@ const About: React.FC = () => {
   }, []);
 
   const stats = [
-    { number: '1+', label: 'год роста', icon: <Clock className="w-6 h-6" />, color: 'from-emerald-500 to-teal-600' },
-    { number: '120+', label: 'активных участников', icon: <Users className="w-6 h-6" />, color: 'from-blue-500 to-indigo-600' },
-    { number: '4', label: 'профессиональных корта', icon: <MapPin className="w-6 h-6" />, color: 'from-purple-500 to-pink-600' },
-    { number: '15+', label: 'турниров проведено', icon: <Trophy className="w-6 h-6" />, color: 'from-orange-500 to-red-600' }
+    { number: '1+', label: 'год опыта', icon: <Clock className="w-6 h-6" />, color: 'from-primary-blue to-blue-600' },
+    { number: '120+', label: 'активных участников', icon: <Users className="w-6 h-6" />, color: 'from-primary-yellow to-yellow-600' },
+    { number: '4', label: 'профессиональных корта', icon: <MapPin className="w-6 h-6" />, color: 'from-primary-orange to-red-600' },
+    { number: '15+', label: 'турниров проведено', icon: <Award className="w-6 h-6" />, color: 'from-primary-blue to-blue-700' }
   ];
 
   const features = [
-    { icon: <Shield className="w-6 h-6" />, title: 'Безопасность', desc: 'Современное оборудование и строгие протоколы безопасности' },
-    { icon: <Zap className="w-6 h-6" />, title: 'Динамика', desc: 'Интенсивные тренировки и соревновательный дух' },
-    { icon: <Star className="w-6 h-6" />, title: 'Качество', desc: 'Профессиональные тренеры и индивидуальный подход' }
+    { icon: <Shield className="w-6 h-6" />, title: 'Безопасность', desc: 'Современное оборудование и строгие протоколы безопасности', color: 'from-primary-blue to-blue-600' },
+    { icon: <Zap className="w-6 h-6" />, title: 'Динамика', desc: 'Интенсивные тренировки и соревновательный дух', color: 'from-primary-yellow to-yellow-600' },
+    { icon: <Star className="w-6 h-6" />, title: 'Качество', desc: 'Профессиональные тренеры и индивидуальный подход', color: 'from-primary-orange to-red-600' }
   ];
 
   const timeline: Array<{ year: string; quarter: string; title: string; text: string; highlight?: boolean }> = [
@@ -52,132 +52,149 @@ const About: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
-      {/* Modern Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800">
-        <motion.div style={{ y }} className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] bg-repeat"></div>
-        </motion.div>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section matching main site style */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-black via-slate-900 to-slate-900">
+        <div className="absolute inset-0">
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            src="/jump.MP4"
+            autoPlay
+            muted
+            playsInline
+            loop
+          />
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70vh] md:h-[75vh]">
+            <div
+              className="w-full h-full bg-white"
+              style={{
+                WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.01) 10%, rgba(0,0,0,0.03) 25%, rgba(0,0,0,0.08) 45%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.30) 75%, rgba(0,0,0,0.55) 90%, rgba(0,0,0,0.80) 97%, rgba(0,0,0,1) 100%)',
+                maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.01) 10%, rgba(0,0,0,0.03) 25%, rgba(0,0,0,0.08) 45%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.30) 75%, rgba(0,0,0,0.55) 90%, rgba(0,0,0,0.80) 97%, rgba(0,0,0,1) 100%)'
+              }}
+            />
+          </div>
+        </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 text-center text-white">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center text-white"
+            transition={{ duration: 0.8, ease: 'easeOut' }}
           >
-            <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6"
-            >
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium">Основан в 2024 году</span>
+            <motion.div className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
+              <Award className="w-5 h-5 text-primary-yellow mr-2" />
+              <span className="text-sm font-medium text-white">Профессиональный клуб с 2024 года</span>
             </motion.div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              Altius
-              <span className="block text-3xl md:text-5xl font-light text-blue-200 mt-2">
-                Клуб бадминтона
-              </span>
-            </h1>
+            <motion.h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-display mb-8 leading-tight" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}>
+              <span className="text-white">ALTIUS</span>
+              <br />
+              <span className="text-2xl md:text-3xl lg:text-4xl font-light text-primary-yellow italic font-display">{page?.heroSubtitle || 'Бадминтонный клуб'}</span>
+            </motion.h1>
 
-            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-              Где каждый удар приближает к совершенству, а каждая победа — к новым вершинам
-            </p>
+            <motion.p className="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto leading-relaxed" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.6 }}>
+              Профессиональные тренировки, современное оборудование и дружелюбная атмосфера в самом современном бадминтонном клубе
+            </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-8 flex flex-wrap justify-center gap-4"
-            >
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <Star className="w-4 h-4 text-yellow-400" />
-                <span className="text-sm">Профессиональные тренеры</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <Trophy className="w-4 h-4 text-yellow-400" />
-                <span className="text-sm">15+ турниров</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <Users className="w-4 h-4 text-yellow-400" />
-                <span className="text-sm">120+ участников</span>
-              </div>
+            <motion.div className="flex flex-col sm:flex-row gap-6 justify-center mb-12" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.6 }}>
+              <button className="btn-accent">
+                Записаться на пробное занятие
+                <ChevronRight className="ml-3 w-5 h-5 inline" />
+              </button>
+              <button className="px-10 py-5 bg-white/10 backdrop-blur-md text-white font-medium rounded-2xl border border-white/30 hover:bg-white/20 transition-all duration-500 shadow-xl tracking-wide">
+                Посмотреть видео
+              </button>
             </motion.div>
           </motion.div>
         </div>
+
+        <motion.div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-primary-orange" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.6 }}>
+          <div className="flex flex-col items-center space-y-2">
+            <span className="text-sm">Прокрутите вниз</span>
+            <div className="w-6 h-10 border-2 border-primary-orange/50 rounded-full flex justify-center">
+              <div className="w-1 h-3 bg-primary-orange rounded-full mt-2 animate-bounce"></div>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
-      {/* Interactive Stats Section */}
-      <section className="relative -mt-16 z-20">
+      {/* Stats Section matching main site */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 50 }}
+                className="bg-white rounded-3xl p-8 text-center group transition-all duration-300 hover:shadow-2xl"
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative"
               >
-                <div className="bg-white rounded-3xl shadow-xl p-6 text-center hover:shadow-2xl transition-all duration-300 border border-gray-100">
-                  <div className={`w-16 h-16 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow`}>
-                    {stat.icon}
-                  </div>
-                  <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
-                  <div className="text-sm text-gray-600 leading-tight">{stat.label}</div>
+                <div className={`w-16 h-16 bg-gradient-to-r ${stat.color} rounded-full flex items-center justify-center text-white mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  {stat.icon}
                 </div>
+                <div className="text-3xl font-bold text-primary-black mb-2">{stat.number}</div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{stat.label}</h3>
+                <p className="text-gray-600 text-sm">{stat.label}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Navigation Pills */}
-      <section className="py-16 bg-white">
+      {/* Services Section matching main site */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Узнайте больше о нас</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Выберите раздел, чтобы погрузиться в нашу историю и ценности
+            <h2 className="section-title">
+              О клубе Altius
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Профессиональный подход к развитию бадминтона в регионе
             </p>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { key: 'overview', label: 'Обзор', desc: 'Кто мы такие' },
-              { key: 'mission', label: 'Миссия', desc: 'Наша цель' },
-              { key: 'history', label: 'История', desc: 'Как мы росли' },
-              { key: 'future', label: 'Будущее', desc: 'Куда идём' }
-            ].map((section) => (
-              <motion.button
-                key={section.key}
-                onClick={() => setActiveSection(section.key)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`px-6 py-3 rounded-2xl font-medium transition-all duration-300 ${
-                  activeSection === section.key
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+              { icon: <Users className="w-8 h-8" />, title: 'Наша команда', desc: 'Опытные тренеры и администраторы', color: 'from-primary-blue to-blue-600' },
+              { icon: <Target className="w-8 h-8" />, title: 'Наша миссия', desc: 'Развитие бадминтона в регионе', color: 'from-primary-yellow to-yellow-600' },
+              { icon: <Calendar className="w-8 h-8" />, title: 'Наша история', desc: 'Развитие клуба с 2024 года', color: 'from-primary-orange to-red-600' }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                className="relative group"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                onClick={() => setActiveSection(['overview', 'mission', 'history'][index] as any)}
               >
-                <div className="text-sm">{section.label}</div>
-                <div className="text-xs opacity-75">{section.desc}</div>
-              </motion.button>
+                <div className="bg-white rounded-3xl p-8 h-full flex flex-col hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                  <div className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-lg flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    {item.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
+                  <p className="text-gray-600 mb-4 flex-grow">{item.desc}</p>
+                  <div className="mt-auto">
+                    <button className="btn-secondary group-hover:bg-primary-blue group-hover:text-white transition-all duration-300 w-full">
+                      Узнать больше
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Content Sections */}
-          <div className="space-y-16">
+          <div className="space-y-16 mt-16">
             {activeSection === 'overview' && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -191,9 +208,9 @@ const About: React.FC = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 border border-gray-200 hover:border-blue-300 transition-colors group"
+                    className="bg-white rounded-3xl p-8 border border-gray-200 hover:shadow-2xl transition-all duration-300"
                   >
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform">
+                    <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-lg flex items-center justify-center text-white mb-4`}>
                       {feature.icon}
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
@@ -209,34 +226,36 @@ const About: React.FC = () => {
                 animate={{ opacity: 1 }}
                 className="text-center max-w-4xl mx-auto"
               >
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-3xl p-12 border border-blue-100">
-                  <motion.div
-                    initial={{ scale: 0.9 }}
-                    animate={{ scale: 1 }}
-                    className="text-6xl mb-6"
-                  >
-                    🎯
-                  </motion.div>
+                <div className="bg-white rounded-3xl p-12 border border-gray-200 shadow-lg">
+                  <div className="w-16 h-16 bg-gradient-to-r from-primary-blue to-blue-600 rounded-xl flex items-center justify-center text-white mx-auto mb-6">
+                    <Target className="w-8 h-8" />
+                  </div>
                   <h3 className="text-3xl font-bold text-gray-900 mb-6">Наша миссия</h3>
                   <p className="text-xl text-gray-700 leading-relaxed mb-8">
-                    Создавать сообщество увлечённых бадминтоном людей, где каждый может развиваться,
-                    достигать новых высот и находить друзей с похожими интересами.
+                    Создавать профессиональное сообщество для развития бадминтона в регионе,
+                    предоставляя качественные тренировки и соревнования для спортсменов всех уровней.
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-                    <div className="bg-white rounded-xl p-6 shadow-sm">
-                      <div className="text-2xl mb-2">🌟</div>
-                      <h4 className="font-semibold mb-2">Доступность</h4>
-                      <p className="text-sm text-gray-600">Тренировки для всех уровней подготовки</p>
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                      <div className="w-12 h-12 bg-gradient-to-r from-primary-blue to-blue-600 rounded-lg flex items-center justify-center text-white mb-4">
+                        <Users className="w-6 h-6" />
+                      </div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Профессионализм</h4>
+                      <p className="text-sm text-gray-600">Сертифицированные тренеры и современная методика</p>
                     </div>
-                    <div className="bg-white rounded-xl p-6 shadow-sm">
-                      <div className="text-2xl mb-2">🏆</div>
-                      <h4 className="font-semibold mb-2">Результаты</h4>
-                      <p className="text-sm text-gray-600">Регулярные турниры и достижения</p>
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                      <div className="w-12 h-12 bg-gradient-to-r from-primary-yellow to-yellow-600 rounded-lg flex items-center justify-center text-white mb-4">
+                        <Trophy className="w-6 h-6" />
+                      </div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Результаты</h4>
+                      <p className="text-sm text-gray-600">Систематическое развитие навыков и достижений</p>
                     </div>
-                    <div className="bg-white rounded-xl p-6 shadow-sm">
-                      <div className="text-2xl mb-2">🤝</div>
-                      <h4 className="font-semibold mb-2">Сообщество</h4>
-                      <p className="text-sm text-gray-600">Дружная атмосфера и поддержка</p>
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                      <div className="w-12 h-12 bg-gradient-to-r from-primary-orange to-red-600 rounded-lg flex items-center justify-center text-white mb-4">
+                        <Shield className="w-6 h-6" />
+                      </div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Безопасность</h4>
+                      <p className="text-sm text-gray-600">Современное оборудование и строгие стандарты</p>
                     </div>
                   </div>
                 </div>
@@ -247,109 +266,57 @@ const About: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="space-y-12"
+                className="bg-white rounded-2xl p-8 relative overflow-hidden"
               >
-                {timeline.reduce((acc: any[], item, index) => {
-                  const yearIndex = acc.findIndex(group => group.year === item.year);
-                  if (yearIndex === -1) {
-                    acc.push({ year: item.year, items: [item] });
-                  } else {
-                    acc[yearIndex].items.push(item);
-                  }
-                  return acc;
-                }, []).map((yearGroup, yearIndex) => (
-                  <motion.div
-                    key={yearGroup.year}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: yearIndex * 0.1 }}
-                  >
-                    <div className="text-center mb-8">
-                      <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full px-6 py-3">
-                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        <span className="text-2xl font-bold text-gray-900">{yearGroup.year}</span>
-                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                      </div>
-                    </div>
+                <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">
+                  История развития клуба
+                </h3>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                      {yearGroup.items.map((item, itemIndex) => (
+                <div className="relative min-h-[620px]">
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 620" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="tlGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#1e3a8a" />
+                        <stop offset="100%" stopColor="#f59e0b" />
+                      </linearGradient>
+                    </defs>
+                    <path id="timelinePath" d="M 50 40 C 250 80, 200 160, 420 200 S 620 320, 820 300 S 700 440, 500 480 S 300 560, 150 600" fill="none" stroke="url(#tlGrad)" strokeWidth="4" strokeLinecap="round" strokeDasharray="10 14" />
+                  </svg>
+
+                  <div className="space-y-8 relative">
+                    {timeline.map((milestone, index) => {
+                      const isLeft = index % 2 === 0;
+                      return (
                         <motion.div
-                          key={itemIndex}
-                          whileHover={{ y: -5, scale: 1.02 }}
-                          className={`rounded-2xl p-6 border-2 transition-all duration-300 ${
-                            item.highlight
-                              ? 'bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200 shadow-lg'
-                              : 'bg-white border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-md'
-                          }`}
+                          key={index}
+                          className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                          initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.6, delay: index * 0.1 }}
                         >
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
-                              {item.quarter}
-                            </span>
-                            {item.highlight && <Star className="w-4 h-4 text-yellow-500" />}
+                          <div className={`w-1/2 ${isLeft ? 'pl-8 text-left' : 'pr-8 text-right'} relative`}>
+                            <div className="relative bg-white rounded-lg p-4 transition-transform duration-300 hover:scale-[1.02] border border-gray-200 shadow-sm">
+                              <div className={`text-xl font-bold mb-1 ${milestone.highlight ? 'text-primary-yellow' : 'text-primary-blue'}`}>{milestone.year} {milestone.quarter}</div>
+                              <h4 className={`text-lg font-semibold mb-2 ${milestone.highlight ? 'text-primary-blue' : 'text-gray-900'}`}>{milestone.title}</h4>
+                              <p className="text-gray-600">{milestone.text}</p>
+                            </div>
                           </div>
-                          <h4 className="font-bold text-gray-900 mb-2 leading-tight">{item.title}</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">{item.text}</p>
+                          <div className="w-1/2"></div>
                         </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-
-            {activeSection === 'future' && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="space-y-8"
-              >
-                <div className="text-center mb-12">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Наш путь вперёд</h3>
-                  <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Мы постоянно развиваемся и планируем новые достижения
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {roadmap.map((item, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: index * 0.1 }}
-                      className="bg-white rounded-3xl p-8 shadow-sm border border-gray-200 hover:shadow-lg transition-shadow"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium">
-                          {item.quarter}
-                        </span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          item.status === 'completed' ? 'bg-green-100 text-green-700' :
-                          item.status === 'active' ? 'bg-blue-100 text-blue-700' :
-                          'bg-gray-100 text-gray-600'
-                        }`}>
-                          {item.status === 'completed' ? '✅ Выполнено' :
-                           item.status === 'active' ? '🔥 В работе' :
-                           '⏳ Запланировано'}
-                        </span>
-                      </div>
-                      <h4 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h4>
-                      <p className="text-gray-600 leading-relaxed">{item.desc}</p>
-                    </motion.div>
-                  ))}
+                      );
+                    })}
+                  </div>
                 </div>
               </motion.div>
             )}
+
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-700 text-white">
+      {/* Call to Action matching main site */}
+      <section className="py-20 bg-gradient-to-r from-primary-blue to-primary-yellow">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -357,16 +324,16 @@ const About: React.FC = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <h2 className="text-4xl md:text-5xl font-bold">Готовы присоединиться?</h2>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Станьте частью нашего спортивного сообщества и откройте для себя мир бадминтона
+            <h2 className="text-4xl md:text-5xl font-bold text-white">Готовы начать?</h2>
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+              Присоединяйтесь к нашему клубу и откройте для себя мир профессионального бадминтона
             </p>
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-shadow"
+              className="inline-flex items-center gap-2 bg-white text-primary-blue px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-500"
             >
-              Присоединиться к клубу
+              Записаться на тренировку
               <ChevronRight className="w-5 h-5" />
             </motion.div>
           </motion.div>
