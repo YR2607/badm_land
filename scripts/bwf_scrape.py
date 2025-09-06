@@ -543,7 +543,7 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
 
 
 def scrape() -> dict:
-    # Try championships site news-overview-wrap first
+    # Only championships site news-overview-wrap
     champ_items = []
     champ_pages = [
         'https://bwfworldchampionships.bwfbadminton.com/news/',
@@ -556,8 +556,8 @@ def scrape() -> dict:
         if len(champ_items) >= 20:
             break
 
-    items: list[dict] = []
     # Deduplicate by href preserve order
+    items: list[dict] = []
     seen = set()
     for it in champ_items:
         h = it.get('href')
@@ -567,11 +567,6 @@ def scrape() -> dict:
         items.append(it)
         if len(items) >= 20:
             break
-
-    # If nothing found on championships, fallback to main site's LATEST NEWS
-    if not items:
-        base = 'https://bwfbadminton.com'
-        items = parse_listing_latest(base, limit=60)[:20]
 
     return {
         'scraped_at': datetime.now(timezone.utc).isoformat(),
