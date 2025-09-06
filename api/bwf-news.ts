@@ -1,8 +1,18 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import * as cheerio from 'cheerio'
 
 let cache: { timestamp: number; data: any[] } | null = null
 const TTL_MS = 10 * 60 * 1000
+
+function extractFirstImageFromContent(content: string): string | undefined {
+  if (!content) return undefined
+  // Try <img src="...">
+  const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i)
+  if (imgMatch && imgMatch[1]) return imgMatch[1]
+  // Try og:image or media:content
+  const mediaMatch = content.match(/<media:content[^>]+url=["']([^"']+)["']/i)
+  if (mediaMatch && mediaMatch[1]) return mediaMatch[1]
+  return undefined
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -10,48 +20,50 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ cached: true, items: cache.data })
     }
 
-    const url = 'https://bwfbadminton.com/news/'
-    const html = await fetch(url).then(r => r.text())
-    const $ = cheerio.load(html)
+    const feedUrl = 'https://bwfbadminton.com/feed/'
+    const xml = await fetch(feedUrl, { headers: { 'Accept': 'application/rss+xml, application/xml;q=0.9' } }).then(r => r.text())
 
+    // Basic RSS parse without extra deps
     const items: any[] = []
-
-    // Подстраховка под возможные разметки
-    $('article, .news-card, .post, .c-article').each((_, el) => {
-      const root = $(el)
-      const linkEl = root.find('a').first()
-      const href = linkEl.attr('href') || ''
-      const title = root.find('h2, h3').first().text().trim() || linkEl.attr('title') || ''
-      const img = root.find('img').first().attr('src') || root.find('img').first().attr('data-src') || ''
-      const preview = root.find('p').first().text().trim()
-      const date = root.find('time').first().attr('datetime') || root.find('.date, .c-article__meta').first().text().trim()
-
-      if (href && title) {
-        items.push({ title, href: href.startsWith('http') ? href : new URL(href, url).href, img, preview, date })
+    const itemBlocks = xml.split('<item>').slice(1)
+    for (const raw of itemBlocks) {
+      const block = raw.split('</item>')[0]
+      const pick = (tag: string) => {
+        const m = block.match(new RegExp(`<${tag}>([\s\S]*?)</${tag}>`, 'i'))
+        return m ? m[1].trim() : ''
       }
-    })
+      const pickCdata = (tag: string) => {
+        const m = block.match(new RegExp(`<${tag}>([\s\S]*?)</${tag}>`, 'i'))
+        if (!m) return ''
+        const val = m[1]
+        const cdata = val.match(/<!\[CDATA\[([\s\S]*?)\]\]>/)
+        return (cdata ? cdata[1] : val).trim()
+      }
 
-    // Фолбэк: если статей мало, ищем альтернативные карточки
-    if (items.length < 5) {
-      $('.c-article-list a').each((_, a) => {
-        const href = $(a).attr('href') || ''
-        const title = $(a).find('h3, h2').text().trim() || $(a).attr('title') || ''
-        const img = $(a).find('img').attr('src') || ''
-        if (href && title) items.push({ title, href: href.startsWith('http') ? href : new URL(href, url).href, img })
-      })
+      const title = pickCdata('title') || pick('title')
+      const link = pick('link')
+      const pubDate = pick('pubDate')
+      const description = pickCdata('description')
+      const content = pickCdata('content:encoded') || description
+      const enclosure = block.match(/<enclosure[^>]+url=["']([^"']+)["']/i)?.[1]
+      const media = block.match(/<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
+      const img = enclosure || media || extractFirstImageFromContent(content)
+
+      if (title && link) {
+        items.push({ title, href: link, img, preview: description.replace(/<[^>]*>/g, '').slice(0, 240), date: pubDate })
+      }
     }
 
-    // Дедупликация по ссылке
-    const seen = new Set<string>()
+    const dedupSeen = new Set<string>()
     const dedup = items.filter(it => {
-      if (seen.has(it.href)) return false
-      seen.add(it.href)
+      if (dedupSeen.has(it.href)) return false
+      dedupSeen.add(it.href)
       return true
     }).slice(0, 24)
 
     cache = { timestamp: Date.now(), data: dedup }
     res.status(200).json({ cached: false, items: dedup })
   } catch (e: any) {
-    res.status(500).json({ error: e?.message || 'failed to parse' })
+    res.status(500).json({ error: e?.message || 'failed to fetch rss' })
   }
 }
