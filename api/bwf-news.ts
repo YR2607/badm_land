@@ -17,6 +17,17 @@ function stripTags(input: string): string {
   return input.replace(/<[^>]*>/g, '')
 }
 
+function extractFirstImageFromContent(content: string): string | undefined {
+  if (!content) return undefined
+  const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i)
+  if (imgMatch && imgMatch[1]) return imgMatch[1]
+  const metaOg = content.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+  if (metaOg && metaOg[1]) return metaOg[1]
+  const urlMatch = content.match(/https?:[^\s"')]+\.(?:jpg|jpeg|png|webp)/i)
+  if (urlMatch && urlMatch[0]) return urlMatch[0]
+  return undefined
+}
+
 const SCRAPERAPI_KEY = process.env.SCRAPERAPI_KEY
 const SCRAPINGBEE_KEY = process.env.SCRAPINGBEE_KEY
 
@@ -24,21 +35,22 @@ async function fetchDirect(url: string): Promise<string> {
   const r = await fetch(url, {
     cache: 'no-store',
     headers: {
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept': 'text/html,application/rss+xml,application/xml;q=0.9, text/xml;q=0.8, */*;q=0.5',
       'User-Agent': 'Mozilla/5.0 (compatible; AltiusSiteBot/1.0; +https://badm-land-main.vercel.app)'
     }
   })
   return r.text()
 }
 
-async function fetchViaProxy(url: string): Promise<string> {
+async function fetchViaProxy(url: string, opts?: { render?: boolean }): Promise<string> {
+  const render = opts?.render === undefined ? true : !!opts?.render
   if (SCRAPERAPI_KEY) {
-    const proxyUrl = `https://api.scraperapi.com?api_key=${encodeURIComponent(SCRAPERAPI_KEY)}&url=${encodeURIComponent(url)}&country=de`
+    const proxyUrl = `https://api.scraperapi.com?api_key=${encodeURIComponent(SCRAPERAPI_KEY)}&url=${encodeURIComponent(url)}${render ? '&render=true' : ''}&country=de`
     const r = await fetch(proxyUrl, { cache: 'no-store' })
     return r.text()
   }
   if (SCRAPINGBEE_KEY) {
-    const proxyUrl = `https://app.scrapingbee.com/api/v1/?api_key=${encodeURIComponent(SCRAPINGBEE_KEY)}&url=${encodeURIComponent(url)}&render_js=false`
+    const proxyUrl = `https://app.scrapingbee.com/api/v1/?api_key=${encodeURIComponent(SCRAPINGBEE_KEY)}&url=${encodeURIComponent(url)}${render ? '&render_js=true' : '&render_js=false'}`
     const r = await fetch(proxyUrl, { cache: 'no-store' })
     return r.text()
   }
@@ -53,9 +65,9 @@ async function fetchViaJina(url: string): Promise<string> {
 
 async function fetchText(url: string): Promise<string> {
   const host = new URL(url).hostname
-  const isBwf = host === 'bwfbadminton.com'
+  const isBwf = /(\.|^)bwfbadminton\.com$/i.test(host)
   if (isBwf && (SCRAPERAPI_KEY || SCRAPINGBEE_KEY)) {
-    return fetchViaProxy(url)
+    return fetchViaProxy(url, { render: true })
   }
   return fetchDirect(url)
 }
@@ -84,99 +96,84 @@ function parseRssItems(xml: string): Array<{ title: string; href: string; img?: 
     let link = decodeHtml(stripTags(pickTag(block, 'link')))
     const pubDate = decodeHtml(stripTags(pickTag(block, 'pubDate')))
     const description = pickCdata(block, 'description')
+    const content = pickCdata(block, 'content:encoded') || description
 
     if (/news\.google\.com\//i.test(link)) {
       const hrefInDesc = description.match(/href=\"(https?:[^\"]+)\"/i)?.[1]
       if (hrefInDesc) link = decodeURIComponent(hrefInDesc)
     }
 
+    const enclosure = block.match(/<enclosure[^>]+url=["']([^"']+)["']/i)?.[1]
+    const mediaContent = block.match(/<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
+    const mediaThumb = block.match(/<media:thumbnail[^>]+url=["']([^"']+)["']/i)?.[1]
+    const mediaGroup = block.match(/<media:group>[\s\S]*?<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
+    const img = enclosure || mediaThumb || mediaContent || mediaGroup || extractFirstImageFromContent(content)
+
     if (title && link) {
-      list.push({ title, href: link, date: pubDate })
+      const clean = decodeHtml(stripTags(description)).replace(/\s+/g, ' ').trim()
+      list.push({ title, href: link, img, preview: clean.slice(0, 220), date: pubDate })
     }
   }
   return list
 }
 
-async function scrapeArticle(url: string) {
-  const page = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchText(url) : await fetchViaJina(url)
-  if (page.startsWith('Title:')) {
-    const title = (page.match(/^Title:\s*(.*)$/m)?.[1] || '').trim()
-    const img = page.match(/https?:[^\s')"]+\.(?:jpg|jpeg|png|webp)/i)?.[0]
-    const preview = (page.match(/\n\n([^\n].{40,200})/s)?.[1] || '').replace(/\s+/g, ' ').trim()
-    const date = ''
-    return title ? { title, href: url, img, preview, date } : null
-  } else {
-    const $p = cheerio.load(page)
-    const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
-    const img = $p('meta[property="og:image"]').attr('content') || $p('img').first().attr('src')
-    const date = $p('time').first().attr('datetime') || ''
-    const preview = ($p('meta[name="description"]').attr('content') || $p('p').first().text() || '').trim()
-    return title ? { title, href: url, img, preview, date } : null
-  }
-}
-
-async function scrapeFromList(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
-  const base = 'https://bwfbadminton.com'
-  const html = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchText(`${base}/news/`) : await fetchViaJina(`${base}/news/`)
-  const $ = cheerio.load(html)
-  const links: string[] = []
-  $('a').each((_, a) => {
-    const href = $(a).attr('href') || ''
-    const abs = href.startsWith('http') ? href : new URL(href, base).href
+async function scrapeFromBases(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
+  const bases = [
+    'https://bwfbadminton.com',
+  ]
+  const allTargets: string[] = []
+  for (const base of bases) {
     try {
-      const u = new URL(abs)
-      if (u.hostname === 'bwfbadminton.com' && /\/news\//.test(u.pathname) && !/\/news\/$/.test(u.pathname)) links.push(u.href)
-    } catch {}
-  })
+      const html = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchViaProxy(`${base}/news/`, { render: true }) : await fetchViaJina(`${base}/news/`)
+      const $ = cheerio.load(html)
+      $('a').each((_, a) => {
+        const href = $(a).attr('href') || ''
+        const abs = href.startsWith('http') ? href : new URL(href, base).href
+        if (/\/news\//.test(abs) && !/\/news\/$/.test(abs)) allTargets.push(abs)
+      })
+    } catch {
+      // ignore this base
+    }
+  }
   const seen = new Set<string>()
-  const targets = links.filter(h => { if (seen.has(h)) return false; seen.add(h); return true }).slice(0, 24)
-  const results: any[] = []
+  const targets = allTargets.filter(h => {
+    if (seen.has(h)) return false
+    seen.add(h)
+    return true
+  }).slice(0, 24)
+
   const concurrency = 5
   let idx = 0
+  const results: any[] = []
   async function worker() {
     while (idx < targets.length) {
       const i = idx++
       const url = targets[i]
       try {
-        const art = await scrapeArticle(url)
-        if (art) results.push(art)
-      } catch {}
+        const page = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchViaProxy(url, { render: true }) : await fetchViaJina(url)
+        if (url.includes('bwfbadminton.com')) {
+          const $p = cheerio.load(page)
+          const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
+          const img = $p('meta[property="og:image"]').attr('content') || $p('img').first().attr('src')
+          const date = $p('time').first().attr('datetime') || ''
+          const preview = ($p('meta[name="description"]').attr('content') || $p('p').first().text() || '').trim()
+          if (title) results.push({ title, href: url, img, preview, date })
+        }
+      } catch {
+        // ignore this target
+      }
     }
   }
   await Promise.all(Array.from({ length: concurrency }).map(() => worker()))
   return results
 }
 
-async function discoverViaGoogleAndScrape(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
-  // Используем только для обнаружения ссылок. Контент берём с официального сайта.
+async function fetchGoogleNewsUS(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
   const query = 'site:bwfbadminton.com/news when:365d'
   const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent(query) + '&hl=en-US&gl=US&ceid=US:en'
-  const xml = await fetchDirect(gUrl)
-  if (!xml || !xml.includes('<rss')) return []
-  const items = parseRssItems(xml)
-  const links = items.map(i => i.href).filter(h => {
-    try {
-      const u = new URL(h)
-      return u.hostname === 'bwfbadminton.com' && /\/news\//.test(u.pathname)
-    } catch { return false }
-  }).slice(0, 24)
-  const seen = new Set<string>()
-  const uniq = links.filter(h => { if (seen.has(h)) return false; seen.add(h); return true })
-  const out: any[] = []
-  const concurrency = 5
-  let idx = 0
-  async function worker() {
-    while (idx < uniq.length) {
-      const i = idx++
-      const url = uniq[i]
-      try {
-        const art = await scrapeArticle(url)
-        if (art) out.push(art)
-      } catch {}
-    }
-  }
-  await Promise.all(Array.from({ length: concurrency }).map(() => worker()))
-  return out
+  const gXml = await fetchDirect(gUrl)
+  if (!gXml || !gXml.includes('<rss')) return []
+  return parseRssItems(gXml)
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -186,20 +183,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ cached: true, items: cache.data })
     }
 
-    // 1) Сначала пытаемся со списка /news/
-    let items = await scrapeFromList()
+    let items: any[] = []
 
-    // 2) Если пусто — ищем ссылки через Google News (только ссылки), затем парсим страницы с bwfbadminton.com
+    // 1) Web-scraping official BWF site with JS render
+    items = await scrapeFromBases()
+
+    // 2) If still empty, discover via Google (only official links), then scrape
     if (items.length === 0) {
-      const viaGoogle = await discoverViaGoogleAndScrape()
-      if (viaGoogle.length > 0) items = viaGoogle
+      const gItems = await fetchGoogleNewsUS()
+      const links = gItems.map(i => i.href).filter(h => {
+        try { const u = new URL(h); return /(^|\.)bwfbadminton\.com$/i.test(u.hostname) } catch { return false }
+      }).slice(0, 20)
+      for (const link of links) {
+        try {
+          const page = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchViaProxy(link, { render: true }) : await fetchViaJina(link)
+          const $p = cheerio.load(page)
+          const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
+          const img = $p('meta[property="og:image"]').attr('content') || $p('img').first().attr('src')
+          const date = $p('time').first().attr('datetime') || ''
+          const preview = ($p('meta[name="description"]').attr('content') || $p('p').first().text() || '').trim()
+          if (title) items.push({ title, href: link, img, preview, date })
+        } catch {}
+      }
     }
 
-    // Дедупликация и ограничение
-    const seen = new Set<string>()
+    const dedupSeen = new Set<string>()
     const dedup = items.filter(it => {
-      if (seen.has(it.href)) return false
-      seen.add(it.href)
+      if (dedupSeen.has(it.href)) return false
+      dedupSeen.add(it.href)
       return true
     }).slice(0, 20)
 

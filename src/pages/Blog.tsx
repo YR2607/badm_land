@@ -28,9 +28,23 @@ const Blog: React.FC = () => {
   useEffect(() => {
     let alive = true;
     (async () => {
+      // Try static file first
       try {
-        const r = await fetch('/api/bwf-news');
-        const data = await r.json();
+        const r1 = await fetch('/data/bwf_news.json', { cache: 'no-store' });
+        if (r1.ok) {
+          const j = await r1.json();
+          const items: BwfItem[] = (j?.items || []) as BwfItem[];
+          if (items.length > 0) {
+            if (!alive) return;
+            setBwf(items);
+            return;
+          }
+        }
+      } catch {}
+      // Fallback to API
+      try {
+        const r2 = await fetch('/api/bwf-news');
+        const data = await r2.json();
         if (!alive) return;
         setBwf((data?.items || []) as BwfItem[]);
       } catch {
