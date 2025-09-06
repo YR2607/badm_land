@@ -27,6 +27,20 @@ jobs:
           SCRAPINGBEE_KEY: ${{ secrets.SCRAPINGBEE_KEY }}
         run: |
           python scripts/bwf_scrape.py
+      - name: Show scraped items count
+        run: |
+          python - << 'PY'
+import json
+with open('public/data/bwf_news.json','r',encoding='utf-8') as f:
+  j=json.load(f)
+print('items:', len(j.get('items') or []))
+print('first_titles:', [it.get('title') for it in (j.get('items') or [])][:3])
+PY
+      - name: Upload scraped JSON artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bwf_news_json
+          path: public/data/bwf_news.json
       - name: Commit and push
         run: |
           git config user.name "github-actions"

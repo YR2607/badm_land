@@ -28,11 +28,12 @@ const Blog: React.FC = () => {
   useEffect(() => {
     let alive = true;
     (async () => {
-      // Try static file first
+      // GitHub Raw first (latest)
       try {
-        const r1 = await fetch('/data/bwf_news.json', { cache: 'no-store' });
-        if (r1.ok) {
-          const j = await r1.json();
+        const rawUrl = 'https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json?t=' + Date.now();
+        const rRaw = await fetch(rawUrl, { cache: 'no-store' });
+        if (rRaw.ok) {
+          const j = await rRaw.json();
           const items: BwfItem[] = (j?.items || []) as BwfItem[];
           if (items.length > 0) {
             if (!alive) return;
@@ -41,12 +42,11 @@ const Blog: React.FC = () => {
           }
         }
       } catch {}
-      // Try GitHub Raw fallback (latest committed file without redeploy)
+      // Local static next
       try {
-        const rawUrl = 'https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json';
-        const rRaw = await fetch(rawUrl, { cache: 'no-store' });
-        if (rRaw.ok) {
-          const j = await rRaw.json();
+        const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
+        if (r1.ok) {
+          const j = await r1.json();
           const items: BwfItem[] = (j?.items || []) as BwfItem[];
           if (items.length > 0) {
             if (!alive) return;

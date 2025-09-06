@@ -33,31 +33,9 @@ const BusinessNewsSection: React.FC = () => {
   React.useEffect(() => {
     let alive = true;
     (async () => {
+      // 1) GitHub Raw first (always latest after GH Action)
       try {
-        // Try static JSON first
-        const r1 = await fetch('/data/bwf_news.json', { cache: 'no-store' });
-        if (r1.ok) {
-          const j = await r1.json();
-          const items: any[] = j?.items || [];
-          if (items.length > 0) {
-            const mapped = items.map((it) => ({
-              id: it.href,
-              title: it.title,
-              content: '',
-              excerpt: it.preview || '',
-              image: it.img,
-              date: it.date || new Date().toISOString(),
-              category: 'world',
-              url: it.href,
-            })) as NewsItem[];
-            if (alive) setBwf(mapped);
-            return;
-          }
-        }
-      } catch {}
-      // Try GitHub Raw fallback (latest committed file without redeploy)
-      try {
-        const rawUrl = 'https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json';
+        const rawUrl = 'https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json?t=' + Date.now();
         const rRaw = await fetch(rawUrl, { cache: 'no-store' });
         if (rRaw.ok) {
           const j = await rRaw.json();
@@ -78,9 +56,31 @@ const BusinessNewsSection: React.FC = () => {
           }
         }
       } catch {}
+      // 2) Local static JSON
       try {
-        // Fallback to API
-        const r2 = await fetch('/api/bwf-news');
+        const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
+        if (r1.ok) {
+          const j = await r1.json();
+          const items: any[] = j?.items || [];
+          if (items.length > 0) {
+            const mapped = items.map((it) => ({
+              id: it.href,
+              title: it.title,
+              content: '',
+              excerpt: it.preview || '',
+              image: it.img,
+              date: it.date || new Date().toISOString(),
+              category: 'world',
+              url: it.href,
+            })) as NewsItem[];
+            if (alive) setBwf(mapped);
+            return;
+          }
+        }
+      } catch {}
+      // 3) API fallback
+      try {
+        const r2 = await fetch('/api/bwf-news?t=' + Date.now(), { cache: 'no-store' });
         const data = await r2.json();
         const items = (data?.items || []).map((it: any): NewsItem => ({
           id: it.href,
