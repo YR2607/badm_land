@@ -382,9 +382,111 @@ def parse_article(url: str) -> dict | None:
     }
 
 
+def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
+    """Parse items inside .news-overview-wrap on BWF World Championships site.
+    Works on both the news overview page and a news-single page that contains the wrap.
+    """
+    try:
+        html = fetch(page_url)
+    except Exception:
+        return []
+    soup = BeautifulSoup(html, 'lxml')
+    wrap = soup.select_one('.news-overview-wrap')
+    if wrap is None:
+        return []
+    items: list[dict] = []
+    seen = set()
+    base_for_abs = page_url
+
+    for a in wrap.select('a[href]'):
+        href = a.get('href') or ''
+        if '/news' not in href:
+            continue
+        href_abs = to_abs_url(base_for_abs, href)
+        try:
+            u = urlparse(href_abs)
+            if not (u.scheme and is_official_host((u.hostname or '').lower())):
+                continue
+        except Exception:
+            continue
+        if href_abs in seen:
+            continue
+        seen.add(href_abs)
+
+        # Try to find context card
+        card = a
+        if card.parent:
+            card = card.parent
+        if card and card.parent:
+            card = card.parent
+
+        title = (a.get('title') or a.get_text(' ', strip=True) or '').strip()
+        img = None
+        img_el = card.select_one('img[src]') if hasattr(card, 'select_one') else None
+        if not img_el and hasattr(card, 'select_one'):
+            img_el = card.select_one('img[data-src]')
+        if img_el:
+            img = img_el.get('src') or img_el.get('data-src')
+        if not img and hasattr(card, 'select_one'):
+            meta = card.select_one('meta[property="og:image"][content]')
+            if meta:
+                img = meta.get('content')
+        img_abs = to_abs_url(href_abs, img or '') if img else ''
+
+        preview = ''
+        p = card.select_one('p') if hasattr(card, 'select_one') else None
+        if p:
+            preview = p.get_text(' ', strip=True)
+        date = ''
+        t = card.select_one('time[datetime]') if hasattr(card, 'select_one') else None
+        if t:
+            date = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
+
+        if title:
+            items.append({
+                'title': title,
+                'href': href_abs,
+                'img': img_abs,
+                'preview': (preview or '')[:220],
+                'date': date,
+            })
+        if len(items) >= limit:
+            break
+
+    return items
+
+
 def scrape() -> dict:
-    base = 'https://bwfbadminton.com'
-    items = parse_listing_latest(base, limit=60)
+    # Try championships site news-overview-wrap first
+    champ_items = []
+    champ_pages = [
+        'https://bwfworldchampionships.bwfbadminton.com/news/',
+        'https://bwfworldchampionships.bwfbadminton.com/news-single/2025/08/14/pressure-and-paris-inside-my-championship-mindset/',
+    ]
+    for url in champ_pages:
+        part = parse_championships_overview(url, limit=40)
+        if part:
+            champ_items.extend(part)
+        if len(champ_items) >= 20:
+            break
+
+    items: list[dict] = []
+    # Deduplicate by href preserve order
+    seen = set()
+    for it in champ_items:
+        h = it.get('href')
+        if not h or h in seen:
+            continue
+        seen.add(h)
+        items.append(it)
+        if len(items) >= 20:
+            break
+
+    # If nothing found on championships, fallback to main site's LATEST NEWS
+    if not items:
+        base = 'https://bwfbadminton.com'
+        items = parse_listing_latest(base, limit=60)[:20]
+
     return {
         'scraped_at': datetime.now(timezone.utc).isoformat(),
         'items': items[:20],
