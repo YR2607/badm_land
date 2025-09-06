@@ -28,6 +28,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }).then(r => r.text())
 
+    if (req.query?.debug === '1') {
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+      return res.status(200).send(xml.slice(0, 20000))
+    }
+
     if (!xml || (!xml.includes('<rss') && !xml.includes('<feed') && !xml.includes('<channel>'))) {
       throw new Error('invalid rss response')
     }
