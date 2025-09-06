@@ -76,7 +76,13 @@ def discover_from_official_lists(limit: int = 40) -> list[str]:
         soup = BeautifulSoup(html, 'lxml')
         for a in soup.select('a[href]'):
             href = a.get('href') or ''
-            abs_url = href if href.startswith('http') else f'{base}{href if href.startswith('/') else "/"+href}'
+            if href.startswith('http'):
+                abs_url = href
+            else:
+                if href.startswith('/'):
+                    abs_url = f'{base}{href}'
+                else:
+                    abs_url = f'{base}/{href}'
             try:
                 u = urlparse(abs_url)
                 if is_official_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path):
