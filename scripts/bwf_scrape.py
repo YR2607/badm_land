@@ -59,6 +59,21 @@ def fetch(url: str, use_cloud: bool = True) -> str:
     return r.text
 
 
+def to_abs_url(base_url: str, possibly_relative: str) -> str:
+    s = (possibly_relative or '').strip()
+    if not s:
+        return s
+    if s.startswith('http://') or s.startswith('https://'):
+        return s
+    if s.startswith('//'):
+        return 'https:' + s
+    bu = urlparse(base_url)
+    origin = f'{bu.scheme}://{bu.hostname}'
+    if not s.startswith('/'):
+        s = '/' + s
+    return origin + s
+
+
 def discover_from_official_lists(limit: int = 40) -> list[str]:
     bases = [
         'https://bwfbadminton.com',
@@ -76,13 +91,7 @@ def discover_from_official_lists(limit: int = 40) -> list[str]:
         soup = BeautifulSoup(html, 'lxml')
         for a in soup.select('a[href]'):
             href = a.get('href') or ''
-            if href.startswith('http'):
-                abs_url = href
-            else:
-                if href.startswith('/'):
-                    abs_url = f'{base}{href}'
-                else:
-                    abs_url = f'{base}/{href}'
+            abs_url = to_abs_url(base, href)
             try:
                 u = urlparse(abs_url)
                 if is_official_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path):
@@ -155,6 +164,69 @@ def resolve_google(link: str) -> str:
         return link
 
 
+def parse_listing(base: str, limit: int = 40) -> list[dict]:
+    try:
+        html = fetch(f'{base}/news/')
+    except Exception:
+        return []
+    soup = BeautifulSoup(html, 'lxml')
+    items: list[dict] = []
+    seen = set()
+    # Grab anchors first, then enrich from nearby context
+    for a in soup.select('a[href*="/news/"]'):
+        href = a.get('href') or ''
+        href_abs = to_abs_url(base, href)
+        try:
+            u = urlparse(href_abs)
+            if not (u.scheme and is_official_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path)):
+                continue
+        except Exception:
+            continue
+        if href_abs in seen:
+            continue
+        seen.add(href_abs)
+        # determine a card context: up to two parent levels
+        card = a
+        if card.parent:
+            card = card.parent
+        if card and card.parent:
+            card = card.parent
+        title = (a.get('title') or a.get_text(' ', strip=True) or '').strip()
+        img = None
+        img_el = None
+        # look for image nearby
+        img_el = card.select_one('img[src]') if hasattr(card, 'select_one') else None
+        if not img_el and hasattr(card, 'select_one'):
+            img_el = card.select_one('img[data-src]')
+        if img_el:
+            img = img_el.get('src') or img_el.get('data-src')
+        if not img:
+            meta = card.select_one('meta[property="og:image"][content]') if hasattr(card, 'select_one') else None
+            if meta:
+                img = meta.get('content')
+        img_abs = to_abs_url(href_abs, img or '') if img else ''
+        # preview and date heuristics
+        preview = ''
+        p = card.select_one('p') if hasattr(card, 'select_one') else None
+        if p:
+            preview = p.get_text(' ', strip=True)
+        date = ''
+        t = card.select_one('time[datetime]') if hasattr(card, 'select_one') else None
+        if t:
+            date = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
+        if title:
+            items.append({
+                'title': title,
+                'href': href_abs,
+                'img': img_abs,
+                'preview': (preview or '')[:220],
+                'date': date,
+            })
+        if len(items) >= limit:
+            break
+    return items
+
+
 def parse_article(url: str) -> dict | None:
     try:
         html = fetch(url)
@@ -170,6 +242,7 @@ def parse_article(url: str) -> dict | None:
         first_img = soup.select_one('img[src]')
         if first_img:
             img = first_img.get('src')
+    img = to_abs_url(url, img or '') if img else ''
     desc = (soup.select_one('meta[name="description"][content]') or {}).get('content')
     if not desc:
         p = soup.select_one('p')
@@ -182,30 +255,34 @@ def parse_article(url: str) -> dict | None:
     return {
         'title': title,
         'href': url,
-        'img': img or '',
+        'img': img,
         'preview': (desc or '')[:220],
         'date': date,
     }
 
 
 def scrape() -> dict:
-    links = discover_from_official_lists(limit=40)
-    if not links:
-        links = discover_links_via_google(limit=40)
-    items: list[dict] = []
-    for link in links:
-        u = urlparse(link)
-        if not (u.scheme and is_official_host((u.hostname or '').lower())):
-            continue
-        art = parse_article(link)
-        if art:
-            items.append(art)
-        if len(items) >= 20:
-            break
-        time.sleep(0.4)
+    # First, parse listing to capture many visible items with images
+    base = 'https://bwfbadminton.com'
+    items = parse_listing(base, limit=60)
+    # If fewer than 20, enrich via detailed article parsing from discovered links
+    if len(items) < 20:
+        links = discover_from_official_lists(limit=60)
+        if not links:
+            links = discover_links_via_google(limit=60)
+        for link in links:
+            u = urlparse(link)
+            if not (u.scheme and is_official_host((u.hostname or '').lower())):
+                continue
+            art = parse_article(link)
+            if art and all(it.get('href') != art['href'] for it in items):
+                items.append(art)
+            if len(items) >= 24:
+                break
+            time.sleep(0.3)
     return {
         'scraped_at': datetime.now(timezone.utc).isoformat(),
-        'items': items,
+        'items': items[:20],
     }
 
 
