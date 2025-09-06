@@ -58,7 +58,9 @@ def fetch(url: str, use_cloud: bool = True) -> str:
     r.raise_for_status()
     return r.text
 
-
+# Helper to normalize potentially relative URLs to absolute based on base_url
+# Works with protocol-relative and path-relative inputs
+# Example: to_abs_url('https://bwfbadminton.com/news/', '/img.jpg') -> 'https://bwfbadminton.com/img.jpg'
 def to_abs_url(base_url: str, possibly_relative: str) -> str:
     s = (possibly_relative or '').strip()
     if not s:
@@ -75,29 +77,22 @@ def to_abs_url(base_url: str, possibly_relative: str) -> str:
 
 
 def discover_from_official_lists(limit: int = 40) -> list[str]:
-    bases = [
-        'https://bwfbadminton.com',
-        'https://corporate.bwfbadminton.com',
-        'https://bwfworldtour.bwfbadminton.com',
-        'https://bwfworldchampionships.bwfbadminton.com',
-        'https://bwfworldtourfinals.bwfbadminton.com'
-    ]
+    base = 'https://bwfbadminton.com'
     links: list[str] = []
-    for base in bases:
+    try:
+        html = fetch(f'{base}/news/')
+    except Exception:
+        return []
+    soup = BeautifulSoup(html, 'lxml')
+    for a in soup.select('a[href]'):
+        href = a.get('href') or ''
+        abs_url = to_abs_url(base, href)
         try:
-            html = fetch(f'{base}/news/')
+            u = urlparse(abs_url)
+            if is_official_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path):
+                links.append(u.geturl())
         except Exception:
             continue
-        soup = BeautifulSoup(html, 'lxml')
-        for a in soup.select('a[href]'):
-            href = a.get('href') or ''
-            abs_url = to_abs_url(base, href)
-            try:
-                u = urlparse(abs_url)
-                if is_official_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path):
-                    links.append(u.geturl())
-            except Exception:
-                continue
         if len(links) >= limit:
             break
     # unique preserve order
@@ -227,6 +222,99 @@ def parse_listing(base: str, limit: int = 40) -> list[dict]:
     return items
 
 
+def parse_listing_latest(base: str, limit: int = 40) -> list[dict]:
+    """Parse only the 'LATEST NEWS' section on the BWF news page."""
+    try:
+        html = fetch(f'{base}/news/')
+    except Exception:
+        return []
+    soup = BeautifulSoup(html, 'lxml')
+
+    def is_latest_news_heading(text: str) -> bool:
+        t = (text or '').strip().lower()
+        return ('latest' in t) and ('news' in t)
+
+    heading = None
+    for tag in ['h1', 'h2', 'h3', 'h4', 'h5']:
+        for h in soup.find_all(tag):
+            if is_latest_news_heading(h.get_text(' ', strip=True)):
+                heading = h
+                break
+        if heading:
+            break
+
+    container = None
+    if heading is not None:
+        node = heading
+        for _ in range(6):
+            parent = node.parent if node else None
+            if not parent:
+                break
+            anchors = parent.find_all('a', href=True)
+            news_links = [a for a in anchors if '/news/' in (a.get('href') or '')]
+            if len(news_links) >= 6:
+                container = parent
+                break
+            node = parent
+
+    scope = container if container is not None else soup
+
+    items: list[dict] = []
+    seen = set()
+    for a in scope.select('a[href*="/news/"]'):
+        href = a.get('href') or ''
+        href_abs = to_abs_url(base, href)
+        try:
+            u = urlparse(href_abs)
+            if not (u.scheme and is_official_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path)):
+                continue
+        except Exception:
+            continue
+        if href_abs in seen:
+            continue
+        seen.add(href_abs)
+
+        card = a
+        if card.parent:
+            card = card.parent
+        if card and card.parent:
+            card = card.parent
+
+        title = (a.get('title') or a.get_text(' ', strip=True) or '').strip()
+        img = None
+        img_el = card.select_one('img[src]') if hasattr(card, 'select_one') else None
+        if not img_el and hasattr(card, 'select_one'):
+            img_el = card.select_one('img[data-src]')
+        if img_el:
+            img = img_el.get('src') or img_el.get('data-src')
+        if not img:
+            meta = card.select_one('meta[property="og:image"][content]') if hasattr(card, 'select_one') else None
+            if meta:
+                img = meta.get('content')
+        img_abs = to_abs_url(href_abs, img or '') if img else ''
+
+        preview = ''
+        p = card.select_one('p') if hasattr(card, 'select_one') else None
+        if p:
+            preview = p.get_text(' ', strip=True)
+        date = ''
+        t = card.select_one('time[datetime]') if hasattr(card, 'select_one') else None
+        if t:
+            date = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
+
+        if title:
+            items.append({
+                'title': title,
+                'href': href_abs,
+                'img': img_abs,
+                'preview': (preview or '')[:220],
+                'date': date,
+            })
+        if len(items) >= limit:
+            break
+    return items
+
+
 def parse_article(url: str) -> dict | None:
     try:
         html = fetch(url)
@@ -262,24 +350,8 @@ def parse_article(url: str) -> dict | None:
 
 
 def scrape() -> dict:
-    # First, parse listing to capture many visible items with images
     base = 'https://bwfbadminton.com'
-    items = parse_listing(base, limit=60)
-    # If fewer than 20, enrich via detailed article parsing from discovered links
-    if len(items) < 20:
-        links = discover_from_official_lists(limit=60)
-        if not links:
-            links = discover_links_via_google(limit=60)
-        for link in links:
-            u = urlparse(link)
-            if not (u.scheme and is_official_host((u.hostname or '').lower())):
-                continue
-            art = parse_article(link)
-            if art and all(it.get('href') != art['href'] for it in items):
-                items.append(art)
-            if len(items) >= 24:
-                break
-            time.sleep(0.3)
+    items = parse_listing_latest(base, limit=60)
     return {
         'scraped_at': datetime.now(timezone.utc).isoformat(),
         'items': items[:20],
