@@ -66,15 +66,15 @@ const Hero: React.FC = () => {
           playsInline
         />
         <div className="absolute inset-0 bg-black/45" />
-        {/* ultra-smooth bottom fade into white via CSS mask */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[45vh] md:h-[55vh]">
+        {/* ultra-smooth bottom fade into white via CSS mask (starts higher) */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70vh] md:h-[75vh]">
           <div
             className="w-full h-full bg-white"
             style={{
               WebkitMaskImage:
-                'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.02) 18%, rgba(0,0,0,0.06) 36%, rgba(0,0,0,0.14) 54%, rgba(0,0,0,0.28) 72%, rgba(0,0,0,0.52) 86%, rgba(0,0,0,1) 100%)',
+                'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.01) 10%, rgba(0,0,0,0.03) 25%, rgba(0,0,0,0.08) 45%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.30) 75%, rgba(0,0,0,0.55) 90%, rgba(0,0,0,0.80) 97%, rgba(0,0,0,1) 100%)',
               maskImage:
-                'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.02) 18%, rgba(0,0,0,0.06) 36%, rgba(0,0,0,0.14) 54%, rgba(0,0,0,0.28) 72%, rgba(0,0,0,0.52) 86%, rgba(0,0,0,1) 100%)'
+                'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.01) 10%, rgba(0,0,0,0.03) 25%, rgba(0,0,0,0.08) 45%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.30) 75%, rgba(0,0,0,0.55) 90%, rgba(0,0,0,0.80) 97%, rgba(0,0,0,1) 100%)'
             }}
           />
         </div>
@@ -105,11 +105,11 @@ const Hero: React.FC = () => {
           </motion.div>
         </motion.div>
       </div>
-      <motion.div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/70" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.6 }}>
+      <motion.div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-primary-orange" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.6 }}>
         <div className="flex flex-col items-center space-y-2">
           <span className="text-sm">Прокрутите вниз</span>
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-bounce"></div>
+          <div className="w-6 h-10 border-2 border-primary-orange/50 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-primary-orange rounded-full mt-2 animate-bounce"></div>
           </div>
         </div>
       </motion.div>
