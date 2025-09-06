@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Globe, Zap, Search, Filter, ArrowRight, ExternalLink } from 'lucide-react';
+import { Calendar, Globe, Zap, Search, Filter, ArrowRight } from 'lucide-react';
 import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
 import { Link } from 'react-router-dom';
 
@@ -12,7 +12,6 @@ const Blog: React.FC = () => {
   const [posts, setPosts] = useState<CmsPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [bwf, setBwf] = useState<BwfItem[] | null>(null);
-  const [bwfError, setBwfError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -34,9 +33,9 @@ const Blog: React.FC = () => {
         const data = await r.json();
         if (!alive) return;
         setBwf((data?.items || []) as BwfItem[]);
-      } catch (e: any) {
+      } catch {
         if (!alive) return;
-        setBwfError(e?.message || 'Ошибка загрузки мировых новостей');
+        setBwf([]);
       }
     })();
     return () => { alive = false };
@@ -49,15 +48,43 @@ const Blog: React.FC = () => {
     { value: 'world', label: 'Мировые новости', icon: <Globe className="w-4 h-4" /> }
   ];
 
+  const merged = useMemo(() => {
+    const cms = posts.map(p => ({
+      id: p.id,
+      title: p.title,
+      excerpt: p.excerpt,
+      image: p.image,
+      date: p.date,
+      category: p.category,
+      author: p.author,
+      featured: p.featured,
+      _external: false as const,
+      _href: ''
+    }))
+    const world = (bwf || []).map((it, idx) => ({
+      id: `bwf-${idx}`,
+      title: it.title,
+      excerpt: it.preview || '',
+      image: it.img,
+      date: it.date || new Date().toISOString(),
+      category: 'world' as const,
+      author: undefined,
+      featured: false,
+      _external: true as const,
+      _href: it.href
+    }))
+    return [...cms, ...world]
+  }, [posts, bwf])
+
   const filteredNews = useMemo(() => {
-    const list = posts;
+    const list = merged
     return list.filter(n => {
-      const matchesCategory = selectedCategory === 'all' || n.category === selectedCategory;
-      const inTitle = (n.title || '').toLowerCase().includes(searchTerm.toLowerCase());
-      const inExcerpt = (n.excerpt || '').toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesCategory && (inTitle || inExcerpt);
-    });
-  }, [posts, selectedCategory, searchTerm]);
+      const matchesCategory = selectedCategory === 'all' || n.category === selectedCategory
+      const inTitle = (n.title || '').toLowerCase().includes(searchTerm.toLowerCase())
+      const inExcerpt = (n.excerpt || '').toLowerCase().includes(searchTerm.toLowerCase())
+      return matchesCategory && (inTitle || inExcerpt)
+    })
+  }, [merged, selectedCategory, searchTerm])
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -120,58 +147,19 @@ const Blog: React.FC = () => {
         </div>
       </section>
 
-      {/* BWF World News Section */}
-      {(selectedCategory === 'all' || selectedCategory === 'world') && (
-        <section className="py-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-                <Globe className="w-6 h-6 text-primary-orange mr-2" />
-                Мировые новости (BWF)
-              </h3>
-            </div>
-            {!bwf ? (
-              <Empty text="Загрузка мировых новостей..." />
-            ) : bwfError ? (
-              <div className="text-center text-red-500 py-6">{bwfError}</div>
-            ) : bwf.length === 0 ? (
-              <Empty text="Нет материалов" />
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {bwf.map((it) => (
-                  <a key={it.href} href={it.href} target="_blank" rel="noreferrer" className="group rounded-2xl bg-white overflow-hidden border border-gray-100 hover:shadow-md transition-all">
-                    <div className="h-48 bg-gray-100 overflow-hidden">
-                      {it.img ? (
-                        <img src={it.img} alt={it.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform" />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
-                      )}
-                    </div>
-                    <div className="p-5">
-                      <div className="text-xs text-gray-500 mb-2">{it.date ? formatDate(it.date) : ''}</div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{it.title}</h4>
-                      {it.preview && <p className="text-sm text-gray-600 line-clamp-3">{it.preview}</p>}
-                      <div className="mt-4 text-primary-blue text-sm font-medium inline-flex items-center">Открыть источник <ExternalLink className="w-4 h-4 ml-1" /></div>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {loading ? (
+          {loading && merged.length === 0 ? (
             <Empty text="Загрузка..." />
           ) : filteredNews.length === 0 ? (
             <Empty text="Пока нет материалов" />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredNews.map((news, index) => (
-                <motion.article key={news.id} className="bg-white rounded-3xl p-6 group transition-transform duration-300" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.05 }}>
-                  <Link to={`/blog/${news.id}`} className="block">
+              {filteredNews.map((news, index) => {
+                const isExternal = (news as any)._external
+                const href = (news as any)._href
+                const Card = (
+                  <motion.article key={(news as any).id || index} className="bg-white rounded-3xl p-6 group transition-transform duration-300" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.05 }}>
                     <div className="h-48 rounded-lg mb-4 overflow-hidden bg-gray-100">
                       {news.image ? (
                         <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
@@ -179,22 +167,27 @@ const Blog: React.FC = () => {
                         <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
                       )}
                     </div>
-                  </Link>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColor(news.category)}`}>{getCategoryLabel(news.category)}</span>
-                    <span className="text-sm text-gray-500">{formatDate(news.date)}</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-blue transition-colors">{news.title}</h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{news.excerpt}</p>
-                  <div className="flex items-center justify-between">
-                    {news.author && (<span className="text-sm text-gray-500">{news.author}</span>)}
-                    <Link to={`/blog/${news.id}`} className="flex items-center text-primary-blue group-hover:translate-x-2 transition-transform">
-                      <span className="mr-2 text-sm font-medium">Читать</span>
-                      <ArrowRight size={16} />
-                    </Link>
-                  </div>
-                </motion.article>
-              ))}
+                    <div className="flex items-center justify-between mb-3">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColor((news as any).category)}`}>{getCategoryLabel((news as any).category)}</span>
+                      <span className="text-sm text-gray-500">{formatDate((news as any).date)}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-blue transition-colors">{news.title}</h3>
+                    <p className="text-gray-600 mb-4 line-clamp-3">{(news as any).excerpt}</p>
+                    <div className="flex items-center justify-between">
+                      {(news as any).author && (<span className="text-sm text-gray-500">{(news as any).author}</span>)}
+                      <span className="flex items-center text-primary-blue group-hover:translate-x-2 transition-transform">
+                        <span className="mr-2 text-sm font-medium">Читать</span>
+                        <ArrowRight size={16} />
+                      </span>
+                    </div>
+                  </motion.article>
+                )
+                return isExternal ? (
+                  <a key={(news as any).id || index} href={href} target="_blank" rel="noreferrer">{Card}</a>
+                ) : (
+                  <Link key={(news as any).id || index} to={`/blog/${(news as any).id}`}>{Card}</Link>
+                )
+              })}
             </div>
           )}
         </div>

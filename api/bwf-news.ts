@@ -20,8 +20,8 @@ function extractFirstImageFromContent(content: string): string | undefined {
   if (!content) return undefined
   const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i)
   if (imgMatch && imgMatch[1]) return imgMatch[1]
-  const mediaMatch = content.match(/<media:content[^>]+url=["']([^"']+)["']/i)
-  if (mediaMatch && mediaMatch[1]) return mediaMatch[1]
+  const metaOg = content.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+  if (metaOg && metaOg[1]) return metaOg[1]
   return undefined
 }
 
@@ -36,32 +36,37 @@ async function fetchText(url: string): Promise<string> {
   return r.text()
 }
 
+function pickTag(block: string, tag: string): string {
+  const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
+  return m ? m[1].trim() : ''
+}
+
+function pickCdata(block: string, tag: string): string {
+  const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
+  if (!m) return ''
+  const val = m[1]
+  const cdata = val.match(/<!\[CDATA\[([\s\S]*?)\]\]>/)
+  return (cdata ? cdata[1] : val).trim()
+}
+
 function parseRssItems(xml: string): Array<{ title: string; href: string; img?: string; preview?: string; date?: string }> {
   const list: Array<{ title: string; href: string; img?: string; preview?: string; date?: string }> = []
   const blocks = xml.split(/<item>/i).slice(1)
   for (const raw of blocks) {
     const block = raw.split(/<\/item>/i)[0]
-    const pick = (tag: string) => {
-      const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
-      return m ? m[1].trim() : ''
-    }
-    const pickCdata = (tag: string) => {
-      const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
-      if (!m) return ''
-      const val = m[1]
-      const cdata = val.match(/<!\[CDATA\[([\s\S]*?)\]\]>/)
-      return (cdata ? cdata[1] : val).trim()
-    }
 
-    const rawTitle = pickCdata('title') || pick('title')
+    const rawTitle = pickCdata(block, 'title') || pickTag(block, 'title')
     const title = decodeHtml(stripTags(rawTitle))
-    const link = decodeHtml(stripTags(pick('link')))
-    const pubDate = decodeHtml(stripTags(pick('pubDate')))
-    const description = pickCdata('description')
-    const content = pickCdata('content:encoded') || description
+    const link = decodeHtml(stripTags(pickTag(block, 'link')))
+    const pubDate = decodeHtml(stripTags(pickTag(block, 'pubDate')))
+    const description = pickCdata(block, 'description')
+    const content = pickCdata(block, 'content:encoded') || description
+
     const enclosure = block.match(/<enclosure[^>]+url=["']([^"']+)["']/i)?.[1]
-    const media = block.match(/<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
-    const img = enclosure || media || extractFirstImageFromContent(content)
+    const mediaContent = block.match(/<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
+    const mediaThumb = block.match(/<media:thumbnail[^>]+url=["']([^"']+)["']/i)?.[1]
+    const mediaGroup = block.match(/<media:group>[\s\S]*?<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
+    const img = enclosure || mediaThumb || mediaContent || mediaGroup || extractFirstImageFromContent(content)
 
     if (title && link) {
       const clean = decodeHtml(stripTags(description)).replace(/\s+/g, ' ').trim()
@@ -75,30 +80,42 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const bypass = req.query?.refresh === '1'
     const forceGoogle = req.query?.google === '1' || req.query?.source === 'google'
+    const debug = req.query?.debug === '1'
+
     if (!bypass && !forceGoogle && cache && Date.now() - cache.timestamp < TTL_MS) {
       return res.status(200).json({ cached: true, items: cache.data })
     }
 
-    // Primary: Google News RSS
-    const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent('site:bwfbadminton.com') + '&hl=ru&gl=RU&ceid=RU:ru'
-    const gXml = await fetchText(gUrl)
-    if (req.query?.debug === '1' && forceGoogle) {
+    // Primary: BWF News feed
+    const bwfNewsUrl = 'https://bwfbadminton.com/news/feed/'
+    const bwfXml = await fetchText(bwfNewsUrl)
+    if (debug && !forceGoogle) {
       res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-      return res.status(200).send(gXml.slice(0, 20000))
+      return res.status(200).send(bwfXml.slice(0, 20000))
     }
-    let items = parseRssItems(gXml)
+    let items: any[] = []
+    if (bwfXml && (bwfXml.includes('<rss') || bwfXml.includes('<channel>'))) {
+      items = parseRssItems(bwfXml)
+    }
 
-    // Fallback: BWF RSS if Google empty
-    if (items.length === 0 || forceGoogle === false) {
-      const bwfXml = await fetchText('https://bwfbadminton.com/feed/')
-      if (req.query?.debug === '1' && !forceGoogle) {
+    // Fallbacks
+    if (items.length === 0) {
+      // Site root feed
+      const rootXml = await fetchText('https://bwfbadminton.com/feed/')
+      if (rootXml && (rootXml.includes('<rss') || rootXml.includes('<channel>'))) {
+        items = parseRssItems(rootXml)
+      }
+    }
+    if (items.length === 0 || forceGoogle) {
+      // Google News
+      const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent('site:bwfbadminton.com') + '&hl=ru&gl=RU&ceid=RU:ru'
+      const gXml = await fetchText(gUrl)
+      if (debug && forceGoogle) {
         res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-        return res.status(200).send(bwfXml.slice(0, 20000))
+        return res.status(200).send(gXml.slice(0, 20000))
       }
-      if (bwfXml && (bwfXml.includes('<rss') || bwfXml.includes('<feed') || bwfXml.includes('<channel>'))) {
-        const bwfItems = parseRssItems(bwfXml)
-        if (bwfItems.length > 0) items = bwfItems
-      }
+      const gItems = parseRssItems(gXml)
+      if (gItems.length > 0) items = gItems
     }
 
     const dedupSeen = new Set<string>()
