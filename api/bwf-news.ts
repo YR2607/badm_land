@@ -17,17 +17,6 @@ function stripTags(input: string): string {
   return input.replace(/<[^>]*>/g, '')
 }
 
-function extractFirstImageFromContent(content: string): string | undefined {
-  if (!content) return undefined
-  const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i)
-  if (imgMatch && imgMatch[1]) return imgMatch[1]
-  const metaOg = content.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
-  if (metaOg && metaOg[1]) return metaOg[1]
-  const urlMatch = content.match(/https?:[^\s"')]+\.(?:jpg|jpeg|png|webp)/i)
-  if (urlMatch && urlMatch[0]) return urlMatch[0]
-  return undefined
-}
-
 const SCRAPERAPI_KEY = process.env.SCRAPERAPI_KEY
 const SCRAPINGBEE_KEY = process.env.SCRAPINGBEE_KEY
 
@@ -35,7 +24,7 @@ async function fetchDirect(url: string): Promise<string> {
   const r = await fetch(url, {
     cache: 'no-store',
     headers: {
-      'Accept': 'text/html,application/rss+xml,application/xml;q=0.9, text/xml;q=0.8, */*;q=0.5',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       'User-Agent': 'Mozilla/5.0 (compatible; AltiusSiteBot/1.0; +https://badm-land-main.vercel.app)'
     }
   })
@@ -71,51 +60,6 @@ async function fetchText(url: string): Promise<string> {
   return fetchDirect(url)
 }
 
-function pickTag(block: string, tag: string): string {
-  const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
-  return m ? m[1].trim() : ''
-}
-
-function pickCdata(block: string, tag: string): string {
-  const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i'))
-  if (!m) return ''
-  const val = m[1]
-  const cdata = val.match(/<!\[CDATA\[([\s\S]*?)\]\]>/)
-  return (cdata ? cdata[1] : val).trim()
-}
-
-function parseRssItems(xml: string): Array<{ title: string; href: string; img?: string; preview?: string; date?: string }> {
-  const list: Array<{ title: string; href: string; img?: string; preview?: string; date?: string }> = []
-  const blocks = xml.split(/<item>/i).slice(1)
-  for (const raw of blocks) {
-    const block = raw.split(/<\/item>/i)[0]
-
-    const rawTitle = pickCdata(block, 'title') || pickTag(block, 'title')
-    const title = decodeHtml(stripTags(rawTitle))
-    let link = decodeHtml(stripTags(pickTag(block, 'link')))
-    const pubDate = decodeHtml(stripTags(pickTag(block, 'pubDate')))
-    const description = pickCdata(block, 'description')
-    const content = pickCdata(block, 'content:encoded') || description
-
-    if (/news\.google\.com\//i.test(link)) {
-      const hrefInDesc = description.match(/href=\"(https?:[^\"]+)\"/i)?.[1]
-      if (hrefInDesc) link = decodeURIComponent(hrefInDesc)
-    }
-
-    const enclosure = block.match(/<enclosure[^>]+url=["']([^"']+)["']/i)?.[1]
-    const mediaContent = block.match(/<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
-    const mediaThumb = block.match(/<media:thumbnail[^>]+url=["']([^"']+)["']/i)?.[1]
-    const mediaGroup = block.match(/<media:group>[\s\S]*?<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
-    const img = enclosure || mediaThumb || mediaContent || mediaGroup || extractFirstImageFromContent(content)
-
-    if (title && link) {
-      const clean = decodeHtml(stripTags(description)).replace(/\s+/g, ' ').trim()
-      list.push({ title, href: link, img, preview: clean.slice(0, 220), date: pubDate })
-    }
-  }
-  return list
-}
-
 async function scrapeFromBases(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
   const bases = [
     'https://bwfbadminton.com',
@@ -133,7 +77,7 @@ async function scrapeFromBases(): Promise<Array<{ title: string; href: string; i
         if (/\/news\//.test(abs) && !/\/news\/$/.test(abs)) allTargets.push(abs)
       })
     } catch {
-      // ignore this base
+      // ignore
     }
   }
   const seen = new Set<string>()
@@ -152,58 +96,28 @@ async function scrapeFromBases(): Promise<Array<{ title: string; href: string; i
       const url = targets[i]
       try {
         const page = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchText(url) : await fetchViaJina(url)
-        if (url.includes('bwfbadminton.com')) {
-          if (page.startsWith('Title:')) {
-            const title = (page.match(/^Title:\s*(.*)$/m)?.[1] || '').trim()
-            const img = page.match(/https?:[^\s')"]+\.(?:jpg|jpeg|png|webp)/i)?.[0]
-            const preview = (page.match(/\n\n([^\n].{40,200})/s)?.[1] || '').replace(/\s+/g, ' ').trim()
-            const date = ''
-            if (title) results.push({ title, href: url, img, preview, date })
-          } else {
-            const $p = cheerio.load(page)
-            const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
-            const img = $p('meta[property="og:image"]').attr('content') || $p('img').first().attr('src')
-            const date = $p('time').first().attr('datetime') || ''
-            const preview = ($p('meta[name="description"]').attr('content') || $p('p').first().text() || '').trim()
-            if (title) results.push({ title, href: url, img, preview, date })
-          }
+        if (!/bwfbadminton\.com/i.test(url)) continue
+        if (page.startsWith('Title:')) {
+          const title = (page.match(/^Title:\s*(.*)$/m)?.[1] || '').trim()
+          const img = page.match(/https?:[^\s')"]+\.(?:jpg|jpeg|png|webp)/i)?.[0]
+          const preview = (page.match(/\n\n([^\n].{40,200})/s)?.[1] || '').replace(/\s+/g, ' ').trim()
+          const date = ''
+          if (title) results.push({ title, href: url, img, preview, date })
+        } else {
+          const $p = cheerio.load(page)
+          const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
+          const img = $p('meta[property="og:image"]').attr('content') || $p('img').first().attr('src')
+          const date = $p('time').first().attr('datetime') || ''
+          const preview = ($p('meta[name="description"]').attr('content') || $p('p').first().text() || '').trim()
+          if (title) results.push({ title, href: url, img, preview, date })
         }
       } catch {
-        // ignore this target
+        // ignore
       }
     }
   }
   await Promise.all(Array.from({ length: concurrency }).map(() => worker()))
   return results
-}
-
-async function fetchNitterTweets(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
-  const hosts = [
-    'https://nitter.net',
-    'https://ntrqq.com'
-  ]
-  for (const host of hosts) {
-    try {
-      const xml = await fetchDirect(`${host}/bwfmedia/rss`)
-      if (!xml || (!xml.includes('<rss') && !xml.includes('<channel>'))) continue
-      const items = parseRssItems(xml).map(it => {
-        const xLink = it.href.replace(/^https?:\/\/[^/]+/i, 'https://x.com')
-        return { ...it, href: xLink }
-      })
-      if (items.length > 0) return items
-    } catch {
-      continue
-    }
-  }
-  return []
-}
-
-async function fetchGoogleNewsUS(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
-  const query = 'site:bwfbadminton.com/news when:365d -site:shuttletime.bwfbadminton.com'
-  const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent(query) + '&hl=en-US&gl=US&ceid=US:en'
-  const gXml = await fetchDirect(gUrl)
-  if (!gXml || !gXml.includes('<rss')) return []
-  return parseRssItems(gXml)
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -213,48 +127,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ cached: true, items: cache.data })
     }
 
-    let items: any[] = []
+    const items = await scrapeFromBases()
 
-    // 1) PRIMARY: Web-scraping official BWF sites (/news/ + article pages)
-    items = await scrapeFromBases()
-
-    // 2) RSS feeds
-    if (items.length === 0) {
-      const bwfXml = await fetchText('https://bwfbadminton.com/news/feed/')
-      if (bwfXml && (bwfXml.includes('<rss') || bwfXml.includes('<channel>'))) {
-        items = parseRssItems(bwfXml)
-      }
-    }
-    if (items.length === 0) {
-      const rootXml = await fetchText('https://bwfbadminton.com/feed/')
-      if (rootXml && (rootXml.includes('<rss') || rootXml.includes('<channel>'))) {
-        items = parseRssItems(rootXml)
-      }
-    }
-
-    // 3) Google News (US)
-    if (items.length === 0) {
-      const gItems = await fetchGoogleNewsUS()
-      if (gItems.length > 0) items = gItems
-    }
-
-    // 4) X via Nitter
-    if (items.length === 0) {
-      const tweets = await fetchNitterTweets()
-      if (tweets.length > 0) items = tweets
-    }
-
-    const dedupSeen = new Set<string>()
+    // Дедупликация и ограничение
+    const seen = new Set<string>()
     const dedup = items.filter(it => {
-      if (dedupSeen.has(it.href)) return false
-      dedupSeen.add(it.href)
+      if (seen.has(it.href)) return false
+      seen.add(it.href)
       return true
     }).slice(0, 20)
 
-    if (dedup.length > 0) {
-      cache = { timestamp: Date.now(), data: dedup }
-    }
-
+    cache = { timestamp: Date.now(), data: dedup }
     res.status(200).json({ cached: false, items: dedup })
   } catch (e: any) {
     res.status(500).json({ error: e?.message || 'failed to fetch' })
