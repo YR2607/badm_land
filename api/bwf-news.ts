@@ -91,10 +91,16 @@ function parseRssItems(xml: string): Array<{ title: string; href: string; img?: 
 
     const rawTitle = pickCdata(block, 'title') || pickTag(block, 'title')
     const title = decodeHtml(stripTags(rawTitle))
-    const link = decodeHtml(stripTags(pickTag(block, 'link')))
+    let link = decodeHtml(stripTags(pickTag(block, 'link')))
     const pubDate = decodeHtml(stripTags(pickTag(block, 'pubDate')))
     const description = pickCdata(block, 'description')
     const content = pickCdata(block, 'content:encoded') || description
+
+    // Try to extract real link from Google description if present
+    if (/news\.google\.com\//i.test(link)) {
+      const hrefInDesc = description.match(/href=\"(https?:[^\"]+)\"/i)?.[1]
+      if (hrefInDesc) link = decodeURIComponent(hrefInDesc)
+    }
 
     const enclosure = block.match(/<enclosure[^>]+url=["']([^"']+)["']/i)?.[1]
     const mediaContent = block.match(/<media:content[^>]+url=["']([^"']+)["']/i)?.[1]
@@ -118,10 +124,10 @@ async function scrapeNewsList(): Promise<Array<{ title: string; href: string; im
   const $ = cheerio.load(html)
   const links: string[] = []
 
-  $('article a, .c-article a, .news-card a, a').each((_, a) => {
+  $('a').each((_, a) => {
     const href = $(a).attr('href') || ''
     const abs = href.startsWith('http') ? href : new URL(href, base).href
-    if (abs.includes('/news/')) links.push(abs)
+    if (/\/news\//.test(abs)) links.push(abs)
   })
 
   const seen = new Set<string>()
@@ -131,7 +137,7 @@ async function scrapeNewsList(): Promise<Array<{ title: string; href: string; im
     return true
   }).slice(0, 24)
 
-  const concurrency = 4
+  const concurrency = 3
   let idx = 0
   const results: any[] = []
   async function worker() {
@@ -187,42 +193,49 @@ async function fetchNitterTweets(): Promise<Array<{ title: string; href: string;
   return []
 }
 
+async function fetchGoogleNewsUS(): Promise<Array<{ title: string; href: string; img?: string; preview?: string; date?: string }>> {
+  const query = 'site:bwfbadminton.com/news when:365d -site:shuttletime.bwfbadminton.com'
+  const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent(query) + '&hl=en-US&gl=US&ceid=US:en'
+  const gXml = await fetchDirect(gUrl)
+  if (!gXml || !gXml.includes('<rss')) return []
+  return parseRssItems(gXml)
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const bypass = req.query?.refresh === '1'
     const forceGoogle = req.query?.google === '1' || req.query?.source === 'google'
-    const debug = req.query?.debug === '1'
 
     if (!bypass && !forceGoogle && cache && Date.now() - cache.timestamp < TTL_MS) {
       return res.status(200).json({ cached: true, items: cache.data })
     }
 
-    // Primary: BWF News feed
-    const bwfNewsUrl = 'https://bwfbadminton.com/news/feed/'
-    const bwfXml = await fetchText(bwfNewsUrl)
-    if (debug && !forceGoogle) {
-      res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-      return res.status(200).send(bwfXml.slice(0, 20000))
-    }
     let items: any[] = []
-    if (bwfXml && (bwfXml.includes('<rss') || bwfXml.includes('<channel>'))) {
-      items = parseRssItems(bwfXml)
+
+    // 1) Nitter (X) first for recency and reliability
+    items = await fetchNitterTweets()
+
+    // 2) Google News (US locale) if nothing
+    if (items.length === 0 || forceGoogle) {
+      const gItems = await fetchGoogleNewsUS()
+      if (gItems.length > 0) items = gItems
     }
 
-    // Fallbacks: root feed, Google (recent), HTML scraping, X via Nitter
+    // 3) BWF RSS feeds
+    if (items.length === 0) {
+      const bwfXml = await fetchText('https://bwfbadminton.com/news/feed/')
+      if (bwfXml && (bwfXml.includes('<rss') || bwfXml.includes('<channel>'))) {
+        items = parseRssItems(bwfXml)
+      }
+    }
     if (items.length === 0) {
       const rootXml = await fetchText('https://bwfbadminton.com/feed/')
       if (rootXml && (rootXml.includes('<rss') || rootXml.includes('<channel>'))) {
         items = parseRssItems(rootXml)
       }
     }
-    if (items.length === 0 || forceGoogle) {
-      const query = 'site:bwfbadminton.com/news when:180d -site:shuttletime.bwfbadminton.com'
-      const gUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent(query) + '&hl=ru&gl=RU&ceid=RU:ru'
-      const gXml = await fetchDirect(gUrl)
-      const gItems = parseRssItems(gXml)
-      if (gItems.length > 0) items = gItems
-    }
+
+    // 4) HTML scrape as last resort
     if (items.length === 0) {
       try {
         const scraped = await scrapeNewsList()
@@ -230,11 +243,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       } catch {
         // ignore
       }
-    }
-    if (items.length === 0) {
-      // Finally: X via Nitter (no keys)
-      const tweets = await fetchNitterTweets()
-      if (tweets.length > 0) items = tweets
     }
 
     const dedupSeen = new Set<string>()
