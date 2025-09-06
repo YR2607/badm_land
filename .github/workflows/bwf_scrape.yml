@@ -30,11 +30,11 @@ jobs:
       - name: Show scraped items count
         run: |
           python - << 'PY'
-import json
-with open('public/data/bwf_news.json','r',encoding='utf-8') as f:
-  j=json.load(f)
-print('items:', len(j.get('items') or []))
-print('first_titles:', [it.get('title') for it in (j.get('items') or [])][:3])
+            import json
+            with open('public/data/bwf_news.json','r',encoding='utf-8') as f:
+              j=json.load(f)
+            print('items:', len(j.get('items') or []))
+            print('first_titles:', [it.get('title') for it in (j.get('items') or [])][:3])
 PY
       - name: Upload scraped JSON artifact
         uses: actions/upload-artifact@v4
