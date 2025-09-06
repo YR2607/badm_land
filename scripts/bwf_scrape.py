@@ -244,7 +244,17 @@ def parse_listing_latest(base: str, limit: int = 40) -> list[dict]:
             break
 
     container = None
-    if heading is not None:
+    # Try by class/id heuristics first
+    candidates = soup.select('[id*="latest" i], [class*="latest" i]')
+    for c in candidates:
+        anchors = c.find_all('a', href=True)
+        news_links = [a for a in anchors if '/news/' in (a.get('href') or '')]
+        if len(news_links) >= 6:
+            container = c
+            break
+
+    # If still not found, try ancestors around heading
+    if container is None and heading is not None:
         node = heading
         for _ in range(6):
             parent = node.parent if node else None
@@ -257,29 +267,27 @@ def parse_listing_latest(base: str, limit: int = 40) -> list[dict]:
                 break
             node = parent
 
-    scope = container if container is not None else soup
-
     items: list[dict] = []
     seen = set()
-    for a in scope.select('a[href*="/news/"]'):
+
+    def push_anchor(a):
+        nonlocal items
         href = a.get('href') or ''
         href_abs = to_abs_url(base, href)
         try:
             u = urlparse(href_abs)
             if not (u.scheme and is_official_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path)):
-                continue
+                return
         except Exception:
-            continue
+            return
         if href_abs in seen:
-            continue
-        seen.add(href_abs)
-
+            return
+        # Build card context
         card = a
         if card.parent:
             card = card.parent
         if card and card.parent:
             card = card.parent
-
         title = (a.get('title') or a.get_text(' ', strip=True) or '').strip()
         img = None
         img_el = card.select_one('img[src]') if hasattr(card, 'select_one') else None
@@ -287,12 +295,11 @@ def parse_listing_latest(base: str, limit: int = 40) -> list[dict]:
             img_el = card.select_one('img[data-src]')
         if img_el:
             img = img_el.get('src') or img_el.get('data-src')
-        if not img:
-            meta = card.select_one('meta[property="og:image"][content]') if hasattr(card, 'select_one') else None
+        if not img and hasattr(card, 'select_one'):
+            meta = card.select_one('meta[property="og:image"][content]')
             if meta:
                 img = meta.get('content')
         img_abs = to_abs_url(href_abs, img or '') if img else ''
-
         preview = ''
         p = card.select_one('p') if hasattr(card, 'select_one') else None
         if p:
@@ -301,7 +308,6 @@ def parse_listing_latest(base: str, limit: int = 40) -> list[dict]:
         t = card.select_one('time[datetime]') if hasattr(card, 'select_one') else None
         if t:
             date = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
-
         if title:
             items.append({
                 'title': title,
@@ -310,9 +316,36 @@ def parse_listing_latest(base: str, limit: int = 40) -> list[dict]:
                 'preview': (preview or '')[:220],
                 'date': date,
             })
-        if len(items) >= limit:
-            break
-    return items
+
+    if container is not None:
+        for a in container.select('a[href*="/news/"]'):
+            push_anchor(a)
+            if len(items) >= limit:
+                break
+    else:
+        # Traverse from heading forward and collect anchors until next heading or limit
+        start = heading if heading is not None else soup.body or soup
+        count = 0
+        for el in start.next_elements:
+            if hasattr(el, 'name') and el.name in ('h1', 'h2', 'h3', 'h4', 'h5') and el is not start:
+                # stop at the next section heading
+                break
+            if getattr(el, 'name', '') == 'a' and el.has_attr('href') and '/news/' in (el.get('href') or ''):
+                push_anchor(el)
+                count += 1
+                if len(items) >= limit:
+                    break
+
+    # Deduplicate and cap
+    uniq_items = []
+    seen_hrefs = set()
+    for it in items:
+        href = it.get('href')
+        if not href or href in seen_hrefs:
+            continue
+        seen_hrefs.add(href)
+        uniq_items.append(it)
+    return uniq_items[:limit]
 
 
 def parse_article(url: str) -> dict | None:
