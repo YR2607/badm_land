@@ -55,6 +55,29 @@ const BusinessNewsSection: React.FC = () => {
           }
         }
       } catch {}
+      // Try GitHub Raw fallback (latest committed file without redeploy)
+      try {
+        const rawUrl = 'https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json';
+        const rRaw = await fetch(rawUrl, { cache: 'no-store' });
+        if (rRaw.ok) {
+          const j = await rRaw.json();
+          const items: any[] = j?.items || [];
+          if (items.length > 0) {
+            const mapped = items.map((it) => ({
+              id: it.href,
+              title: it.title,
+              content: '',
+              excerpt: it.preview || '',
+              image: it.img,
+              date: it.date || new Date().toISOString(),
+              category: 'world',
+              url: it.href,
+            })) as NewsItem[];
+            if (alive) setBwf(mapped);
+            return;
+          }
+        }
+      } catch {}
       try {
         // Fallback to API
         const r2 = await fetch('/api/bwf-news');

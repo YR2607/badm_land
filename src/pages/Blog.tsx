@@ -41,6 +41,20 @@ const Blog: React.FC = () => {
           }
         }
       } catch {}
+      // Try GitHub Raw fallback (latest committed file without redeploy)
+      try {
+        const rawUrl = 'https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json';
+        const rRaw = await fetch(rawUrl, { cache: 'no-store' });
+        if (rRaw.ok) {
+          const j = await rRaw.json();
+          const items: BwfItem[] = (j?.items || []) as BwfItem[];
+          if (items.length > 0) {
+            if (!alive) return;
+            setBwf(items);
+            return;
+          }
+        }
+      } catch {}
       // Fallback to API
       try {
         const r2 = await fetch('/api/bwf-news');
