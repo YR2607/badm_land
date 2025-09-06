@@ -580,11 +580,58 @@ def scrape() -> dict:
 
 
 def main():
-    data = scrape()
+    new_data = scrape()
+    new_items = list(new_data.get('items', []))
+
+    # Load previous items if exist
+    old_items = []
+    if os.path.exists(OUT_PATH):
+        try:
+            with open(OUT_PATH, 'r', encoding='utf-8') as f:
+                prev = json.load(f)
+                old_items = list(prev.get('items', []))
+        except Exception:
+            old_items = []
+
+    # If scrape failed (no items), keep previous content to avoid empty site
+    if len(new_items) == 0 and len(old_items) > 0:
+        data_out = {
+            'scraped_at': datetime.now(timezone.utc).isoformat(),
+            'items': old_items,
+        }
+    else:
+        # Merge new first, then old; dedupe by href
+        merged: list[dict] = []
+        seen = set()
+        def push_list(lst):
+            for it in lst:
+                href = it.get('href')
+                if not href or href in seen:
+                    continue
+                seen.add(href)
+                merged.append(it)
+        push_list(new_items)
+        push_list(old_items)
+
+        # Sort by date desc when possible, else keep insertion order
+        def date_key(it: dict):
+            d = it.get('date') or ''
+            try:
+                dt = date_parser.parse(d)
+                return dt
+            except Exception:
+                return datetime.min.replace(tzinfo=timezone.utc)
+        merged_sorted = sorted(merged, key=date_key, reverse=True)
+
+        data_out = {
+            'scraped_at': datetime.now(timezone.utc).isoformat(),
+            'items': merged_sorted[:20],
+        }
+
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    print(f'wrote {len(data.get("items", []))} items to {OUT_PATH}')
+        json.dump(data_out, f, ensure_ascii=False, indent=2)
+    print(f'wrote {len(data_out.get("items", []))} items to {OUT_PATH}')
 
 
 if __name__ == '__main__':
