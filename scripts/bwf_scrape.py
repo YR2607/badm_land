@@ -9,6 +9,8 @@ from urllib.parse import urlencode, urlparse, unquote
 
 import requests
 from bs4 import BeautifulSoup
+import concurrent.futures
+from dateutil import parser as date_parser
 
 try:
     import cloudscraper  # optional
@@ -46,6 +48,11 @@ def fetch_via_proxy(url: str) -> str:
 
 def fetch(url: str, use_cloud: bool = True) -> str:
     host = (urlparse(url).hostname or '').lower()
+    # Championships site: fetch directly (no proxy/JS render needed)
+    if host.endswith('bwfworldchampionships.bwfbadminton.com'):
+        r = requests.get(url, headers=HEADERS, timeout=40)
+        r.raise_for_status()
+        return r.text
     if is_official_host(host):
         if SCRAPERAPI_KEY or SCRAPINGBEE_KEY:
             return fetch_via_proxy(url)
@@ -348,43 +355,109 @@ def parse_listing_latest(base: str, limit: int = 40) -> list[dict]:
     return uniq_items[:limit]
 
 
+def normalize_date_iso(s: str) -> str:
+    try:
+        dt = date_parser.parse(s)
+        return dt.replace(tzinfo=timezone.utc).isoformat()
+    except Exception:
+        return s.strip() if s else ''
+
+
 def parse_article(url: str) -> dict | None:
     try:
         html = fetch(url)
     except Exception:
         return None
     soup = BeautifulSoup(html, 'lxml')
+    # Title
     title = (soup.select_one('meta[property="og:title"][content]') or {}).get('content') or (soup.title.string if soup.title else '')
     title = (title or '').strip()
     if not title:
+        # try h1 fallback
+        h1 = soup.select_one('h1')
+        if h1:
+            title = h1.get_text(' ', strip=True)
+    if not title:
         return None
+    # Image
     img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content')
     if not img:
-        first_img = soup.select_one('img[src]')
+        first_img = soup.select_one('article img[src], .entry-content img[src], img[src]')
         if first_img:
             img = first_img.get('src')
     img = to_abs_url(url, img or '') if img else ''
+    # Description/Preview
     desc = (soup.select_one('meta[name="description"][content]') or {}).get('content')
     if not desc:
-        p = soup.select_one('p')
+        p = soup.select_one('article p, .entry-content p, p')
         if p:
             desc = p.get_text(' ', strip=True)
-    date = ''
-    t = soup.select_one('time[datetime]')
-    if t:
-        date = t.get('datetime', '').strip()
+    # Date
+    date_raw = ''
+    m = soup.select_one('meta[property="article:published_time"][content]')
+    if m:
+        date_raw = (m.get('content') or '').strip()
+    if not date_raw:
+        m = soup.select_one('meta[name="article:published_time"][content]')
+        if m:
+            date_raw = (m.get('content') or '').strip()
+    if not date_raw:
+        t = soup.select_one('time[datetime]')
+        if t:
+            date_raw = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
+    if not date_raw:
+        # JSON-LD
+        for s in soup.select('script[type="application/ld+json"]'):
+            try:
+                data = json.loads(s.get_text("\n", strip=True))
+            except Exception:
+                continue
+            def find_date(obj):
+                if isinstance(obj, dict):
+                    for k in ['datePublished', 'dateCreated', 'uploadDate']:
+                        if k in obj and isinstance(obj[k], str) and obj[k].strip():
+                            return obj[k].strip()
+                    for v in obj.values():
+                        d = find_date(v)
+                        if d:
+                            return d
+                elif isinstance(obj, list):
+                    for it in obj:
+                        d = find_date(it)
+                        if d:
+                            return d
+                return ''
+            d = find_date(data)
+            if d:
+                date_raw = d
+                break
+    if not date_raw:
+        # Fallback: parse from visible text like 'Friday, September 5, 2025'
+        text_blocks = [
+            (soup.select_one('article') or soup.select_one('.entry-content') or soup).get_text(' ', strip=True),
+            desc or ''
+        ]
+        dow = '(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)'
+        pattern = re.compile(rf'{dow},?\s+[A-Za-z]+\s+\d{{1,2}},\s+\d{{4}}')
+        for txt in text_blocks:
+            m = pattern.search(txt)
+            if m:
+                date_raw = m.group(0)
+                break
+    date_iso = normalize_date_iso(date_raw)
     return {
         'title': title,
         'href': url,
         'img': img,
         'preview': (desc or '')[:220],
-        'date': date,
+        'date': date_iso,
     }
 
 
 def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
     """Parse items inside .news-overview-wrap on BWF World Championships site.
     Works on both the news overview page and a news-single page that contains the wrap.
+    This now enriches each item by fetching the article page for accurate image and date.
     """
     try:
         html = fetch(page_url)
@@ -394,15 +467,15 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
     wrap = soup.select_one('.news-overview-wrap')
     if wrap is None:
         return []
-    items: list[dict] = []
-    seen = set()
-    base_for_abs = page_url
 
+    # Collect targets (href, fallback title, fallback img, fallback preview)
+    targets = []
+    seen = set()
     for a in wrap.select('a[href]'):
         href = a.get('href') or ''
         if '/news' not in href:
             continue
-        href_abs = to_abs_url(base_for_abs, href)
+        href_abs = to_abs_url(page_url, href)
         try:
             u = urlparse(href_abs)
             if not (u.scheme and is_official_host((u.hostname or '').lower())):
@@ -412,46 +485,59 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
         if href_abs in seen:
             continue
         seen.add(href_abs)
-
-        # Try to find context card
         card = a
         if card.parent:
             card = card.parent
         if card and card.parent:
             card = card.parent
-
-        title = (a.get('title') or a.get_text(' ', strip=True) or '').strip()
-        img = None
+        title_fb = (a.get('title') or a.get_text(' ', strip=True) or '').strip()
+        img_fb = None
         img_el = card.select_one('img[src]') if hasattr(card, 'select_one') else None
         if not img_el and hasattr(card, 'select_one'):
             img_el = card.select_one('img[data-src]')
         if img_el:
-            img = img_el.get('src') or img_el.get('data-src')
-        if not img and hasattr(card, 'select_one'):
+            img_fb = img_el.get('src') or img_el.get('data-src')
+        if not img_fb and hasattr(card, 'select_one'):
             meta = card.select_one('meta[property="og:image"][content]')
             if meta:
-                img = meta.get('content')
-        img_abs = to_abs_url(href_abs, img or '') if img else ''
-
-        preview = ''
+                img_fb = meta.get('content')
+        img_fb = to_abs_url(href_abs, img_fb or '') if img_fb else ''
+        preview_fb = ''
         p = card.select_one('p') if hasattr(card, 'select_one') else None
         if p:
-            preview = p.get_text(' ', strip=True)
-        date = ''
-        t = card.select_one('time[datetime]') if hasattr(card, 'select_one') else None
-        if t:
-            date = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
-
-        if title:
-            items.append({
-                'title': title,
-                'href': href_abs,
-                'img': img_abs,
-                'preview': (preview or '')[:220],
-                'date': date,
-            })
-        if len(items) >= limit:
+            preview_fb = p.get_text(' ', strip=True)
+        targets.append((href_abs, title_fb, img_fb, preview_fb))
+        if len(targets) >= limit:
             break
+
+    # Enrich by fetching each article page
+    items: list[dict] = []
+    def enrich(entry):
+        href_abs, title_fb, img_fb, preview_fb = entry
+        art = parse_article(href_abs)
+        if art:
+            if not art.get('img'):
+                art['img'] = img_fb
+            if not art.get('preview'):
+                art['preview'] = (preview_fb or '')[:220]
+            if not art.get('title'):
+                art['title'] = title_fb
+            return art
+        else:
+            return {
+                'title': title_fb or href_abs,
+                'href': href_abs,
+                'img': img_fb,
+                'preview': (preview_fb or '')[:220],
+                'date': '',
+            }
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        for art in executor.map(enrich, targets[:limit]):
+            if art:
+                items.append(art)
+                if len(items) >= 20:
+                    break
 
     return items
 
