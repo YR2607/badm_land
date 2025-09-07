@@ -546,9 +546,8 @@ def scrape() -> dict:
     # Championships site - check both news page and main page
     champ_items = []
     champ_pages = [
-        'https://bwfworldchampionships.bwfbadminton.com/news/',
-        'https://bwfworldchampionships.bwfbadminton.com/',  # Main page has latest news
-        'https://bwfworldchampionships.bwfbadminton.com/news-single/2025/08/14/pressure-and-paris-inside-my-championship-mindset/',
+        'https://bwfworldchampionships.bwfbadminton.com/',  # Main page first (has latest)
+        'https://bwfworldchampionships.bwfbadminton.com/news/',  # News page second
     ]
     
     # Parse all pages first, then deduplicate
