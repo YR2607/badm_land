@@ -557,6 +557,10 @@ def scrape() -> dict:
         if part:
             champ_items.extend(part)
             print(f"Found {len(part)} items from {url}")
+        else:
+            print(f"No items found from {url}")
+
+    print(f"Total items before deduplication: {len(champ_items)}")
 
     # Deduplicate by href
     seen = set()
@@ -567,6 +571,8 @@ def scrape() -> dict:
             continue
         seen.add(h)
         unique_items.append(it)
+    
+    print(f"Unique items after deduplication: {len(unique_items)}")
     
     # Sort by date (newest first) and take top 20
     def get_date(item):
@@ -579,7 +585,7 @@ def scrape() -> dict:
     
     items = sorted(unique_items, key=get_date, reverse=True)[:20]
 
-    print(f"Scraped {len(items)} unique items from championships site (news page + main page)")
+    print(f"Final result: {len(items)} items from championships site (news page + main page)")
     
     return {
         'scraped_at': datetime.now(timezone.utc).isoformat(),
