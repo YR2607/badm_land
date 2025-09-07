@@ -35,8 +35,15 @@ const BusinessNewsSection: React.FC = () => {
     (async () => {
       // 1) GitHub Raw first (always latest after GH Action)
       try {
-        const rawUrl = 'https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json?t=' + Date.now();
-        const rRaw = await fetch(rawUrl, { cache: 'no-store' });
+        const rawUrl = `https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json?v=${Date.now()}`;
+        const rRaw = await fetch(rawUrl, { 
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
         if (rRaw.ok) {
           const j = await rRaw.json();
           const items: any[] = j?.items || [];
@@ -52,10 +59,13 @@ const BusinessNewsSection: React.FC = () => {
               url: it.href,
             })) as NewsItem[];
             if (alive) setBwf(mapped);
+            console.log('BWF news loaded from GitHub Raw:', mapped.length, 'items');
             return;
           }
         }
-      } catch {}
+      } catch (e) {
+        console.log('GitHub Raw fetch failed:', e);
+      }
       // 2) Local static JSON
       try {
         const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
