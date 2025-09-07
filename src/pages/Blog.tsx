@@ -79,7 +79,8 @@ const Blog: React.FC = () => {
     const world = (bwf || []).map((it, idx) => ({
       id: `bwf-${idx}`,
       title: it.title,
-      excerpt: it.preview || '',
+      // Hide BWF subdescription on cards
+      excerpt: '',
       image: it.img,
       date: it.date || new Date().toISOString(),
       category: 'world' as const,
@@ -186,8 +187,8 @@ const Blog: React.FC = () => {
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColor((news as any).category)}`}>{getCategoryLabel((news as any).category)}</span>
                       <span className="text-sm text-gray-500">{formatDate((news as any).date)}</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-blue transition-colors">{news.title}</h3>
-                    <p className="text-gray-600 mb-4 line-clamp-3">{(news as any).excerpt}</p>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-blue transition-colors break-words whitespace-normal leading-snug">{news.title}</h3>
+                    <p className="text-gray-600 mb-4">{(news as any).excerpt}</p>
                     <div className="flex items-center justify-between">
                       {(news as any).author && (<span className="text-sm text-gray-500">{(news as any).author}</span>)}
                       <span className="flex items-center text-primary-blue group-hover:translate-x-2 transition-transform">

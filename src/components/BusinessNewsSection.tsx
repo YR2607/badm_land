@@ -45,7 +45,8 @@ const BusinessNewsSection: React.FC = () => {
               id: it.href,
               title: it.title,
               content: '',
-              excerpt: it.preview || '',
+              // Hide BWF subdescription on cards
+              excerpt: '',
               image: it.img,
               date: it.date || new Date().toISOString(),
               category: 'world',
@@ -155,8 +156,8 @@ const BusinessNewsSection: React.FC = () => {
                 {category === 'news' ? '🏢 Клуб' : category === 'world' ? '🌍 Мир' : '🎉 Событие'}
               </div>
             </div>
-            <h3 className="font-bold text-xl text-gray-900 leading-tight mb-4 line-clamp-2">{news.title}</h3>
-            <p className="text-gray-600 text-sm line-clamp-3 mb-6 leading-relaxed">{news.excerpt}</p>
+            <h3 className="font-bold text-2xl text-gray-900 leading-snug mb-4 break-words whitespace-normal">{news.title}</h3>
+            <p className="text-gray-600 text-sm mb-6 leading-relaxed">{news.excerpt}</p>
             <div className="flex items-center space-x-2 text-primary-blue transition-all duration-300 cursor-pointer">
               <span className="text-sm font-semibold">Читать далее</span>
               <div className="w-6 h-6 bg-primary-blue/10 rounded-full flex items-center justify-center">
