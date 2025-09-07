@@ -42,13 +42,7 @@ jobs:
           git add public/data/bwf_news.json
           git commit -m "chore(scrape): update BWF news JSON - $(date '+%Y-%m-%d %H:%M')" || echo "No changes"
           git push
-      - name: Trigger Vercel deploy
-        env:
-          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+      - name: Note about Vercel auto-deploy
         run: |
-          if [ -n "$VERCEL_DEPLOY_HOOK_URL" ]; then
-            echo "Triggering Vercel deploy..."
-            curl -X POST -sS "$VERCEL_DEPLOY_HOOK_URL" && echo "Deploy triggered successfully" || echo "Deploy trigger failed"
-          else
-            echo "No VERCEL_DEPLOY_HOOK_URL secret set, skipping deploy hook"
-          fi
+          echo "Vercel will automatically deploy when we push to main branch"
+          echo "No need for manual deploy hook to avoid double deployment"

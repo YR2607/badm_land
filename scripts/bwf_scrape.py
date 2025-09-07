@@ -543,7 +543,9 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
 
 
 def scrape() -> dict:
-    # Only championships site news-overview-wrap
+    all_items = []
+    
+    # 1. Try championships site first (highest priority)
     champ_items = []
     champ_pages = [
         'https://bwfworldchampionships.bwfbadminton.com/news/',
@@ -555,11 +557,36 @@ def scrape() -> dict:
             champ_items.extend(part)
         if len(champ_items) >= 20:
             break
+    
+    # 2. Try main BWF news page (latest news section)
+    main_items = []
+    try:
+        main_items = parse_listing_latest('https://bwfbadminton.com', limit=30)
+    except Exception as e:
+        print(f"Failed to parse main BWF news: {e}")
+    
+    # 3. Try Google News discovery as fallback
+    google_items = []
+    if len(champ_items) + len(main_items) < 10:
+        try:
+            links = discover_links_via_google(limit=20)
+            print(f"Found {len(links)} links via Google News")
+            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+                for art in executor.map(parse_article, links[:10]):
+                    if art:
+                        google_items.append(art)
+        except Exception as e:
+            print(f"Failed to parse via Google News: {e}")
+
+    # Combine all sources
+    all_items.extend(champ_items)
+    all_items.extend(main_items)
+    all_items.extend(google_items)
 
     # Deduplicate by href preserve order
     items: list[dict] = []
     seen = set()
-    for it in champ_items:
+    for it in all_items:
         h = it.get('href')
         if not h or h in seen:
             continue
@@ -568,6 +595,8 @@ def scrape() -> dict:
         if len(items) >= 20:
             break
 
+    print(f"Scraped {len(items)} total items: {len(champ_items)} from championships, {len(main_items)} from main site, {len(google_items)} from Google News")
+    
     return {
         'scraped_at': datetime.now(timezone.utc).isoformat(),
         'items': items[:20],
