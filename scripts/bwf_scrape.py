@@ -543,36 +543,47 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
 
 
 def scrape() -> dict:
-    # Only championships site news-overview-wrap
+    # Championships site - check both news page and main page
     champ_items = []
     champ_pages = [
         'https://bwfworldchampionships.bwfbadminton.com/news/',
+        'https://bwfworldchampionships.bwfbadminton.com/',  # Main page has latest news
         'https://bwfworldchampionships.bwfbadminton.com/news-single/2025/08/14/pressure-and-paris-inside-my-championship-mindset/',
     ]
+    
+    # Parse all pages first, then deduplicate
     for url in champ_pages:
         part = parse_championships_overview(url, limit=40)
         if part:
             champ_items.extend(part)
-        if len(champ_items) >= 20:
-            break
+            print(f"Found {len(part)} items from {url}")
 
-    # Deduplicate by href preserve order
-    items: list[dict] = []
+    # Deduplicate by href
     seen = set()
+    unique_items = []
     for it in champ_items:
         h = it.get('href')
         if not h or h in seen:
             continue
         seen.add(h)
-        items.append(it)
-        if len(items) >= 20:
-            break
+        unique_items.append(it)
+    
+    # Sort by date (newest first) and take top 20
+    def get_date(item):
+        date_str = item.get('date', '')
+        try:
+            from dateutil import parser
+            return parser.parse(date_str) if date_str else datetime.min.replace(tzinfo=timezone.utc)
+        except:
+            return datetime.min.replace(tzinfo=timezone.utc)
+    
+    items = sorted(unique_items, key=get_date, reverse=True)[:20]
 
-    print(f"Scraped {len(items)} items from championships site")
+    print(f"Scraped {len(items)} unique items from championships site (news page + main page)")
     
     return {
         'scraped_at': datetime.now(timezone.utc).isoformat(),
-        'items': items[:20],
+        'items': items,
     }
 
 
