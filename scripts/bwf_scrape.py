@@ -32,6 +32,22 @@ def is_official_host(host: str) -> bool:
     return host == 'bwfbadminton.com' or host.endswith('.bwfbadminton.com')
 
 
+_MONTH_RE = r"(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)"
+
+def remove_date_from_title(title: str) -> str:
+    """Strip trailing inline dates like '05 Sep', '7 September 2025' from listing titles."""
+    if not title:
+        return title
+    s = title.strip()
+    patterns = [
+        rf"\b\d{{1,2}}\s+{_MONTH_RE}\s+\d{{4}}$",
+        rf"\b\d{{1,2}}\s+{_MONTH_RE}$",
+    ]
+    for pat in patterns:
+        s = re.sub(pat, "", s, flags=re.IGNORECASE).rstrip(" -|,–—").strip()
+    return s
+
+
 def fetch_via_proxy(url: str) -> str:
     if SCRAPERAPI_KEY:
         proxy = f"https://api.scraperapi.com?api_key={SCRAPERAPI_KEY}&url={requests.utils.quote(url, safe='')}&country=de&render=true"
@@ -379,12 +395,30 @@ def parse_article(url: str) -> dict | None:
             title = h1.get_text(' ', strip=True)
     if not title:
         return None
-    # Image
+    # Image: prefer og:image; otherwise, choose a content image from the article area
     img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content')
     if not img:
-        first_img = soup.select_one('article img[src], .entry-content img[src], img[src]')
-        if first_img:
-            img = first_img.get('src')
+        fallback_selectors = [
+            '.news-single img[src]',
+            'article .entry-content img[src]',
+            'article .wp-block-image img[src]',
+            'article img[src]'
+        ]
+        for sel in fallback_selectors:
+            for node in soup.select(sel):
+                src = (node.get('src') or '').strip()
+                if not src:
+                    continue
+                if src.lower().endswith('.svg'):
+                    continue
+                abs_src = to_abs_url(url, src)
+                if not abs_src:
+                    continue
+                if ('/wp-content/uploads/' in abs_src) or abs_src.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                    img = abs_src
+                    break
+            if img:
+                break
     img = to_abs_url(url, img or '') if img else ''
     # Description/Preview
     desc = (soup.select_one('meta[name="description"][content]') or {}).get('content')
@@ -496,7 +530,7 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
             card = card.parent
         if card and card.parent:
             card = card.parent
-        title_fb = (a.get('title') or a.get_text(' ', strip=True) or '').strip()
+        title_fb = remove_date_from_title((a.get('title') or a.get_text(' ', strip=True) or '').strip())
         img_fb = None
         img_el = card.select_one('img[src]') if hasattr(card, 'select_one') else None
         if not img_el and hasattr(card, 'select_one'):
@@ -527,7 +561,7 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
             if not art.get('preview'):
                 art['preview'] = (preview_fb or '')[:220]
             if not art.get('title'):
-                art['title'] = title_fb
+                art['title'] = remove_date_from_title(title_fb)
             return art
         else:
             return {
