@@ -7,6 +7,8 @@ const BusinessNewsSection: React.FC = () => {
   const [posts, setPosts] = React.useState<CmsPost[] | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [bwf, setBwf] = React.useState<NewsItem[]>([]);
+  const [fb, setFb] = React.useState<NewsItem[]>([]);
+  const [rssClub, setRssClub] = React.useState<NewsItem[]>([]);
 
   React.useEffect(() => {
     let mounted = true;
@@ -77,6 +79,71 @@ const BusinessNewsSection: React.FC = () => {
     return () => { alive = false };
   }, []);
 
+  // Load Facebook posts for "Новости клуба"
+  React.useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        // Prefer RSS (rss.app) if available; fallback to fb-posts
+        const rRss = await fetch('/api/rss-club?limit=6', { cache: 'no-store' });
+        if (rRss.ok) {
+          const j = await rRss.json();
+          const items = (j?.items || []).map((it: any): NewsItem => ({
+            id: it.id,
+            title: it.title,
+            content: '',
+            excerpt: '',
+            image: it.image,
+            date: it.date,
+            category: 'news',
+            url: it.url,
+          }));
+          if (items.length > 0) {
+            if (alive) setRssClub(items);
+            return;
+          }
+        }
+        // Dev fallback: when /api is not available in Vite dev server
+        try {
+          const rssDirect = await fetch('https://rss.app/feeds/v1.1/yneQwQdZWmbASmAF.json', { cache: 'no-store' });
+          if (rssDirect.ok) {
+            const jj = await rssDirect.json();
+            const items2 = (jj?.items || []).map((it: any): NewsItem => ({
+              id: it.id || it.url,
+              title: it.title,
+              content: '',
+              excerpt: '',
+              image: it.image,
+              date: it.date_published || new Date().toISOString(),
+              category: 'news',
+              url: it.url,
+            }));
+            if (items2.length > 0) {
+              if (alive) setRssClub(items2);
+              return;
+            }
+          }
+        } catch {}
+        const r = await fetch('/api/fb-posts?limit=6', { cache: 'no-store' });
+        if (r.ok) {
+          const j = await r.json();
+          const items = (j?.items || []).map((it: any): NewsItem => ({
+            id: it.id,
+            title: it.title,
+            content: '',
+            excerpt: '',
+            image: it.image,
+            date: it.date,
+            category: 'news',
+            url: it.url,
+          }));
+          if (alive) setFb(items);
+        }
+      } catch {}
+    })();
+    return () => { alive = false };
+  }, []);
+
   const source: NewsItem[] = (posts || []).map((p) => ({
     id: p.id,
     title: p.title,
@@ -89,7 +156,7 @@ const BusinessNewsSection: React.FC = () => {
     featured: p.featured,
   }));
 
-  const clubNews = source.filter(news => news.category === 'news');
+  const clubNews = (rssClub.length > 0 ? rssClub : (fb.length > 0 ? fb : source.filter(news => news.category === 'news')));
   const worldDisplay = bwf.length > 0 ? bwf : source.filter(news => news.category === 'world');
   const events = source.filter(news => news.category === 'event');
 

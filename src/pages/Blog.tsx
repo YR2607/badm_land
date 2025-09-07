@@ -5,6 +5,7 @@ import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
 import { Link } from 'react-router-dom';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
+type FbItem = { id: string; title: string; image?: string; date?: string; url: string };
 
 const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -12,6 +13,7 @@ const Blog: React.FC = () => {
   const [posts, setPosts] = useState<CmsPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [bwf, setBwf] = useState<BwfItem[] | null>(null);
+  const [fb, setFb] = useState<FbItem[] | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -23,6 +25,24 @@ const Blog: React.FC = () => {
         setLoading(false);
       }
     })();
+  }, []);
+
+  // Load Facebook posts
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const r = await fetch('/api/fb-posts?limit=10', { cache: 'no-store' });
+        if (!r.ok) return;
+        const j = await r.json();
+        if (!alive) return;
+        setFb((j?.items || []) as FbItem[]);
+      } catch {
+        if (!alive) return;
+        setFb([]);
+      }
+    })();
+    return () => { alive = false };
   }, []);
 
   useEffect(() => {
@@ -89,8 +109,20 @@ const Blog: React.FC = () => {
       _external: true as const,
       _href: it.href
     }))
-    return [...cms, ...world]
-  }, [posts, bwf])
+    const fbPosts = (fb || []).map((it, idx) => ({
+      id: `fb-${idx}`,
+      title: it.title,
+      excerpt: '',
+      image: it.image,
+      date: it.date || new Date().toISOString(),
+      category: 'news' as const,
+      author: undefined,
+      featured: false,
+      _external: true as const,
+      _href: it.url
+    }))
+    return [...cms, ...fbPosts, ...world]
+  }, [posts, fb, bwf])
 
   const filteredNews = useMemo(() => {
     const list = merged
