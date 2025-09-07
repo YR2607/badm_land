@@ -28,31 +28,8 @@ const Blog: React.FC = () => {
   useEffect(() => {
     let alive = true;
     (async () => {
-      // GitHub Raw first (latest)
-      try {
-        const rawUrl = `https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json?v=${Date.now()}`;
-        const rRaw = await fetch(rawUrl, { 
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-          }
-        });
-        if (rRaw.ok) {
-          const j = await rRaw.json();
-          const items: BwfItem[] = (j?.items || []) as BwfItem[];
-          if (items.length > 0) {
-            if (!alive) return;
-            setBwf(items);
-            console.log('Blog: BWF news loaded from GitHub Raw:', items.length, 'items');
-            return;
-          }
-        }
-      } catch (e) {
-        console.log('Blog: GitHub Raw fetch failed:', e);
-      }
-      // Local static next
+        // GitHub Raw removed due to CORS issues
+        // Local static first
       try {
         const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
         if (r1.ok) {
@@ -65,7 +42,7 @@ const Blog: React.FC = () => {
           }
         }
       } catch {}
-      // Fallback to API
+        // API fallback
       try {
         const r2 = await fetch('/api/bwf-news');
         const data = await r2.json();
