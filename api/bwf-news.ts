@@ -178,6 +178,21 @@ async function fetchGoogleNewsUS(): Promise<Array<{ title: string; href: string;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
+    // Try to read from static file first (GitHub Raw)
+    try {
+      const staticData = await fetch('https://raw.githubusercontent.com/YR2607/badm_land/main/public/data/bwf_news.json').then(r => r.json())
+      if (staticData && staticData.items && staticData.items.length > 0) {
+        return res.status(200).json({ 
+          cached: false, 
+          items: staticData.items,
+          scraped_at: staticData.scraped_at 
+        })
+      }
+    } catch (e) {
+      console.log('Failed to fetch static file:', e)
+    }
+
+    // Fallback to old parsing logic if static file fails
     const bypass = req.query?.refresh === '1'
     if (!bypass && cache && Date.now() - cache.timestamp < TTL_MS) {
       return res.status(200).json({ cached: true, items: cache.data })
