@@ -459,10 +459,16 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
     Works on both the news overview page and a news-single page that contains the wrap.
     This now enriches each item by fetching the article page for accurate image and date.
     """
+    # Try direct fetch first; if it fails (e.g., on GitHub runners), retry via proxy
     try:
         html = fetch(page_url)
-    except Exception:
-        return []
+    except Exception as e1:
+        try:
+            html = fetch_via_proxy(page_url)
+            print(f"Fetched via proxy: {page_url}")
+        except Exception as e2:
+            print(f"Failed to fetch {page_url}: {e1} / {e2}")
+            return []
     soup = BeautifulSoup(html, 'lxml')
     wrap = soup.select_one('.news-overview-wrap')
     if wrap is None:
