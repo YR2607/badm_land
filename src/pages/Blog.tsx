@@ -237,7 +237,7 @@ const Blog: React.FC = () => {
                     </div>
                   </motion.article>
                 )
-                return isExternal && !embedSrc ? (
+                return isExternal ? (
                   <a key={(news as any).id || index} href={href} target="_blank" rel="noreferrer">{Card}</a>
                 ) : (
                   <div key={(news as any).id || index}>{Card}</div>

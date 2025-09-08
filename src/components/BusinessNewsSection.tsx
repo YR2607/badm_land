@@ -254,31 +254,38 @@ const BusinessNewsSection: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {clubItems.map((item, idx) => (
-                <article key={idx} className="group cursor-pointer mb-2 break-inside-avoid">
-                  <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden shadow-sm hover:shadow-md">
-                    <div className="relative overflow-hidden h-96">
-                      <iframe
-                        title={`fb-post-${idx}`}
-                        src={toPluginSrc(item.url)}
-                        width="100%"
-                        height="673"
-                        style={{ border: 'none', overflow: 'hidden' } as React.CSSProperties}
-                        scrolling="no"
-                        frameBorder={0}
-                        allowFullScreen
-                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                        className="absolute inset-0 w-full h-full"
-                      />
-                    </div>
-                    <div className="p-5">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600">🏢 Клуб</span>
+                <a key={idx} href={item.url} target="_blank" rel="noreferrer" className="group">
+                  <article className="group cursor-pointer mb-8 break-inside-avoid">
+                    <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden">
+                      <div className={`h-72 relative overflow-hidden`}>
+                        <iframe
+                          title={`fb-post-${idx}`}
+                          src={toPluginSrc(item.url)}
+                          width="100%"
+                          height="100%"
+                          style={{ border: 'none', overflow: 'hidden' } as React.CSSProperties}
+                          scrolling="no"
+                          frameBorder={0}
+                          allowFullScreen
+                          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                          className="absolute inset-0 w-full h-full"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                       </div>
-                      {item.title && <h3 className="font-bold text-2xl text-gray-900 leading-snug mb-2 break-words whitespace-normal">{item.title}</h3>}
-                      {item.description && <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>}
+                      <div className="p-7">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-2 text-gray-500">
+                            <Clock className="w-4 h-4" />
+                            <span className="text-sm font-medium">{formatDate(new Date().toISOString())}</span>
+                          </div>
+                          <div className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600">🏢 Клуб</div>
+                        </div>
+                        {item.title && <h3 className="font-bold text-2xl text-gray-900 leading-snug mb-4 break-words whitespace-normal">{item.title}</h3>}
+                        {item.description && <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>}
+                      </div>
                     </div>
-                  </div>
-                </article>
+                  </article>
+                </a>
               ))}
             </div>
           )}
