@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
 
-type ClubEmbed = { title: string; url: string; description?: string };
+type ClubEmbed = { title: string; url: string; description?: string; kind?: 'news' | 'event' };
 
 const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -118,7 +118,7 @@ const Blog: React.FC = () => {
       excerpt: it.description || '',
       image: undefined as unknown as string,
       date: new Date().toISOString(),
-      category: 'news' as const,
+      category: (it.kind || 'news') as 'news' | 'event',
       author: undefined,
       featured: false,
       _external: true as const,

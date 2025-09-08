@@ -67,6 +67,13 @@ const clubEmbeds = (S: any) =>
       S.documentTypeList('clubEmbed').title('Новости клуба (встраиваемые)')
     )
 
+const eventEmbeds = (S: any) =>
+  S.listItem()
+    .title('События (встраиваемые)')
+    .child(
+      S.documentTypeList('eventEmbed').title('События (встраиваемые)')
+    )
+
 const postsByCategory = (S: any) =>
   S.listItem()
     .title('Новости по категориям')
@@ -94,9 +101,8 @@ const deskStructure = (S: any) =>
       S.divider(),
       S.listItem().title('Новости').child(
         S.list().title('Новости').items([
-          S.listItem().title('Все посты').child(S.documentTypeList('post').title('Все посты')),
-          postsByCategory(S),
           clubEmbeds(S),
+          eventEmbeds(S),
           featuredPosts(S),
         ])
       ),

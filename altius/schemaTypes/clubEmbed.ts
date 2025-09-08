@@ -12,12 +12,27 @@ export default defineType({
       validation: (r) => r.required().min(3),
     }),
     defineField({
+      name: 'kind',
+      title: 'Тип материала',
+      type: 'string',
+      initialValue: 'news',
+      options: {
+        list: [
+          { title: 'Новость клуба', value: 'news' },
+          { title: 'Событие', value: 'event' },
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      validation: (r) => r.required(),
+    }),
+    defineField({
       name: 'url',
       title: 'Ссылка на пост Facebook или iframe HTML',
       type: 'text',
       rows: 3,
       description:
-        'Вставьте полную ссылку на пост (например, https://www.facebook.com/permalink.php?story_fbid=...&id=...) или код <iframe ...></iframe>',
+        'Вставьте полную ссылку на пост/видео Facebook (или код <iframe ...></iframe>) — мы корректно отобразим блок на сайте',
       validation: (r) => r.required(),
     }),
     defineField({

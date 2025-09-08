@@ -4,13 +4,14 @@ import { NewsItem } from '../types';
 import { isCmsEnabled, fetchPosts, CmsPost, fetchClubEmbeds } from '../lib/cms';
 
 type ClubEmbed = { title: string; url: string; description?: string };
+type ClubEmbedKind = { title: string; url: string; description?: string; kind?: 'news' | 'event' };
 
 const BusinessNewsSection: React.FC = () => {
   const [posts, setPosts] = React.useState<CmsPost[] | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [bwf, setBwf] = React.useState<NewsItem[]>([]);
   const [clubEmbeds, setClubEmbeds] = React.useState<string[]>([]);
-  const [clubItems, setClubItems] = React.useState<ClubEmbed[]>([]);
+  const [clubItems, setClubItems] = React.useState<ClubEmbedKind[]>([]);
 
   function normalizeUrl(u: string): string {
     try {
@@ -142,7 +143,8 @@ const BusinessNewsSection: React.FC = () => {
   }));
 
   const worldDisplay = bwf.length > 0 ? bwf : source.filter(news => news.category === 'world');
-  const events = source.filter(news => news.category === 'event');
+  const clubList = clubItems.filter((c) => (c.kind || 'news') === 'news');
+  const eventList = clubItems.filter((c) => (c.kind || 'news') === 'event');
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -249,11 +251,11 @@ const BusinessNewsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <section className="mb-24">
           <SectionHeader title="Новости клуба" icon={<Newspaper className="w-8 h-8 stroke-1" />} gradient="from-blue-500 to-blue-600" />
-          {clubItems.length === 0 ? (
+          {clubList.length === 0 ? (
             <EmptyBlock text="Нет материалов" />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {clubItems.map((item, idx) => (
+              {clubList.map((item, idx) => (
                 <a key={idx} href={item.url} target="_blank" rel="noreferrer" className="group">
                   <article className="group cursor-pointer mb-8 break-inside-avoid">
                     <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden">
@@ -304,14 +306,43 @@ const BusinessNewsSection: React.FC = () => {
         </section>
         <section className="mb-24">
           <SectionHeader title="События" icon={<Award className="w-8 h-8 stroke-1" />} gradient="from-yellow-500 to-orange-500" />
-          {loading ? (
-            <EmptyBlock text="Загрузка..." />
-          ) : events.length === 0 ? (
-            <EmptyBlock text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
+          {eventList.length === 0 ? (
+            <EmptyBlock text="Нет материалов" />
           ) : (
-            <div className="columns-1 md:columns-2 lg:columns-3">
-              {events.slice(0, 6).map((event, index) => (
-                <NewsCard key={(event as any).id ?? index} news={event} index={index} category="event" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {eventList.map((item, idx) => (
+                <a key={idx} href={item.url} target="_blank" rel="noreferrer" className="group">
+                  <article className="group cursor-pointer mb-8 break-inside-avoid">
+                    <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden">
+                      <div className={`h-72 relative overflow-hidden`}>
+                        <iframe
+                          title={`fb-event-${idx}`}
+                          src={toPluginSrc(item.url)}
+                          width="100%"
+                          height="100%"
+                          style={{ border: 'none', overflow: 'hidden' } as React.CSSProperties}
+                          scrolling="no"
+                          frameBorder={0}
+                          allowFullScreen
+                          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                          className="absolute inset-0 w-full h-full"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                      </div>
+                      <div className="p-7">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-2 text-gray-500">
+                            <Clock className="w-4 h-4" />
+                            <span className="text-sm font-medium">{formatDate(new Date().toISOString())}</span>
+                          </div>
+                          <div className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500">🎉 Событие</div>
+                        </div>
+                        {item.title && <h3 className="font-bold text-2xl text-gray-900 leading-snug mb-4 break-words whitespace-normal">{item.title}</h3>}
+                        {item.description && <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>}
+                      </div>
+                    </div>
+                  </article>
+                </a>
               ))}
             </div>
           )}
