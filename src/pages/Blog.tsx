@@ -76,25 +76,27 @@ const Blog: React.FC = () => {
     let alive = true;
     (async () => {
         // GitHub Raw removed due to CORS issues
-        // Local static first
+        // Prefer API first (better image extraction), then fallback to local static JSON
       try {
-        const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
-        if (r1.ok) {
-          const j = await r1.json();
-          const items: BwfItem[] = (j?.items || []) as BwfItem[];
+        const r2 = await fetch('/api/bwf-news?refresh=1&t=' + Date.now(), { cache: 'no-store' });
+        if (r2.ok) {
+          const data = await r2.json();
+          if (!alive) return;
+          const items: BwfItem[] = (data?.items || []) as BwfItem[];
           if (items.length > 0) {
-            if (!alive) return;
             setBwf(items);
             return;
           }
         }
       } catch {}
-        // API fallback
+      // Fallback to local static JSON
       try {
-        const r2 = await fetch('/api/bwf-news');
-        const data = await r2.json();
-        if (!alive) return;
-        setBwf((data?.items || []) as BwfItem[]);
+        const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
+        if (r1.ok) {
+          const j = await r1.json();
+          if (!alive) return;
+          setBwf(((j?.items || []) as BwfItem[]));
+        }
       } catch {
         if (!alive) return;
         setBwf([]);
