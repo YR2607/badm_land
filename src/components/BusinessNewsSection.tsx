@@ -255,7 +255,7 @@ const BusinessNewsSection: React.FC = () => {
           ) : (
             <div className="columns-1 md:columns-2 lg:columns-3">
               {clubList.map((item, idx) => (
-                <a key={idx} href={item.url} target="_blank" rel="noreferrer" className="group">
+                <a key={idx} href={extractPostUrl(item.url)} target="_blank" rel="noreferrer" className="group">
                   <article className="group cursor-pointer mb-8 break-inside-avoid">
                     <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden">
                       {(() => { const heightClass = ['h-72', 'h-56', 'h-80', 'h-64'][idx % 4]; return (
@@ -312,7 +312,7 @@ const BusinessNewsSection: React.FC = () => {
           ) : (
             <div className="columns-1 md:columns-2 lg:columns-3">
               {eventList.map((item, idx) => (
-                <a key={idx} href={item.url} target="_blank" rel="noreferrer" className="group">
+                <a key={idx} href={extractPostUrl(item.url)} target="_blank" rel="noreferrer" className="group">
                   <article className="group cursor-pointer mb-8 break-inside-avoid">
                     <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden">
                       {(() => { const heightClass = ['h-72', 'h-56', 'h-80', 'h-64'][idx % 4]; return (
