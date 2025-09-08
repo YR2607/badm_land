@@ -396,13 +396,14 @@ def parse_article(url: str) -> dict | None:
     if not title:
         return None
     # Image: prefer og:image; otherwise, choose a content image from the article area
-    img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content')
+    img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content') or (soup.select_one('meta[property="og:image:secure_url"][content]') or {}).get('content')
     if not img:
         fallback_selectors = [
             '.news-single img[src]',
             'article .entry-content img[src]',
             'article .wp-block-image img[src]',
-            'article img[src]'
+            'article img[src]',
+            '.single-post__content img[src]'
         ]
         for sel in fallback_selectors:
             for node in soup.select(sel):
@@ -415,11 +416,14 @@ def parse_article(url: str) -> dict | None:
                 if not abs_src:
                     continue
                 if ('/wp-content/uploads/' in abs_src) or abs_src.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-                    img = abs_src
+                    # normalize size suffixes like -308x239.jpg
+                    img = re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', abs_src, flags=re.IGNORECASE)
                     break
             if img:
                 break
     img = to_abs_url(url, img or '') if img else ''
+    if img:
+        img = re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', img, flags=re.IGNORECASE)
     # Description/Preview
     desc = (soup.select_one('meta[name="description"][content]') or {}).get('content')
     if not desc:
@@ -480,7 +484,7 @@ def parse_article(url: str) -> dict | None:
                 break
     date_iso = normalize_date_iso(date_raw)
     return {
-        'title': title,
+        'title': remove_date_from_title(title),
         'href': url,
         'img': img,
         'preview': (desc or '')[:220],
@@ -542,6 +546,8 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
             if meta:
                 img_fb = meta.get('content')
         img_fb = to_abs_url(href_abs, img_fb or '') if img_fb else ''
+        if img_fb:
+            img_fb = re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', img_fb, flags=re.IGNORECASE)
         preview_fb = ''
         p = card.select_one('p') if hasattr(card, 'select_one') else None
         if p:
