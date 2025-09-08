@@ -142,7 +142,11 @@ export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
 
 export async function fetchClubEmbeds(): Promise<string[]> {
   if (!sanityClient) return [];
-  const query = groq`*[_type == "clubEmbed"] | order(_createdAt desc){ url }`;
+  const query = groq`*[_type == "clubEmbed"] | order(_createdAt desc){ title, url, description }`;
   const list = await sanityClient.fetch(query);
-  return (list || []).map((i: any) => i?.url).filter((u: any) => typeof u === 'string' && u.trim().length > 0);
+  return (list || []).map((i: any) => ({
+    title: i?.title || '',
+    url: i?.url || '',
+    description: i?.description || '',
+  }));
 }

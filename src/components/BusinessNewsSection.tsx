@@ -3,16 +3,28 @@ import { Calendar, ArrowRight, Globe, Clock, ExternalLink, Newspaper, Award } fr
 import { NewsItem } from '../types';
 import { isCmsEnabled, fetchPosts, CmsPost, fetchClubEmbeds } from '../lib/cms';
 
+type ClubEmbed = { title: string; url: string; description?: string };
+
 const BusinessNewsSection: React.FC = () => {
   const [posts, setPosts] = React.useState<CmsPost[] | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [bwf, setBwf] = React.useState<NewsItem[]>([]);
   const [clubEmbeds, setClubEmbeds] = React.useState<string[]>([]);
+  const [clubItems, setClubItems] = React.useState<ClubEmbed[]>([]);
+
+  function normalizeUrl(u: string): string {
+    try {
+      const url = new URL(u);
+      url.search = '';
+      return url.toString();
+    } catch {
+      return (u || '').trim();
+    }
+  }
 
   function toPluginSrc(input: string): string {
     const raw = (input || '').trim();
     if (!raw) return '';
-    // If user pasted full iframe HTML, extract src or href
     const srcMatch = raw.match(/src=["']([^"']+)["']/i);
     let url = '';
     if (srcMatch && srcMatch[1]) {
@@ -22,10 +34,12 @@ const BusinessNewsSection: React.FC = () => {
       if (hrefMatch && hrefMatch[1]) url = hrefMatch[1];
     }
     if (!url) url = raw;
-    // If it's already the plugin URL, keep it
-    if (/facebook\.com\/plugins\/post\.php/i.test(url)) return url;
-    // Otherwise, treat as permalink to the post and wrap with plugin endpoint
-    return `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(url)}&show_text=true&width=500`;
+    // If already a Facebook plugin URL (post or video), use as-is
+    if (/facebook\.com\/plugins\/(post|video)\.php/i.test(url)) return url;
+    // Choose plugin based on URL path
+    const isVideo = /facebook\.com\/.+\/videos\//i.test(url);
+    const endpoint = isVideo ? 'video.php' : 'post.php';
+    return `https://www.facebook.com/plugins/${endpoint}?href=${encodeURIComponent(url)}&show_text=true&width=500`;
   }
 
   React.useEffect(() => {
@@ -39,12 +53,12 @@ const BusinessNewsSection: React.FC = () => {
           ]);
           if (mounted) {
             setPosts(p);
-            setClubEmbeds(embeds || []);
+            setClubItems(embeds as any);
           }
         } catch {
           if (mounted) {
             setPosts([]);
-            setClubEmbeds([]);
+            setClubItems([]);
           }
         } finally {
           if (mounted) setLoading(false);
@@ -52,13 +66,40 @@ const BusinessNewsSection: React.FC = () => {
       } else {
         if (mounted) {
           setPosts([]);
-          setClubEmbeds([]);
+          setClubItems([]);
           setLoading(false);
         }
       }
     })();
     return () => { mounted = false };
   }, []);
+
+  // Enrich club descriptions from rss-club feed if empty
+  React.useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        if (clubItems.length === 0) return;
+        const r = await fetch('/api/rss-club?limit=20', { cache: 'no-store' });
+        if (!r.ok) return;
+        const j = await r.json();
+        const items = (j?.items || []) as Array<{ url: string; title?: string; excerpt?: string }>;
+        if (items.length === 0) return;
+        const byUrl = new Map<string, { title?: string; excerpt?: string }>();
+        items.forEach((it: any) => byUrl.set(normalizeUrl(it.url || ''), it));
+        const enriched = clubItems.map((ci) => {
+          if (ci.description && ci.description.trim().length > 0) return ci;
+          const match = byUrl.get(normalizeUrl(ci.url));
+          if (match && (match.excerpt || '').trim().length > 0) {
+            return { ...ci, description: match.excerpt };
+          }
+          return ci;
+        });
+        if (alive) setClubItems(enriched);
+      } catch {}
+    })();
+    return () => { alive = false };
+  }, [clubItems]);
 
   React.useEffect(() => {
     let alive = true;
@@ -208,17 +249,17 @@ const BusinessNewsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <section className="mb-24">
           <SectionHeader title="Новости клуба" icon={<Newspaper className="w-8 h-8 stroke-1" />} gradient="from-blue-500 to-blue-600" />
-          {clubEmbeds.length === 0 ? (
+          {clubItems.length === 0 ? (
             <EmptyBlock text="Нет материалов" />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {clubEmbeds.map((href, idx) => (
+              {clubItems.map((item, idx) => (
                 <article key={idx} className="group cursor-pointer mb-2 break-inside-avoid">
                   <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden shadow-sm hover:shadow-md">
                     <div className="relative overflow-hidden h-96">
                       <iframe
                         title={`fb-post-${idx}`}
-                        src={toPluginSrc(href)}
+                        src={toPluginSrc(item.url)}
                         width="100%"
                         height="673"
                         style={{ border: 'none', overflow: 'hidden' } as React.CSSProperties}
@@ -230,9 +271,11 @@ const BusinessNewsSection: React.FC = () => {
                       />
                     </div>
                     <div className="p-5">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-3">
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600">🏢 Клуб</span>
                       </div>
+                      {item.title && <h3 className="font-bold text-2xl text-gray-900 leading-snug mb-2 break-words whitespace-normal">{item.title}</h3>}
+                      {item.description && <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>}
                     </div>
                   </div>
                 </article>

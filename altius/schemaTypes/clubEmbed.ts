@@ -20,5 +20,11 @@ export default defineType({
         'Вставьте полную ссылку на пост (например, https://www.facebook.com/permalink.php?story_fbid=...&id=...) или код <iframe ...></iframe>',
       validation: (r) => r.required(),
     }),
+    defineField({
+      name: 'description',
+      title: 'Описание',
+      type: 'text',
+      rows: 3,
+    }),
   ],
 })
