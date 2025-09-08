@@ -5,7 +5,7 @@ import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
 import { Link } from 'react-router-dom';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
-type FbItem = { id: string; title: string; image?: string; date?: string; url: string };
+type FbItem = { id: string; title: string; image?: string; date?: string; url: string; content_text?: string };
 
 const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -32,11 +32,38 @@ const Blog: React.FC = () => {
     let alive = true;
     (async () => {
       try {
-        const r = await fetch('/api/fb-posts?limit=10', { cache: 'no-store' });
-        if (!r.ok) return;
-        const j = await r.json();
-        if (!alive) return;
-        setFb((j?.items || []) as FbItem[]);
+        // 1) Try tokenless scraper
+        const rScrape = await fetch('/api/fb-rss?limit=12', { cache: 'no-store' });
+        if (rScrape.ok) {
+          const j = await rScrape.json();
+          if (!alive) return;
+          const items = (j?.items || []).map((it: any): FbItem => ({
+            id: it.id,
+            title: it.title,
+            image: it.image,
+            date: it.date,
+            url: it.url,
+            content_text: it.excerpt,
+          }));
+          if (items.length > 0) {
+            setFb(items);
+            return;
+          }
+        }
+        const r = await fetch('/api/rss-club?limit=10', { cache: 'no-store' });
+        if (r.ok) {
+          const j = await r.json();
+          if (!alive) return;
+          setFb((j?.items || []) as FbItem[]);
+          return;
+        }
+        // Fallback last
+        const r2 = await fetch('/api/fb-posts?limit=10', { cache: 'no-store' });
+        if (r2.ok) {
+          const j2 = await r2.json();
+          if (!alive) return;
+          setFb((j2?.items || []) as FbItem[]);
+        }
       } catch {
         if (!alive) return;
         setFb([]);
@@ -112,7 +139,7 @@ const Blog: React.FC = () => {
     const fbPosts = (fb || []).map((it, idx) => ({
       id: `fb-${idx}`,
       title: it.title,
-      excerpt: '',
+      excerpt: it.content_text ? it.content_text.substring(0, 200) + '...' : '',
       image: it.image,
       date: it.date || new Date().toISOString(),
       category: 'news' as const,

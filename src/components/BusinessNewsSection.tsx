@@ -84,6 +84,25 @@ const BusinessNewsSection: React.FC = () => {
     let alive = true;
     (async () => {
       try {
+        // 1) Try our tokenless Facebook scraper first
+        const rScrape = await fetch('/api/fb-rss?limit=6', { cache: 'no-store' });
+        if (rScrape.ok) {
+          const j = await rScrape.json();
+          const items = (j?.items || []).map((it: any): NewsItem => ({
+            id: it.id,
+            title: it.title,
+            content: '',
+            excerpt: it.excerpt || '',
+            image: it.image,
+            date: it.date,
+            category: 'news',
+            url: it.url,
+          }));
+          if (items.length > 0) {
+            if (alive) setRssClub(items);
+            return;
+          }
+        }
         // Prefer RSS (rss.app) if available; fallback to fb-posts
         const rRss = await fetch('/api/rss-club?limit=6', { cache: 'no-store' });
         if (rRss.ok) {
@@ -92,7 +111,7 @@ const BusinessNewsSection: React.FC = () => {
             id: it.id,
             title: it.title,
             content: '',
-            excerpt: '',
+            excerpt: it.excerpt || '',
             image: it.image,
             date: it.date,
             category: 'news',
@@ -112,7 +131,7 @@ const BusinessNewsSection: React.FC = () => {
               id: it.id || it.url,
               title: it.title,
               content: '',
-              excerpt: '',
+              excerpt: (it.content_text || '').substring(0, 220) + ((it.content_text || '').length > 220 ? '...' : ''),
               image: it.image,
               date: it.date_published || new Date().toISOString(),
               category: 'news',
@@ -127,19 +146,11 @@ const BusinessNewsSection: React.FC = () => {
         const r = await fetch('/api/fb-posts?limit=6', { cache: 'no-store' });
         if (r.ok) {
           const j = await r.json();
-          const items = (j?.items || []).map((it: any): NewsItem => ({
-            id: it.id,
-            title: it.title,
-            content: '',
-            excerpt: '',
-            image: it.image,
-            date: it.date,
-            category: 'news',
-            url: it.url,
-          }));
-          if (alive) setFb(items);
+          if (alive) setFb((j?.items || []) as NewsItem[]);
         }
-      } catch {}
+      } catch (e) {
+        console.error('Failed to fetch FB posts:', e);
+      }
     })();
     return () => { alive = false };
   }, []);
