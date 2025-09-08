@@ -395,35 +395,41 @@ def parse_article(url: str) -> dict | None:
             title = h1.get_text(' ', strip=True)
     if not title:
         return None
-    # Image: prefer og:image; otherwise, choose a content image from the article area
-    img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content') or (soup.select_one('meta[property="og:image:secure_url"][content]') or {}).get('content')
+    # Image: prefer content images inside article (to avoid generic header), then fallback to og:image
+    def normalize_img(u: str) -> str:
+        if not u:
+            return u
+        u = to_abs_url(url, u)
+        return re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', u, flags=re.IGNORECASE)
+
+    bad_keywords = ('logo', 'favicon', 'default', 'placeholder', 'sprite', 'WC25', 'FI-')
+    content_selectors = [
+        'article .entry-content img[src]',
+        'article .wp-block-image img[src]',
+        '.news-single .entry-content img[src]',
+        '.single-post__content img[src]',
+        'article img[src]'
+    ]
+    candidates: list[str] = []
+    for sel in content_selectors:
+        for node in soup.select(sel):
+            src = (node.get('src') or '').strip()
+            if not src or src.lower().endswith('.svg'):
+                continue
+            abs_src = normalize_img(src)
+            if not abs_src:
+                continue
+            low = abs_src.lower()
+            if any(k.lower() in low for k in bad_keywords):
+                continue
+            if ('/wp-content/uploads/' in abs_src) or low.endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                candidates.append(abs_src)
+        if candidates:
+            break
+    img = candidates[0] if candidates else None
     if not img:
-        fallback_selectors = [
-            '.news-single img[src]',
-            'article .entry-content img[src]',
-            'article .wp-block-image img[src]',
-            'article img[src]',
-            '.single-post__content img[src]'
-        ]
-        for sel in fallback_selectors:
-            for node in soup.select(sel):
-                src = (node.get('src') or '').strip()
-                if not src:
-                    continue
-                if src.lower().endswith('.svg'):
-                    continue
-                abs_src = to_abs_url(url, src)
-                if not abs_src:
-                    continue
-                if ('/wp-content/uploads/' in abs_src) or abs_src.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-                    # normalize size suffixes like -308x239.jpg
-                    img = re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', abs_src, flags=re.IGNORECASE)
-                    break
-            if img:
-                break
-    img = to_abs_url(url, img or '') if img else ''
-    if img:
-        img = re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', img, flags=re.IGNORECASE)
+        img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content') or (soup.select_one('meta[property="og:image:secure_url"][content]') or {}).get('content')
+        img = normalize_img(img or '') if img else ''
     # Description/Preview
     desc = (soup.select_one('meta[name="description"][content]') or {}).get('content')
     if not desc:

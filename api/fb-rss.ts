@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import * as cheerio from 'cheerio'
 
-// Tokenless Facebook page scraper using mbasic + keyless proxy (r.jina.ai)
-// Env (optional): FB_PAGE_ID
+// Tokenless Facebook page scraper using m.facebook/mbasic + keyless proxy (r.jina.ai)
+// Env (optional): FB_PAGE_ID, RSS_APP_FEED_URL
 // Query: limit (default 10), refresh=1 to bypass cache
 
 let cache: { ts: number; data: any[] } | null = null
@@ -11,11 +11,10 @@ const TTL_MS = 15 * 60 * 1000 // 15 minutes
 function absolutize(url: string): string {
   if (!url) return ''
   if (url.startsWith('http')) return url
-  return `https://mbasic.facebook.com${url.startsWith('/') ? '' : '/'}${url}`
+  return `https://m.facebook.com${url.startsWith('/') ? '' : '/'}${url}`
 }
 
 function proxyUrl(targetUrl: string): string {
-  // Use r.jina.ai to fetch HTML without JS and avoid bot blocks
   const encoded = targetUrl.replace(/^https?:\/\//, '')
   return `https://r.jina.ai/http://${encoded}`
 }
@@ -37,7 +36,7 @@ function normalizeTitleAndExcerpt(text: string) {
   return { title: title.trim(), excerpt }
 }
 
-async function fetchHtml(url: string): Promise<string> {
+async function fetchHtmlRaw(url: string): Promise<string> {
   const r = await fetch(proxyUrl(url), {
     headers: {
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36',
@@ -50,68 +49,113 @@ async function fetchHtml(url: string): Promise<string> {
   return await r.text()
 }
 
+async function fetchHtmlForPage(pageId: string): Promise<string> {
+  const candidates = [
+    `https://m.facebook.com/profile.php?id=${encodeURIComponent(pageId)}&v=timeline`,
+    `https://m.facebook.com/${encodeURIComponent(pageId)}/posts`,
+    `https://mbasic.facebook.com/profile.php?id=${encodeURIComponent(pageId)}&v=timeline`,
+  ]
+  let lastErr: any = null
+  for (const u of candidates) {
+    try {
+      return await fetchHtmlRaw(u)
+    } catch (e) {
+      lastErr = e
+      continue
+    }
+  }
+  throw lastErr || new Error('failed to fetch facebook page')
+}
+
 function parseList(html: string) {
   const $ = cheerio.load(html)
   const items: { href: string; text: string; image?: string; date?: string }[] = []
 
-  // mbasic timeline posts often contain anchors like story.php?story_fbid=...
-  $('a[href*="story.php?story_fbid="]').each((_, a) => {
-    const href = absolutize($(a).attr('href') || '')
+  $('a[href]').each((_, a) => {
+    const hrefRaw = ($(a).attr('href') || '').trim()
+    if (!/(story\.php|permalink\.php|\/posts\/)/.test(hrefRaw)) return
+    const href = absolutize(hrefRaw)
     if (!href) return
 
-    // Find nearest text container
     const container = $(a).closest('article, div')
     const text = container.text().replace(/See more|Показать полностью|Подробнее/gi, ' ').trim()
 
-    // Try find an image within the same container
     let img = ''
     const imgNode = container.find('img').first()
     if (imgNode && imgNode.attr('src')) img = imgNode.attr('src') as string
 
-    // Try date text from abbr/time
-    let dateText = container.find('abbr, time').first().text().trim()
+    const dateText = container.find('abbr, time').first().text().trim()
 
     items.push({ href, text, image: img, date: dateText })
   })
 
-  // Deduplicate by href
   const seen = new Set<string>()
   const dedup = items.filter((it) => {
     if (seen.has(it.href)) return false
     seen.add(it.href)
     return true
   })
-  return dedup
+  return { $, items: dedup }
+}
+
+function findNextUrl($: cheerio.CheerioAPI): string {
+  let next = $('a:contains("See more")').attr('href')
+  if (!next) next = $('a:contains("See More Posts")').attr('href') as string
+  if (!next) next = $('a:contains("Показать")').attr('href') as string
+  if (!next) next = $('a:contains("Показать ещё")').attr('href') as string
+  if (!next) next = $('a[href*="sectionLoadingID"], a[href*="cursor="], a[href*="__tn__"]').first().attr('href') as string
+  return next ? absolutize(next) : ''
 }
 
 async function scrape(pageId: string, limit: number) {
-  const url = `https://mbasic.facebook.com/profile.php?id=${encodeURIComponent(pageId)}&v=timeline`
-  const html = await fetchHtml(url)
-  const list = parseList(html)
-
-  const normalized = list.slice(0, Math.max(5, limit * 2)).map((it) => {
-    const { title, excerpt } = normalizeTitleAndExcerpt(it.text || '')
-    return {
-      id: it.href,
-      title: title || 'Пост Facebook',
-      excerpt,
-      image: it.image || '',
-      date: toIso(it.date || ''),
-      url: it.href,
-      category: 'news',
-    }
-  })
-
-  // Keep top unique by URL
-  const unique: any[] = []
+  let html = await fetchHtmlForPage(pageId)
+  const collected: any[] = []
   const seen = new Set<string>()
-  for (const n of normalized) {
-    if (seen.has(n.url)) continue
-    seen.add(n.url)
-    unique.push(n)
-    if (unique.length >= limit) break
+
+  for (let page = 0; page < 5 && collected.length < limit; page++) {
+    const { $, items } = parseList(html)
+    for (const it of items) {
+      if (seen.has(it.href)) continue
+      seen.add(it.href)
+      const { title, excerpt } = normalizeTitleAndExcerpt(it.text || '')
+      collected.push({
+        id: it.href,
+        title: title || 'Пост Facebook',
+        excerpt,
+        image: it.image || '',
+        date: toIso(it.date || ''),
+        url: it.href,
+        category: 'news',
+      })
+      if (collected.length >= limit) break
+    }
+    if (collected.length >= limit) break
+    const nextUrl = findNextUrl($)
+    if (!nextUrl) break
+    try {
+      html = await fetchHtmlRaw(nextUrl)
+    } catch {
+      break
+    }
   }
-  return unique
+
+  return collected.slice(0, limit)
+}
+
+async function fetchRssApp() {
+  const FEED_URL = process.env.RSS_APP_FEED_URL || 'https://rss.app/feeds/v1.1/yneQwQdZWmbASmAF.json'
+  const r = await fetch(FEED_URL, { cache: 'no-store' })
+  if (!r.ok) return []
+  const j = await r.json()
+  return (j?.items || []).map((it: any) => ({
+    id: it.id || it.url,
+    title: (it.title || '').trim(),
+    excerpt: (it.content_text || '').substring(0, 220) + ((it.content_text || '').length > 220 ? '...' : ''),
+    image: it.image || '',
+    date: it.date_published || new Date().toISOString(),
+    url: it.url || '#',
+    category: 'news',
+  }))
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -122,17 +166,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ cached: true, items: cache.data.slice(0, limit) })
     }
 
-    const PAGE_ID = process.env.FB_PAGE_ID || '61562124174747'
-    const data = await scrape(PAGE_ID, limit)
+    // Primary: rss.app to guarantee up to `limit` items
+    let data: any[] = []
+    try {
+      const feed = await fetchRssApp()
+      data = feed.slice(0, limit)
+    } catch {}
+
+    // Secondary: augment with scrape if fewer than limit
+    if (data.length < limit) {
+      try {
+        const PAGE_ID = process.env.FB_PAGE_ID || '61562124174747'
+        const scraped = await scrape(PAGE_ID, limit * 2)
+        const seen = new Set(data.map(d => d.url))
+        for (const it of scraped) {
+          if (seen.has(it.url)) continue
+          data.push(it)
+          seen.add(it.url)
+          if (data.length >= limit) break
+        }
+      } catch {}
+    }
 
     if (data.length > 0) {
       cache = { ts: Date.now(), data }
       return res.status(200).json({ cached: false, items: data.slice(0, limit) })
     }
 
-    // Fallback to rss-club if scraping yields nothing
+    // Final fallback: internal /api/rss-club
+    const host = (req.headers['x-forwarded-host'] as string) || (req.headers.host as string) || ''
+    const base = host ? `https://${host}` : ''
     try {
-      const r = await fetch(`${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : ''}/api/rss-club?limit=${limit}&refresh=1`, { cache: 'no-store' })
+      const r = await fetch(`${base}/api/rss-club?limit=${limit}&refresh=1`, { cache: 'no-store' })
       if (r.ok) {
         const j = await r.json()
         const items = (j?.items || [])
