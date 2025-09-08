@@ -142,12 +142,13 @@ export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
 
 export async function fetchClubEmbeds(): Promise<any[]> {
   if (!sanityClient) return [];
-  const query = groq`*[_type == "clubEmbed"] | order(_createdAt desc){ title, url, description, kind }`;
+  const query = groq`*[_type == "clubEmbed"] | order(coalesce(publishedAt, _createdAt) desc){ title, url, description, kind, publishedAt }`;
   const list = await sanityClient.fetch(query);
   return (list || []).map((i: any) => ({
     title: i?.title || '',
     url: i?.url || '',
     description: i?.description || '',
     kind: i?.kind || 'news',
+    publishedAt: i?.publishedAt || null,
   }));
 }

@@ -4,7 +4,7 @@ import { NewsItem } from '../types';
 import { isCmsEnabled, fetchPosts, CmsPost, fetchClubEmbeds } from '../lib/cms';
 
 type ClubEmbed = { title: string; url: string; description?: string };
-type ClubEmbedKind = { title: string; url: string; description?: string; kind?: 'news' | 'event' };
+type ClubEmbedKind = { title: string; url: string; description?: string; kind?: 'news' | 'event'; date?: string; publishedAt?: string };
 
 const BusinessNewsSection: React.FC = () => {
   const [posts, setPosts] = React.useState<CmsPost[] | null>(null);
@@ -43,6 +43,25 @@ const BusinessNewsSection: React.FC = () => {
     return `https://www.facebook.com/plugins/${endpoint}?href=${encodeURIComponent(url)}&show_text=true&width=500`;
   }
 
+  function extractPostUrl(input: string): string {
+    const raw = (input || '').trim();
+    if (!raw) return '';
+    // If it's an iframe, get src
+    const srcMatch = raw.match(/src=["']([^"']+)["']/i);
+    let src = srcMatch?.[1] || raw;
+    // If src is a plugin URL, extract the href param
+    try {
+      const u = new URL(src);
+      if (/facebook\.com\/plugins\/(post|video)\.php/i.test(u.pathname)) {
+        const href = u.searchParams.get('href');
+        if (href) return href;
+      }
+      return src;
+    } catch {
+      return src;
+    }
+  }
+
   React.useEffect(() => {
     let mounted = true;
     (async () => {
@@ -75,32 +94,12 @@ const BusinessNewsSection: React.FC = () => {
     return () => { mounted = false };
   }, []);
 
-  // Enrich club descriptions from rss-club feed if empty
+  // Sort by publishedAt descending
   React.useEffect(() => {
-    let alive = true;
-    (async () => {
-      try {
-        if (clubItems.length === 0) return;
-        const r = await fetch('/api/rss-club?limit=20', { cache: 'no-store' });
-        if (!r.ok) return;
-        const j = await r.json();
-        const items = (j?.items || []) as Array<{ url: string; title?: string; excerpt?: string }>;
-        if (items.length === 0) return;
-        const byUrl = new Map<string, { title?: string; excerpt?: string }>();
-        items.forEach((it: any) => byUrl.set(normalizeUrl(it.url || ''), it));
-        const enriched = clubItems.map((ci) => {
-          if (ci.description && ci.description.trim().length > 0) return ci;
-          const match = byUrl.get(normalizeUrl(ci.url));
-          if (match && (match.excerpt || '').trim().length > 0) {
-            return { ...ci, description: match.excerpt };
-          }
-          return ci;
-        });
-        if (alive) setClubItems(enriched);
-      } catch {}
-    })();
-    return () => { alive = false };
-  }, [clubItems]);
+    if (clubItems.length === 0) return;
+    const sorted = [...clubItems].sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime());
+    setClubItems(sorted);
+  }, [clubItems.length]);
 
   React.useEffect(() => {
     let alive = true;
@@ -254,12 +253,13 @@ const BusinessNewsSection: React.FC = () => {
           {clubList.length === 0 ? (
             <EmptyBlock text="Нет материалов" />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="columns-1 md:columns-2 lg:columns-3">
               {clubList.map((item, idx) => (
                 <a key={idx} href={item.url} target="_blank" rel="noreferrer" className="group">
                   <article className="group cursor-pointer mb-8 break-inside-avoid">
                     <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden">
-                      <div className={`h-72 relative overflow-hidden`}>
+                      {(() => { const heightClass = ['h-72', 'h-56', 'h-80', 'h-64'][idx % 4]; return (
+                      <div className={`${heightClass} relative overflow-hidden`}>
                         <iframe
                           title={`fb-post-${idx}`}
                           src={toPluginSrc(item.url)}
@@ -274,11 +274,12 @@ const BusinessNewsSection: React.FC = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                       </div>
+                      )})()}
                       <div className="p-7">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center space-x-2 text-gray-500">
                             <Clock className="w-4 h-4" />
-                            <span className="text-sm font-medium">{formatDate(new Date().toISOString())}</span>
+                            <span className="text-sm font-medium">{formatDate(item.publishedAt || new Date().toISOString())}</span>
                           </div>
                           <div className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600">🏢 Клуб</div>
                         </div>
@@ -309,12 +310,13 @@ const BusinessNewsSection: React.FC = () => {
           {eventList.length === 0 ? (
             <EmptyBlock text="Нет материалов" />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="columns-1 md:columns-2 lg:columns-3">
               {eventList.map((item, idx) => (
                 <a key={idx} href={item.url} target="_blank" rel="noreferrer" className="group">
                   <article className="group cursor-pointer mb-8 break-inside-avoid">
                     <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden">
-                      <div className={`h-72 relative overflow-hidden`}>
+                      {(() => { const heightClass = ['h-72', 'h-56', 'h-80', 'h-64'][idx % 4]; return (
+                      <div className={`${heightClass} relative overflow-hidden`}>
                         <iframe
                           title={`fb-event-${idx}`}
                           src={toPluginSrc(item.url)}
@@ -329,11 +331,12 @@ const BusinessNewsSection: React.FC = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                       </div>
+                      )})()}
                       <div className="p-7">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center space-x-2 text-gray-500">
                             <Clock className="w-4 h-4" />
-                            <span className="text-sm font-medium">{formatDate(new Date().toISOString())}</span>
+                            <span className="text-sm font-medium">{formatDate(item.publishedAt || new Date().toISOString())}</span>
                           </div>
                           <div className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500">🎉 Событие</div>
                         </div>

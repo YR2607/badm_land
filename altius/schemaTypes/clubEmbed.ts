@@ -27,6 +27,14 @@ export default defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'publishedAt',
+      title: 'Дата публикации (как на Facebook)',
+      type: 'datetime',
+      options: { timeStep: 1 },
+      description: 'Укажите дату/время публикации поста на Facebook для правильной сортировки и отображения.',
+      validation: (r) => r.required(),
+    }),
+    defineField({
       name: 'url',
       title: 'Ссылка на пост Facebook или iframe HTML',
       type: 'text',
