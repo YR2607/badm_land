@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import cheerio from 'cheerio'
+import * as cheerio from 'cheerio'
 
 // Tokenless Facebook page scraper using mbasic + keyless proxy (r.jina.ai)
 // Env (optional): FB_PAGE_ID

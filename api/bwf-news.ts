@@ -31,6 +31,32 @@ function extractFirstImageFromContent(content: string): string | undefined {
 const SCRAPERAPI_KEY = process.env.SCRAPERAPI_KEY
 const SCRAPINGBEE_KEY = process.env.SCRAPINGBEE_KEY
 
+function toAbs(base: string, src?: string): string | undefined {
+  if (!src) return undefined
+  try {
+    const u = new URL(src, base)
+    return u.href
+  } catch {
+    return undefined
+  }
+}
+
+function normalizeImg(url?: string): string | undefined {
+  if (!url) return undefined
+  // remove size suffix like -613x290.jpg
+  return url.replace(/-\d+x\d+\.(jpg|jpeg|png|webp)$/i, '.$1')
+}
+
+function isBadImage(url?: string): boolean {
+  if (!url) return true
+  const u = url.toLowerCase()
+  if (u.endsWith('.svg')) return true
+  // common placeholders/logos
+  if (u.includes('/logo') || u.includes('logo-') || u.includes('/favicon')) return true
+  if (u.includes('bwfbadminton.com/wp-content/uploads/2019/02/bwf-logo')) return true
+  return false
+}
+
 async function fetchDirect(url: string): Promise<string> {
   const r = await fetch(url, {
     cache: 'no-store',
@@ -83,6 +109,56 @@ function pickCdata(block: string, tag: string): string {
   const val = m[1]
   const cdata = val.match(/<!\[CDATA\[([\s\S]*?)\]\]>/)
   return (cdata ? cdata[1] : val).trim()
+}
+
+function selectBestImage($p: cheerio.CheerioAPI, pageUrl: string): string | undefined {
+  const base = pageUrl
+  let img = $p('meta[property="og:image"]').attr('content') || ''
+  img = normalizeImg(toAbs(base, img)) || ''
+  if (!img || isBadImage(img)) {
+    const candidates: string[] = []
+    const selectors = [
+      'article .entry-content img[src]',
+      'article img[src]',
+      '.news-single img[src]',
+      '.wp-block-image img[src]',
+      'img[src]'
+    ]
+    for (const sel of selectors) {
+      $p(sel).each((_, el) => {
+        const s = $p(el).attr('src') || ''
+        const abs = normalizeImg(toAbs(base, s))
+        if (abs && !isBadImage(abs)) candidates.push(abs)
+      })
+      if (candidates.length > 0) break
+    }
+    if (candidates.length > 0) img = candidates[0]
+  }
+  return img || undefined
+}
+
+function selectPreview($p: cheerio.CheerioAPI): string {
+  const meta = ($p('meta[name="description"]').attr('content') || '').trim()
+  if (meta) return meta
+  const p = ($p('article p').first().text() || $p('p').first().text() || '').trim()
+  return p
+}
+
+function selectDate($p: cheerio.CheerioAPI): string {
+  const dt = ($p('time').first().attr('datetime') || '').trim()
+  return dt
+}
+
+function selectTitle($p: cheerio.CheerioAPI): string {
+  return ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
+}
+
+function mapArticle($p: cheerio.CheerioAPI, url: string) {
+  const title = selectTitle($p)
+  const img = selectBestImage($p, url)
+  const date = selectDate($p)
+  const preview = selectPreview($p)
+  return { title, href: url, img, preview, date }
 }
 
 function parseRssItems(xml: string): Array<{ title: string; href: string; img?: string; preview?: string; date?: string }> {
@@ -153,11 +229,8 @@ async function scrapeFromBases(): Promise<Array<{ title: string; href: string; i
         const page = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchViaProxy(url, { render: true }) : await fetchViaJina(url)
         if (url.includes('bwfbadminton.com')) {
           const $p = cheerio.load(page)
-          const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
-          const img = $p('meta[property="og:image"]').attr('content') || $p('img').first().attr('src')
-          const date = $p('time').first().attr('datetime') || ''
-          const preview = ($p('meta[name="description"]').attr('content') || $p('p').first().text() || '').trim()
-          if (title) results.push({ title, href: url, img, preview, date })
+          const mapped = mapArticle($p, url)
+          if (mapped.title) results.push(mapped)
         }
       } catch {
         // ignore this target
@@ -198,11 +271,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         try {
           const page = (SCRAPERAPI_KEY || SCRAPINGBEE_KEY) ? await fetchViaProxy(link, { render: true }) : await fetchViaJina(link)
           const $p = cheerio.load(page)
-          const title = ($p('meta[property="og:title"]').attr('content') || $p('title').text() || '').trim()
-          const img = $p('meta[property="og:image"]').attr('content') || $p('img').first().attr('src')
-          const date = $p('time').first().attr('datetime') || ''
-          const preview = ($p('meta[name="description"]').attr('content') || $p('p').first().text() || '').trim()
-          if (title) items.push({ title, href: link, img, preview, date })
+          const mapped = mapArticle($p, link)
+          if (mapped.title) items.push(mapped)
         } catch {}
       }
     }
