@@ -9,6 +9,25 @@ const BusinessNewsSection: React.FC = () => {
   const [bwf, setBwf] = React.useState<NewsItem[]>([]);
   const [clubEmbeds, setClubEmbeds] = React.useState<string[]>([]);
 
+  function toPluginSrc(input: string): string {
+    const raw = (input || '').trim();
+    if (!raw) return '';
+    // If user pasted full iframe HTML, extract src or href
+    const srcMatch = raw.match(/src=["']([^"']+)["']/i);
+    let url = '';
+    if (srcMatch && srcMatch[1]) {
+      url = srcMatch[1];
+    } else {
+      const hrefMatch = raw.match(/href=["']([^"']+)["']/i);
+      if (hrefMatch && hrefMatch[1]) url = hrefMatch[1];
+    }
+    if (!url) url = raw;
+    // If it's already the plugin URL, keep it
+    if (/facebook\.com\/plugins\/post\.php/i.test(url)) return url;
+    // Otherwise, treat as permalink to the post and wrap with plugin endpoint
+    return `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(url)}&show_text=true&width=500`;
+  }
+
   React.useEffect(() => {
     let mounted = true;
     (async () => {
@@ -199,7 +218,7 @@ const BusinessNewsSection: React.FC = () => {
                     <div className="relative overflow-hidden h-96">
                       <iframe
                         title={`fb-post-${idx}`}
-                        src={`https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(href)}&show_text=true&width=500`}
+                        src={toPluginSrc(href)}
                         width="100%"
                         height="673"
                         style={{ border: 'none', overflow: 'hidden' } as React.CSSProperties}
