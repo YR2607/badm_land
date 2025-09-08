@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Globe, Zap, Search, Filter, ArrowRight } from 'lucide-react';
-import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
+import { isCmsEnabled, fetchPosts, CmsPost, fetchClubEmbeds } from '../lib/cms';
 import { Link } from 'react-router-dom';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
+
+type ClubEmbed = { title: string; url: string; description?: string };
 
 const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -12,6 +14,24 @@ const Blog: React.FC = () => {
   const [posts, setPosts] = useState<CmsPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [bwf, setBwf] = useState<BwfItem[] | null>(null);
+  const [clubEmbeds, setClubEmbeds] = useState<ClubEmbed[]>([]);
+
+  function toPluginSrc(input: string): string {
+    const raw = (input || '').trim();
+    if (!raw) return '';
+    const srcMatch = raw.match(/src=["']([^"']+)["']/i);
+    let url = '';
+    if (srcMatch && srcMatch[1]) url = srcMatch[1];
+    else {
+      const hrefMatch = raw.match(/href=["']([^"']+)["']/i);
+      if (hrefMatch && hrefMatch[1]) url = hrefMatch[1];
+    }
+    if (!url) url = raw;
+    if (/facebook\.com\/plugins\/(post|video)\.php/i.test(url)) return url;
+    const isVideo = /facebook\.com\/.+\/videos\//i.test(url);
+    const endpoint = isVideo ? 'video.php' : 'post.php';
+    return `https://www.facebook.com/plugins/${endpoint}?href=${encodeURIComponent(url)}&show_text=true&width=500`;
+  }
 
   useEffect(() => {
     (async () => {
@@ -39,6 +59,22 @@ const Blog: React.FC = () => {
       } catch {
         if (!alive) return;
         setBwf([]);
+      }
+    })();
+    return () => { alive = false };
+  }, []);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        if (!isCmsEnabled) { setClubEmbeds([]); return; }
+        const embeds = await fetchClubEmbeds();
+        if (!alive) return;
+        setClubEmbeds(embeds as any);
+      } catch {
+        if (!alive) return;
+        setClubEmbeds([]);
       }
     })();
     return () => { alive = false };
@@ -76,8 +112,21 @@ const Blog: React.FC = () => {
       _external: true as const,
       _href: it.href
     }))
-    return [...cms, ...world]
-  }, [posts, bwf])
+    const club = (clubEmbeds || []).map((it, idx) => ({
+      id: `club-${idx}`,
+      title: it.title,
+      excerpt: it.description || '',
+      image: undefined as unknown as string,
+      date: new Date().toISOString(),
+      category: 'news' as const,
+      author: undefined,
+      featured: false,
+      _external: true as const,
+      _href: it.url,
+      _embed: toPluginSrc(it.url),
+    }))
+    return [...club, ...cms, ...world]
+  }, [posts, bwf, clubEmbeds])
 
   const filteredNews = useMemo(() => {
     const list = merged
@@ -161,10 +210,13 @@ const Blog: React.FC = () => {
               {filteredNews.map((news, index) => {
                 const isExternal = (news as any)._external
                 const href = (news as any)._href
+                const embedSrc = (news as any)._embed as string | undefined
                 const Card = (
                   <motion.article key={(news as any).id || index} className="bg-white rounded-3xl p-6 group transition-transform duration-300" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.05 }}>
                     <div className="h-48 rounded-lg mb-4 overflow-hidden bg-gray-100">
-                      {news.image ? (
+                      {embedSrc ? (
+                        <iframe title={`embed-${index}`} src={embedSrc} width="100%" height="100%" style={{ border: 'none', overflow: 'hidden' }} scrolling="no" frameBorder={0} allowFullScreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" />
+                      ) : news.image ? (
                         <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
@@ -185,10 +237,10 @@ const Blog: React.FC = () => {
                     </div>
                   </motion.article>
                 )
-                return isExternal ? (
+                return isExternal && !embedSrc ? (
                   <a key={(news as any).id || index} href={href} target="_blank" rel="noreferrer">{Card}</a>
                 ) : (
-                  <Link key={(news as any).id || index} to={`/blog/${(news as any).id}`}>{Card}</Link>
+                  <div key={(news as any).id || index}>{Card}</div>
                 )
               })}
             </div>
