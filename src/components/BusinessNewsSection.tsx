@@ -1,30 +1,39 @@
 import React from 'react';
 import { Calendar, ArrowRight, Globe, Clock, ExternalLink, Newspaper, Award } from 'lucide-react';
 import { NewsItem } from '../types';
-import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
+import { isCmsEnabled, fetchPosts, CmsPost, fetchClubEmbeds } from '../lib/cms';
 
 const BusinessNewsSection: React.FC = () => {
   const [posts, setPosts] = React.useState<CmsPost[] | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [bwf, setBwf] = React.useState<NewsItem[]>([]);
-  const [fb, setFb] = React.useState<NewsItem[]>([]);
-  const [rssClub, setRssClub] = React.useState<NewsItem[]>([]);
+  const [clubEmbeds, setClubEmbeds] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     let mounted = true;
     (async () => {
       if (isCmsEnabled) {
         try {
-          const p = await fetchPosts();
-          if (mounted) setPosts(p);
+          const [p, embeds] = await Promise.all([
+            fetchPosts(),
+            fetchClubEmbeds(),
+          ]);
+          if (mounted) {
+            setPosts(p);
+            setClubEmbeds(embeds || []);
+          }
         } catch {
-          if (mounted) setPosts([]);
+          if (mounted) {
+            setPosts([]);
+            setClubEmbeds([]);
+          }
         } finally {
           if (mounted) setLoading(false);
         }
       } else {
         if (mounted) {
           setPosts([]);
+          setClubEmbeds([]);
           setLoading(false);
         }
       }
@@ -35,8 +44,6 @@ const BusinessNewsSection: React.FC = () => {
   React.useEffect(() => {
     let alive = true;
     (async () => {
-      // GitHub Raw removed due to CORS issues
-      // 1) Local static JSON
       try {
         const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
         if (r1.ok) {
@@ -47,7 +54,6 @@ const BusinessNewsSection: React.FC = () => {
               id: it.href,
               title: it.title,
               content: '',
-              // Hide BWF subdescription on cards
               excerpt: '',
               image: it.img,
               date: it.date || new Date().toISOString(),
@@ -59,98 +65,6 @@ const BusinessNewsSection: React.FC = () => {
           }
         }
       } catch {}
-      // 2) API fallback
-      try {
-        const r2 = await fetch('/api/bwf-news?t=' + Date.now(), { cache: 'no-store' });
-        const data = await r2.json();
-        const items = (data?.items || []).map((it: any): NewsItem => ({
-          id: it.href,
-          title: it.title,
-          content: '',
-          excerpt: it.preview || '',
-          image: it.img,
-          date: it.date || new Date().toISOString(),
-          category: 'world',
-          url: it.href,
-        }));
-        if (alive) setBwf(items);
-      } catch {}
-    })();
-    return () => { alive = false };
-  }, []);
-
-  // Load Facebook posts for "Новости клуба"
-  React.useEffect(() => {
-    let alive = true;
-    (async () => {
-      try {
-        // 1) Try our tokenless Facebook scraper first
-        const rScrape = await fetch('/api/fb-rss?limit=6', { cache: 'no-store' });
-        if (rScrape.ok) {
-          const j = await rScrape.json();
-          const items = (j?.items || []).map((it: any): NewsItem => ({
-            id: it.id,
-            title: it.title,
-            content: '',
-            excerpt: it.excerpt || '',
-            image: it.image,
-            date: it.date,
-            category: 'news',
-            url: it.url,
-          }));
-          if (items.length > 0) {
-            if (alive) setRssClub(items);
-            return;
-          }
-        }
-        // Prefer RSS (rss.app) if available; fallback to fb-posts
-        const rRss = await fetch('/api/rss-club?limit=6', { cache: 'no-store' });
-        if (rRss.ok) {
-          const j = await rRss.json();
-          const items = (j?.items || []).map((it: any): NewsItem => ({
-            id: it.id,
-            title: it.title,
-            content: '',
-            excerpt: it.excerpt || '',
-            image: it.image,
-            date: it.date,
-            category: 'news',
-            url: it.url,
-          }));
-          if (items.length > 0) {
-            if (alive) setRssClub(items);
-            return;
-          }
-        }
-        // Dev fallback: when /api is not available in Vite dev server
-        try {
-          const rssDirect = await fetch('https://rss.app/feeds/v1.1/yneQwQdZWmbASmAF.json', { cache: 'no-store' });
-          if (rssDirect.ok) {
-            const jj = await rssDirect.json();
-            const items2 = (jj?.items || []).map((it: any): NewsItem => ({
-              id: it.id || it.url,
-              title: it.title,
-              content: '',
-              excerpt: (it.content_text || '').substring(0, 220) + ((it.content_text || '').length > 220 ? '...' : ''),
-              image: it.image,
-              date: it.date_published || new Date().toISOString(),
-              category: 'news',
-              url: it.url,
-            }));
-            if (items2.length > 0) {
-              if (alive) setRssClub(items2);
-              return;
-            }
-          }
-        } catch {}
-        const r = await fetch('/api/fb-posts?limit=6', { cache: 'no-store' });
-        if (r.ok) {
-          const j = await r.json();
-          if (alive) setFb((j?.items || []) as NewsItem[]);
-        }
-      } catch (e) {
-        console.error('Failed to fetch FB posts:', e);
-      }
     })();
     return () => { alive = false };
   }, []);
@@ -167,7 +81,6 @@ const BusinessNewsSection: React.FC = () => {
     featured: p.featured,
   }));
 
-  const clubNews = (rssClub.length > 0 ? rssClub : (fb.length > 0 ? fb : source.filter(news => news.category === 'news')));
   const worldDisplay = bwf.length > 0 ? bwf : source.filter(news => news.category === 'world');
   const events = source.filter(news => news.category === 'event');
 
@@ -276,25 +189,45 @@ const BusinessNewsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <section className="mb-24">
           <SectionHeader title="Новости клуба" icon={<Newspaper className="w-8 h-8 stroke-1" />} gradient="from-blue-500 to-blue-600" />
-          {loading ? (
-            <EmptyBlock text="Загрузка..." />
-          ) : clubNews.length === 0 ? (
-            <EmptyBlock text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
+          {clubEmbeds.length === 0 ? (
+            <EmptyBlock text="Нет материалов" />
           ) : (
-            <div className="columns-1 md:columns-2 lg:columns-3">
-              {clubNews.slice(0, 6).map((news, index) => (
-                <NewsCard key={(news as any).id ?? index} news={news} index={index} category="news" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {clubEmbeds.map((href, idx) => (
+                <article key={idx} className="group cursor-pointer mb-2 break-inside-avoid">
+                  <div className="bg-white rounded-2xl transition-all duration-500 overflow-hidden shadow-sm hover:shadow-md">
+                    <div className="relative overflow-hidden h-96">
+                      <iframe
+                        title={`fb-post-${idx}`}
+                        src={`https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(href)}&show_text=true&width=500`}
+                        width="100%"
+                        height="673"
+                        style={{ border: 'none', overflow: 'hidden' } as React.CSSProperties}
+                        scrolling="no"
+                        frameBorder={0}
+                        allowFullScreen
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                        className="absolute inset-0 w-full h-full"
+                      />
+                    </div>
+                    <div className="p-5">
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600">🏢 Клуб</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
               ))}
             </div>
           )}
         </section>
         <section className="mb-24">
           <SectionHeader title="Мировые новости" icon={<Globe className="w-8 h-8 stroke-1" />} gradient="from-orange-500 to-red-500" />
-          {bwf.length === 0 ? (
+          {worldDisplay.length === 0 ? (
             <EmptyBlock text="Нет материалов" />
           ) : (
             <div className="columns-1 md:columns-2 lg:columns-3">
-              {bwf.slice(0, 6).map((news, index) => (
+              {worldDisplay.slice(0, 6).map((news, index) => (
                 <NewsCard key={(news as any).id ?? index} news={news} index={index} category="world" />
               ))}
             </div>

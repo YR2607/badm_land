@@ -139,3 +139,10 @@ export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
   const albums = await sanityClient.fetch(query);
   return albums as CmsAlbum[];
 }
+
+export async function fetchClubEmbeds(): Promise<string[]> {
+  if (!sanityClient) return [];
+  const query = groq`*[_type == "clubEmbed"] | order(_createdAt desc){ url }`;
+  const list = await sanityClient.fetch(query);
+  return (list || []).map((i: any) => i?.url).filter((u: any) => typeof u === 'string' && u.trim().length > 0);
+}

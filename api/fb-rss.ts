@@ -108,12 +108,31 @@ function parseList(html: string) {
   return { $, items: dedup }
 }
 
+function extractCursorFromScripts($: cheerio.CheerioAPI): string {
+  // Scan scripts for "cursor" or timeline continuation params
+  let cursor = ''
+  $('script').each((_, s) => {
+    const txt = $(s).html() || ''
+    const m = txt.match(/"cursor":"(.*?)"/)
+    if (m && m[1]) {
+      cursor = decodeURIComponent(m[1].replace(/\\u0025/g, '%'))
+    }
+  })
+  return cursor
+}
+
 function findNextUrl($: cheerio.CheerioAPI): string {
   let next = $('a:contains("See more")').attr('href')
   if (!next) next = $('a:contains("See More Posts")').attr('href') as string
   if (!next) next = $('a:contains("Показать")').attr('href') as string
   if (!next) next = $('a:contains("Показать ещё")').attr('href') as string
   if (!next) next = $('a[href*="sectionLoadingID"], a[href*="cursor="], a[href*="__tn__"], a[href*="/?refid="]').first().attr('href') as string
+  if (!next) {
+    const cursor = extractCursorFromScripts($)
+    if (cursor) {
+      next = `/profile/timeline/stream/?cursor=${encodeURIComponent(cursor)}` as string
+    }
+  }
   return next ? absolutize(next) : ''
 }
 
@@ -122,7 +141,7 @@ async function scrape(pageId: string, limit: number) {
   const collected: any[] = []
   const seen = new Set<string>()
 
-  for (let page = 0; page < 10 && collected.length < limit; page++) {
+  for (let page = 0; page < 12 && collected.length < limit; page++) {
     const { $, items } = parseList(html)
     for (const it of items) {
       if (seen.has(it.href)) continue
@@ -172,7 +191,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const limit = Number(req.query.limit || 10)
     const bypass = req.query.refresh === '1'
-    const source = String(req.query.source || '').toLowerCase() // 'scrape' | 'rss' | ''
+    const source = String(req.query.source || '').toLowerCase()
 
     if (!bypass && cache && Date.now() - cache.ts < TTL_MS && (cache.data?.length || 0) > 0) {
       return res.status(200).json({ cached: true, items: cache.data.slice(0, limit) })
@@ -198,7 +217,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         } catch {}
       }
     } else {
-      // mixed strategy: rss first, then add scraped items to reach limit
       try { data = (await fetchRssApp()).slice(0, limit) } catch {}
       if (data.length < limit) {
         try {

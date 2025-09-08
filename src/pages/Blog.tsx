@@ -5,7 +5,6 @@ import { isCmsEnabled, fetchPosts, CmsPost } from '../lib/cms';
 import { Link } from 'react-router-dom';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
-type FbItem = { id: string; title: string; image?: string; date?: string; url: string; content_text?: string };
 
 const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -13,7 +12,6 @@ const Blog: React.FC = () => {
   const [posts, setPosts] = useState<CmsPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [bwf, setBwf] = useState<BwfItem[] | null>(null);
-  const [fb, setFb] = useState<FbItem[] | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -27,75 +25,16 @@ const Blog: React.FC = () => {
     })();
   }, []);
 
-  // Load Facebook posts
   useEffect(() => {
     let alive = true;
     (async () => {
-      try {
-        // 1) Try tokenless scraper
-        const rScrape = await fetch('/api/fb-rss?limit=12', { cache: 'no-store' });
-        if (rScrape.ok) {
-          const j = await rScrape.json();
-          if (!alive) return;
-          const items = (j?.items || []).map((it: any): FbItem => ({
-            id: it.id,
-            title: it.title,
-            image: it.image,
-            date: it.date,
-            url: it.url,
-            content_text: it.excerpt,
-          }));
-          if (items.length > 0) {
-            setFb(items);
-            return;
-          }
-        }
-        const r = await fetch('/api/rss-club?limit=10', { cache: 'no-store' });
-        if (r.ok) {
-          const j = await r.json();
-          if (!alive) return;
-          setFb((j?.items || []) as FbItem[]);
-          return;
-        }
-        // Fallback last
-        const r2 = await fetch('/api/fb-posts?limit=10', { cache: 'no-store' });
-        if (r2.ok) {
-          const j2 = await r2.json();
-          if (!alive) return;
-          setFb((j2?.items || []) as FbItem[]);
-        }
-      } catch {
-        if (!alive) return;
-        setFb([]);
-      }
-    })();
-    return () => { alive = false };
-  }, []);
-
-  useEffect(() => {
-    let alive = true;
-    (async () => {
-        // GitHub Raw removed due to CORS issues
-        // Prefer API first (better image extraction), then fallback to local static JSON
-      try {
-        const r2 = await fetch('/api/bwf-news?refresh=1&t=' + Date.now(), { cache: 'no-store' });
-        if (r2.ok) {
-          const data = await r2.json();
-          if (!alive) return;
-          const items: BwfItem[] = (data?.items || []) as BwfItem[];
-          if (items.length > 0) {
-            setBwf(items);
-            return;
-          }
-        }
-      } catch {}
-      // Fallback to local static JSON
       try {
         const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
         if (r1.ok) {
           const j = await r1.json();
+          const items: BwfItem[] = (j?.items || []) as BwfItem[];
           if (!alive) return;
-          setBwf(((j?.items || []) as BwfItem[]));
+          setBwf(items);
         }
       } catch {
         if (!alive) return;
@@ -128,7 +67,6 @@ const Blog: React.FC = () => {
     const world = (bwf || []).map((it, idx) => ({
       id: `bwf-${idx}`,
       title: it.title,
-      // Hide BWF subdescription on cards
       excerpt: '',
       image: it.img,
       date: it.date || new Date().toISOString(),
@@ -138,20 +76,8 @@ const Blog: React.FC = () => {
       _external: true as const,
       _href: it.href
     }))
-    const fbPosts = (fb || []).map((it, idx) => ({
-      id: `fb-${idx}`,
-      title: it.title,
-      excerpt: it.content_text ? it.content_text.substring(0, 200) + '...' : '',
-      image: it.image,
-      date: it.date || new Date().toISOString(),
-      category: 'news' as const,
-      author: undefined,
-      featured: false,
-      _external: true as const,
-      _href: it.url
-    }))
-    return [...cms, ...fbPosts, ...world]
-  }, [posts, fb, bwf])
+    return [...cms, ...world]
+  }, [posts, bwf])
 
   const filteredNews = useMemo(() => {
     const list = merged
