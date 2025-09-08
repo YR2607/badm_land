@@ -117,15 +117,32 @@ async function scrape(pageId: string, limit: number) {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const limit = Number(req.query.limit || 10)
-    if (cache && Date.now() - cache.ts < TTL_MS && !req.query.refresh) {
+    const bypass = req.query.refresh === '1'
+    if (!bypass && cache && Date.now() - cache.ts < TTL_MS && (cache.data?.length || 0) > 0) {
       return res.status(200).json({ cached: true, items: cache.data.slice(0, limit) })
     }
 
     const PAGE_ID = process.env.FB_PAGE_ID || '61562124174747'
     const data = await scrape(PAGE_ID, limit)
 
-    cache = { ts: Date.now(), data }
-    res.status(200).json({ cached: false, items: data.slice(0, limit) })
+    if (data.length > 0) {
+      cache = { ts: Date.now(), data }
+      return res.status(200).json({ cached: false, items: data.slice(0, limit) })
+    }
+
+    // Fallback to rss-club if scraping yields nothing
+    try {
+      const r = await fetch(`${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : ''}/api/rss-club?limit=${limit}&refresh=1`, { cache: 'no-store' })
+      if (r.ok) {
+        const j = await r.json()
+        const items = (j?.items || [])
+        if (items.length > 0) {
+          return res.status(200).json({ cached: false, items })
+        }
+      }
+    } catch {}
+
+    res.status(200).json({ items: [] })
   } catch (e: any) {
     console.error('fb-rss error', e?.message || e)
     res.status(200).json({ items: [] })
