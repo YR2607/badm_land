@@ -5,5 +5,6 @@ import page from './page'
 import author from './author'
 import category from './category'
 import galleryAlbum from './galleryAlbum'
+import clubEmbed from './clubEmbed'
 
-export const schemaTypes = [gallerySection, tournamentCategory, post, page, author, category, galleryAlbum]
+export const schemaTypes = [gallerySection, tournamentCategory, post, page, author, category, galleryAlbum, clubEmbed]

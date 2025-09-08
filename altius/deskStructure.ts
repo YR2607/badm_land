@@ -60,6 +60,13 @@ const featuredPosts = (S: any) =>
         .filter('_type == "post" && featured == true')
     )
 
+const clubEmbeds = (S: any) =>
+  S.listItem()
+    .title('Новости клуба (встраиваемые)')
+    .child(
+      S.documentTypeList('clubEmbed').title('Новости клуба (встраиваемые)')
+    )
+
 const postsByCategory = (S: any) =>
   S.listItem()
     .title('Новости по категориям')
@@ -89,6 +96,7 @@ const deskStructure = (S: any) =>
         S.list().title('Новости').items([
           S.listItem().title('Все посты').child(S.documentTypeList('post').title('Все посты')),
           postsByCategory(S),
+          clubEmbeds(S),
           featuredPosts(S),
         ])
       ),
