@@ -279,7 +279,7 @@ const BusinessNewsSection: React.FC = () => {
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center space-x-2 text-gray-500">
                             <Clock className="w-4 h-4" />
-                            <span className="text-sm font-medium">{formatDate(item.publishedAt || new Date().toISOString())}</span>
+                            <span className="text-sm font-medium">{item.publishedAt ? formatDate(item.publishedAt) : 'Дата не указана'}</span>
                           </div>
                           <div className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600">🏢 Клуб</div>
                         </div>
@@ -336,7 +336,7 @@ const BusinessNewsSection: React.FC = () => {
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center space-x-2 text-gray-500">
                             <Clock className="w-4 h-4" />
-                            <span className="text-sm font-medium">{formatDate(item.publishedAt || new Date().toISOString())}</span>
+                            <span className="text-sm font-medium">{item.publishedAt ? formatDate(item.publishedAt) : 'Дата не указана'}</span>
                           </div>
                           <div className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500">🎉 Событие</div>
                         </div>

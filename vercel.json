@@ -1,6 +1,9 @@
 {
   "routes": [
     { "handle": "filesystem" },
+    { "src": "^/api/(.*)$", "dest": "/api/$1" },
+    { "src": "^/data/(.*)$", "dest": "/data/$1" },
+    { "src": "^/assets/(.*)$", "dest": "/assets/$1" },
     { "src": "^/static/(.*)$", "dest": "/admin/static/$1" },
     { "src": "^/vendor/(.*)$", "dest": "/admin/vendor/$1" },
     { "src": "^/manifest\\.webmanifest$", "dest": "/admin/manifest.webmanifest" },
