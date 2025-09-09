@@ -19,6 +19,7 @@ except Exception:  # pragma: no cover
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_PATH = os.path.join(ROOT, 'public', 'data', 'bwf_news.json')
+OVERRIDES_PATH = os.path.join(ROOT, 'scripts', 'image_overrides.json')
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (compatible; AltiusSiteBot/1.0; +https://badm-land-main.vercel.app)'
@@ -61,6 +62,22 @@ def fetch_via_proxy(url: str) -> str:
         r.raise_for_status()
         return r.text
     raise RuntimeError('no proxy key')
+
+
+def load_image_overrides() -> dict:
+    try:
+        if os.path.exists(OVERRIDES_PATH):
+            with open(OVERRIDES_PATH, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                # structure:
+                # {
+                #   "by_href": { "<article_url>": "<image_url>" },
+                #   "by_title_substr": { "Week in Quotes": "<image_url>" }
+                # }
+                return data or {}
+    except Exception:
+        pass
+    return {}
 
 
 def fetch(url: str, use_cloud: bool = True) -> str:
@@ -208,11 +225,8 @@ def parse_listing(base: str, limit: int = 40) -> list[dict]:
             continue
         seen.add(href_abs)
         # determine a card context: up to two parent levels
+        # Restrict search to the anchor itself to avoid picking unrelated page assets
         card = a
-        if card.parent:
-            card = card.parent
-        if card and card.parent:
-            card = card.parent
         title = (a.get('title') or a.get_text(' ', strip=True) or '').strip()
         img = None
         img_el = None
@@ -459,28 +473,13 @@ def parse_article(url: str) -> dict | None:
         '.article-content img[src]',
         'article img[src]',
         '.featured-image img[src]',
-        '.post-thumbnail img[src]',
-        'img[src]'  # Last resort
+        '.post-thumbnail img[src]'
     ]
     
     # Collect all candidate images with their priority
     candidates = []
     
-    # Check for Open Graph image first
-    og_img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content') or \
-             (soup.select_one('meta[property="og:image:secure_url"][content]') or {}).get('content')
-    if og_img:
-        og_img = normalize_img(og_img)
-        if og_img.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-            # Give OG image high priority but we'll still check others
-            candidates.append((og_img, 90))  # High priority
-    
-    # Check for Twitter card image
-    twitter_img = (soup.select_one('meta[name="twitter:image"][content]') or {}).get('content')
-    if twitter_img:
-        twitter_img = normalize_img(twitter_img)
-        if twitter_img.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')) and twitter_img not in [c[0] for c in candidates]:
-            candidates.append((twitter_img, 85))  # High priority but lower than OG
+    # We prefer in-article content images FIRST; OG/Twitter later as fallback
     
     # Scan the article for images
     for sel in content_selectors:
@@ -492,33 +491,58 @@ def parse_article(url: str) -> dict | None:
             abs_src = normalize_img(src)
             if not abs_src or abs_src in [c[0] for c in candidates]:
                 continue
-                
-            # Skip if it's a data URL or base64 image
-            if src.startswith(('data:', 'http')) and not src.startswith(('http://', 'https://')):
+            low_src = abs_src.lower()
+            # Accept only media from wp-content/uploads to avoid unrelated assets
+            if '/wp-content/uploads/' not in low_src:
                 continue
-                
-            # Skip generic images
-            low = abs_src.lower()
-            if any(k in low for k in bad_keywords) or any(term in low for term in generic_image_terms):
+            if any(k in low_src for k in bad_keywords) or any(term in low_src for term in generic_image_terms):
                 continue
-                
-            # Check if the image is likely to be content
-            parent_classes = ' '.join(node.find_parents(class_=True)[0].get('class', [])) if node.find_parents(class_=True) else ''
-            parent_classes = parent_classes.lower()
+            # Priority: earliest content images are highest
+            priority = 100
+            if i == 0:
+                priority += 0
+            elif i == 1:
+                priority -= 10
+            elif i == 2:
+                priority -= 15
             
-            # Skip if in a header, footer, or sidebar
-            if any(x in parent_classes for x in ('header', 'footer', 'sidebar', 'widget', 'nav', 'menu')):
-                continue
+            # Some heuristic boosts
+            if any(word in low_src for word in ['action', 'match', 'court', 'celebration', 'win', 'champ']):
+                priority += 5
+            if any(word in low_src for word in ['headshot', 'profile', 'logo', 'banner', 'featured']):
+                priority -= 25
+            # Prefer larger images by filename suffix (e.g., '-2048x1365')
+            m = re.search(r'(\d{3,4})x(\d{3,4})', abs_src)
+            if m:
+                w, h = int(m.group(1)), int(m.group(2))
+                if w >= 1600 and h >= 900:
+                    priority += 5
+                elif w >= 1200 and h >= 800:
+                    priority += 3
+                else:
+                    priority -= 5
+            # Earlier images inside article tend to be more representative
+            if i < 5:
+                priority += 0
                 
-            # Calculate priority (earlier in DOM is better, larger images are better)
-            priority = 80 - i  # Base priority based on selector order
-            
-            # Check image dimensions if available
-            width = None
-            height = None
-            if node.get('width') and node['width'].isdigit():
-                width = int(node['width'])
-            if node.get('height') and node['height'].isdigit():
+            candidates.append((abs_src, priority))
+
+    # Fallback OG/Twitter after content images
+    og_img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content') or \
+             (soup.select_one('meta[property="og:image:secure_url"][content]') or {}).get('content')
+    if og_img:
+        og_img = normalize_img(og_img)
+        low_og = (og_img or '').lower()
+        if low_og.endswith(('.jpg', '.jpeg', '.png', '.webp')) and not (any(k in low_og for k in bad_keywords) or any(term in low_og for term in generic_image_terms)):
+            candidates.append((og_img, 80))
+
+    twitter_img = (soup.select_one('meta[name="twitter:image"][content]') or {}).get('content')
+    if twitter_img:
+        twitter_img = normalize_img(twitter_img)
+        low_tw = (twitter_img or '').lower()
+        if low_tw.endswith(('.jpg', '.jpeg', '.png', '.webp')) and twitter_img not in [c[0] for c in candidates]:
+            if not (any(k in low_tw for k in bad_keywords) or any(term in low_tw for term in generic_image_terms)):
+                candidates.append((twitter_img, 75))
                 height = int(node['height'])
                 
             # Adjust priority based on size (larger images are better)
@@ -540,6 +564,7 @@ def parse_article(url: str) -> dict | None:
     
     # Return the best candidate, or None if no good candidates found
     img = candidates[0][0] if candidates else None
+    img_candidates = [u for (u, _) in candidates]
     # Description/Preview (avoid cookie/consent text)
     def is_bad_preview(t: str) -> bool:
         t_low = (t or '').strip().lower()
@@ -635,6 +660,7 @@ def parse_article(url: str) -> dict | None:
         'title': remove_date_from_title(title),
         'href': url,
         'img': img,
+        'img_candidates': img_candidates,
         'preview': (desc or '')[:220],
         'date': date_iso,
     }
@@ -715,6 +741,10 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
         img_fb = to_abs_url(href_abs, img_fb or '') if img_fb else ''
         if img_fb:
             img_fb = re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', img_fb, flags=re.IGNORECASE)
+            low_fb = img_fb.lower()
+            # Drop generic/featured images from card if we can find better from article later
+            if any(k in low_fb for k in ('logo','favicon','default','placeholder','sprite','icon','avatar','thumbnail')) or any(term in low_fb for term in ('fi-','header','banner','featured','momota')):
+                img_fb = ''
         preview_fb = ''
         p = card.select_one('p') if hasattr(card, 'select_one') else None
         if p:
@@ -737,10 +767,18 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
 
     # Enrich by fetching each article page
     items: list[dict] = []
+    overrides = load_image_overrides()
+    by_href = (overrides.get('by_href') or {}) if isinstance(overrides, dict) else {}
+    by_title_substr = (overrides.get('by_title_substr') or {}) if isinstance(overrides, dict) else {}
     def enrich(entry):
         href_abs, title_fb, img_fb, preview_fb, date_fb = entry
         art = parse_article(href_abs)
         if art:
+            # Apply overrides by href or title substring first
+            ov_img = by_href.get(href_abs) or next((v for k, v in (by_title_substr.items()) if k and k.lower() in (art.get('title') or '').lower()), None)
+            if ov_img:
+                art['img'] = ov_img
+            # choose best non-duplicate image among candidates
             if not art.get('img'):
                 art['img'] = img_fb
             if not art.get('preview'):
@@ -749,6 +787,31 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
                 art['title'] = remove_date_from_title(title_fb)
             if not art.get('date'):
                 art['date'] = normalize_date_iso(date_fb or '')
+            # If override set, use it as final and skip further selection
+            if ov_img:
+                if 'img_candidates' in art:
+                    del art['img_candidates']
+                return art
+            # Choose best per-article image (no global de-dup to avoid mismatches)
+            candidates: list[str] = []
+            # article-reported best
+            if art.get('img'):
+                candidates.append(art['img'])
+            # article candidates list
+            if isinstance(art.get('img_candidates'), list):
+                candidates.extend([c for c in art['img_candidates'] if isinstance(c, str)])
+            # fallback from card
+            if img_fb:
+                candidates.append(img_fb)
+            def is_generic(u: str) -> bool:
+                lu = (u or '').lower()
+                return any(k in lu for k in ('logo','favicon','default','placeholder','sprite','icon','avatar','thumbnail')) or any(term in lu for term in ('header','banner','featured'))
+            # pick first non-generic, else first available
+            non_generic = [c for c in candidates if c and not is_generic(c)]
+            art['img'] = (non_generic[0] if non_generic else next((c for c in candidates if c), art.get('img') or img_fb))
+            # clean up helper key
+            if 'img_candidates' in art:
+                del art['img_candidates']
             return art
         else:
             # Extract date from URL as fallback when parse_article fails
@@ -758,10 +821,12 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
                 year, month, day = url_date_match.groups()
                 url_date = f"{year}-{month.zfill(2)}-{day.zfill(2)}T00:00:00+00:00"
             
+            # apply overrides even on fallback path
+            ov_img = by_href.get(href_abs) or next((v for k, v in (by_title_substr.items()) if k and k.lower() in (title_fb or '').lower()), None)
             return {
                 'title': title_fb or href_abs,
                 'href': href_abs,
-                'img': img_fb,
+                'img': ov_img or img_fb,
                 'preview': (preview_fb or '')[:220],
                 'date': url_date or normalize_date_iso(date_fb or ''),
             }
