@@ -30,6 +30,8 @@ jobs:
           BWF_CHAMP_URLS: 'https://bwfworldchampionships.bwfbadminton.com/,https://bwfworldchampionships.bwfbadminton.com/news/'
           # Force proxy for championship domain to avoid consent/cookie HTML on CI
           BWF_FORCE_PROXY: '1'
+          # Use list-only mode on CI to avoid article fetch instability
+          BWF_MODE: 'list_only'
         run: |
           python scripts/bwf_scrape.py
       - name: Show scraped items count

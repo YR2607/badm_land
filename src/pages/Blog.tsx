@@ -159,6 +159,12 @@ const Blog: FC = () => {
 
   const filteredNews = useMemo(() => {
     const list = merged
+      .slice()
+      .sort((a: any, b: any) => {
+        const da = new Date(a?.date || 0).getTime();
+        const db = new Date(b?.date || 0).getTime();
+        return db - da;
+      })
     return list.filter(n => {
       const matchesCategory = selectedCategory === 'all' || n.category === selectedCategory
       const inTitle = (n.title || '').toLowerCase().includes(searchTerm.toLowerCase())

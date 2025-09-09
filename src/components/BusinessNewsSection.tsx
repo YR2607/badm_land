@@ -31,7 +31,15 @@ const BusinessNewsSection: FC = () => {
         const r = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
         if (!r.ok) throw new Error('Failed to load bwf_news.json');
         const j = await r.json();
-        const items: WorldNewsItem[] = (j?.items || []).slice(0, 6);
+        const itemsAll: WorldNewsItem[] = (j?.items || []) as WorldNewsItem[];
+        const items: WorldNewsItem[] = itemsAll
+          .slice()
+          .sort((a: any, b: any) => {
+            const da = new Date(a?.date || 0).getTime();
+            const db = new Date(b?.date || 0).getTime();
+            return db - da;
+          })
+          .slice(0, 6);
         if (alive) setWorldNews(items);
       } catch (e: any) {
         if (alive) setError(e?.message || 'Не удалось загрузить новости');

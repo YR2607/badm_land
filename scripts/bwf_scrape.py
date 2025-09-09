@@ -28,6 +28,7 @@ HEADERS = {
 SCRAPERAPI_KEY = os.getenv('SCRAPERAPI_KEY')
 SCRAPINGBEE_KEY = os.getenv('SCRAPINGBEE_KEY')
 BWF_FORCE_PROXY = os.getenv('BWF_FORCE_PROXY', '').strip().lower() in ('1', 'true', 'yes')
+BWF_MODE = (os.getenv('BWF_MODE', '').strip().lower() or 'default')  # 'default' | 'list_only'
 
 
 def is_official_host(host: str) -> bool:
@@ -266,6 +267,98 @@ def parse_listing(base: str, limit: int = 40) -> list[dict]:
                 'preview': (preview or '')[:220],
                 'date': date,
             })
+        if len(items) >= limit:
+            break
+    return items
+
+
+def parse_championships_list_only(page_url: str, limit: int = 40) -> list[dict]:
+    """Lightweight list parser: only uses overview/listing data, no article fetch.
+    Stable for CI where article HTML may be blocked/consent. Returns up to `limit` items.
+    """
+    try:
+        html = fetch(page_url)
+    except Exception as e1:
+        try:
+            html = fetch_via_proxy(page_url)
+            print(f"Fetched via proxy (list_only): {page_url}")
+        except Exception as e2:
+            print(f"Failed to fetch (list_only) {page_url}: {e1} / {e2}")
+            return []
+    soup = BeautifulSoup(html, 'lxml')
+    wrap = soup.select_one('.news-overview-wrap') or soup
+    items: list[dict] = []
+    seen = set()
+    for a in wrap.select('a[href]'):
+        href = a.get('href') or ''
+        if '/news' not in href:
+            continue
+        href_abs = to_abs_url(page_url, href)
+        try:
+            u = urlparse(href_abs)
+            if not (u.scheme and is_official_host((u.hostname or '').lower())):
+                continue
+        except Exception:
+            continue
+        if href_abs in seen:
+            continue
+        seen.add(href_abs)
+        # Only search inside the anchor for image/title to avoid cross-pick
+        card = a
+        title = remove_date_from_title((a.get('title') or a.get_text(' ', strip=True) or '').strip())
+        # image candidates from the anchor
+        def pick_from_srcset(srcset: str) -> str:
+            parts = [p.strip() for p in (srcset or '').split(',') if p.strip()]
+            if parts:
+                return parts[0].split()[0]
+            return ''
+        img = ''
+        img_el = card.select_one('img[src], img[data-src], img[srcset], img[data-srcset]') if hasattr(card, 'select_one') else None
+        if img_el:
+            img = img_el.get('src') or img_el.get('data-src') or ''
+            if not img:
+                img = pick_from_srcset(img_el.get('srcset') or img_el.get('data-srcset') or '')
+        if not img and hasattr(card, 'select_one'):
+            src_el = card.select_one('picture source[srcset], source[srcset]')
+            if src_el and src_el.get('srcset'):
+                img = pick_from_srcset(src_el.get('srcset'))
+        if not img and hasattr(card, 'get'):
+            style_attr = card.get('style') or ''
+            m = re.search(r"background-image\s*:\s*url\((['\"]?)(.+?)\1\)", style_attr, re.I)
+            if m:
+                img = m.group(2)
+        img = to_abs_url(href_abs, img or '') if img else ''
+        if img:
+            img = re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', img, flags=re.IGNORECASE)
+        # preview and date from card
+        preview = ''
+        p = card.select_one('p') if hasattr(card, 'select_one') else None
+        if p:
+            preview = p.get_text(' ', strip=True)
+        date_raw = ''
+        t = card.select_one('time[datetime]') if hasattr(card, 'select_one') else None
+        if t:
+            date_raw = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
+        if not date_raw and hasattr(card, 'get_text'):
+            txt = card.get_text(' ', strip=True)
+            mdate = re.search(r"(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+[A-Za-z]+\s+\d{1,2},\s+\d{4}", txt)
+            if not mdate:
+                mdate = re.search(r"[A-Za-z]+\s+\d{1,2},\s+\d{4}", txt)
+            if mdate:
+                date_raw = mdate.group(0)
+        # as last resort, date from URL
+        if not date_raw:
+            murl = re.search(r'/((\d{4})/(\d{1,2})/(\d{1,2}))/+', href_abs)
+            if murl:
+                y, mo, d = murl.group(2), murl.group(3), murl.group(4)
+                date_raw = f"{y}-{mo.zfill(2)}-{d.zfill(2)}T00:00:00+00:00"
+        items.append({
+            'title': title or href_abs,
+            'href': href_abs,
+            'img': img,
+            'preview': (preview or '')[:220],
+            'date': normalize_date_iso(date_raw or ''),
+        })
         if len(items) >= limit:
             break
     return items
@@ -863,7 +956,10 @@ def scrape() -> dict:
 
     # Parse all pages first, then deduplicate
     for url in champ_pages:
-        part = parse_championships_overview(url, limit=40)
+        if BWF_MODE == 'list_only':
+            part = parse_championships_list_only(url, limit=40)
+        else:
+            part = parse_championships_overview(url, limit=40)
         if part:
             champ_items.extend(part)
             print(f"Found {len(part)} items from {url}")
