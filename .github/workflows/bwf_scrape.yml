@@ -28,11 +28,23 @@ jobs:
           # Default: parse ONLY from championships main and news pages (diverse per-card images)
           BWF_CHAMP_ONLY: '1'
           BWF_CHAMP_URLS: 'https://bwfworldchampionships.bwfbadminton.com/,https://bwfworldchampionships.bwfbadminton.com/news/'
+          # Force proxy for championship domain to avoid consent/cookie HTML on CI
+          BWF_FORCE_PROXY: '1'
         run: |
           python scripts/bwf_scrape.py
       - name: Show scraped items count
         run: |
           python -c "import json; j=json.load(open('public/data/bwf_news.json','r',encoding='utf-8')); print('items:', len(j.get('items') or [])); print('first_titles:', [it.get('title') for it in (j.get('items') or [])][:3])"
+      - name: Diagnostics (unique images)
+        run: |
+          python - <<'PY'
+          import json
+          j=json.load(open('public/data/bwf_news.json','r',encoding='utf-8'))
+          imgs=[(it.get('img') or '') for it in (j.get('items') or [])]
+          uniq=list(dict.fromkeys(imgs))
+          print('unique_images_count:', len([u for u in uniq if u]))
+          print('sample_images:', uniq[:10])
+          PY
       - name: Upload scraped JSON artifact
         uses: actions/upload-artifact@v4
         with:

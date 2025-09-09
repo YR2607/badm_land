@@ -26,6 +26,7 @@ HEADERS = {
 
 SCRAPERAPI_KEY = os.getenv('SCRAPERAPI_KEY')
 SCRAPINGBEE_KEY = os.getenv('SCRAPINGBEE_KEY')
+BWF_FORCE_PROXY = os.getenv('BWF_FORCE_PROXY', '').strip().lower() in ('1', 'true', 'yes')
 
 
 def is_official_host(host: str) -> bool:
@@ -64,11 +65,14 @@ def fetch_via_proxy(url: str) -> str:
 
 def fetch(url: str, use_cloud: bool = True) -> str:
     host = (urlparse(url).hostname or '').lower()
-    # Championships site: fetch directly (no proxy/JS render needed)
-    if host.endswith('bwfworldchampionships.bwfbadminton.com'):
+    # Championships site: fetch directly unless forced via proxy
+    if host.endswith('bwfworldchampionships.bwfbadminton.com') and not BWF_FORCE_PROXY:
         r = requests.get(url, headers=HEADERS, timeout=40)
         r.raise_for_status()
         return r.text
+    if host.endswith('bwfworldchampionships.bwfbadminton.com') and BWF_FORCE_PROXY:
+        if SCRAPERAPI_KEY or SCRAPINGBEE_KEY:
+            return fetch_via_proxy(url)
     if is_official_host(host):
         if SCRAPERAPI_KEY or SCRAPINGBEE_KEY:
             return fetch_via_proxy(url)
@@ -232,6 +236,14 @@ def parse_listing(base: str, limit: int = 40) -> list[dict]:
         t = card.select_one('time[datetime]') if hasattr(card, 'select_one') else None
         if t:
             date = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
+        if not date and hasattr(card, 'get_text'):
+            # try to find textual date like 'Friday, September 5, 2025'
+            txt = card.get_text(' ', strip=True)
+            mdate = re.search(r"(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+[A-Za-z]+\s+\d{1,2},\s+\d{4}", txt)
+            if not mdate:
+                mdate = re.search(r"[A-Za-z]+\s+\d{1,2},\s+\d{4}", txt)
+            if mdate:
+                date = mdate.group(0)
         if title:
             items.append({
                 'title': title,
@@ -380,19 +392,25 @@ def normalize_date_iso(s: str) -> str:
 
 
 def parse_article(url: str) -> dict | None:
-    try:
-        html = fetch(url)
-    except Exception as e1:
-        # Retry via proxy on CI where direct requests may be blocked
+    def load_html(use_proxy_first: bool = False) -> str | None:
+        if use_proxy_first:
+            try:
+                return fetch_via_proxy(url)
+            except Exception:
+                pass
         try:
-            html = fetch_via_proxy(url)
-            print(f"Fetched article via proxy: {url}")
-        except Exception as e2:
-            # Give up if both attempts fail
-            print(f"Failed to fetch article {url}: {e1} / {e2}")
-            return None
+            return fetch(url)
+        except Exception:
+            try:
+                return fetch_via_proxy(url)
+            except Exception:
+                return None
+
+    html = load_html(False)
+    if html is None:
+        return None
     soup = BeautifulSoup(html, 'lxml')
-    # Detect consent/cookie pages and bail so enrich() uses listing fallbacks
+    # Detect consent/cookie pages; if detected, retry via proxy explicitly once
     page_text = soup.get_text(" ", strip=True).lower()
     consent_bad_signals = (
         'we do not use cookies of this type',
@@ -402,7 +420,10 @@ def parse_article(url: str) -> dict | None:
         'gdpr'
     )
     if sum(1 for s in consent_bad_signals if s in page_text) >= 2:
-        return None
+        html2 = load_html(True)
+        if not html2:
+            return None
+        soup = BeautifulSoup(html2, 'lxml')
     # Title
     title = (soup.select_one('meta[property="og:title"][content]') or {}).get('content') or (soup.title.string if soup.title else '')
     title = (title or '').strip()
@@ -639,7 +660,7 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
     if wrap is None:
         return []
 
-    # Collect targets (href, fallback title, fallback img, fallback preview)
+    # Collect targets (href, fallback title, fallback img, fallback preview, fallback date)
     targets = []
     seen = set()
     for a in wrap.select('a[href]'):
@@ -662,12 +683,31 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
         if card and card.parent:
             card = card.parent
         title_fb = remove_date_from_title((a.get('title') or a.get_text(' ', strip=True) or '').strip())
-        img_fb = None
-        img_el = card.select_one('img[src]') if hasattr(card, 'select_one') else None
-        if not img_el and hasattr(card, 'select_one'):
-            img_el = card.select_one('img[data-src]')
+        def pick_from_srcset(srcset: str) -> str:
+            # take first url in srcset
+            parts = [p.strip() for p in (srcset or '').split(',') if p.strip()]
+            if parts:
+                first = parts[0].split()[0]
+                return first
+            return ''
+
+        img_fb = ''
+        img_el = card.select_one('img[src], img[data-src], img[srcset], img[data-srcset]') if hasattr(card, 'select_one') else None
         if img_el:
-            img_fb = img_el.get('src') or img_el.get('data-src')
+            img_fb = img_el.get('src') or img_el.get('data-src') or ''
+            if not img_fb:
+                img_fb = pick_from_srcset(img_el.get('srcset') or img_el.get('data-srcset') or '')
+        if not img_fb and hasattr(card, 'select_one'):
+            # picture > source srcset
+            src_el = card.select_one('picture source[srcset], source[srcset]')
+            if src_el and src_el.get('srcset'):
+                img_fb = pick_from_srcset(src_el.get('srcset'))
+        if not img_fb and hasattr(card, 'get'):
+            # background-image in style
+            style_attr = card.get('style') or ''
+            m = re.search(r"background-image\s*:\s*url\((['\"]?)(.+?)\1\)", style_attr, re.I)
+            if m:
+                img_fb = m.group(2)
         if not img_fb and hasattr(card, 'select_one'):
             meta = card.select_one('meta[property="og:image"][content]')
             if meta:
@@ -679,14 +719,26 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
         p = card.select_one('p') if hasattr(card, 'select_one') else None
         if p:
             preview_fb = p.get_text(' ', strip=True)
-        targets.append((href_abs, title_fb, img_fb, preview_fb))
+        # fallback date from card (date_fb)
+        date_fb = ''
+        t = card.select_one('time[datetime]') if hasattr(card, 'select_one') else None
+        if t:
+            date_fb = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
+        if not date_fb and hasattr(card, 'get_text'):
+            txt = card.get_text(' ', strip=True)
+            mdate = re.search(r"(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+[A-Za-z]+\s+\d{1,2},\s+\d{4}", txt)
+            if not mdate:
+                mdate = re.search(r"[A-Za-z]+\s+\d{1,2},\s+\d{4}", txt)
+            if mdate:
+                date_fb = mdate.group(0)
+        targets.append((href_abs, title_fb, img_fb, preview_fb, date_fb))
         if len(targets) >= limit:
             break
 
     # Enrich by fetching each article page
     items: list[dict] = []
     def enrich(entry):
-        href_abs, title_fb, img_fb, preview_fb = entry
+        href_abs, title_fb, img_fb, preview_fb, date_fb = entry
         art = parse_article(href_abs)
         if art:
             if not art.get('img'):
@@ -695,6 +747,8 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
                 art['preview'] = (preview_fb or '')[:220]
             if not art.get('title'):
                 art['title'] = remove_date_from_title(title_fb)
+            if not art.get('date'):
+                art['date'] = normalize_date_iso(date_fb or '')
             return art
         else:
             # Extract date from URL as fallback when parse_article fails
@@ -709,7 +763,7 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
                 'href': href_abs,
                 'img': img_fb,
                 'preview': (preview_fb or '')[:220],
-                'date': url_date,
+                'date': url_date or normalize_date_iso(date_fb or ''),
             }
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
