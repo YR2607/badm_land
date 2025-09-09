@@ -19,6 +19,7 @@ type EmbedItem = {
   iframeHtml?: string | null
   externalUrl?: string
   cover?: string
+  coverUrl?: string
 }
 
 const parseEmbedField = (rawUrlOrHtml?: string): { url?: string; iframeHtml?: string | null } => {
@@ -97,6 +98,7 @@ const CmsEmbedsSection: FC = () => {
             iframeHtml: p.iframeHtml || null,
             externalUrl: extractExternalUrl(p.url, p.iframeHtml || null),
             cover: i?.cover || undefined,
+            coverUrl: i?.coverUrl || undefined,
           }
         })
         .sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime())
@@ -178,7 +180,9 @@ const CmsEmbedsSection: FC = () => {
                 <article className="group cursor-pointer h-full">
                   <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col border border-gray-100 hover:shadow-md">
                     <div className={`${index === 1 ? 'h-56 md:h-72 lg:h-[28rem]' : 'h-56'} relative overflow-hidden`}>
-                      {it.cover ? (
+                      {it.coverUrl ? (
+                        <img src={it.coverUrl} alt={it.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
+                      ) : it.cover ? (
                         <img src={it.cover} alt={it.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
                       ) : ogImages[it.id] ? (
                         <img src={ogImages[it.id]} alt={it.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />

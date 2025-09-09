@@ -51,6 +51,13 @@ export default defineType({
       description: 'Опционально: загрузите обложку, если картинка не подтягивается автоматически из Facebook',
     }),
     defineField({
+      name: 'coverUrl',
+      title: 'Обложка по ссылке (URL изображения)',
+      type: 'url',
+      description: 'Вставьте прямую ссылку на изображение (например, из поста Facebook). Если указано и валидно — будет использовано как картинка карточки.',
+      validation: (r) => r.uri({ allowRelative: false, scheme: ['http','https'] }),
+    }),
+    defineField({
       name: 'description',
       title: 'Описание',
       type: 'text',
