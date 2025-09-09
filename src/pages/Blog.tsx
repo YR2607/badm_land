@@ -1,38 +1,25 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Globe, Zap, Search, Filter, ArrowRight } from 'lucide-react';
-import { isCmsEnabled, fetchPosts, CmsPost, fetchClubEmbeds } from '../lib/cms';
+import { Globe, Search, Filter, ArrowRight } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
 
-type ClubEmbed = { title: string; url: string; description?: string; kind?: 'news' | 'event' };
+// We rely only on automated feeds on this page
 
 const Blog: FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [posts, setPosts] = useState<CmsPost[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize] = useState<number>(18);
+  const listTopRef = useRef<HTMLDivElement | null>(null)
+  const filtersRef = useRef<HTMLElement | null>(null)
   const [loading, setLoading] = useState<boolean>(true);
   const [bwf, setBwf] = useState<BwfItem[] | null>(null);
-  const [clubEmbeds, setClubEmbeds] = useState<ClubEmbed[]>([]);
+  // FB feeds disabled for clean slate
 
-  function toPluginSrc(input: string): string {
-    const raw = (input || '').trim();
-    if (!raw) return '';
-    const srcMatch = raw.match(/src=["']([^"']+)["']/i);
-    let url = '';
-    if (srcMatch && srcMatch[1]) url = srcMatch[1];
-    else {
-      const hrefMatch = raw.match(/href=["']([^"']+)["']/i);
-      if (hrefMatch && hrefMatch[1]) url = hrefMatch[1];
-    }
-    if (!url) url = raw;
-    if (/facebook\.com\/plugins\/(post|video)\.php/i.test(url)) return url;
-    const isVideo = /facebook\.com\/.+\/videos\//i.test(url);
-    const endpoint = isVideo ? 'video.php' : 'post.php';
-    return `https://www.facebook.com/plugins/${endpoint}?href=${encodeURIComponent(url)}&show_text=true&width=500`;
-  }
+  // No embeds processing needed on the Blog page
 
   useEffect(() => {
     // Switch category by URL hash (e.g., /blog#world-news)
@@ -53,17 +40,9 @@ const Blog: FC = () => {
     }
   }, [location.hash]);
 
-  useEffect(() => {
-    (async () => {
-      if (!isCmsEnabled) { setPosts([]); setLoading(false); return; }
-      try {
-        const data = await fetchPosts();
-        setPosts(data);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  // Loading indicator controlled by BWF/FB loaders
+
+  // FB feeds removed for now
 
   useEffect(() => {
     let alive = true;
@@ -75,10 +54,15 @@ const Blog: FC = () => {
           const items: BwfItem[] = (j?.items || []) as BwfItem[];
           if (!alive) return;
           setBwf(items);
+        } else {
+          if (!alive) return;
+          setBwf([]);
         }
       } catch {
         if (!alive) return;
         setBwf([]);
+      } finally {
+        if (alive) setLoading(false);
       }
     };
     load();
@@ -93,42 +77,14 @@ const Blog: FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    let alive = true;
-    (async () => {
-      try {
-        if (!isCmsEnabled) { setClubEmbeds([]); return; }
-        const embeds = await fetchClubEmbeds();
-        if (!alive) return;
-        setClubEmbeds(embeds as any);
-      } catch {
-        if (!alive) return;
-        setClubEmbeds([]);
-      }
-    })();
-    return () => { alive = false };
-  }, []);
+  // No manual embeds: we rely only on automated FB/BWF feeds
 
   const categories = [
     { value: 'all', label: 'Все', icon: <Filter className="w-4 h-4" /> },
-    { value: 'news', label: 'Новости клуба', icon: <Zap className="w-4 h-4" /> },
-    { value: 'event', label: 'События', icon: <Calendar className="w-4 h-4" /> },
     { value: 'world', label: 'Мировые новости', icon: <Globe className="w-4 h-4" /> }
   ];
 
   const merged = useMemo(() => {
-    const cms = posts.map(p => ({
-      id: p.id,
-      title: p.title,
-      excerpt: p.excerpt,
-      image: p.image,
-      date: p.date,
-      category: p.category,
-      author: p.author,
-      featured: p.featured,
-      _external: false as const,
-      _href: ''
-    }))
     const world = (bwf || []).map((it, idx) => ({
       id: `bwf-${idx}`,
       title: it.title,
@@ -141,21 +97,8 @@ const Blog: FC = () => {
       _external: true as const,
       _href: it.href
     }))
-    const club = (clubEmbeds || []).map((it, idx) => ({
-      id: `club-${idx}`,
-      title: it.title,
-      excerpt: it.description || '',
-      image: undefined as unknown as string,
-      date: new Date().toISOString(),
-      category: (it.kind || 'news') as 'news' | 'event',
-      author: undefined,
-      featured: false,
-      _external: true as const,
-      _href: it.url,
-      _embed: toPluginSrc(it.url),
-    }))
-    return [...club, ...cms, ...world]
-  }, [posts, bwf, clubEmbeds])
+    return [...world]
+  }, [bwf])
 
   const filteredNews = useMemo(() => {
     const list = merged
@@ -172,6 +115,25 @@ const Blog: FC = () => {
       return matchesCategory && (inTitle || inExcerpt)
     })
   }, [merged, selectedCategory, searchTerm])
+
+  // Reset to page 1 when filters/search change
+  useEffect(() => { setPage(1) }, [selectedCategory, searchTerm])
+
+  // Scroll to filters section when page changes
+  useEffect(() => {
+    const el = filtersRef.current || listTopRef.current
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [page])
+
+  const totalPages = Math.max(1, Math.ceil(filteredNews.length / pageSize))
+  const pageItems = useMemo(() => {
+    const start = (page - 1) * pageSize
+    return filteredNews.slice(start, start + pageSize)
+  }, [filteredNews, page, pageSize])
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -200,7 +162,6 @@ const Blog: FC = () => {
     <motion.div className="text-center py-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
       <div className="text-6xl mb-4">🗞️</div>
       <h3 className="text-xl font-semibold text-gray-900 mb-2">{text}</h3>
-      {!isCmsEnabled && <p className="text-gray-600">CMS не настроена</p>}
     </motion.div>
   );
 
@@ -215,7 +176,7 @@ const Blog: FC = () => {
         </div>
       </section>
 
-      <section className="py-8 bg-white">
+      <section ref={filtersRef as any} className="py-8 bg-white scroll-mt-28 md:scroll-mt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
             <motion.div className="relative flex-grow max-w-md" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
@@ -237,7 +198,7 @@ const Blog: FC = () => {
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Anchors for deep links */}
-          <div className="sr-only" id="all-news" />
+          <div ref={listTopRef} className="sr-only" id="all-news" />
           <div className="sr-only" id="world-news" />
           <div className="sr-only" id="club-news" />
           <div className="sr-only" id="event-news" />
@@ -247,16 +208,13 @@ const Blog: FC = () => {
             <Empty text="Пока нет материалов" />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredNews.map((news, index) => {
+              {pageItems.map((news, index) => {
                 const isExternal = (news as any)._external
                 const href = (news as any)._href
-                const embedSrc = (news as any)._embed as string | undefined
                 const Card = (
                   <motion.article key={(news as any).id || index} className="bg-white rounded-3xl p-6 group transition-transform duration-300" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.05 }}>
                     <div className="h-48 rounded-lg mb-4 overflow-hidden bg-gray-100">
-                      {embedSrc ? (
-                        <iframe title={`embed-${index}`} src={embedSrc} width="100%" height="100%" style={{ border: 'none', overflow: 'hidden' }} scrolling="no" frameBorder={0} allowFullScreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" />
-                      ) : news.image ? (
+                      {news.image ? (
                         <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
@@ -287,6 +245,33 @@ const Blog: FC = () => {
           )}
         </div>
       </section>
+
+      {/* Pagination Controls */}
+      {filteredNews.length > pageSize && (
+        <section className="pb-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between gap-4">
+              <button
+                className={`px-4 py-2 rounded-lg border text-sm font-medium ${page > 1 ? 'bg-white hover:bg-gray-50 border-gray-300 text-gray-900' : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'}`}
+                onClick={() => page > 1 && setPage(p => Math.max(1, p - 1))}
+                disabled={page <= 1}
+              >
+                ← Предыдущая
+              </button>
+              <div className="text-sm text-gray-600">
+                Страница {page} из {totalPages} • Показано {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filteredNews.length)} из {filteredNews.length}
+              </div>
+              <button
+                className={`px-4 py-2 rounded-lg border text-sm font-medium ${page < totalPages ? 'bg-white hover:bg-gray-50 border-gray-300 text-gray-900' : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'}`}
+                onClick={() => page < totalPages && setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages}
+              >
+                Следующая →
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 };

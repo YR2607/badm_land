@@ -4,8 +4,12 @@ import * as cheerio from 'cheerio'
 let cache: { ts: number; data: any[] } | null = null
 const TTL_MS = 10 * 60 * 1000
 
-const SCRAPERAPI_KEY = process.env.SCRAPERAPI_KEY
-const SCRAPINGBEE_KEY = process.env.SCRAPINGBEE_KEY
+function getProxyKeys() {
+  return {
+    SCRAPERAPI_KEY: process.env.SCRAPERAPI_KEY || '',
+    SCRAPINGBEE_KEY: process.env.SCRAPINGBEE_KEY || '',
+  }
+}
 
 function normalizeItem(p: any) {
   return {
@@ -35,6 +39,7 @@ async function fetchDirect(url: string): Promise<string> {
 }
 
 async function fetchViaProxy(url: string, render = false): Promise<string> {
+  const { SCRAPERAPI_KEY, SCRAPINGBEE_KEY } = getProxyKeys()
   if (SCRAPERAPI_KEY) {
     const proxyUrl = `https://api.scraperapi.com?api_key=${encodeURIComponent(SCRAPERAPI_KEY)}&url=${encodeURIComponent(url)}${render ? '&render=true' : ''}&country=de`
     const r = await fetch(proxyUrl, { cache: 'no-store' })
@@ -45,6 +50,13 @@ async function fetchViaProxy(url: string, render = false): Promise<string> {
     const r = await fetch(proxyUrl, { cache: 'no-store' })
     return r.text()
   }
+  // No proxy keys: try direct for mobile hosts
+  try {
+    const h = new URL(url).host
+    if (/^(m|mbasic)\.facebook\.com$/i.test(h)) {
+      return await fetchDirect(url)
+    }
+  } catch {}
   const u = new URL(url)
   return fetchDirect(`https://r.jina.ai/http://${u.host}${u.pathname}${u.search}`)
 }
@@ -53,14 +65,25 @@ async function fetchGraph(pageId: string, limit: number): Promise<any[]> {
   const token = process.env.FB_ACCESS_TOKEN
   if (!token) return []
   const fields = ['id','message','story','created_time','permalink_url','full_picture'].join(',')
-  const url = `https://graph.facebook.com/v18.0/${encodeURIComponent(pageId)}/posts?fields=${fields}&limit=${limit}&access_token=${encodeURIComponent(token)}`
+  // Graph API supports pagination via cursors; loop until we reach limit
+  let url = `https://graph.facebook.com/v18.0/${encodeURIComponent(pageId)}/posts?fields=${fields}&limit=${Math.min(50, Math.max(5, limit))}&access_token=${encodeURIComponent(token)}`
+  const out: any[] = []
   try {
-    const r = await fetch(url, { cache: 'no-store' })
-    if (!r.ok) return []
-    const j = await r.json()
-    const arr = Array.isArray(j?.data) ? j.data : []
-    return arr.map((p: any) => normalizeItem(p))
-  } catch { return [] }
+    while (url && out.length < limit) {
+      const r = await fetch(url, { cache: 'no-store' })
+      if (!r.ok) break
+      const j = await r.json()
+      const arr = Array.isArray(j?.data) ? j.data : []
+      for (const p of arr) {
+        out.push(normalizeItem(p))
+        if (out.length >= limit) break
+      }
+      const next = j?.paging?.next as string | undefined
+      if (!next) break
+      url = next
+    }
+  } catch {}
+  return out
 }
 
 function absolutize(url: string): string { if (!url) return ''; if (url.startsWith('http')) return url; return `https://m.facebook.com${url.startsWith('/') ? '' : '/'}${url}` }
@@ -69,7 +92,7 @@ function normText(text: string) { return (text || '').replace(/\s+/g, ' ').repla
 
 function toIso(dateText: string) { const d = new Date(dateText); return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString() }
 
-async function scrapeMobile(pageId: string, limit: number): Promise<any[]> {
+async function scrapeMobile(pageId: string, limit: number, maxPages: number = 12): Promise<any[]> {
   const candidates = [
     `https://m.facebook.com/profile.php?id=${encodeURIComponent(pageId)}&v=timeline`,
     `https://m.facebook.com/${encodeURIComponent(pageId)}/posts`,
@@ -83,7 +106,7 @@ async function scrapeMobile(pageId: string, limit: number): Promise<any[]> {
 
   const out: any[] = []
   const seen = new Set<string>()
-  for (let page = 0; page < 12 && out.length < limit; page++) {
+  for (let page = 0; page < maxPages && out.length < limit; page++) {
     const $ = cheerio.load(html)
     $('a[href]').each((_, a) => {
       const hrefRaw = ($(a).attr('href') || '').trim()
@@ -144,6 +167,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const limit = Math.max(1, Math.min(50, Number(req.query.limit || 12)))
     const wantEvents = String(req.query.type || '').toLowerCase() === 'events'
     const bypass = req.query.refresh === '1'
+    const depth = Math.max(1, Math.min(50, Number(req.query.depth || 12)))
 
     if (!bypass && cache && Date.now() - cache.ts < TTL_MS) {
       let data = cache.data.slice()
@@ -162,7 +186,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       } catch {}
       if (items.length < limit) {
         try {
-          const mob = await scrapeMobile(pageId, limit * 2)
+          const mob = await scrapeMobile(pageId, limit * 2, depth)
           const seen = new Set(items.map(i => i.url))
           for (const it of mob) { if (!seen.has(it.url)) { items.push(it); seen.add(it.url) } }
         } catch {}

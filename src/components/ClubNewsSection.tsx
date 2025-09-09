@@ -18,7 +18,7 @@ const ClubNewsSection: FC = () => {
     let alive = true
     const load = async () => {
       try {
-        const r = await fetch('/api/fb-feed?limit=10&refresh=1', { cache: 'no-store' })
+        const r = await fetch('/api/fb-rss?limit=10&refresh=1', { cache: 'no-store' })
         const j = await r.json()
         const arr: any[] = (j?.items || []) as any[]
         const mapped: ClubItem[] = arr
@@ -118,6 +118,8 @@ const ClubNewsSection: FC = () => {
             ))}
           </div>
         )}
+
+        
       </div>
     </section>
   )

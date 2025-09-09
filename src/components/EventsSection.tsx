@@ -18,9 +18,29 @@ const EventsSection: FC = () => {
     let alive = true
     const load = async () => {
       try {
-        const r = await fetch('/api/fb-feed?type=events&limit=10&refresh=1', { cache: 'no-store' })
-        const j = await r.json()
-        const arr: any[] = (j?.items || []) as any[]
+        let arr: any[] = []
+        try {
+          const r = await fetch('/api/fb-feed?type=events&limit=10&refresh=1', { cache: 'no-store' })
+          const j = await r.json()
+          arr = (j?.items || []) as any[]
+        } catch {
+          // Fallback to RSS App JSON (client-side) then filter event-like
+          const FEED_URL = (import.meta as any).env?.VITE_RSS_APP_FEED_URL || 'https://rss.app/feeds/v1.1/yneQwQdZWmbASmAF.json'
+          const r2 = await fetch(FEED_URL, { cache: 'no-store' })
+          const j2 = await r2.json()
+          const raw = ((j2?.items || []) as any[]).map((it: any) => ({
+            title: it.title,
+            url: it.url,
+            image: it.image,
+            date: it.date_published,
+            excerpt: (it.content_text || '').slice(0, 220)
+          }))
+          const isEventLike = (txt: string) => {
+            const t = (txt || '').toLowerCase()
+            return ['турнир','соревнован','чемпионат','cup','open','league','match','event','турнір','чемпіонат','кубок'].some(k => t.includes(k))
+          }
+          arr = raw.filter((it: any) => isEventLike(`${it.title} ${it.excerpt}`))
+        }
         const mapped: EventItem[] = arr
           .map(p => ({
             title: p.title || '',
