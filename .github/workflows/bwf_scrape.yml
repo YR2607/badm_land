@@ -25,9 +25,9 @@ jobs:
         env:
           SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
           SCRAPINGBEE_KEY: ${{ secrets.SCRAPINGBEE_KEY }}
-          # Default: parse ONLY from the specified championships page (news-single) overview block
+          # Default: parse ONLY from championships main and news pages (diverse per-card images)
           BWF_CHAMP_ONLY: '1'
-          BWF_CHAMP_URLS: 'https://bwfworldchampionships.bwfbadminton.com/news-single/2025/09/06/why-not-keep-going/'
+          BWF_CHAMP_URLS: 'https://bwfworldchampionships.bwfbadminton.com/,https://bwfworldchampionships.bwfbadminton.com/news/'
         run: |
           python scripts/bwf_scrape.py
       - name: Show scraped items count
