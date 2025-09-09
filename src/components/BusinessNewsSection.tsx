@@ -77,8 +77,8 @@ const BusinessNewsSection: React.FC = () => {
           // Convert permalink URLs to direct post URLs  
           const permalinkMatch = decodedHref.match(/facebook\.com\/permalink\.php\?story_fbid=([^&]+)&id=(\d+)/);
           if (permalinkMatch) {
-            const storyId = permalinkMatch[1].replace(/^pfbid/, '');
-            return `https://www.facebook.com/${permalinkMatch[2]}/posts/${storyId}`;
+            // Keep the original permalink format as it's more reliable
+            return decodedHref;
           }
           
           // Convert photo URLs to direct photo URLs
@@ -114,8 +114,8 @@ const BusinessNewsSection: React.FC = () => {
               // Convert permalink URLs to direct post URLs  
               const permalinkMatch = decodedHref.match(/facebook\.com\/permalink\.php\?story_fbid=([^&]+)&id=(\d+)/);
               if (permalinkMatch) {
-                const storyId = permalinkMatch[1].replace(/^pfbid/, '');
-                return `https://www.facebook.com/${permalinkMatch[2]}/posts/${storyId}`;
+                // Keep the original permalink format as it's more reliable
+                return decodedHref;
               }
               
               return decodedHref;

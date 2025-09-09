@@ -402,13 +402,15 @@ def parse_article(url: str) -> dict | None:
         u = to_abs_url(url, u)
         return re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', u, flags=re.IGNORECASE)
 
-    bad_keywords = ('logo', 'favicon', 'default', 'placeholder', 'sprite', 'WC25', 'FI-')
+    bad_keywords = ('logo', 'favicon', 'default', 'placeholder', 'sprite')
     content_selectors = [
         'article .entry-content img[src]',
         'article .wp-block-image img[src]',
         '.news-single .entry-content img[src]',
         '.single-post__content img[src]',
-        'article img[src]'
+        'article img[src]',
+        '.featured-image img[src]',
+        '.post-thumbnail img[src]'
     ]
     candidates: list[str] = []
     for sel in content_selectors:
@@ -428,8 +430,14 @@ def parse_article(url: str) -> dict | None:
             break
     img = candidates[0] if candidates else None
     if not img:
-        img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content') or (soup.select_one('meta[property="og:image:secure_url"][content]') or {}).get('content')
-        img = normalize_img(img or '') if img else ''
+        # Try og:image but avoid generic images
+        og_img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content') or (soup.select_one('meta[property="og:image:secure_url"][content]') or {}).get('content')
+        if og_img:
+            og_img = normalize_img(og_img)
+            low = og_img.lower()
+            # Only use og:image if it's not a generic image
+            if not any(k.lower() in low for k in bad_keywords) and not any(generic in low for generic in ['wc25', 'fi-', 'pablo-abian', 'momota-fi']):
+                img = og_img
     # Description/Preview
     desc = (soup.select_one('meta[name="description"][content]') or {}).get('content')
     if not desc:
@@ -475,6 +483,12 @@ def parse_article(url: str) -> dict | None:
             if d:
                 date_raw = d
                 break
+    if not date_raw:
+        # Try to extract date from URL path like /2025/09/07/
+        url_date_match = re.search(r'/(\d{4})/(\d{1,2})/(\d{1,2})/', url)
+        if url_date_match:
+            year, month, day = url_date_match.groups()
+            date_raw = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
     if not date_raw:
         # Fallback: parse from visible text like 'Friday, September 5, 2025'
         text_blocks = [
