@@ -46,19 +46,60 @@ const BusinessNewsSection: React.FC = () => {
   function extractPostUrl(input: string): string {
     const raw = (input || '').trim();
     if (!raw) return '';
+    
+    // First, decode any HTML entities
+    const decoded = raw.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    
     // If it's an iframe, get src
-    const srcMatch = raw.match(/src=["']([^"']+)["']/i);
-    let src = srcMatch?.[1] || raw;
-    // If src is a plugin URL, extract the href param
+    const srcMatch = decoded.match(/src=["']([^"']+)["']/i);
+    let src = srcMatch?.[1] || decoded;
+    
+    // If input looks like a direct Facebook URL, return it
+    if (/^https?:\/\/.*facebook\.com\/(?!plugins)/.test(src)) {
+      return src;
+    }
+    
     try {
       const u = new URL(src);
+      
+      // If src is a plugin URL, extract the href param and convert to proper Facebook URL
       if (/facebook\.com\/plugins\/(post|video)\.php/i.test(u.pathname)) {
         const href = u.searchParams.get('href');
-        if (href) return href;
+        if (href) {
+          const decodedHref = decodeURIComponent(href);
+          
+          // Convert video URLs to watch format
+          const videoMatch = decodedHref.match(/facebook\.com\/(\d+|[^\/]+)\/videos\/(\d+)/);
+          if (videoMatch) {
+            return `https://www.facebook.com/watch/?v=${videoMatch[2]}`;
+          }
+          
+          // Convert permalink URLs to direct post URLs  
+          const permalinkMatch = decodedHref.match(/facebook\.com\/permalink\.php\?story_fbid=([^&]+)&id=(\d+)/);
+          if (permalinkMatch) {
+            const storyId = permalinkMatch[1].replace(/^pfbid/, '');
+            return `https://www.facebook.com/${permalinkMatch[2]}/posts/${storyId}`;
+          }
+          
+          // Convert photo URLs to direct photo URLs
+          const photoMatch = decodedHref.match(/facebook\.com\/photo\.php\?fbid=(\d+)/);
+          if (photoMatch) {
+            return `https://www.facebook.com/photo/?fbid=${photoMatch[1]}`;
+          }
+          
+          // Return the original href if no specific pattern matches
+          return decodedHref;
+        }
       }
+      
       return src;
     } catch {
-      return src;
+      // If URL parsing fails, try to extract Facebook URL from the raw string
+      const fbUrlMatch = raw.match(/https?:\/\/[^"'\s]*facebook\.com\/[^"'\s]*/);
+      if (fbUrlMatch) {
+        return fbUrlMatch[0];
+      }
+      return '#';
     }
   }
 
