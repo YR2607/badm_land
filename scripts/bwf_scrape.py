@@ -382,8 +382,15 @@ def normalize_date_iso(s: str) -> str:
 def parse_article(url: str) -> dict | None:
     try:
         html = fetch(url)
-    except Exception:
-        return None
+    except Exception as e1:
+        # Retry via proxy on CI where direct requests may be blocked
+        try:
+            html = fetch_via_proxy(url)
+            print(f"Fetched article via proxy: {url}")
+        except Exception as e2:
+            # Give up if both attempts fail
+            print(f"Failed to fetch article {url}: {e1} / {e2}")
+            return None
     soup = BeautifulSoup(html, 'lxml')
     # Title
     title = (soup.select_one('meta[property="og:title"][content]') or {}).get('content') or (soup.title.string if soup.title else '')
