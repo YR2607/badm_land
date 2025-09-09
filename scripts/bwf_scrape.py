@@ -392,6 +392,17 @@ def parse_article(url: str) -> dict | None:
             print(f"Failed to fetch article {url}: {e1} / {e2}")
             return None
     soup = BeautifulSoup(html, 'lxml')
+    # Detect consent/cookie pages and bail so enrich() uses listing fallbacks
+    page_text = soup.get_text(" ", strip=True).lower()
+    consent_bad_signals = (
+        'we do not use cookies of this type',
+        'cookie',
+        'consent',
+        'privacy',
+        'gdpr'
+    )
+    if sum(1 for s in consent_bad_signals if s in page_text) >= 2:
+        return None
     # Title
     title = (soup.select_one('meta[property="og:title"][content]') or {}).get('content') or (soup.title.string if soup.title else '')
     title = (title or '').strip()
@@ -508,26 +519,52 @@ def parse_article(url: str) -> dict | None:
     
     # Return the best candidate, or None if no good candidates found
     img = candidates[0][0] if candidates else None
-    # Description/Preview
+    # Description/Preview (avoid cookie/consent text)
+    def is_bad_preview(t: str) -> bool:
+        t_low = (t or '').strip().lower()
+        if not t_low:
+            return True
+        bad_words = ('cookie', 'privacy', 'consent', 'we do not use cookies')
+        return any(b in t_low for b in bad_words) or len(t_low) < 12
+
     desc = (soup.select_one('meta[name="description"][content]') or {}).get('content')
-    if not desc:
-        p = soup.select_one('article p, .entry-content p, p')
-        if p:
-            desc = p.get_text(' ', strip=True)
+    if is_bad_preview(desc or ''):
+        # Prefer lines that look like BWF byline/date
+        paras = []
+        for sel in ['article p', '.entry-content p', '.single-post__content p', 'p']:
+            for node in soup.select(sel):
+                txt = node.get_text(' ', strip=True)
+                if txt:
+                    paras.append(txt)
+            if paras:
+                break
+        # Heuristics: pick first that contains 'TEXT BY' or a month name
+        month_re = re.compile(r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\b", re.I)
+        candidates = [t for t in paras if 'text by' in t.lower() or month_re.search(t)] or paras
+        for t in candidates:
+            if not is_bad_preview(t):
+                desc = t
+                break
+        if is_bad_preview(desc or ''):
+            desc = ''
     # Date
     date_raw = ''
     m = soup.select_one('meta[property="article:published_time"][content]')
     if m:
-        date_raw = (m.get('content') or '').strip()
+        date_raw = m.get('content') or ''
     if not date_raw:
-        m = soup.select_one('meta[name="article:published_time"][content]')
-        if m:
-            date_raw = (m.get('content') or '').strip()
-    if not date_raw:
+        # Try time tag or date text in article header/meta
         t = soup.select_one('time[datetime]')
-        if t:
-            date_raw = (t.get('datetime') or t.get_text(' ', strip=True) or '').strip()
+        if t and t.get('datetime'):
+            date_raw = t.get('datetime')
     if not date_raw:
+        # Try to extract date-like string from typical byline text
+        body_txt = soup.get_text(' ', strip=True)
+        m2 = re.search(r"(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+([A-Za-z]+)\s+\d{1,2},\s+\d{4}", body_txt)
+        if not m2:
+            m2 = re.search(r"([A-Za-z]+)\s+\d{1,2},\s+\d{4}", body_txt)
+        if m2:
+            date_raw = m2.group(0)
         # JSON-LD
         for s in soup.select('script[type="application/ld+json"]'):
             try:
