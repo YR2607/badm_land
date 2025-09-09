@@ -289,6 +289,9 @@ def parse_championships_list_only(page_url: str, limit: int = 40) -> list[dict]:
     wrap = soup.select_one('.news-overview-wrap') or soup
     items: list[dict] = []
     seen = set()
+    overrides = load_image_overrides()
+    by_href = (overrides.get('by_href') or {}) if isinstance(overrides, dict) else {}
+    by_title_substr = (overrides.get('by_title_substr') or {}) if isinstance(overrides, dict) else {}
     for a in wrap.select('a[href]'):
         href = a.get('href') or ''
         if '/news' not in href:
@@ -352,13 +355,16 @@ def parse_championships_list_only(page_url: str, limit: int = 40) -> list[dict]:
             if murl:
                 y, mo, d = murl.group(2), murl.group(3), murl.group(4)
                 date_raw = f"{y}-{mo.zfill(2)}-{d.zfill(2)}T00:00:00+00:00"
-        items.append({
+        # apply overrides for this item
+        ov_img = by_href.get(href_abs) or next((v for k, v in (by_title_substr.items()) if k and k.lower() in (title or '').lower()), None)
+        item = {
             'title': title or href_abs,
             'href': href_abs,
-            'img': img,
+            'img': ov_img or img,
             'preview': (preview or '')[:220],
             'date': normalize_date_iso(date_raw or ''),
-        })
+        }
+        items.append(item)
         if len(items) >= limit:
             break
     return items
