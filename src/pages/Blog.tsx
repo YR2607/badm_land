@@ -67,7 +67,7 @@ const Blog: FC = () => {
 
   useEffect(() => {
     let alive = true;
-    (async () => {
+    const load = async () => {
       try {
         const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
         if (r1.ok) {
@@ -80,8 +80,17 @@ const Blog: FC = () => {
         if (!alive) return;
         setBwf([]);
       }
-    })();
-    return () => { alive = false };
+    };
+    load();
+    const onFocus = () => load();
+    const onVisibility = () => { if (document.visibilityState === 'visible') load(); };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      alive = false;
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, []);
 
   useEffect(() => {
