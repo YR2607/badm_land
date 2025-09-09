@@ -44,6 +44,13 @@ export default defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'cover',
+      title: 'Обложка (кастомное изображение)',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Опционально: загрузите обложку, если картинка не подтягивается автоматически из Facebook',
+    }),
+    defineField({
       name: 'description',
       title: 'Описание',
       type: 'text',
@@ -51,3 +58,4 @@ export default defineType({
     }),
   ],
 })
+

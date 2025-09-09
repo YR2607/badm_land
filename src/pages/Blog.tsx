@@ -2,6 +2,7 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Globe, Search, Filter, ArrowRight } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { fetchClubEmbeds } from '../lib/cms';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
 
@@ -17,9 +18,10 @@ const Blog: FC = () => {
   const filtersRef = useRef<HTMLElement | null>(null)
   const [loading, setLoading] = useState<boolean>(true);
   const [bwf, setBwf] = useState<BwfItem[] | null>(null);
+  const [embeds, setEmbeds] = useState<any[]>([]);
   // FB feeds disabled for clean slate
 
-  // No embeds processing needed on the Blog page
+  // We now include manual embeds from CMS
 
   useEffect(() => {
     // Switch category by URL hash (e.g., /blog#world-news)
@@ -40,7 +42,7 @@ const Blog: FC = () => {
     }
   }, [location.hash]);
 
-  // Loading indicator controlled by BWF/FB loaders
+  // Loading indicator controlled by BWF and CMS loaders
 
   // FB feeds removed for now
 
@@ -48,19 +50,23 @@ const Blog: FC = () => {
     let alive = true;
     const load = async () => {
       try {
-        const r1 = await fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' });
+        const [r1, cmsList] = await Promise.all([
+          fetch('/data/bwf_news.json?t=' + Date.now(), { cache: 'no-store' }),
+          fetchClubEmbeds().catch(() => [] as any[]),
+        ]);
         if (r1.ok) {
           const j = await r1.json();
           const items: BwfItem[] = (j?.items || []) as BwfItem[];
-          if (!alive) return;
-          setBwf(items);
+          if (alive) setBwf(items);
         } else {
-          if (!alive) return;
-          setBwf([]);
+          if (alive) setBwf([]);
         }
+        if (alive) setEmbeds(Array.isArray(cmsList) ? cmsList : []);
       } catch {
-        if (!alive) return;
-        setBwf([]);
+        if (alive) {
+          setBwf([]);
+          setEmbeds([]);
+        }
       } finally {
         if (alive) setLoading(false);
       }
@@ -81,7 +87,9 @@ const Blog: FC = () => {
 
   const categories = [
     { value: 'all', label: 'Все', icon: <Filter className="w-4 h-4" /> },
-    { value: 'world', label: 'Мировые новости', icon: <Globe className="w-4 h-4" /> }
+    { value: 'world', label: 'Мировые новости', icon: <Globe className="w-4 h-4" /> },
+    { value: 'news', label: 'Новости клуба', icon: <Filter className="w-4 h-4" /> },
+    { value: 'event', label: 'События', icon: <Filter className="w-4 h-4" /> },
   ];
 
   const merged = useMemo(() => {
@@ -95,10 +103,39 @@ const Blog: FC = () => {
       author: undefined,
       featured: false,
       _external: true as const,
-      _href: it.href
+      _href: it.href,
     }))
-    return [...world]
-  }, [bwf])
+    const fromCms = (embeds || []).map((i: any, idx: number) => {
+      const raw = (i?.url || '').trim()
+      const isIframe = /<\s*iframe[\s\S]*?>/i.test(raw)
+      // Extract external URL from iframe src href param if present
+      let external = undefined as string | undefined
+      if (isIframe) {
+        try {
+          const m = raw.match(/<iframe[^>]*\s+src=["']([^"']+)["'][^>]*>/i)
+          const src = m?.[1]
+          if (src) {
+            const u = new URL(src, window.location.origin)
+            const hrefParam = u.searchParams.get('href')
+            external = hrefParam ? decodeURIComponent(hrefParam) : src
+          }
+        } catch { /* noop */ }
+      }
+      return {
+        id: `cms-${idx}-${i?.publishedAt || ''}`,
+        title: i?.title || '',
+        excerpt: i?.description || '',
+        image: i?.cover || undefined,
+        date: i?.publishedAt || new Date().toISOString(),
+        category: (i?.kind === 'event' ? 'event' : 'news') as 'news' | 'event',
+        author: undefined,
+        featured: false,
+        _external: true,
+        _href: isIframe ? external : raw,
+      }
+    })
+    return [...world, ...fromCms]
+  }, [bwf, embeds])
 
   const filteredNews = useMemo(() => {
     const list = merged

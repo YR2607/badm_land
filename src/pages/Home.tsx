@@ -3,7 +3,7 @@ import Hero from '../components/Hero';
 import BusinessNewsSection from '../components/BusinessNewsSection';
 import ServicesSection from '../components/ServicesSection';
 import AchievementsSection from '../components/AchievementsSection';
-import ClubNewsSection from '../components/ClubNewsSection';
+import CmsEmbedsSection from '../components/CmsEmbedsSection';
 
 const Home: FC = () => {
   return (
@@ -12,7 +12,7 @@ const Home: FC = () => {
       <AchievementsSection />
       <ServicesSection />
       <BusinessNewsSection />
-      <ClubNewsSection />
+      <CmsEmbedsSection />
     </div>
   );
 };
