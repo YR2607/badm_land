@@ -181,11 +181,11 @@ const CmsEmbedsSection: FC = () => {
                   <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col border border-gray-100 hover:shadow-md">
                     <div className={`${index === 1 ? 'h-56 md:h-72 lg:h-[28rem]' : 'h-56'} relative overflow-hidden`}>
                       {it.coverUrl ? (
-                        <img src={it.coverUrl} alt={it.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
+                        <img src={it.coverUrl} alt={it.title} referrerPolicy="no-referrer" className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
                       ) : it.cover ? (
                         <img src={it.cover} alt={it.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
                       ) : ogImages[it.id] ? (
-                        <img src={ogImages[it.id]} alt={it.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
+                        <img src={ogImages[it.id]} alt={it.title} referrerPolicy="no-referrer" className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
                       ) : (
                         <>
                           <div className={`absolute inset-0 ${imageFallbackClass(it.kind)}`} />
