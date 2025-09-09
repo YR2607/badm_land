@@ -94,12 +94,39 @@ const BusinessNewsSection: React.FC = () => {
       
       return src;
     } catch {
-      // If URL parsing fails, try to extract Facebook URL from the raw string
-      const fbUrlMatch = raw.match(/https?:\/\/[^"'\s]*facebook\.com\/[^"'\s]*/);
-      if (fbUrlMatch) {
-        return fbUrlMatch[0];
+      // Try to extract any Facebook URL from the raw string as fallback
+      try {
+        const fbUrlMatch = raw.match(/https?:\/\/[^"'\s<>&]*facebook\.com\/[^"'\s<>&]*/);
+        if (fbUrlMatch) {
+          const url = fbUrlMatch[0];
+          // If it's a plugin URL, try to extract href parameter
+          if (url.includes('/plugins/')) {
+            const hrefMatch = url.match(/href=([^&"'\s]+)/);
+            if (hrefMatch) {
+              const decodedHref = decodeURIComponent(hrefMatch[1]);
+              
+              // Convert video URLs to watch format
+              const videoMatch = decodedHref.match(/facebook\.com\/(\d+|[^\/]+)\/videos\/(\d+)/);
+              if (videoMatch) {
+                return `https://www.facebook.com/watch/?v=${videoMatch[2]}`;
+              }
+              
+              // Convert permalink URLs to direct post URLs  
+              const permalinkMatch = decodedHref.match(/facebook\.com\/permalink\.php\?story_fbid=([^&]+)&id=(\d+)/);
+              if (permalinkMatch) {
+                const storyId = permalinkMatch[1].replace(/^pfbid/, '');
+                return `https://www.facebook.com/${permalinkMatch[2]}/posts/${storyId}`;
+              }
+              
+              return decodedHref;
+            }
+          }
+          return url;
+        }
+        return '#';
+      } catch {
+        return '#';
       }
-      return '#';
     }
   }
 
