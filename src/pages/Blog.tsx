@@ -1,15 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Globe, Zap, Search, Filter, ArrowRight } from 'lucide-react';
 import { isCmsEnabled, fetchPosts, CmsPost, fetchClubEmbeds } from '../lib/cms';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
 
 type ClubEmbed = { title: string; url: string; description?: string; kind?: 'news' | 'event' };
 
-const Blog: React.FC = () => {
+const Blog: FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [posts, setPosts] = useState<CmsPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,6 +33,25 @@ const Blog: React.FC = () => {
     const endpoint = isVideo ? 'video.php' : 'post.php';
     return `https://www.facebook.com/plugins/${endpoint}?href=${encodeURIComponent(url)}&show_text=true&width=500`;
   }
+
+  useEffect(() => {
+    // Switch category by URL hash (e.g., /blog#world-news)
+    const hash = (location.hash || '').replace('#', '');
+    const map: Record<string, string> = {
+      'world-news': 'world',
+      'club-news': 'news',
+      'event-news': 'event',
+      'all-news': 'all',
+    };
+    if (map[hash]) {
+      setSelectedCategory(map[hash]);
+      // slight delay to allow layout before scroll into view
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
+  }, [location.hash]);
 
   useEffect(() => {
     (async () => {
@@ -161,7 +181,7 @@ const Blog: React.FC = () => {
     }
   };
 
-  const Empty: React.FC<{ text: string }> = ({ text }) => (
+  const Empty: FC<{ text: string }> = ({ text }) => (
     <motion.div className="text-center py-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
       <div className="text-6xl mb-4">🗞️</div>
       <h3 className="text-xl font-semibold text-gray-900 mb-2">{text}</h3>
@@ -201,6 +221,11 @@ const Blog: React.FC = () => {
 
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Anchors for deep links */}
+          <div className="sr-only" id="all-news" />
+          <div className="sr-only" id="world-news" />
+          <div className="sr-only" id="club-news" />
+          <div className="sr-only" id="event-news" />
           {loading && merged.length === 0 ? (
             <Empty text="Загрузка..." />
           ) : filteredNews.length === 0 ? (
