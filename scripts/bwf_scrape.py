@@ -400,44 +400,107 @@ def parse_article(url: str) -> dict | None:
         if not u:
             return u
         u = to_abs_url(url, u)
-        return re.sub(r'-\d+x\d+\.(jpg|jpeg|png|webp)$', r'.\1', u, flags=re.IGNORECASE)
+        # Remove size parameters from URL but keep the file extension
+        u = re.sub(r'(-\d+x\d+)(\.(?:jpg|jpeg|png|webp))$', r'\2', u, flags=re.IGNORECASE)
+        # Remove any query parameters
+        return u.split('?')[0]
 
-    bad_keywords = ('logo', 'favicon', 'default', 'placeholder', 'sprite')
+    # Keywords that indicate generic/non-article images
+    bad_keywords = ('logo', 'favicon', 'default', 'placeholder', 'sprite', 'icon', 'avatar', 'thumbnail')
+    generic_image_terms = ('wc25', 'fi-', 'pablo-abian', 'momota', 'header', 'banner', 'featured')
+    
+    # Ordered list of selectors to try for finding article images
     content_selectors = [
-        'article .entry-content img[src]',
         'article .wp-block-image img[src]',
+        'article figure img[src]',
+        'article .entry-content img[src]',
         '.news-single .entry-content img[src]',
         '.single-post__content img[src]',
+        '.post-content img[src]',
+        '.article-content img[src]',
         'article img[src]',
         '.featured-image img[src]',
-        '.post-thumbnail img[src]'
+        '.post-thumbnail img[src]',
+        'img[src]'  # Last resort
     ]
-    candidates: list[str] = []
+    
+    # Collect all candidate images with their priority
+    candidates = []
+    
+    # Check for Open Graph image first
+    og_img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content') or \
+             (soup.select_one('meta[property="og:image:secure_url"][content]') or {}).get('content')
+    if og_img:
+        og_img = normalize_img(og_img)
+        if og_img.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+            # Give OG image high priority but we'll still check others
+            candidates.append((og_img, 90))  # High priority
+    
+    # Check for Twitter card image
+    twitter_img = (soup.select_one('meta[name="twitter:image"][content]') or {}).get('content')
+    if twitter_img:
+        twitter_img = normalize_img(twitter_img)
+        if twitter_img.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')) and twitter_img not in [c[0] for c in candidates]:
+            candidates.append((twitter_img, 85))  # High priority but lower than OG
+    
+    # Scan the article for images
     for sel in content_selectors:
-        for node in soup.select(sel):
+        for i, node in enumerate(soup.select(sel)):
             src = (node.get('src') or '').strip()
-            if not src or src.lower().endswith('.svg'):
+            if not src or src.lower().endswith(('.svg', '.gif')):
                 continue
+                
             abs_src = normalize_img(src)
-            if not abs_src:
+            if not abs_src or abs_src in [c[0] for c in candidates]:
                 continue
+                
+            # Skip if it's a data URL or base64 image
+            if src.startswith(('data:', 'http')) and not src.startswith(('http://', 'https://')):
+                continue
+                
+            # Skip generic images
             low = abs_src.lower()
-            if any(k.lower() in low for k in bad_keywords):
+            if any(k in low for k in bad_keywords) or any(term in low for term in generic_image_terms):
                 continue
-            if ('/wp-content/uploads/' in abs_src) or low.endswith(('.jpg', '.jpeg', '.png', '.webp')):
-                candidates.append(abs_src)
-        if candidates:
-            break
-    img = candidates[0] if candidates else None
-    if not img:
-        # Try og:image but avoid generic images
-        og_img = (soup.select_one('meta[property="og:image"][content]') or {}).get('content') or (soup.select_one('meta[property="og:image:secure_url"][content]') or {}).get('content')
-        if og_img:
-            og_img = normalize_img(og_img)
-            low = og_img.lower()
-            # Only use og:image if it's not a generic image
-            if not any(k.lower() in low for k in bad_keywords) and not any(generic in low for generic in ['wc25', 'fi-', 'pablo-abian', 'momota-fi']):
-                img = og_img
+                
+            # Check if the image is likely to be content
+            parent_classes = ' '.join(node.find_parents(class_=True)[0].get('class', [])) if node.find_parents(class_=True) else ''
+            parent_classes = parent_classes.lower()
+            
+            # Skip if in a header, footer, or sidebar
+            if any(x in parent_classes for x in ('header', 'footer', 'sidebar', 'widget', 'nav', 'menu')):
+                continue
+                
+            # Calculate priority (earlier in DOM is better, larger images are better)
+            priority = 80 - i  # Base priority based on selector order
+            
+            # Check image dimensions if available
+            width = None
+            height = None
+            if node.get('width') and node['width'].isdigit():
+                width = int(node['width'])
+            if node.get('height') and node['height'].isdigit():
+                height = int(node['height'])
+                
+            # Adjust priority based on size (larger images are better)
+            if width and height:
+                area = width * height
+                if area > 500 * 500:  # Large images get higher priority
+                    priority += 10
+                elif area < 100 * 100:  # Very small images get lower priority
+                    priority -= 10
+                    
+            # Check if image is above the fold (in first 5 images)
+            if i < 5:
+                priority += 5
+                
+            candidates.append((abs_src, priority))
+    
+    # Sort candidates by priority (highest first)
+    candidates.sort(key=lambda x: -x[1])
+    
+    # Return the best candidate, or None if no good candidates found
+    img = candidates[0][0] if candidates else None
     # Description/Preview
     desc = (soup.select_one('meta[name="description"][content]') or {}).get('content')
     if not desc:
@@ -611,11 +674,23 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
 def scrape() -> dict:
     # Championships site - check both news page and main page
     champ_items = []
-    champ_pages = [
+    default_pages = [
         'https://bwfworldchampionships.bwfbadminton.com/',  # Main page first (has latest)
         'https://bwfworldchampionships.bwfbadminton.com/news/',  # News page second
     ]
-    
+    # Allow overriding/adding pages via env var (comma-separated)
+    extra = os.environ.get('BWF_CHAMP_URLS', '').strip()
+    extra_pages = [u.strip() for u in extra.split(',') if u.strip()] if extra else []
+    only = os.environ.get('BWF_CHAMP_ONLY', '').strip().lower() in ('1', 'true', 'yes')
+    # Deduplicate while preserving order. If ONLY is set and extras provided -> use only extras.
+    seen_pages = set()
+    champ_pages: list[str] = []
+    source_pages = (extra_pages if (only and extra_pages) else (extra_pages + default_pages))
+    for u in source_pages:
+        if u and (u not in seen_pages):
+            champ_pages.append(u)
+            seen_pages.add(u)
+
     # Parse all pages first, then deduplicate
     for url in champ_pages:
         part = parse_championships_overview(url, limit=40)
