@@ -39,7 +39,7 @@ const BusinessNewsSection: FC = () => {
             const db = new Date(b?.date || 0).getTime();
             return db - da;
           })
-          .slice(0, 6);
+          .slice(0, 5);
         if (alive) setWorldNews(items);
       } catch (e: any) {
         if (alive) setError(e?.message || 'Не удалось загрузить новости');
@@ -81,12 +81,12 @@ const BusinessNewsSection: FC = () => {
         )}
 
         {!loading && !error && worldNews.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {worldNews.map((news) => (
-              <a key={news.href} href={news.href} target="_blank" rel="noreferrer" className="group">
-                <article className="group cursor-pointer">
-                  <div className="bg-white rounded-xl border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-                    <div className={`h-56 relative overflow-hidden`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:auto-rows-[1fr]">
+            {worldNews.map((news, index) => (
+              <a key={news.href} href={news.href} target="_blank" rel="noreferrer" className={`group ${index === 1 ? 'lg:row-span-2' : ''}`}>
+                <article className="group cursor-pointer h-full">
+                  <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+                    <div className={`${index === 1 ? 'h-56 md:h-72 lg:h-[28rem]' : 'h-56'} relative overflow-hidden`}>
                       {news.img ? (
                         <img src={news.img} alt={news.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
                       ) : (
@@ -94,7 +94,7 @@ const BusinessNewsSection: FC = () => {
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                     </div>
-                    <div className="p-5">
+                    <div className="p-5 flex-1 flex flex-col">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center space-x-2 text-gray-500">
                           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -104,9 +104,9 @@ const BusinessNewsSection: FC = () => {
                         </div>
                         <div className="px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500">🌍 Мир</div>
                       </div>
-                      <h3 className="font-bold text-xl md:text-2xl text-gray-900 leading-snug mb-2 break-words whitespace-normal">{news.title}</h3>
+                      <h3 className={`font-bold text-gray-900 leading-snug mb-2 break-words whitespace-normal ${index === 1 ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'}`}>{news.title}</h3>
                       {news.preview && (
-                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{news.preview}</p>
+                        <p className={`text-gray-600 leading-relaxed ${index === 1 ? 'text-base md:text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>{news.preview}</p>
                       )}
                       <div className="mt-4 flex items-center space-x-2 text-primary-blue transition-all duration-300">
                         <span className="text-sm font-semibold">Читать далее</span>
