@@ -1,4 +1,11 @@
 {
+  "git": {
+    "deploymentEnabled": {
+      "preview": false,
+      "production": false
+    }
+  },
+  "ignoreCommand": "exit 0",
   "routes": [
     { "handle": "filesystem" },
     { "src": "^/api/(.*)$", "dest": "/api/$1" },
