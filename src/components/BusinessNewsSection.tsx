@@ -81,47 +81,44 @@ const BusinessNewsSection: FC = () => {
         )}
 
         {!loading && !error && worldNews.length > 0 && (
-          <div className="columns-1 md:columns-2 lg:columns-3">
-            {worldNews.map((news, index) => {
-              const heightClass = ['h-64', 'h-56', 'h-72', 'h-60'][index % 4];
-              return (
-                <a key={news.href} href={news.href} target="_blank" rel="noreferrer" className="group">
-                  <article className="group cursor-pointer mb-8 break-inside-avoid">
-                    <div className="bg-white rounded-xl border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-                      <div className={`${heightClass} relative overflow-hidden`}> 
-                        {news.img ? (
-                          <img src={news.img} alt={news.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
-                        ) : (
-                          <div className={`absolute inset-0 bg-gradient-to-br from-orange-500 to-red-500`} />
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                      </div>
-                      <div className="p-5">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center space-x-2 text-gray-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                              <path d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 0 0 2-2v-8H3v8a2 2 0 0 0 2 2Z" />
-                            </svg>
-                            <span className="text-xs md:text-sm font-medium">{formatDate(news.date)}</span>
-                          </div>
-                          <div className="px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500">🌍 Мир</div>
-                        </div>
-                        <h3 className="font-bold text-xl md:text-2xl text-gray-900 leading-snug mb-2 break-words whitespace-normal">{news.title}</h3>
-                        {news.preview && (
-                          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{news.preview}</p>
-                        )}
-                        <div className="mt-4 flex items-center space-x-2 text-primary-blue transition-all duration-300">
-                          <span className="text-sm font-semibold">Читать далее</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M5 12h14M12 5l7 7-7 7" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {worldNews.map((news) => (
+              <a key={news.href} href={news.href} target="_blank" rel="noreferrer" className="group">
+                <article className="group cursor-pointer">
+                  <div className="bg-white rounded-xl border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                    <div className={`h-56 relative overflow-hidden`}>
+                      {news.img ? (
+                        <img src={news.img} alt={news.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
+                      ) : (
+                        <div className={`absolute inset-0 bg-gradient-to-br from-orange-500 to-red-500`} />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                    </div>
+                    <div className="p-5">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-2 text-gray-500">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                            <path d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 0 0 2-2v-8H3v8a2 2 0 0 0 2 2Z" />
                           </svg>
+                          <span className="text-xs md:text-sm font-medium">{formatDate(news.date)}</span>
                         </div>
+                        <div className="px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500">🌍 Мир</div>
+                      </div>
+                      <h3 className="font-bold text-xl md:text-2xl text-gray-900 leading-snug mb-2 break-words whitespace-normal">{news.title}</h3>
+                      {news.preview && (
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{news.preview}</p>
+                      )}
+                      <div className="mt-4 flex items-center space-x-2 text-primary-blue transition-all duration-300">
+                        <span className="text-sm font-semibold">Читать далее</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
                       </div>
                     </div>
-                  </article>
-                </a>
-              );
-            })}
+                  </div>
+                </article>
+              </a>
+            ))}
           </div>
         )}
 

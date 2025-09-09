@@ -1,26 +1,42 @@
-import React from 'react'
+import { FC, useEffect, useState } from 'react'
 
 type Item = { title: string; href: string; img?: string; preview?: string; date?: string }
 
-const BWFNewsSection: React.FC = () => {
-  const [items, setItems] = React.useState<Item[] | null>(null)
-  const [error, setError] = React.useState<string | null>(null)
+const BWFNewsSection: FC = () => {
+  const [items, setItems] = useState<Item[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     let alive = true
     const run = async () => {
       try {
-        const r = await fetch('/api/bwf-news')
+        const r = await fetch('/api/bwf-news?refresh=1', { cache: 'no-store' })
         const data = await r.json()
         if (!alive) return
-        setItems((data?.items || []) as Item[])
+        const arr: Item[] = (data?.items || []) as Item[]
+        const sorted = arr
+          .slice()
+          .sort((a: any, b: any) => {
+            const da = new Date(a?.date || 0).getTime()
+            const db = new Date(b?.date || 0).getTime()
+            return db - da
+          })
+        setItems(sorted)
       } catch (e: any) {
         if (!alive) return
         setError(e?.message || 'Ошибка загрузки')
       }
     }
     run()
-    return () => { alive = false }
+    const onFocus = () => run()
+    const onVis = () => { if (document.visibilityState === 'visible') run() }
+    window.addEventListener('focus', onFocus)
+    document.addEventListener('visibilitychange', onVis)
+    return () => { 
+      alive = false 
+      window.removeEventListener('focus', onFocus)
+      document.removeEventListener('visibilitychange', onVis)
+    }
   }, [])
 
   if (error) return <div className="text-center text-red-500 py-6">{error}</div>
@@ -35,7 +51,7 @@ const BWFNewsSection: React.FC = () => {
           <p className="text-gray-600">Автоматически собранные новости с bwfbadminton.com</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {items.map((it) => (
+          {items.map((it: Item) => (
             <a key={it.href} href={it.href} target="_blank" rel="noreferrer" className="group rounded-2xl bg-white overflow-hidden border border-gray-100 hover:shadow-md transition-all">
               <div className="h-48 bg-gray-100 overflow-hidden">
                 {it.img ? (
