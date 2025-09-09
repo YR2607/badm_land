@@ -697,12 +697,19 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
                 art['title'] = remove_date_from_title(title_fb)
             return art
         else:
+            # Extract date from URL as fallback when parse_article fails
+            url_date = ''
+            url_date_match = re.search(r'/(\d{4})/(\d{1,2})/(\d{1,2})/', href_abs)
+            if url_date_match:
+                year, month, day = url_date_match.groups()
+                url_date = f"{year}-{month.zfill(2)}-{day.zfill(2)}T00:00:00+00:00"
+            
             return {
                 'title': title_fb or href_abs,
                 'href': href_abs,
                 'img': img_fb,
                 'preview': (preview_fb or '')[:220],
-                'date': '',
+                'date': url_date,
             }
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:

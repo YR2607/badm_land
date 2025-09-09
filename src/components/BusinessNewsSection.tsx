@@ -121,7 +121,7 @@ const BusinessNewsSection: FC = () => {
         {!loading && !error && (
           <div className="mt-6 flex justify-center">
             <a
-              href="/news#world-news"
+              href="/blog"
               className="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800 transition-colors"
             >
               Смотреть все новости
