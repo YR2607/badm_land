@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award, Users, MapPin, Clock, Target, Heart, ChevronRight, Star, Trophy, Zap, Shield, Calendar, Play, ArrowRight, Sparkles } from 'lucide-react';
+import { Award, Users, MapPin, Clock, Target, Heart, Trophy, Zap, Calendar, ArrowRight } from 'lucide-react';
 import { fetchPage, isCmsEnabled, CmsPage } from '../lib/cms';
 
-const About: React.FC = () => {
+const About: FC = () => {
   const [page, setPage] = useState<CmsPage | null>(null);
   const [activeTab, setActiveTab] = useState<'mission' | 'coaches' | 'facility'>('mission');
   const [showAllHistory, setShowAllHistory] = useState(false);
@@ -155,21 +155,19 @@ const About: React.FC = () => {
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                className="bg-white rounded-3xl p-8 text-center group transition-all duration-300 hover:shadow-2xl"
-                initial={{ opacity: 0, y: 30 }}
+                className="bg-white rounded-3xl p-8 text-center group transition-transform duration-200"
+                initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.35, ease: 'easeOut', delay: index * 0.05 }}
                 whileHover={{ 
-                  y: -10,
-                  rotateX: 5,
-                  rotateY: 5,
-                  scale: 1.05,
-                  transition: { duration: 0.3 }
+                  y: -6,
+                  scale: 1.03,
+                  transition: { duration: 0.18, ease: 'easeOut' }
                 }}
-                style={{ transformStyle: 'preserve-3d' }}
+                style={{ willChange: 'transform' }}
               >
-                <div className={`w-16 h-16 bg-gradient-to-r ${stat.color} rounded-full flex items-center justify-center text-white mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-16 h-16 bg-gradient-to-r ${stat.color} rounded-full flex items-center justify-center text-white mx-auto mb-4 transition-transform duration-200 group-hover:scale-105`}>
                   {stat.icon}
                 </div>
                 <div className="text-3xl font-bold text-primary-black mb-2">{stat.number}</div>
@@ -381,7 +379,7 @@ const About: React.FC = () => {
               
               return (
                 <div className="space-y-12">
-                  {ordered.map(([year, list], gIdx) => (
+                  {ordered.map(([year, list]) => (
                     <div key={year}>
                       {/* Year divider */}
                       <div className="relative mb-8">
@@ -589,11 +587,12 @@ const About: React.FC = () => {
               <motion.div 
                 key={index} 
                 className="group relative" 
-                initial={{ opacity: 0, y: 30 }} 
+                initial={{ opacity: 0, y: 16 }} 
                 whileInView={{ opacity: 1, y: 0 }} 
-                viewport={{ once: true }} 
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                whileHover={{ y: -10 }}
+                viewport={{ once: true, amount: 0.2 }} 
+                transition={{ duration: 0.32, ease: 'easeOut', delay: index * 0.06 }}
+                whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.16, ease: 'easeOut' } }}
+                style={{ willChange: 'transform' }}
               >
                 {/* Card with gradient background */}
                 <div className="relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 group-hover:border-primary-blue/20 overflow-hidden">
