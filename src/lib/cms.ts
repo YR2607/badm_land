@@ -143,14 +143,23 @@ export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
 export async function fetchClubEmbeds(): Promise<any[]> {
   if (!sanityClient) return [];
   const query = groq`*[_type == "clubEmbed"] | order(coalesce(publishedAt, _createdAt) desc){ title, url, description, kind, publishedAt, "cover": cover.asset->url, coverUrl }`;
-  const list = await sanityClient.fetch(query);
+  
+  // Отключаем CDN для получения свежих данных
+  const freshClient = createClient({ 
+    projectId: sanityClient.config().projectId!, 
+    dataset: sanityClient.config().dataset!, 
+    apiVersion: sanityClient.config().apiVersion!, 
+    useCdn: false 
+  });
+  
+  const list = await freshClient.fetch(query);
   return (list || []).map((i: any) => ({
     title: i?.title || '',
     url: i?.url || '',
     description: i?.description || '',
     kind: i?.kind || 'news',
     publishedAt: i?.publishedAt || null,
-    cover: i?.cover || undefined,
+    cover: i?.cover || i?.coverUrl || undefined,
     coverUrl: i?.coverUrl || undefined,
   }));
 }

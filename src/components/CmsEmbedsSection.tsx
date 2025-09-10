@@ -165,7 +165,6 @@ const CmsEmbedsSection: FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Новости клуба и события</h2>
-          <p className="text-gray-600">Материалы, добавленные вручную в CMS (включая iframe)</p>
         </div>
 
         {loading && (<div className="text-center text-gray-500 py-8">Загрузка…</div>)}
@@ -178,7 +177,7 @@ const CmsEmbedsSection: FC = () => {
               const badge = it.kind === 'event' ? '🎫 Событие' : '🏸 Клуб'
               const card = (
                 <article className="group cursor-pointer h-full">
-                  <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col border border-gray-100 hover:shadow-md">
+                  <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
                     <div className={`${index === 1 ? 'h-56 md:h-72 lg:h-[28rem]' : 'h-56'} relative overflow-hidden`}>
                       {it.coverUrl ? (
                         <img src={it.coverUrl} alt={it.title} referrerPolicy="no-referrer" className="absolute inset-0 w-full h-full object-cover object-top transform transition-transform duration-300 group-hover:scale-[1.02]" />
@@ -208,7 +207,7 @@ const CmsEmbedsSection: FC = () => {
                         <p className={`text-gray-600 ${index === 1 ? 'text-base md:text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>{it.description}</p>
                       )}
                       <div className="mt-4 flex items-center space-x-2 text-primary-blue transition-all duration-300">
-                        <span className="text-sm font-semibold">Открыть в Facebook</span>
+                        <span className="text-sm font-semibold">Читать далее</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>

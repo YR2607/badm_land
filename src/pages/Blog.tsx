@@ -72,12 +72,21 @@ const Blog: FC = () => {
       }
     };
     load();
+    
+    // Добавляем интервал для периодического обновления CMS данных
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        load();
+      }
+    }, 30000); // Обновляем каждые 30 секунд
+    
     const onFocus = () => load();
     const onVisibility = () => { if (document.visibilityState === 'visible') load(); };
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
       alive = false;
+      clearInterval(interval);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onVisibility);
     };
@@ -252,7 +261,7 @@ const Blog: FC = () => {
                   <motion.article key={(news as any).id || index} className="bg-white rounded-3xl p-6 group transition-transform duration-300" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.05 }}>
                     <div className="h-48 rounded-lg mb-4 overflow-hidden bg-gray-100">
                       {news.image ? (
-                        <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
+                        <img src={news.image} alt={news.title} className="w-full h-full object-cover object-top" />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
                       )}
