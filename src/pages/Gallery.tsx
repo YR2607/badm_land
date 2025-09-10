@@ -131,8 +131,18 @@ const Gallery: FC = () => {
     return () => window.removeEventListener('keydown', onKey);
   }, [lightbox]);
 
-  const pillClasses = (id: string) => `px-4 py-2 rounded-full text-sm font-medium transition-all ${activeSection === id ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 hover:bg-primary-blue/10'}`;
+  const pillClasses = (id: string) => `px-4 py-2 rounded-full text-sm font-medium transition-all border ${activeSection === id ? 'bg-primary-blue text-white border-primary-blue shadow-sm' : 'bg-white text-gray-700 border-gray-200 hover:border-primary-blue/40 hover:bg-primary-blue/5'}`;
   const Empty = ({ text }: { text: string }) => (<div className="text-center text-gray-500 py-8">{text}</div>);
+
+  const SkeletonCard = () => (
+    <div className="relative rounded-2xl overflow-hidden bg-white border border-gray-200 animate-pulse">
+      <div className="h-28 bg-gray-100" />
+      <div className="p-4">
+        <div className="h-4 w-2/3 bg-gray-200 rounded mb-2" />
+        <div className="h-3 w-1/2 bg-gray-100 rounded" />
+      </div>
+    </div>
+  )
 
   const applyFilters = (list: TournamentCategory[]) => {
     return list.filter(cat => {
@@ -181,14 +191,24 @@ const Gallery: FC = () => {
 
             {s.id !== 'tournaments' && (
               loading ? (
-                <Empty text="Загрузка..." />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="rounded-2xl overflow-hidden bg-white border border-gray-200 animate-pulse">
+                      <div className="h-40 bg-gray-100" />
+                      <div className="p-4">
+                        <div className="h-4 w-2/3 bg-gray-200 rounded mb-2" />
+                        <div className="h-3 w-1/2 bg-gray-100 rounded" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : (sectionImages[s.id] || []).length === 0 ? (
                 <Empty text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
               ) : (
                 <div className="columns-1 sm:columns-2 md:columns-3 gap-5 space-y-5">
                   {(sectionImages[s.id] || []).map((src, i) => (
-                    <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid">
-                      <img src={src} alt={s.title} loading="lazy" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03]" onClick={() => openLightbox([{ type: 'image', src, alt: s.title }], 0)} />
+                    <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid border border-gray-100 hover:border-primary-blue/20 transition-colors">
+                      <img src={src} alt={s.title} loading="lazy" className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-[1.02]" onClick={() => openLightbox([{ type: 'image', src, alt: s.title }], 0)} />
                       <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </figure>
                   ))}
@@ -198,7 +218,9 @@ const Gallery: FC = () => {
 
             {s.id === 'tournaments' && (
               loading ? (
-                <Empty text="Загрузка..." />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {Array.from({ length: 6 }).map((_, i) => (<SkeletonCard key={i} />))}
+                </div>
               ) : categories.length === 0 ? (
                 <Empty text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
               ) : (
@@ -226,10 +248,10 @@ const Gallery: FC = () => {
                         {cats.map((cat: any) => {
                           const preview = (cat.photos || []).slice(0, 3);
                           return (
-                            <button key={cat.id} className={`group relative rounded-2xl text-left overflow-hidden bg-white transition-all hover:ring-2 hover:ring-primary-blue/30`} onClick={() => openOverlay(cat.id)}>
+                            <button key={cat.id} className={`group relative rounded-2xl text-left overflow-hidden bg-white border border-gray-200 transition-all hover:border-primary-blue/40 hover:shadow-md hover:-translate-y-[2px] duration-200`} onClick={() => openOverlay(cat.id)}>
                               <div className={`absolute -top-3 left-6 w-20 h-6 rounded-t-md bg-gradient-to-r ${cat.gradient}`} />
                               <div className="p-4 pt-6">
-                                <div className="h-28 rounded-xl overflow-hidden bg-gray-50">
+                                <div className="h-28 rounded-xl overflow-hidden bg-gray-50 relative">
                                   {cat.cover ? (
                                     <img src={cat.cover} alt={cat.name} className="w-full h-full object-cover" />
                                   ) : preview.length > 0 ? (
@@ -239,6 +261,11 @@ const Gallery: FC = () => {
                                   ) : (
                                     <div className={`w-full h-full bg-gradient-to-r ${cat.gradient}`} />
                                   )}
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                  <div className="absolute bottom-2 left-2 inline-flex items-center gap-2 text-xs text-white/90">
+                                    <span className="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur inline-flex items-center gap-1"><ImageIcon className="w-3 h-3" />{cat.photos?.length || 0}</span>
+                                    <span className="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur inline-flex items-center gap-1"><VideoIcon className="w-3 h-3" />{cat.videos?.length || 0}</span>
+                                  </div>
                                 </div>
                                 <div className="mt-4 flex items-center justify-between">
                                   <div>
@@ -246,11 +273,9 @@ const Gallery: FC = () => {
                                     <div className="text-xs text-gray-500 flex items-center gap-3 mt-1">
                                       {cat.year && <span>{cat.year}</span>}
                                       {cat.tags && cat.tags.slice(0, 2).map((t: string) => (<span key={t} className="px-2 py-0.5 rounded-full bg-gray-100">{t}</span>))}
-                                      <span className="inline-flex items-center gap-1"><ImageIcon className="w-4 h-4" />{cat.photos?.length || 0}</span>
-                                      <span className="inline-flex items-center gap-1"><VideoIcon className="w-4 h-4" />{cat.videos?.length || 0}</span>
                                     </div>
                                   </div>
-                                  <ChevronDown className={`w-5 h-5 text-primary-blue transition-transform`} />
+                                  <ChevronDown className={`w-5 h-5 text-primary-blue transition-transform group-hover:translate-y-0.5`} />
                                 </div>
                               </div>
                             </button>
@@ -296,13 +321,13 @@ const Gallery: FC = () => {
                                 ) : (
                                   <>
                                     <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
-                                      {photos.map((src: string, i: number) => (
-                                        <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid">
-                                          <img src={src} alt={cat.name} loading="lazy" className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03]" onClick={() => openLightbox(cat.photos.map((p: string) => ({ type: 'image' as const, src: p, alt: cat.name })), i)} />
-                                          <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        </figure>
-                                      ))}
-                                    </div>
+                                    {photos.map((src: string, i: number) => (
+                                      <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid border border-gray-100 hover:border-primary-blue/20 transition-colors">
+                                        <img src={src} alt={cat.name} loading="lazy" className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-[1.02]" onClick={() => openLightbox(cat.photos.map((p: string) => ({ type: 'image' as const, src: p, alt: cat.name })), i)} />
+                                        <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                      </figure>
+                                    ))}
+                                  </div>
                                     {canMore && (
                                       <div className="mt-6 text-center">
                                         <button className="px-5 py-2 rounded-lg border text-sm" onClick={() => loadMore(cat.id)}>Показать ещё</button>
