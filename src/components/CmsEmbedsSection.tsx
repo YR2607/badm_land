@@ -122,7 +122,7 @@ const CmsEmbedsSection: FC = () => {
     }
   }, [])
 
-  const limited = useMemo(() => items.slice(0, 6), [items])
+  const limited = useMemo(() => items.slice(0, 5), [items])
 
   // Fetch Open Graph preview images for items that have an external URL but no image
   useEffect(() => {
@@ -178,13 +178,51 @@ const CmsEmbedsSection: FC = () => {
               const card = (
                 <article className="group cursor-pointer h-full">
                   <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
-                    <div className={`${index === 1 ? 'h-56 md:h-72 lg:h-[28rem]' : 'h-56'} relative overflow-hidden`}>
+                    <div className={`${index === 1 ? 'h-64 md:h-80 lg:h-96' : 'h-48 md:h-56'} relative overflow-hidden bg-gray-100`}>
                       {it.coverUrl ? (
-                        <img src={it.coverUrl} alt={it.title} referrerPolicy="no-referrer" className="absolute inset-0 w-full h-full object-cover object-top transform transition-transform duration-300 group-hover:scale-[1.02]" />
+                        <img 
+                          src={it.coverUrl} 
+                          alt={it.title} 
+                          referrerPolicy="no-referrer" 
+                          className="absolute inset-0 w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-[1.02]"
+                          style={{
+                            aspectRatio: '16/9',
+                            objectFit: 'cover',
+                          }}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.objectFit = 'contain';
+                          }}
+                        />
                       ) : it.cover ? (
-                        <img src={it.cover} alt={it.title} className="absolute inset-0 w-full h-full object-cover object-top transform transition-transform duration-300 group-hover:scale-[1.02]" />
+                        <img 
+                          src={it.cover} 
+                          alt={it.title} 
+                          className="absolute inset-0 w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-[1.02]"
+                          style={{
+                            aspectRatio: '16/9',
+                            objectFit: 'cover',
+                          }}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.objectFit = 'contain';
+                          }}
+                        />
                       ) : ogImages[it.id] ? (
-                        <img src={ogImages[it.id]} alt={it.title} referrerPolicy="no-referrer" className="absolute inset-0 w-full h-full object-cover object-top transform transition-transform duration-300 group-hover:scale-[1.02]" />
+                        <img 
+                          src={ogImages[it.id]} 
+                          alt={it.title} 
+                          referrerPolicy="no-referrer" 
+                          className="absolute inset-0 w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-[1.02]"
+                          style={{
+                            aspectRatio: '16/9',
+                            objectFit: 'cover',
+                          }}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.objectFit = 'contain';
+                          }}
+                        />
                       ) : (
                         <>
                           <div className={`absolute inset-0 ${imageFallbackClass(it.kind)}`} />
@@ -226,6 +264,19 @@ const CmsEmbedsSection: FC = () => {
             })}
           </div>
         )}
+        
+        {/* Show all news button */}
+        <div className="text-center mt-12">
+          <a 
+            href="/blog#club-news" 
+            className="inline-flex items-center px-6 py-3 bg-primary-blue text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md hover:shadow-lg"
+          >
+            <span>Показать все новости</span>
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
       </div>
     </section>
   )

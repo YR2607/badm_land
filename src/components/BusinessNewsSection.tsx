@@ -124,13 +124,13 @@ const BusinessNewsSection: FC = () => {
 
         {/* CTA: Смотреть все новости */}
         {!loading && !error && (
-          <div className="mt-6 flex justify-center">
-            <a
-              href="/blog#world-news"
-              className="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800 transition-colors"
+          <div className="text-center mt-12">
+            <a 
+              href="/blog#world-news" 
+              className="inline-flex items-center px-6 py-3 bg-primary-blue text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md hover:shadow-lg"
             >
-              Смотреть все новости
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <span>Смотреть все новости</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </a>

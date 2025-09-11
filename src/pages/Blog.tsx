@@ -261,7 +261,19 @@ const Blog: FC = () => {
                   <motion.article key={(news as any).id || index} className="bg-white rounded-3xl p-6 group transition-transform duration-300" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.05 }}>
                     <div className="h-48 rounded-lg mb-4 overflow-hidden bg-gray-100">
                       {news.image ? (
-                        <img src={news.image} alt={news.title} className="w-full h-full object-cover object-top" />
+                        <img 
+                          src={news.image} 
+                          alt={news.title} 
+                          className="w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-[1.02]"
+                          style={{
+                            aspectRatio: '16/9',
+                            objectFit: 'cover',
+                          }}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.objectFit = 'contain';
+                          }}
+                        />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
                       )}
