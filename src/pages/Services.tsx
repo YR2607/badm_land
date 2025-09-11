@@ -1,7 +1,6 @@
 import { FC, useState, useEffect } from 'react';
-import { CheckCircle, Clock, Sparkles, Zap, Target, ChevronDown, Phone } from 'lucide-react';
+import { CheckCircle, Clock, Sparkles, Zap, Target, ChevronDown, Phone, Users, Star, Award, User, Calendar, Trophy, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Users, User, Trophy, Star, ArrowRight, Calendar, Award } from 'lucide-react';
 import { fetchPage, isCmsEnabled, CmsPage } from '../lib/cms';
 
 const Services: FC = () => {
@@ -78,13 +77,6 @@ const Services: FC = () => {
       popular: false,
       badge: 'Про'
     }
-  ];
-
-  const additionalServices = [
-    { title: 'Детские группы', description: 'Специальные программы для детей 6-16 лет', icon: '👨‍👩‍👧‍👦' },
-    { title: 'Корпоративные занятия', description: 'Тимбилдинг и корпоративные тренировки', icon: '🏢' },
-    { title: 'Мастер-классы', description: 'Специальные семинары с приглашенными тренерами', icon: '🎓' },
-    { title: 'Фитнес программы', description: 'Общая физическая подготовка для бадминтона', icon: '💪' }
   ];
 
   const [billing, setBilling] = useState<'monthly' | 'per_session'>('monthly');
@@ -579,90 +571,139 @@ const Services: FC = () => {
         </div>
       </motion.section>
 
-      {/* ADDITIONAL */}
+      {/* GYMS CTA SECTION */}
       <motion.section 
-        className="py-16 bg-gradient-to-b from-gray-50 to-white"
+        className="py-20 bg-gradient-to-br from-blue-50 via-white to-indigo-50"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.6 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-2">Дополнительные услуги</h2>
-            <p className="text-lg text-gray-600">Еще больше возможностей для вашего развития</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {additionalServices.map((srv, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl p-6 text-center border border-gray-200 hover:border-primary-blue/30 hover:shadow-md transition-all duration-200"
-              >
-                <div className="text-4xl mb-3">{srv.icon}</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-1">{srv.title}</h3>
-                <p className="text-gray-600 text-sm">{srv.description}</p>
-              </div>
-            ))}
-          </div>
+          <motion.div 
+            className="text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-6">Наши спортзалы</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Удобные локации с профессиональным оборудованием для тренировок по бадминтону
+            </p>
+            
+            <motion.a
+              href="/gyms"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="text-lg">🏸</span>
+              Посмотреть все залы
+              <ArrowRight className="w-5 h-5" />
+            </motion.a>
+          </motion.div>
         </div>
       </motion.section>
 
-      {/* MODERN FAQ SECTION */}
+      {/* FAQ SECTION */}
       <motion.section 
-        className="py-20"
+        className="py-20 bg-white"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.6 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">Частые вопросы</h3>
-            <p className="text-lg text-gray-600">Ответы на самые популярные вопросы о наших тренировках</p>
-          </div>
-          
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">Часто задаваемые вопросы</h2>
+            <p className="text-xl text-gray-600">Ответы на популярные вопросы о наших услугах</p>
+          </motion.div>
+
           <div className="space-y-4">
             {faqs.map((f, idx) => (
-              <div 
-                key={idx} 
-                className="bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+              <motion.div
+                key={idx}
+                className="border border-gray-200 rounded-2xl overflow-hidden"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
-                <button 
-                  className="w-full text-left px-6 py-5 flex items-center justify-between hover:bg-blue-50/50 transition-colors duration-200" 
+                <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
                 >
-                  <span className="font-semibold text-gray-900 text-lg pr-4">{f.q}</span>
-                  <div className="flex-shrink-0">
-                    <ChevronDown className={`w-5 h-5 text-blue-600 transition-transform duration-300 ${openFaq === idx ? 'rotate-180' : ''}`} />
-                  </div>
+                  <span className="font-semibold text-gray-900">{f.q}</span>
+                  <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${openFaq === idx ? 'rotate-180' : ''}`} />
                 </button>
-                
                 {openFaq === idx && (
-                  <div className="px-6 pb-5 text-gray-600 leading-relaxed border-t border-gray-100">
-                    <div className="pt-4">{f.a}</div>
+                  <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                    <p className="text-gray-700">{f.a}</p>
                   </div>
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </motion.section>
 
-      {/* MODERN MOBILE CTA */}
-      <div className="fixed bottom-6 inset-x-0 px-4 md:hidden z-50">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl shadow-2xl backdrop-blur-sm border border-white/10 p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <div className="font-semibold text-sm mb-1">Начните тренировки уже сегодня</div>
-              <div className="text-white/80 text-xs">Бесплатная консультация и подбор формата</div>
-            </div>
-            <button className="bg-white text-blue-600 px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2">
-              <Phone className="w-4 h-4" />
-              Связаться
-            </button>
-          </div>
+      {/* CTA SECTION */}
+      <motion.section 
+        className="py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.h2 
+            className="text-4xl md:text-5xl font-bold mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Готовы начать тренировки?
+          </motion.h2>
+          <motion.p 
+            className="text-xl opacity-90 mb-8 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Свяжитесь с нами сегодня и получите персональную консультацию по выбору программы тренировок
+          </motion.p>
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <a
+              href="/contact"
+              className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
+            >
+              Связаться с нами
+            </a>
+            <a
+              href="tel:+37322000000"
+              className="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-blue-600 transition-colors"
+            >
+              <Phone className="w-5 h-5 mr-2" />
+              Позвонить сейчас
+            </a>
+          </motion.div>
         </div>
-      </div>
+      </motion.section>
     </div>
   );
 };

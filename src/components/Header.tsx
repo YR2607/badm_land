@@ -21,6 +21,7 @@ const Header: React.FC = () => {
     { path: '/about', label: 'О клубе' },
     { path: '/gallery', label: 'Галерея' },
     { path: '/services', label: 'Услуги' },
+    { path: '/gyms', label: 'Спортзалы' },
     { path: '/blog', label: 'Новости' },
     { path: '/contact', label: 'Контакты' }
   ];

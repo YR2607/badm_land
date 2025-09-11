@@ -93,58 +93,233 @@ const About: FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* HERO: 500px высота, градиентный фон, без CTA */}
-      <section className="relative h-[500px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-blue via-primary-blue/90 to-primary-orange">
-        {/* Декоративные элементы */}
-        <div className="pointer-events-none absolute inset-0 opacity-20"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(45deg, rgba(255,255,255,.1) 0, rgba(255,255,255,.1) 1px, transparent 1px, transparent 20px)"
-          }}
-        />
-        {/* Световые пятна */}
-        <div className="pointer-events-none absolute -top-32 -left-32 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -right-32 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
-        <div className="pointer-events-none absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-white/5 blur-3xl" />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            <motion.div 
-              className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-6" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.2, duration: 0.6 }}
-            >
-              <Trophy className="w-4 h-4 text-primary-yellow mr-2" />
-              <span className="text-sm font-medium">Профессиональный клуб с 2024 года</span>
-            </motion.div>
-
-            <motion.h1 
-              className="text-4xl md:text-6xl lg:text-7xl font-bold font-display mb-6 leading-tight" 
-              initial={{ opacity: 0, y: 30 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.4, duration: 0.8 }}
-            >
-              <span className="text-white drop-shadow-lg">ALTIUS</span>
-              <br />
-              <span className="text-xl md:text-2xl lg:text-3xl font-light text-primary-yellow italic font-display">
-                {page?.heroSubtitle || 'Бадминтонный клуб'}
-              </span>
-            </motion.h1>
-
-            <motion.p 
-              className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.6, duration: 0.6 }}
-            >
-              {page?.heroTitle || 'Профессиональные тренировки, современное оборудование и дружелюбная атмосфера'}
-            </motion.p>
-          </motion.div>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden py-20 bg-gradient-to-br from-primary-blue via-primary-blue/95 to-indigo-700">
+        {/* Enhanced Badminton Court Background */}
+        <div className="absolute inset-0">
+          {/* Dynamic Court with Lighting Effects */}
+          <div className="absolute inset-0 opacity-20">
+            <svg viewBox="0 0 1200 600" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                {/* Gradient for court surface */}
+                <radialGradient id="courtGradient" cx="50%" cy="50%" r="70%">
+                  <stop offset="0%" stopColor="rgba(255,255,255,0.15)"/>
+                  <stop offset="50%" stopColor="rgba(255,255,255,0.08)"/>
+                  <stop offset="100%" stopColor="rgba(255,255,255,0.03)"/>
+                </radialGradient>
+                
+                {/* Glow effect for lines */}
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge> 
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                
+                {/* Shadow filter */}
+                <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.3"/>
+                </filter>
+              </defs>
+              
+              {/* Court Surface with gradient */}
+              <rect width="1200" height="600" fill="url(#courtGradient)"/>
+              
+              {/* Court Lines with glow effect */}
+              <g stroke="rgba(255,255,255,0.6)" strokeWidth="3" fill="none" filter="url(#glow)">
+                {/* Outer boundaries */}
+                <rect x="200" y="100" width="800" height="400" strokeWidth="4"/>
+                
+                {/* Center line */}
+                <line x1="600" y1="100" x2="600" y2="500" strokeWidth="3"/>
+                
+                {/* Service lines */}
+                <line x1="200" y1="240" x2="1000" y2="240"/>
+                <line x1="200" y1="360" x2="1000" y2="360"/>
+                
+                {/* Short service lines */}
+                <line x1="320" y1="100" x2="320" y2="500"/>
+                <line x1="880" y1="100" x2="880" y2="500"/>
+                
+                {/* Center service lines */}
+                <line x1="600" y1="240" x2="600" y2="360"/>
+              </g>
+              
+              {/* Enhanced Net with 3D effect */}
+              <g filter="url(#shadow)">
+                <line x1="600" y1="100" x2="600" y2="500" stroke="rgba(255,255,255,0.7)" strokeWidth="6"/>
+                <rect x="596" y="280" width="8" height="40" fill="rgba(255,255,255,0.8)" rx="2"/>
+                
+                {/* Net mesh pattern */}
+                <g stroke="rgba(255,255,255,0.3)" strokeWidth="1">
+                  <line x1="590" y1="120" x2="610" y2="120"/>
+                  <line x1="590" y1="140" x2="610" y2="140"/>
+                  <line x1="590" y1="160" x2="610" y2="160"/>
+                  <line x1="590" y1="180" x2="610" y2="180"/>
+                  <line x1="590" y1="200" x2="610" y2="200"/>
+                  <line x1="590" y1="220" x2="610" y2="220"/>
+                  <line x1="590" y1="240" x2="610" y2="240"/>
+                  <line x1="590" y1="260" x2="610" y2="260"/>
+                </g>
+              </g>
+              
+              {/* Spotlight effects */}
+              <g opacity="0.1">
+                <ellipse cx="400" cy="200" rx="150" ry="80" fill="rgba(255,255,255,0.3)"/>
+                <ellipse cx="800" cy="400" rx="150" ry="80" fill="rgba(255,255,255,0.3)"/>
+              </g>
+            </svg>
+          </div>
+          
+          {/* Enhanced Equipment Graphics with 3D Effects */}
+          <div className="absolute top-8 left-4 md:top-16 md:left-16 w-16 h-16 md:w-24 md:h-24 opacity-30 transform rotate-12 will-change-transform hover:scale-110 transition-transform duration-300">
+            <svg viewBox="0 0 100 100" className="w-full h-full">
+              {/* Badminton Racket */}
+              <defs>
+                <linearGradient id="racketGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="rgba(255,255,255,0.8)"/>
+                  <stop offset="100%" stopColor="rgba(255,255,255,0.4)"/>
+                </linearGradient>
+                <filter id="racketShadow">
+                  <feDropShadow dx="2" dy="2" stdDeviation="2" floodOpacity="0.3"/>
+                </filter>
+              </defs>
+              
+              {/* Racket Handle */}
+              <rect x="45" y="70" width="10" height="25" fill="url(#racketGradient)" rx="5" filter="url(#racketShadow)"/>
+              
+              {/* Racket Head */}
+              <ellipse cx="50" cy="35" rx="20" ry="30" fill="none" stroke="url(#racketGradient)" strokeWidth="3" filter="url(#racketShadow)"/>
+              
+              {/* Strings */}
+              <g stroke="rgba(255,255,255,0.4)" strokeWidth="1">
+                <line x1="35" y1="20" x2="35" y2="50"/>
+                <line x1="42" y1="15" x2="42" y2="55"/>
+                <line x1="50" y1="10" x2="50" y2="60"/>
+                <line x1="58" y1="15" x2="58" y2="55"/>
+                <line x1="65" y1="20" x2="65" y2="50"/>
+                
+                <line x1="32" y1="25" x2="68" y2="25"/>
+                <line x1="30" y1="35" x2="70" y2="35"/>
+                <line x1="32" y1="45" x2="68" y2="45"/>
+              </g>
+            </svg>
+          </div>
+          
+          {/* Animated Shuttlecock */}
+          <div className="absolute top-20 right-8 md:top-24 md:right-20 w-12 h-12 md:w-16 md:h-16 opacity-40 animate-bounce">
+            <svg viewBox="0 0 60 60" className="w-full h-full">
+              <defs>
+                <radialGradient id="shuttlecockGradient" cx="50%" cy="30%" r="60%">
+                  <stop offset="0%" stopColor="rgba(255,255,255,0.9)"/>
+                  <stop offset="100%" stopColor="rgba(255,255,255,0.3)"/>
+                </radialGradient>
+              </defs>
+              
+              {/* Shuttlecock Cork */}
+              <circle cx="30" cy="45" r="6" fill="url(#shuttlecockGradient)"/>
+              
+              {/* Feathers */}
+              <g fill="rgba(255,255,255,0.6)">
+                <path d="M30 39 L25 15 L30 20 L35 15 Z"/>
+                <path d="M24 40 L15 18 L22 22 L28 20 Z"/>
+                <path d="M36 40 L45 18 L38 22 L32 20 Z"/>
+                <path d="M22 42 L12 25 L20 28 L26 26 Z"/>
+                <path d="M38 42 L48 25 L40 28 L34 26 Z"/>
+              </g>
+            </svg>
+          </div>
+          
+          {/* Trophy with Badminton Theme */}
+          <div className="absolute bottom-16 left-8 md:bottom-20 md:left-16 w-14 h-14 md:w-20 md:h-20 opacity-25 animate-pulse">
+            <svg viewBox="0 0 80 80" className="w-full h-full">
+              <defs>
+                <linearGradient id="trophyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="rgba(255,215,0,0.8)"/>
+                  <stop offset="100%" stopColor="rgba(255,165,0,0.6)"/>
+                </linearGradient>
+              </defs>
+              
+              {/* Trophy Cup */}
+              <path d="M20 25 Q20 20 25 20 L55 20 Q60 20 60 25 L60 40 Q60 50 50 50 L30 50 Q20 50 20 40 Z" fill="url(#trophyGradient)"/>
+              
+              {/* Trophy Handles */}
+              <path d="M15 30 Q10 30 10 35 Q10 40 15 40" fill="none" stroke="url(#trophyGradient)" strokeWidth="3"/>
+              <path d="M65 30 Q70 30 70 35 Q70 40 65 40" fill="none" stroke="url(#trophyGradient)" strokeWidth="3"/>
+              
+              {/* Trophy Base */}
+              <rect x="25" y="50" width="30" height="8" fill="url(#trophyGradient)" rx="2"/>
+              <rect x="30" y="58" width="20" height="12" fill="url(#trophyGradient)" rx="2"/>
+              
+              {/* Mini Racket on Trophy */}
+              <ellipse cx="40" cy="35" rx="8" ry="10" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
+              <line x1="40" y1="45" x2="40" y2="50" stroke="rgba(255,255,255,0.8)" strokeWidth="2"/>
+            </svg>
+          </div>
+          
+          {/* Floating Particles */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-yellow-300/30 rounded-full animate-ping" style={{animationDelay: '0s'}}></div>
+            <div className="absolute top-1/2 right-1/4 w-1 h-1 bg-white/40 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
+            <div className="absolute bottom-1/3 left-1/4 w-1.5 h-1.5 bg-blue-300/30 rounded-full animate-ping" style={{animationDelay: '2s'}}></div>
+            <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-yellow-200/40 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
+          </div>
+          
+          {/* Subtle Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-blue/20 via-transparent to-transparent"></div>
+        </div>
+        
+        <div className="relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center text-white">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
+                <Trophy className="w-4 h-4 text-yellow-300" />
+                <span className="text-sm font-medium">Профессиональный клуб с 2024 года</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+                ALTIUS
+              </h1>
+              
+              <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
+                {page?.heroTitle || 'Профессиональные тренировки, современное оборудование и дружелюбная атмосфера'}
+              </p>
+              
+              {/* Statistics */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                <motion.div 
+                  className="text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  <div className="text-4xl font-bold text-yellow-300 mb-2">120+</div>
+                  <div className="text-blue-100">Активных участников</div>
+                </motion.div>
+                
+                <motion.div 
+                  className="text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                  <div className="text-4xl font-bold text-yellow-300 mb-2">1+</div>
+                  <div className="text-blue-100">Год опыта</div>
+                </motion.div>
+                
+                <motion.div 
+                  className="text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  <div className="text-4xl font-bold text-yellow-300 mb-2">15+</div>
+                  <div className="text-blue-100">Турниров проведено</div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
