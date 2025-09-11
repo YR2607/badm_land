@@ -1,16 +1,24 @@
 import { FC, useState, useEffect } from 'react';
 import { CheckCircle, Clock, Sparkles, Zap, Target, ChevronDown, Phone, Users, Star, Award, User, Calendar, Trophy, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { fetchPage, isCmsEnabled, CmsPage } from '../lib/cms';
+import { fetchServicesPage, CmsServicesPage } from '../lib/cms';
 
 const Services: FC = () => {
-  const [page, setPage] = useState<CmsPage | null>(null);
+  const [cmsData, setCmsData] = useState<CmsServicesPage | null>(null);
+  
   useEffect(() => {
-    (async () => {
-      if (!isCmsEnabled) return;
-      const data = await fetchPage('services');
-      setPage(data);
-    })();
+    const loadCmsData = async () => {
+      try {
+        const data = await fetchServicesPage();
+        if (data) {
+          setCmsData(data);
+        }
+      } catch (error) {
+        console.error('Failed to load CMS data:', error);
+      }
+    };
+
+    loadCmsData();
   }, []);
 
   const services = [
@@ -311,11 +319,11 @@ const Services: FC = () => {
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                {page?.heroTitle || 'Наши услуги'}
+                {cmsData?.hero?.title || 'Наши услуги'}
               </h1>
               
               <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                {page?.heroSubtitle || 'Выберите идеальный формат тренировок для достижения ваших целей в бадминтоне'}
+                {cmsData?.hero?.subtitle || 'Выберите идеальный формат тренировок для достижения ваших целей в бадминтоне'}
               </p>
               
               {/* Statistics with Entrance Animations Only */}

@@ -12,6 +12,7 @@ const galleryGroup = (S: any) =>
               S.documentTypeList('gallerySection')
                 .title('Наш зал')
                 .filter('_type == "gallerySection" && key == "hall"')
+                .apiVersion('2023-05-03')
                 .initialValueTemplates([
                   S.initialValueTemplateItem('gallerySection-hall')
                 ])
@@ -23,6 +24,7 @@ const galleryGroup = (S: any) =>
               S.documentTypeList('gallerySection')
                 .title('Наши тренера')
                 .filter('_type == "gallerySection" && key == "coaches"')
+                .apiVersion('2023-05-03')
                 .initialValueTemplates([
                   S.initialValueTemplateItem('gallerySection-coaches')
                 ])
@@ -34,6 +36,7 @@ const galleryGroup = (S: any) =>
               S.documentTypeList('gallerySection')
                 .title('Наши тренировки')
                 .filter('_type == "gallerySection" && key == "trainings"')
+                .apiVersion('2023-05-03')
                 .initialValueTemplates([
                   S.initialValueTemplateItem('gallerySection-trainings')
                 ])
@@ -46,9 +49,9 @@ const byTypeList = (S: any, type: string, title: string) =>
     S.documentTypeList(type).title(title)
   )
 
-const draftsList = (type: string, title: string) =>
+const draftsList = (S: any, type: string, title: string) =>
   S.listItem().title(title).child(
-    S.documentList().title(title).filter('_type == $type && !_id in path("drafts.**") == false').params({ type })
+    S.documentList().title(title).filter('_type == $type && !_id in path("drafts.**") == false').params({ type }).apiVersion('2023-05-03')
   )
 
 const featuredPosts = (S: any) =>
@@ -58,6 +61,7 @@ const featuredPosts = (S: any) =>
       S.documentList()
         .title('Избранные посты')
         .filter('_type == "post" && featured == true')
+        .apiVersion('2023-05-03')
     )
 
 const clubEmbeds = (S: any) =>
@@ -82,34 +86,338 @@ const postsByCategory = (S: any) =>
         .title('Категории')
         .items([
           S.listItem().title('Новости клуба').child(
-            S.documentList().title('Новости клуба').filter('_type == "post" && (category->slug.current == "news" || category == "news")')
+            S.documentList().title('Новости клуба').filter('_type == "post" && (category->slug.current == "news" || category == "news")').apiVersion('2023-05-03')
           ),
           S.listItem().title('Мировые новости').child(
-            S.documentList().title('Мировые новости').filter('_type == "post" && (category->slug.current == "world" || category == "world")')
+            S.documentList().title('Мировые новости').filter('_type == "post" && (category->slug.current == "world" || category == "world")').apiVersion('2023-05-03')
           ),
           S.listItem().title('События').child(
-            S.documentList().title('События').filter('_type == "post" && (category->slug.current == "event" || category == "event")')
+            S.documentList().title('События').filter('_type == "post" && (category->slug.current == "event" || category == "event")').apiVersion('2023-05-03')
           ),
         ])
     )
 
 const deskStructure = (S: any) =>
   S.list()
-    .title('Контент')
+    .title('Контент сайта')
     .items([
-      S.listItem().title('Страницы').child(S.documentTypeList('page').title('Страницы')),
+      // Основные страницы сайта
+      S.listItem()
+        .title('🏠 Главная страница')
+        .child(
+          S.list()
+            .title('Главная страница')
+            .items([
+              S.listItem()
+                .title('🎯 Hero секция')
+                .child(
+                  S.document()
+                    .schemaType('homePage')
+                    .documentId('homePage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('ℹ️ О клубе (секция)')
+                .child(
+                  S.document()
+                    .schemaType('homePage')
+                    .documentId('homePage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('🏸 Услуги (секция)')
+                .child(
+                  S.document()
+                    .schemaType('homePage')
+                    .documentId('homePage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('🏆 Достижения')
+                .child(
+                  S.document()
+                    .schemaType('homePage')
+                    .documentId('homePage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('📞 CTA секция')
+                .child(
+                  S.document()
+                    .schemaType('homePage')
+                    .documentId('homePage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('🔍 SEO настройки')
+                .child(
+                  S.document()
+                    .schemaType('homePage')
+                    .documentId('homePage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+            ])
+        ),
+      S.listItem()
+        .title('ℹ️ О клубе')
+        .child(
+          S.list()
+            .title('О клубе')
+            .items([
+              S.listItem()
+                .title('🎯 Hero секция')
+                .child(
+                  S.document()
+                    .schemaType('aboutPage')
+                    .documentId('aboutPage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('📊 Статистика')
+                .child(
+                  S.document()
+                    .schemaType('aboutPage')
+                    .documentId('aboutPage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('📋 Табы (Миссия, Тренеры, Залы)')
+                .child(
+                  S.document()
+                    .schemaType('aboutPage')
+                    .documentId('aboutPage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('📅 История клуба')
+                .child(
+                  S.document()
+                    .schemaType('aboutPage')
+                    .documentId('aboutPage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('🗺️ Планы развития')
+                .child(
+                  S.document()
+                    .schemaType('aboutPage')
+                    .documentId('aboutPage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('🔍 SEO настройки')
+                .child(
+                  S.document()
+                    .schemaType('aboutPage')
+                    .documentId('aboutPage')
+                    .views([
+                      S.view.form()
+                        .title('Редактировать')
+                        .icon(() => '✏️')
+                    ])
+                ),
+            ])
+        ),
+      S.listItem()
+        .title('🏸 Услуги')
+        .child(
+          S.list()
+            .title('Услуги')
+            .items([
+              S.listItem()
+                .title('🎯 Hero секция')
+                .child(
+                  S.document()
+                    .schemaType('servicesPage')
+                    .documentId('servicesPage')
+                    .views([
+                      S.view.form().title('Редактировать').icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('🏸 Список услуг')
+                .child(
+                  S.document()
+                    .schemaType('servicesPage')
+                    .documentId('servicesPage')
+                    .views([
+                      S.view.form().title('Редактировать').icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('💰 Тарифы')
+                .child(
+                  S.document()
+                    .schemaType('servicesPage')
+                    .documentId('servicesPage')
+                    .views([
+                      S.view.form().title('Редактировать').icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('🔍 SEO настройки')
+                .child(
+                  S.document()
+                    .schemaType('servicesPage')
+                    .documentId('servicesPage')
+                    .views([
+                      S.view.form().title('Редактировать').icon(() => '✏️')
+                    ])
+                ),
+            ])
+        ),
+      S.listItem()
+        .title('🏢 Спортзалы')
+        .child(
+          S.list()
+            .title('Спортзалы')
+            .items([
+              S.listItem()
+                .title('📄 Главная страница залов')
+                .child(
+                  S.document()
+                    .schemaType('gymsPage')
+                    .documentId('gymsPage')
+                ),
+              S.divider(),
+              S.listItem()
+                .title('🏢 Управление залами')
+                .child(S.documentTypeList('gym').title('Залы')),
+            ])
+        ),
+      S.listItem()
+        .title('📞 Контакты')
+        .child(
+          S.list()
+            .title('Контакты')
+            .items([
+              S.listItem()
+                .title('🎯 Hero секция')
+                .child(
+                  S.document()
+                    .schemaType('contactPage')
+                    .documentId('contactPage')
+                    .views([
+                      S.view.form().title('Редактировать').icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('📞 Контактная информация')
+                .child(
+                  S.document()
+                    .schemaType('contactPage')
+                    .documentId('contactPage')
+                    .views([
+                      S.view.form().title('Редактировать').icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('🏢 Контакты залов')
+                .child(
+                  S.document()
+                    .schemaType('contactPage')
+                    .documentId('contactPage')
+                    .views([
+                      S.view.form().title('Редактировать').icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('📝 Форма обратной связи')
+                .child(
+                  S.document()
+                    .schemaType('contactPage')
+                    .documentId('contactPage')
+                    .views([
+                      S.view.form().title('Редактировать').icon(() => '✏️')
+                    ])
+                ),
+              S.listItem()
+                .title('🔍 SEO настройки')
+                .child(
+                  S.document()
+                    .schemaType('contactPage')
+                    .documentId('contactPage')
+                    .views([
+                      S.view.form().title('Редактировать').icon(() => '✏️')
+                    ])
+                ),
+            ])
+        ),
+      
       S.divider(),
-      S.listItem().title('Новости').child(
-        S.list().title('Новости').items([
-          clubEmbeds(S),
-          eventEmbeds(S),
-          featuredPosts(S),
-        ])
-      ),
-      S.divider(),
+      
+      // Медиа контент
+      S.listItem()
+        .title('📰 Новости и блог')
+        .child(
+          S.list()
+            .title('Новости')
+            .items([
+              byTypeList(S, 'post', 'Все статьи'),
+              S.divider(),
+              clubEmbeds(S),
+              eventEmbeds(S),
+              featuredPosts(S),
+              postsByCategory(S),
+            ])
+        ),
       galleryGroup(S),
-      byTypeList(S, 'tournamentCategory', 'Турниры'),
+      
       S.divider(),
+      
+      // Справочники
+      S.listItem()
+        .title('👥 Команда')
+        .child(S.documentTypeList('trainer').title('Тренеры')),
+      
+      S.divider(),
+      
+      // Настройки
+      S.listItem().title('Старые страницы').child(S.documentTypeList('page').title('Страницы')),
       byTypeList(S, 'author', 'Авторы'),
       byTypeList(S, 'category', 'Категории'),
     ])

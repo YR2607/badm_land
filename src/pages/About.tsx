@@ -1,10 +1,10 @@
 import { type FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Award, Users, MapPin, Clock, Target, Heart, Trophy, Zap, Calendar, ArrowRight } from 'lucide-react';
-import { fetchPage, isCmsEnabled, CmsPage } from '../lib/cms';
+import { fetchAboutPage, CmsAboutPage } from '../lib/cms';
 
 const About: FC = () => {
-  const [page, setPage] = useState<CmsPage | null>(null);
+  const [cmsData, setCmsData] = useState<CmsAboutPage | null>(null);
   const [activeTab, setActiveTab] = useState<'mission' | 'coaches' | 'facility'>('mission');
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -13,11 +13,18 @@ const About: FC = () => {
   const VISIBLE_HISTORY_COUNT = 3;
 
   useEffect(() => {
-    (async () => {
-      if (!isCmsEnabled) return;
-      const data = await fetchPage('about');
-      setPage(data);
-    })();
+    const loadCmsData = async () => {
+      try {
+        const data = await fetchAboutPage();
+        if (data) {
+          setCmsData(data);
+        }
+      } catch (error) {
+        console.error('Failed to load CMS data:', error);
+      }
+    };
+
+    loadCmsData();
   }, []);
 
   // Drag scroll functionality
@@ -283,7 +290,7 @@ const About: FC = () => {
               </h1>
               
               <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                {page?.heroTitle || 'Профессиональные тренировки, современное оборудование и дружелюбная атмосфера'}
+                {cmsData?.hero?.subtitle || 'Профессиональные тренировки, современное оборудование и дружелюбная атмосфера'}
               </p>
               
               {/* Statistics */}

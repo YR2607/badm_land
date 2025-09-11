@@ -1,0 +1,68 @@
+[
+  {
+    "_type": "trainer",
+    "_id": "trainer-aleksandr-petrov",
+    "name": "Александр Петров",
+    "slug": {
+      "current": "aleksandr-petrov"
+    },
+    "experience": "8 лет опыта",
+    "specialization": "Детские группы",
+    "description": "Опытный тренер по работе с детьми. Специализируется на обучении основам бадминтона и развитии технических навыков у юных спортсменов.",
+    "achievements": [
+      "Мастер спорта по бадминтону",
+      "Чемпион Молдовы 2018",
+      "Лучший детский тренер 2022"
+    ],
+    "phone": "+373 69 123-456",
+    "email": "aleksandr@altius.md",
+    "socialMedia": {
+      "instagram": "https://instagram.com/aleksandr_badminton",
+      "telegram": "@aleksandr_coach"
+    }
+  },
+  {
+    "_type": "trainer",
+    "_id": "trainer-maria-ivanova",
+    "name": "Мария Иванова",
+    "slug": {
+      "current": "maria-ivanova"
+    },
+    "experience": "5 лет опыта",
+    "specialization": "Взрослые группы",
+    "description": "Тренер по работе со взрослыми спортсменами. Фокусируется на технике игры и тактической подготовке.",
+    "achievements": [
+      "Кандидат в мастера спорта",
+      "Призер международных турниров",
+      "Сертифицированный тренер BWF"
+    ],
+    "phone": "+373 69 234-567",
+    "email": "maria@altius.md",
+    "socialMedia": {
+      "instagram": "https://instagram.com/maria_badminton",
+      "facebook": "https://facebook.com/maria.ivanova.coach"
+    }
+  },
+  {
+    "_type": "trainer",
+    "_id": "trainer-dmitriy-kozlov",
+    "name": "Дмитрий Козлов",
+    "slug": {
+      "current": "dmitriy-kozlov"
+    },
+    "experience": "12 лет опыта",
+    "specialization": "Профессиональная подготовка",
+    "description": "Главный тренер клуба. Специализируется на подготовке спортсменов высокого уровня и индивидуальных тренировках.",
+    "achievements": [
+      "Заслуженный тренер Молдовы",
+      "Подготовил 15+ мастеров спорта",
+      "Тренер сборной команды Молдовы"
+    ],
+    "phone": "+373 69 345-678",
+    "email": "dmitriy@altius.md",
+    "socialMedia": {
+      "instagram": "https://instagram.com/kozlov_coach",
+      "telegram": "@dmitriy_altius"
+    }
+  }
+]

@@ -1,14 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Medal, Users, Calendar, Star, Target } from 'lucide-react';
+import { Trophy, Medal, Users, Calendar, Star } from 'lucide-react';
 
-const AchievementsSection: React.FC = () => {
+interface AchievementsSectionProps {
+  cmsData?: {
+    title: string;
+    achievements: Array<{
+      title: string;
+      description: string;
+      icon: string;
+    }>;
+  };
+}
+
+const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pathRef = useRef<SVGPathElement | null>(null);
   const shuttleRef = useRef<SVGGElement | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  const achievements = [
+  const defaultAchievements = [
     {
       icon: <Trophy className="w-8 h-8" />,
       title: 'Чемпионы Молдовы',
@@ -122,7 +133,7 @@ const AchievementsSection: React.FC = () => {
 
         {/* Achievement Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {achievements.map((achievement, index) => (
+          {(cmsData?.achievements || defaultAchievements).map((achievement: any, index: number) => (
             <motion.div
               key={index}
               className="bg-white rounded-3xl p-8 text-center group transition-all duration-300"

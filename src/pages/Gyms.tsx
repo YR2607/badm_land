@@ -2,6 +2,21 @@ import { FC, useState } from 'react';
 import { CheckCircle, Clock, Phone, MapPin, Filter, Users, ArrowLeft, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+// CMS interface for future integration
+// interface CmsGymsPage {
+//   title: string;
+//   hero: {
+//     badge?: { icon: string; text: string };
+//     title: string;
+//     subtitle: string;
+//     statistics?: Array<{ number: string; description: string }>;
+//   };
+//   introSection?: {
+//     title: string;
+//     description: string;
+//   };
+// }
+
 const Gyms: FC = () => {
   const [gymFilter, setGymFilter] = useState<'all' | 'children' | 'adults'>('all');
   const [selectedGym, setSelectedGym] = useState<number | null>(null);

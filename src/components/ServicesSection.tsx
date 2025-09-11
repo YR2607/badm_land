@@ -1,8 +1,21 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Users, User, Trophy, Clock, MapPin, Star } from 'lucide-react';
+import { Users, User, Trophy, Clock, Star } from 'lucide-react';
 
-const ServicesSection: React.FC = () => {
+interface ServicesSectionProps {
+  cmsData?: {
+    title: string;
+    subtitle?: string;
+    services: Array<{
+      title: string;
+      description: string;
+      features?: string[];
+      price: string;
+      icon: string;
+    }>;
+  };
+}
+
+const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
   const services = [
     {
       icon: <Users className="w-8 h-8" />,
@@ -50,16 +63,16 @@ const ServicesSection: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl font-bold font-display text-gray-900 mb-4">
-            Наши Услуги
+            {cmsData?.title || 'Наши Услуги'}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Широкий спектр услуг для игроков любого уровня - от начинающих до профессионалов
+            {cmsData?.subtitle || 'Широкий спектр услуг для игроков любого уровня - от начинающих до профессионалов'}
           </p>
         </motion.div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.slice(0, 3).map((service, index) => (
+          {(cmsData?.services || services).slice(0, 3).map((service: any, index: number) => (
             <motion.div
               key={index}
               className="relative group"
@@ -80,7 +93,7 @@ const ServicesSection: React.FC = () => {
 
                 {/* Features */}
                 <ul className="space-y-2 mb-4">
-                  {service.features.map((feature, featureIndex) => (
+                  {(service.features || []).map((feature: string, featureIndex: number) => (
                     <li key={featureIndex} className="flex items-center text-sm text-gray-600">
                       <Star className="w-4 h-4 text-primary-yellow mr-2 flex-shrink-0" />
                       {feature}

@@ -140,6 +140,207 @@ export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
   return albums as CmsAlbum[];
 }
 
+// New CMS functions for page content
+export type CmsHomePage = {
+  title: string;
+  hero: {
+    badge?: { icon: string; text: string };
+    title: string;
+    subtitle: string;
+    statistics?: Array<{ number: string; description: string }>;
+  };
+  aboutSection?: {
+    title: string;
+    description: string;
+    image?: string;
+  };
+  servicesSection?: {
+    title: string;
+    subtitle: string;
+    services: Array<{
+      title: string;
+      description: string;
+      icon: string;
+      price: string;
+    }>;
+  };
+  achievementsSection?: {
+    title: string;
+    achievements: Array<{
+      title: string;
+      description: string;
+      icon: string;
+    }>;
+  };
+  ctaSection?: {
+    title: string;
+    description: string;
+    buttonText: string;
+    buttonLink: string;
+  };
+  seo?: {
+    metaTitle: string;
+    metaDescription: string;
+    keywords: string;
+  };
+};
+
+export async function fetchHomePage(): Promise<CmsHomePage | null> {
+  if (!sanityClient) return null;
+  const query = groq`*[_type == "homePage"][0]{
+    title,
+    hero{
+      badge,
+      title,
+      subtitle,
+      statistics
+    },
+    aboutSection,
+    servicesSection,
+    achievementsSection,
+    ctaSection,
+    seo
+  }`;
+  
+  const freshClient = createClient({ 
+    projectId: sanityClient.config().projectId!, 
+    dataset: sanityClient.config().dataset!, 
+    apiVersion: sanityClient.config().apiVersion!, 
+    useCdn: false 
+  });
+  
+  return await freshClient.fetch(query);
+}
+
+export type CmsAboutPage = {
+  title: string;
+  hero: {
+    badge?: { icon: string; text: string };
+    title: string;
+    subtitle: string;
+    statistics?: Array<{ number: string; description: string }>;
+  };
+  statsSection?: {
+    title: string;
+    stats: Array<{
+      number: string;
+      label: string;
+      description: string;
+      icon: string;
+      color: string;
+    }>;
+  };
+  tabsSection?: {
+    title: string;
+    subtitle: string;
+    tabs: Array<any>;
+  };
+  historySection?: {
+    title: string;
+    subtitle: string;
+    showAllByDefault: boolean;
+    timeline: Array<{
+      year: string;
+      title: string;
+      text: string;
+    }>;
+  };
+  roadmapSection?: {
+    title: string;
+    subtitle: string;
+    roadmapItems: Array<{
+      tag: string;
+      title: string;
+      description: string;
+      status: 'done' | 'progress' | 'planned';
+    }>;
+  };
+  seo?: {
+    metaTitle: string;
+    metaDescription: string;
+    keywords: string;
+  };
+};
+
+export async function fetchAboutPage(): Promise<CmsAboutPage | null> {
+  if (!sanityClient) return null;
+  const query = groq`*[_type == "aboutPage"][0]{
+    title,
+    hero{
+      badge,
+      title,
+      subtitle,
+      statistics
+    },
+    statsSection,
+    tabsSection,
+    historySection,
+    roadmapSection,
+    seo
+  }`;
+  
+  const freshClient = createClient({ 
+    projectId: sanityClient.config().projectId!, 
+    dataset: sanityClient.config().dataset!, 
+    apiVersion: sanityClient.config().apiVersion!, 
+    useCdn: false 
+  });
+  
+  return await freshClient.fetch(query);
+}
+
+export type CmsServicesPage = {
+  title: string;
+  hero: {
+    badge?: { icon: string; text: string };
+    title: string;
+    subtitle: string;
+    statistics?: Array<{ number: string; description: string }>;
+  };
+  servicesSection?: {
+    title: string;
+    subtitle: string;
+    services: Array<{
+      title: string;
+      description: string;
+      features?: string[];
+      price: string;
+      icon: string;
+      ageGroup?: string;
+      duration?: string;
+    }>;
+  };
+  seo?: {
+    metaTitle: string;
+    metaDescription: string;
+    keywords: string;
+  };
+};
+
+export async function fetchServicesPage(): Promise<CmsServicesPage | null> {
+  if (!sanityClient) return null;
+  const query = groq`*[_type == "servicesPage"][0]{
+    title,
+    hero{
+      badge,
+      title,
+      subtitle,
+      statistics
+    },
+    servicesSection,
+    seo
+  }`;
+  
+  const freshClient = createClient({ 
+    projectId: sanityClient.config().projectId!, 
+    dataset: sanityClient.config().dataset!, 
+    apiVersion: sanityClient.config().apiVersion!, 
+    useCdn: false 
+  });
+  
+  return await freshClient.fetch(query);
+}
+
 export async function fetchClubEmbeds(): Promise<any[]> {
   if (!sanityClient) return [];
   const query = groq`*[_type == "clubEmbed"] | order(coalesce(publishedAt, _createdAt) desc){ title, url, description, kind, publishedAt, "cover": cover.asset->url, coverUrl }`;
