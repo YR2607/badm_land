@@ -5,6 +5,7 @@ import { fetchServicesPage, CmsServicesPage } from '../lib/cms';
 
 const Services: FC = () => {
   const [cmsData, setCmsData] = useState<CmsServicesPage | null>(null);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     const loadCmsData = async () => {
@@ -14,7 +15,10 @@ const Services: FC = () => {
           setCmsData(data);
         }
       } catch (error) {
-        console.error('Failed to load CMS data:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to load CMS data:', error);
+        }
+        setError('Не удалось загрузить данные');
       }
     };
 
@@ -97,8 +101,24 @@ const Services: FC = () => {
 
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-primary-blue text-white rounded hover:bg-blue-600"
+          >
+            Попробовать снова
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* HERO SECTION */}
       <section className="relative overflow-hidden py-20 bg-gradient-to-br from-primary-blue via-primary-blue/95 to-indigo-700">
         {/* Enhanced Badminton Court Background */}

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, Send, User, MessageSquare } from 'lucide-react';
-import { fetchPage, isCmsEnabled, CmsPage } from '../lib/cms';
+import { fetchPageBySlug, isCmsEnabled, CmsPage } from '../lib/cms';
 
-const Contact: React.FC = () => {
+const Contact: FC = () => {
   const [page, setPage] = useState<CmsPage | null>(null);
   useEffect(() => {
     (async () => {
       if (!isCmsEnabled) return;
-      const data = await fetchPage('contact');
+      const data = await fetchPageBySlug('contact');
       setPage(data);
     })();
   }, []);
@@ -18,7 +18,15 @@ const Contact: React.FC = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); console.log('Form submitted:', formData); setFormData({ name: '', email: '', phone: '', message: '', service: '' }); };
+  const handleSubmit = (e: React.FormEvent) => { 
+    e.preventDefault(); 
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Form submitted:', formData); 
+    }
+    // Here you would typically send data to your backend
+    alert('Спасибо за заявку! Мы свяжемся с вами в ближайшее время.');
+    setFormData({ name: '', email: '', phone: '', message: '', service: '' }); 
+  };
 
   const contactInfo = [
     { icon: <MapPin className="w-6 h-6" />, title: 'Адрес', content: 'ул. Примерная 123, Кишинев, Молдова', color: 'from-primary-blue to-blue-600' },

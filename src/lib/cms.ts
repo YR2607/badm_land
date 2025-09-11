@@ -1,24 +1,24 @@
 import { createClient } from '@sanity/client';
-import groq from 'groq';
+import { cmsCache } from './cache';
+
+const groq = String.raw;
 
 const projectId = import.meta.env.VITE_SANITY_PROJECT_ID as string | undefined;
 const dataset = import.meta.env.VITE_SANITY_DATASET as string | undefined;
 const apiVersion = import.meta.env.VITE_SANITY_API_VERSION as string | undefined;
 const useCdn = true;
 
-export const isCmsEnabled = Boolean(projectId && dataset && apiVersion);
+const client = createClient({ projectId, dataset, apiVersion, useCdn });
 
-export const sanityClient = isCmsEnabled
-  ? createClient({ projectId, dataset, apiVersion, useCdn })
-  : null;
+export const isCmsEnabled = Boolean(projectId && dataset && apiVersion);
 
 export type CmsImage = { url: string; alt?: string };
 export type CmsMedia = { type: 'image' | 'video'; url: string; alt?: string };
 
 export async function fetchGallerySections(): Promise<Record<string, string[]>> {
-  if (!sanityClient) return {};
+  if (!client) return {};
   const query = groq`*[_type == "gallerySection"]{ key, "images": images[].asset->url }`;
-  const list = await sanityClient.fetch(query);
+  const list = await client.fetch(query);
   const result: Record<string, string[]> = { hall: [], coaches: [], trainings: [] };
   (list || []).forEach((it: any) => {
     if (it?.key && result[it.key] !== undefined) {
@@ -39,7 +39,7 @@ export type TournamentCategoryCms = {
 };
 
 export async function fetchTournamentCategories(): Promise<TournamentCategoryCms[]> {
-  if (!sanityClient) return [];
+  if (!client) return [];
   const query = groq`*[_type == "tournamentCategory"] | order(coalesce(year, 0) desc, _createdAt desc){
     "id": slug.current,
     name,
@@ -50,7 +50,7 @@ export async function fetchTournamentCategories(): Promise<TournamentCategoryCms
     "photos": photos[].asset->url,
     "videos": videos[].asset->url
   }`;
-  const list = await sanityClient.fetch(query);
+  const list = await client.fetch(query);
   return (list || []).map((i: any) => ({
     id: i.id,
     name: i.name,
@@ -74,32 +74,98 @@ export type CmsPost = {
 };
 
 export async function fetchPosts(): Promise<CmsPost[]> {
-  if (!sanityClient) return [];
-  const query = groq`*[_type == "post"] | order(coalesce(date, _createdAt) desc) {
-    "id": slug.current,
-    title,
-    excerpt,
-    "image": image.asset->url,
-    "date": coalesce(date, _createdAt),
-    // Возвращаем строковый слаг категории или строковое поле category, иначе 'news'
-    "category": select(defined(category->slug.current) => category->slug.current, defined(category) => category, "news"),
-    // Имя автора из ссылки или строковое поле author, иначе null
-    "author": select(defined(author->name) => author->name, defined(author) => author, null),
-    featured
-  }`;
-  const posts = await sanityClient.fetch(query);
-  // Приводим к допустимым категориям
-  const allowed = new Set(['news', 'world', 'event']);
-  return (posts as any[]).map((p) => ({
-    id: p.id,
-    title: p.title,
-    excerpt: p.excerpt,
-    image: p.image,
-    date: p.date,
-    category: allowed.has(p.category) ? p.category : 'news',
-    author: p.author || undefined,
-    featured: Boolean(p.featured),
-  }));
+  const cacheKey = 'posts';
+  
+  // Try to get from cache first
+  const cached = cmsCache.get<CmsPost[]>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  try {
+    const posts = await client.fetch(`
+      *[_type == "post"] | order(coalesce(date, _createdAt) desc) {
+        "id": slug.current,
+        title,
+        excerpt,
+        "image": image.asset->url,
+        "date": coalesce(date, _createdAt),
+        // Возвращаем строковый слаг категории или строковое поле category, иначе 'news'
+        "category": select(defined(category->slug.current) => category->slug.current, defined(category) => category, "news"),
+        // Имя автора из ссылки или строковое поле author, иначе null
+        "author": select(defined(author->name) => author->name, defined(author) => author, null),
+        featured
+      }
+    `);
+    
+    const result = posts || [];
+    
+    // Cache the result with shorter TTL for dynamic content
+    cmsCache.set(cacheKey, result, 2 * 60 * 1000); // 2 minutes
+    
+    return result;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching posts:', error);
+    }
+    return [];
+  }
+}
+
+export async function fetchPostBySlug(slug: string): Promise<CmsPost | null> {
+  const cacheKey = `post-${slug}`;
+  
+  // Try to get from cache first
+  const cached = cmsCache.get<CmsPost>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  try {
+    const post = await client.fetch(`
+      *[_type == "post" && slug.current == $slug][0] {
+        _id,
+        title,
+        slug,
+        excerpt,
+        body,
+        publishedAt,
+        featured,
+        mainImage {
+          asset->{
+            _id,
+            url
+          },
+          alt
+        },
+        author->{
+          name,
+          image {
+            asset->{
+              _id,
+              url
+            }
+          }
+        },
+        categories[]->{
+          title,
+          slug
+        }
+      }
+    `, { slug });
+    
+    // Cache the result
+    if (post) {
+      cmsCache.set(cacheKey, post);
+    }
+    
+    return post;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching post:', error);
+    }
+    return null;
+  }
 }
 
 export type CmsPage = {
@@ -111,24 +177,46 @@ export type CmsPage = {
   sections?: Array<{ heading?: string; body?: any[] }>;
 };
 
-export async function fetchPage(slug: string): Promise<CmsPage | null> {
-  if (!sanityClient) return null;
-  const query = groq`*[_type == "page" && slug.current == $slug][0]{
-    "slug": slug.current,
-    title,
-    heroTitle,
-    heroSubtitle,
-    "heroImage": heroImage.asset->url,
-    sections[]{ heading, body }
-  }`;
-  const page = await sanityClient.fetch(query, { slug });
-  return page || null;
+export async function fetchPageBySlug(slug: string): Promise<CmsPage | null> {
+  const cacheKey = `page-${slug}`;
+  
+  // Try to get from cache first
+  const cached = cmsCache.get<CmsPage>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  if (!client) return null;
+  
+  try {
+    const query = groq`*[_type == "page" && slug.current == $slug][0]{
+      "slug": slug.current,
+      title,
+      heroTitle,
+      heroSubtitle,
+      "heroImage": heroImage.asset->url,
+      sections[]{ heading, body }
+    }`;
+    const page = await client.fetch(query, { slug });
+    
+    // Cache the result
+    if (page) {
+      cmsCache.set(cacheKey, page);
+    }
+    
+    return page || null;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching page:', error);
+    }
+    return null;
+  }
 }
 
 export type CmsAlbum = { id: string; title: string; sectionSlug: string; cover?: string; images: string[] };
 
 export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
-  if (!sanityClient) return [];
+  if (!client) return [];
   const query = groq`*[_type == "galleryAlbum"] | order(_createdAt desc) {
     "id": slug.current,
     title,
@@ -136,11 +224,10 @@ export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
     "cover": cover.asset->url,
     "images": images[].asset->url
   }`;
-  const albums = await sanityClient.fetch(query);
+  const albums = await client.fetch(query);
   return albums as CmsAlbum[];
 }
 
-// New CMS functions for page content
 export type CmsHomePage = {
   title: string;
   hero: {
@@ -186,30 +273,65 @@ export type CmsHomePage = {
 };
 
 export async function fetchHomePage(): Promise<CmsHomePage | null> {
-  if (!sanityClient) return null;
-  const query = groq`*[_type == "homePage"][0]{
-    title,
-    hero{
-      badge,
-      title,
-      subtitle,
-      statistics
-    },
-    aboutSection,
-    servicesSection,
-    achievementsSection,
-    ctaSection,
-    seo
-  }`;
+  const cacheKey = 'homePage';
   
-  const freshClient = createClient({ 
-    projectId: sanityClient.config().projectId!, 
-    dataset: sanityClient.config().dataset!, 
-    apiVersion: sanityClient.config().apiVersion!, 
-    useCdn: false 
-  });
-  
-  return await freshClient.fetch(query);
+  // Try to get from cache first
+  const cached = cmsCache.get<CmsHomePage>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  try {
+    const data = await client.fetch(`
+      *[_type == "homePage"][0] {
+        hero {
+          title,
+          subtitle,
+          description,
+          ctaText,
+          ctaLink,
+          backgroundImage {
+            asset->{
+              _id,
+              url
+            },
+            alt
+          }
+        },
+        achievementsSection {
+          title,
+          subtitle,
+          achievements[] {
+            number,
+            label,
+            description
+          }
+        },
+        servicesSection {
+          title,
+          subtitle,
+          services[] {
+            title,
+            description,
+            icon,
+            features[]
+          }
+        }
+      }
+    `);
+    
+    // Cache the result
+    if (data) {
+      cmsCache.set(cacheKey, data);
+    }
+    
+    return data;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching home page:', error);
+    }
+    return null;
+  }
 }
 
 export type CmsAboutPage = {
@@ -263,30 +385,49 @@ export type CmsAboutPage = {
 };
 
 export async function fetchAboutPage(): Promise<CmsAboutPage | null> {
-  if (!sanityClient) return null;
-  const query = groq`*[_type == "aboutPage"][0]{
-    title,
-    hero{
-      badge,
-      title,
-      subtitle,
-      statistics
-    },
-    statsSection,
-    tabsSection,
-    historySection,
-    roadmapSection,
-    seo
-  }`;
+  const cacheKey = 'aboutPage';
   
-  const freshClient = createClient({ 
-    projectId: sanityClient.config().projectId!, 
-    dataset: sanityClient.config().dataset!, 
-    apiVersion: sanityClient.config().apiVersion!, 
-    useCdn: false 
-  });
-  
-  return await freshClient.fetch(query);
+  // Try to get from cache first
+  const cached = cmsCache.get<CmsAboutPage>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  try {
+    const data = await client.fetch(`
+      *[_type == "aboutPage"][0] {
+        hero {
+          title,
+          subtitle,
+          description,
+          backgroundImage {
+            asset->{
+              _id,
+              url
+            },
+            alt
+          }
+        },
+        introSection {
+          title,
+          content,
+          highlights[]
+        }
+      }
+    `);
+    
+    // Cache the result
+    if (data) {
+      cmsCache.set(cacheKey, data);
+    }
+    
+    return data;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching about page:', error);
+    }
+    return null;
+  }
 }
 
 export type CmsServicesPage = {
@@ -318,49 +459,88 @@ export type CmsServicesPage = {
 };
 
 export async function fetchServicesPage(): Promise<CmsServicesPage | null> {
-  if (!sanityClient) return null;
-  const query = groq`*[_type == "servicesPage"][0]{
-    title,
-    hero{
-      badge,
-      title,
-      subtitle,
-      statistics
-    },
-    servicesSection,
-    seo
-  }`;
+  const cacheKey = 'servicesPage';
   
-  const freshClient = createClient({ 
-    projectId: sanityClient.config().projectId!, 
-    dataset: sanityClient.config().dataset!, 
-    apiVersion: sanityClient.config().apiVersion!, 
-    useCdn: false 
-  });
-  
-  return await freshClient.fetch(query);
+  // Try to get from cache first
+  const cached = cmsCache.get<CmsServicesPage>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  try {
+    const data = await client.fetch(`
+      *[_type == "servicesPage"][0] {
+        hero {
+          title,
+          subtitle,
+          description,
+          backgroundImage {
+            asset->{
+              _id,
+              url
+            },
+            alt
+          }
+        },
+        servicesSection {
+          title,
+          subtitle,
+          services[] {
+            title,
+            description,
+            icon,
+            features[],
+            pricing {
+              monthly,
+              perSession
+            }
+          }
+        }
+      }
+    `);
+    
+    // Cache the result
+    if (data) {
+      cmsCache.set(cacheKey, data);
+    }
+    
+    return data;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching services page:', error);
+    }
+    return null;
+  }
 }
 
+export const sanityClient = client;
+
 export async function fetchClubEmbeds(): Promise<any[]> {
-  if (!sanityClient) return [];
-  const query = groq`*[_type == "clubEmbed"] | order(coalesce(publishedAt, _createdAt) desc){ title, url, description, kind, publishedAt, "cover": cover.asset->url, coverUrl }`;
+  const cacheKey = 'clubEmbeds';
   
-  // Отключаем CDN для получения свежих данных
-  const freshClient = createClient({ 
-    projectId: sanityClient.config().projectId!, 
-    dataset: sanityClient.config().dataset!, 
-    apiVersion: sanityClient.config().apiVersion!, 
-    useCdn: false 
-  });
+  // Try to get from cache first
+  const cached = cmsCache.get<any[]>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  if (!client) return [];
   
-  const list = await freshClient.fetch(query);
-  return (list || []).map((i: any) => ({
-    title: i?.title || '',
-    url: i?.url || '',
-    description: i?.description || '',
-    kind: i?.kind || 'news',
-    publishedAt: i?.publishedAt || null,
-    cover: i?.cover || i?.coverUrl || undefined,
-    coverUrl: i?.coverUrl || undefined,
-  }));
+  try {
+    const query = groq`*[_type == "clubEmbed"] | order(_createdAt desc) {
+      title, url, description
+    }`;
+    const embeds = await client.fetch(query);
+    const result = embeds || [];
+    
+    // Cache the result
+    cmsCache.set(cacheKey, result);
+    
+    return result;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching club embeds:', error);
+    }
+    return [];
+  }
 }

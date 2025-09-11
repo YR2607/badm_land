@@ -5,6 +5,7 @@ import { fetchAboutPage, CmsAboutPage } from '../lib/cms';
 
 const About: FC = () => {
   const [cmsData, setCmsData] = useState<CmsAboutPage | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'mission' | 'coaches' | 'facility'>('mission');
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -20,7 +21,10 @@ const About: FC = () => {
           setCmsData(data);
         }
       } catch (error) {
-        console.error('Failed to load CMS data:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to load CMS data:', error);
+        }
+        setError('Не удалось загрузить данные');
       }
     };
 
@@ -97,6 +101,22 @@ const About: FC = () => {
     { tag: '2026 Q1', title: 'Академия U17', desc: 'Регулярные сборы, тесты, сопровождение и календарь стартов.', status: 'planned' },
     { tag: '2026 Q2', title: 'Клубная лига 2.0', desc: 'Уровневые дивизионы, рейтинги, матч‑дни и трансляции.', status: 'planned' },
   ];
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-primary-blue text-white rounded hover:bg-blue-600"
+          >
+            Попробовать снова
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
