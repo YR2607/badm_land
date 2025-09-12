@@ -6,7 +6,7 @@ const groq = String.raw;
 const projectId = import.meta.env.VITE_SANITY_PROJECT_ID as string | undefined;
 const dataset = import.meta.env.VITE_SANITY_DATASET as string | undefined;
 const apiVersion = import.meta.env.VITE_SANITY_API_VERSION as string | undefined;
-const useCdn = true;
+const useCdn = false; // Отключаем CDN для получения свежих данных
 
 const client = createClient({ projectId, dataset, apiVersion, useCdn });
 
@@ -76,10 +76,12 @@ export type CmsPost = {
 export async function fetchPosts(): Promise<CmsPost[]> {
   const cacheKey = 'posts';
   
-  // Try to get from cache first
-  const cached = cmsCache.get<CmsPost[]>(cacheKey);
-  if (cached) {
-    return cached;
+  // В development режиме пропускаем кэш для получения свежих данных
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsPost[]>(cacheKey);
+    if (cached) {
+      return cached;
+    }
   }
 
   try {
@@ -100,8 +102,10 @@ export async function fetchPosts(): Promise<CmsPost[]> {
     
     const result = posts || [];
     
-    // Cache the result with shorter TTL for dynamic content
-    cmsCache.set(cacheKey, result, 2 * 60 * 1000); // 2 minutes
+    // Кэшируем только в production с коротким TTL для динамического контента
+    if (process.env.NODE_ENV !== 'development') {
+      cmsCache.set(cacheKey, result, 2 * 60 * 1000); // 2 minutes
+    }
     
     return result;
   } catch (error) {
@@ -115,10 +119,12 @@ export async function fetchPosts(): Promise<CmsPost[]> {
 export async function fetchPostBySlug(slug: string): Promise<CmsPost | null> {
   const cacheKey = `post-${slug}`;
   
-  // Try to get from cache first
-  const cached = cmsCache.get<CmsPost>(cacheKey);
-  if (cached) {
-    return cached;
+  // В development режиме пропускаем кэш для получения свежих данных
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsPost>(cacheKey);
+    if (cached) {
+      return cached;
+    }
   }
 
   try {
@@ -154,8 +160,8 @@ export async function fetchPostBySlug(slug: string): Promise<CmsPost | null> {
       }
     `, { slug });
     
-    // Cache the result
-    if (post) {
+    // Кэшируем только в production
+    if (post && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, post);
     }
     
@@ -180,10 +186,12 @@ export type CmsPage = {
 export async function fetchPageBySlug(slug: string): Promise<CmsPage | null> {
   const cacheKey = `page-${slug}`;
   
-  // Try to get from cache first
-  const cached = cmsCache.get<CmsPage>(cacheKey);
-  if (cached) {
-    return cached;
+  // В development режиме пропускаем кэш для получения свежих данных
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsPage>(cacheKey);
+    if (cached) {
+      return cached;
+    }
   }
 
   if (!client) return null;
@@ -199,8 +207,8 @@ export async function fetchPageBySlug(slug: string): Promise<CmsPage | null> {
     }`;
     const page = await client.fetch(query, { slug });
     
-    // Cache the result
-    if (page) {
+    // Кэшируем только в production
+    if (page && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, page);
     }
     
@@ -272,13 +280,15 @@ export type CmsHomePage = {
   };
 };
 
-export async function fetchHomePage(): Promise<CmsHomePage | null> {
+export const fetchHomePage = async (): Promise<CmsHomePage | null> => {
   const cacheKey = 'homePage';
   
-  // Try to get from cache first
-  const cached = cmsCache.get<CmsHomePage>(cacheKey);
-  if (cached) {
-    return cached;
+  // В development режиме пропускаем кэш для получения свежих данных
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsHomePage>(cacheKey);
+    if (cached) {
+      return cached;
+    }
   }
 
   try {
@@ -320,8 +330,8 @@ export async function fetchHomePage(): Promise<CmsHomePage | null> {
       }
     `);
     
-    // Cache the result
-    if (data) {
+    // Кэшируем только в production
+    if (data && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, data);
     }
     
@@ -384,13 +394,15 @@ export type CmsAboutPage = {
   };
 };
 
-export async function fetchAboutPage(): Promise<CmsAboutPage | null> {
+export const fetchAboutPage = async (): Promise<CmsAboutPage | null> => {
   const cacheKey = 'aboutPage';
   
-  // Try to get from cache first
-  const cached = cmsCache.get<CmsAboutPage>(cacheKey);
-  if (cached) {
-    return cached;
+  // В development режиме пропускаем кэш для получения свежих данных
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsAboutPage>(cacheKey);
+    if (cached) {
+      return cached;
+    }
   }
 
   try {
@@ -416,8 +428,8 @@ export async function fetchAboutPage(): Promise<CmsAboutPage | null> {
       }
     `);
     
-    // Cache the result
-    if (data) {
+    // Кэшируем только в production
+    if (data && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, data);
     }
     
@@ -458,13 +470,15 @@ export type CmsServicesPage = {
   };
 };
 
-export async function fetchServicesPage(): Promise<CmsServicesPage | null> {
+export const fetchServicesPage = async (): Promise<CmsServicesPage | null> => {
   const cacheKey = 'servicesPage';
   
-  // Try to get from cache first
-  const cached = cmsCache.get<CmsServicesPage>(cacheKey);
-  if (cached) {
-    return cached;
+  // В development режиме пропускаем кэш для получения свежих данных
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsServicesPage>(cacheKey);
+    if (cached) {
+      return cached;
+    }
   }
 
   try {
@@ -499,8 +513,8 @@ export async function fetchServicesPage(): Promise<CmsServicesPage | null> {
       }
     `);
     
-    // Cache the result
-    if (data) {
+    // Кэшируем только в production
+    if (data && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, data);
     }
     
@@ -518,10 +532,12 @@ export const sanityClient = client;
 export async function fetchClubEmbeds(): Promise<any[]> {
   const cacheKey = 'clubEmbeds';
   
-  // Try to get from cache first
-  const cached = cmsCache.get<any[]>(cacheKey);
-  if (cached) {
-    return cached;
+  // В development режиме пропускаем кэш для получения свежих данных
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<any[]>(cacheKey);
+    if (cached) {
+      return cached;
+    }
   }
 
   if (!client) return [];
@@ -533,8 +549,10 @@ export async function fetchClubEmbeds(): Promise<any[]> {
     const embeds = await client.fetch(query);
     const result = embeds || [];
     
-    // Cache the result
-    cmsCache.set(cacheKey, result);
+    // Кэшируем только в production
+    if (process.env.NODE_ENV !== 'development') {
+      cmsCache.set(cacheKey, result);
+    }
     
     return result;
   } catch (error) {
