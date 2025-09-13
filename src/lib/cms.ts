@@ -372,6 +372,27 @@ export const fetchHomePage = async (): Promise<CmsHomePage | null> => {
   }
 }
 
+export type CmsFounder = {
+  name: string;
+  role: string;
+  experience?: string;
+  achievements?: string[];
+  description?: any[];
+  quote?: string;
+  stats?: Array<{ label: string; value: string }>;
+  photo?: string;
+};
+
+export type CmsTrainer = {
+  name: string;
+  role: string;
+  experience?: string;
+  specialization?: string;
+  achievements?: string[];
+  description?: string;
+  photo?: string;
+};
+
 export type CmsAboutPage = {
   title: string;
   hero: {
@@ -379,6 +400,12 @@ export type CmsAboutPage = {
     title: string;
     subtitle: string;
     statistics?: Array<{ number: string; description: string }>;
+  };
+  teamSection?: {
+    title: string;
+    subtitle: string;
+    founder?: CmsFounder;
+    coaches?: CmsTrainer[];
   };
   statsSection?: {
     title: string;
@@ -436,22 +463,79 @@ export const fetchAboutPage = async (): Promise<CmsAboutPage | null> => {
   try {
     const data = await client.fetch(`
       *[_type == "aboutPage"][0] {
+        title,
         hero {
+          badge {
+            icon,
+            text
+          },
           title,
           subtitle,
-          description,
-          backgroundImage {
-            asset->{
-              _id,
-              url
-            },
-            alt
+          statistics[] {
+            number,
+            description
           }
         },
-        introSection {
+        teamSection {
           title,
-          content,
-          highlights[]
+          subtitle,
+          founder-> {
+            name,
+            role,
+            experience,
+            achievements[],
+            description,
+            quote,
+            stats[] {
+              label,
+              value
+            },
+            "photo": photo.asset->url
+          },
+          coaches[]-> {
+            name,
+            role,
+            experience,
+            specialization,
+            achievements[],
+            description,
+            "photo": photo.asset->url
+          }
+        },
+        statsSection {
+          title,
+          stats[] {
+            number,
+            label,
+            description,
+            icon,
+            color
+          }
+        },
+        historySection {
+          title,
+          subtitle,
+          showAllByDefault,
+          timeline[] {
+            year,
+            title,
+            text
+          }
+        },
+        roadmapSection {
+          title,
+          subtitle,
+          roadmapItems[] {
+            tag,
+            title,
+            description,
+            status
+          }
+        },
+        seo {
+          metaTitle,
+          metaDescription,
+          keywords
         }
       }
     `);

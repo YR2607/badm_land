@@ -29,6 +29,12 @@ export default defineType({
       }
     }),
     defineField({
+      name: 'role',
+      title: 'Должность',
+      type: 'string',
+      validation: r => r.required()
+    }),
+    defineField({
       name: 'experience',
       title: 'Опыт работы',
       type: 'string'

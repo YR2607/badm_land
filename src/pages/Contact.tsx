@@ -1,6 +1,6 @@
 import { type FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send, User, MessageSquare } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { fetchPageBySlug, isCmsEnabled, CmsPage } from '../lib/cms';
 
 const Contact: FC = () => {
@@ -13,20 +13,6 @@ const Contact: FC = () => {
     })();
   }, []);
 
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '', service: '' });
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-  const handleSubmit = (e: React.FormEvent) => { 
-    e.preventDefault(); 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Form submitted:', formData); 
-    }
-    // Here you would typically send data to your backend
-    alert('Спасибо за заявку! Мы свяжемся с вами в ближайшее время.');
-    setFormData({ name: '', email: '', phone: '', message: '', service: '' }); 
-  };
 
   const contactInfo = [
     { icon: <MapPin className="w-6 h-6" />, title: 'Адрес', content: 'ул. Примерная 123, Кишинев, Молдова', color: 'from-primary-blue to-blue-600' },
@@ -305,170 +291,246 @@ const Contact: FC = () => {
         </div>
       </section>
 
-      {/* Contact Form and Map */}
-      <section className="py-20">
+      {/* Gym Locations */}
+      <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-800 mb-6">
+              <MapPin className="w-4 h-4" />
+              <span className="text-sm font-medium">3 удобные локации</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-6">
+              Как нас найти
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Выберите наиболее удобную для вас локацию. Каждый зал оборудован всем необходимым для комфортных тренировок.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Gym 1 - Малая Малиан */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="group"
             >
-              <div className="card">
-                <h2 className="text-3xl font-bold font-display text-gray-900 mb-6">
-                  Отправьте нам сообщение
-                </h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                        Имя *
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          required
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-                          placeholder="Ваше имя"
-                        />
-                      </div>
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-blue-100 group-hover:border-blue-200 h-full">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                      <MapPin className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                        Email *
-                      </label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          required
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-                          placeholder="your@email.com"
-                        />
-                      </div>
+                      <h3 className="text-xl font-bold text-gray-900">Зал №1</h3>
+                      <p className="text-sm text-blue-600 font-medium">Центральная локация</p>
                     </div>
                   </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      Телефон
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-                        placeholder="+373 60 123 456"
-                      />
+                  <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    Популярный
+                  </span>
+                </div>
+                
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-gray-900">ул. Малая Малиан, 24</p>
+                      <p className="text-sm text-gray-600">Центр города, легко добраться</p>
                     </div>
                   </div>
-
-                  <div>
-                    <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
-                      Интересующая услуга
-                    </label>
-                    <select
-                      id="service"
-                      name="service"
-                      value={formData.service}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent"
-                    >
-                      <option value="">Выберите услугу</option>
-                      <option value="group">Групповые тренировки</option>
-                      <option value="individual">Индивидуальные занятия</option>
-                      <option value="competition">Подготовка к соревнованиям</option>
-                      <option value="court">Аренда корта</option>
-                    </select>
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                    <a href="tel:+37360123456" className="text-gray-900 hover:text-blue-600 transition-colors">
+                      +373 60 123 456
+                    </a>
                   </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                      Сообщение *
-                    </label>
-                    <div className="relative">
-                      <MessageSquare className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                      <textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        required
-                        rows={4}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent resize-none"
-                        placeholder="Расскажите нам о ваших целях и вопросах..."
-                      />
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                    <span className="text-gray-600 text-sm">Пн-Вс: 08:00-22:00</span>
                   </div>
+                </div>
 
-                  <button
-                    type="submit"
-                    className="w-full btn-primary flex items-center justify-center"
-                  >
-                    <Send className="mr-2 w-5 h-5" />
-                    Отправить сообщение
-                  </button>
-                </form>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">Детские группы</span>
+                  <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">Взрослые группы</span>
+                  <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">Парковка</span>
+                </div>
+
+                <button 
+                  onClick={() => window.open('https://maps.google.com/?q=Малая+Малиан+24', '_blank')}
+                  className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-medium group-hover:scale-105"
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Открыть на карте
+                  <ExternalLink className="w-4 h-4 ml-2" />
+                </button>
               </div>
             </motion.div>
 
-            {/* Map */}
+            {/* Gym 2 - 31 августа */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="group"
             >
-              <div className="card h-full">
-                <h2 className="text-3xl font-bold font-display text-gray-900 mb-6">
-                  Как нас найти
-                </h2>
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-green-100 group-hover:border-green-200 h-full">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                      <MapPin className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">Зал №2</h3>
+                      <p className="text-sm text-green-600 font-medium">Детский центр</p>
+                    </div>
+                  </div>
+                  <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    Для детей
+                  </span>
+                </div>
                 
-                {/* Map Placeholder */}
-                <div className="w-full h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center mb-6">
-                  <div className="text-center">
-                    <MapPin className="w-16 h-16 text-primary-blue mx-auto mb-4" />
-                    <p className="text-gray-600">Интерактивная карта</p>
-                    <p className="text-sm text-gray-500">ул. Примерная 123, Кишинев</p>
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-gray-900">ул. 31 августа 1989, 15</p>
+                      <p className="text-sm text-gray-600">Современный детский центр</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    <a href="tel:+37360234567" className="text-gray-900 hover:text-green-600 transition-colors">
+                      +373 60 234 567
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    <span className="text-gray-600 text-sm">Пн-Пт: 16:00-18:00</span>
                   </div>
                 </div>
 
-                {/* Directions */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Как добраться:</h3>
-                  <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-start">
-                      <span className="w-2 h-2 bg-primary-blue rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      На общественном транспорте: автобусы №5, 12, 27 до остановки "Центр"
-                    </li>
-                    <li className="flex items-start">
-                      <span className="w-2 h-2 bg-primary-orange rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      На автомобиле: парковка рядом с входом (бесплатная для участников)
-                    </li>
-                    <li className="flex items-start">
-                      <span className="w-2 h-2 bg-primary-yellow rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      Пешком: 5 минут от центральной площади
-                    </li>
-                  </ul>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Детские группы</span>
+                  <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Детская площадка</span>
+                  <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Кафетерий</span>
                 </div>
+
+                <button 
+                  onClick={() => window.open('https://maps.google.com/?q=31+августа+1989+15', '_blank')}
+                  className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 font-medium group-hover:scale-105"
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Открыть на карте
+                  <ExternalLink className="w-4 h-4 ml-2" />
+                </button>
+              </div>
+            </motion.div>
+
+            {/* Gym 3 - Ион Крянге */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="group"
+            >
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-amber-100 group-hover:border-amber-200 h-full">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-xl flex items-center justify-center">
+                      <MapPin className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">Зал №3</h3>
+                      <p className="text-sm text-amber-600 font-medium">Премиум зал</p>
+                    </div>
+                  </div>
+                  <span className="bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    Премиум
+                  </span>
+                </div>
+                
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-gray-900">ул. Ион Крянге, 1</p>
+                      <p className="text-sm text-gray-600">Профессиональный центр</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                    <a href="tel:+37360345678" className="text-gray-900 hover:text-amber-600 transition-colors">
+                      +373 60 345 678
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                    <span className="text-gray-600 text-sm">Пн-Вс: 09:00-21:00</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">Совершенствование</span>
+                  <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">Взрослые группы</span>
+                  <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">Сауна</span>
+                </div>
+
+                <button 
+                  onClick={() => window.open('https://maps.google.com/?q=Ион+Крянге+1', '_blank')}
+                  className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-xl hover:from-amber-600 hover:to-yellow-600 transition-all duration-300 font-medium group-hover:scale-105"
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Открыть на карте
+                  <ExternalLink className="w-4 h-4 ml-2" />
+                </button>
               </div>
             </motion.div>
           </div>
+
+          {/* General Tips Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mt-16 bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+          >
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Полезная информация</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <MapPin className="w-6 h-6 text-blue-600" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Удобное расположение</h4>
+                <p className="text-sm text-gray-600">Все залы доступны на общественном транспорте и имеют парковку</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Phone className="w-6 h-6 text-green-600" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Предварительная запись</h4>
+                <p className="text-sm text-gray-600">Рекомендуем звонить заранее для уточнения расписания</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Clock className="w-6 h-6 text-amber-600" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Гибкое расписание</h4>
+                <p className="text-sm text-gray-600">Разные время работы для максимального удобства</p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

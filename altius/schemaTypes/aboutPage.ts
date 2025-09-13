@@ -55,8 +55,14 @@ export default defineType({
         { name: 'title', title: 'Заголовок', type: 'string' },
         { name: 'subtitle', title: 'Подзаголовок', type: 'text' },
         {
-          name: 'team',
-          title: 'Члены команды',
+          name: 'founder',
+          title: 'Основатель',
+          type: 'reference',
+          to: [{ type: 'founder' }]
+        },
+        {
+          name: 'coaches',
+          title: 'Тренеры',
           type: 'array',
           of: [{ type: 'reference', to: [{ type: 'trainer' }] }]
         }

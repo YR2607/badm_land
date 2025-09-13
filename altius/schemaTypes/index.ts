@@ -16,6 +16,7 @@ import gymsPage from './gymsPage'
 import contactPage from './contactPage'
 import gym from './gym'
 import trainer from './trainer'
+import founder from './founder'
 
 export const schemaTypes = [
   // Original schemas
@@ -23,5 +24,5 @@ export const schemaTypes = [
   // New page schemas
   heroSection, homePage, aboutPage, servicesPage, gymsPage, contactPage,
   // Content schemas
-  gym, trainer
+  gym, trainer, founder
 ]

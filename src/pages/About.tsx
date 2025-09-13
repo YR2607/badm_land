@@ -1,12 +1,11 @@
 import { type FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award, Users, MapPin, Clock, Target, Heart, Trophy, Zap, Calendar, ArrowRight } from 'lucide-react';
+import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight } from 'lucide-react';
 import { fetchAboutPage, CmsAboutPage } from '../lib/cms';
 
 const About: FC = () => {
   const [cmsData, setCmsData] = useState<CmsAboutPage | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'mission' | 'coaches' | 'facility'>('mission');
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -381,157 +380,249 @@ const About: FC = () => {
         </div>
       </section>
 
-      {/* Interactive Tabs Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+      {/* Our Team Section */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 w-[36rem] h-[36rem] rounded-full bg-primary-blue/5 blur-3xl" />
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
-            className="text-center mb-12" 
+            className="text-center mb-16" 
             initial={{ opacity: 0, y: 20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             viewport={{ once: true }} 
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">О нашем клубе</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">Узнайте больше о нашей миссии, тренерах и инфраструктуре</p>
+            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">
+              Наша команда
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Опытные специалисты, которые помогут вам достичь новых высот в бадминтоне
+            </p>
           </motion.div>
 
-          {/* Modern Tab Navigation */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
-            {([
-              { key: 'mission', label: 'Миссия', icon: <Target className="w-4 h-4" /> },
-              { key: 'coaches', label: 'Тренеры', icon: <Users className="w-4 h-4" /> },
-              { key: 'facility', label: 'Инфраструктура', icon: <MapPin className="w-4 h-4" /> }
-            ] as const).map((t) => (
-              <motion.button
-                key={t.key}
-                onClick={() => setActiveTab(t.key)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                  activeTab === t.key 
-                    ? 'bg-primary-blue text-white shadow-lg shadow-primary-blue/25' 
-                    : 'bg-white text-gray-700 border border-gray-200 hover:border-primary-blue/50 hover:shadow-md'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {t.icon}
-                {t.label}
-              </motion.button>
-            ))}
-          </div>
-
-          {/* Tab Content */}
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            {activeTab === 'mission' && (
-              <>
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  transition={{ duration: 0.5, delay: 0.1 }} 
-                  className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-r from-primary-blue to-blue-600 rounded-xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Heart className="w-6 h-6" />
+          {/* Founder Section */}
+          {(cmsData?.teamSection?.founder || !cmsData) && (
+            <motion.div 
+              className="mb-20" 
+              initial={{ opacity: 0, y: 30 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }} 
+              transition={{ duration: 0.8 }}
+            >
+              <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">Основатель клуба</h3>
+              
+              <div className="bg-white rounded-2xl p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                  {/* Photo Section */}
+                  <div className="lg:col-span-1 text-center">
+                    {cmsData?.teamSection?.founder?.photo ? (
+                      <img 
+                        src={cmsData.teamSection.founder.photo} 
+                        alt={cmsData.teamSection.founder.name}
+                        className="w-64 h-64 mx-auto rounded-2xl object-cover mb-4"
+                      />
+                    ) : (
+                      <div className="w-64 h-64 mx-auto rounded-2xl bg-gradient-to-br from-primary-blue to-indigo-600 flex items-center justify-center mb-4">
+                        <Users className="w-32 h-32 text-white" />
+                      </div>
+                    )}
+                    <span className="inline-block bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm font-medium">
+                      {cmsData?.teamSection?.founder?.achievements?.[0] || "Мастер спорта"}
+                    </span>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Доступность</h3>
-                  <p className="text-gray-600 leading-relaxed">Группы по уровням, понятные планы тренировок и дружеская атмосфера для всех возрастов.</p>
-                </motion.div>
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  transition={{ duration: 0.5, delay: 0.2 }} 
-                  className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-r from-primary-yellow to-yellow-600 rounded-xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Zap className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Рост результатов</h3>
-                  <p className="text-gray-600 leading-relaxed">Индивидуальные рекомендации, разбор игр и участие в клубной лиге для постоянного развития.</p>
-                </motion.div>
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  transition={{ duration: 0.5, delay: 0.3 }} 
-                  className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-r from-primary-orange to-red-600 rounded-xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Users className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Сообщество</h3>
-                  <p className="text-gray-600 leading-relaxed">Совместные выезды, открытые дни, мини-турниры и спортивные мероприятия.</p>
-                </motion.div>
-              </>
-            )}
-            {activeTab === 'coaches' && (
-              <>
-                {[
-                  { name: 'Алексей Петров', role: 'Главный тренер', experience: '8 лет опыта' },
-                  { name: 'Мария Сидорова', role: 'Тренер по технике', experience: '5 лет опыта' },
-                  { name: 'Дмитрий Козлов', role: 'Тренер по физической подготовке', experience: '6 лет опыта' }
-                ].map((coach, i) => (
-                  <motion.div 
-                    key={i} 
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }} 
-                    className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-                  >
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-blue/20 to-primary-orange/20 mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Users className="w-8 h-8 text-primary-blue" />
+                  
+                  {/* Content Section */}
+                  <div className="lg:col-span-2 text-center lg:text-left">
+                    <h4 className="text-3xl font-bold text-gray-900 mb-2">
+                      {cmsData?.teamSection?.founder?.name || "Александр Иванов"}
+                    </h4>
+                    <p className="text-lg text-primary-blue font-medium mb-6">
+                      {cmsData?.teamSection?.founder?.role || "Основатель и директор клуба"}
+                    </p>
+                    
+                    <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
+                      {cmsData?.teamSection?.founder?.stats ? (
+                        cmsData.teamSection.founder.stats.map((stat, index) => (
+                          <span key={index} className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">
+                            {stat.value}
+                          </span>
+                        ))
+                      ) : (
+                        <>
+                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">15 лет опыта</span>
+                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">Международный уровень</span>
+                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">120+ учеников</span>
+                        </>
+                      )}
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{coach.name}</h3>
-                    <p className="text-primary-blue font-medium mb-2">{coach.role}</p>
-                    <p className="text-gray-600 text-sm">{coach.experience}</p>
+                    
+                    <div className="space-y-4 text-gray-600 leading-relaxed">
+                      {cmsData?.teamSection?.founder?.description ? (
+                        <div className="prose prose-gray max-w-none">
+                          {cmsData.teamSection.founder.description.map((block: any, index: number) => (
+                            <p key={index}>{block.children?.[0]?.text || ''}</p>
+                          ))}
+                        </div>
+                      ) : (
+                        <>
+                          <p>
+                            Мастер спорта по бадминтону с 15-летним опытом игры на профессиональном уровне. 
+                            Участник международных турниров и чемпионатов Европы.
+                          </p>
+                          <p>
+                            В 2024 году основал клуб Altius с целью создания профессиональной среды для развития 
+                            бадминтона в регионе. Под его руководством клуб стал домом для более чем 120 активных игроков.
+                          </p>
+                        </>
+                      )}
+                      <blockquote className="italic text-gray-700 border-l-3 border-primary-blue pl-4">
+                        "{cmsData?.teamSection?.founder?.quote || 'Бадминтон — это не просто спорт, это образ жизни, который учит дисциплине, стратегическому мышлению и командной работе.'}"
+                      </blockquote>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Coaches Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            transition={{ duration: 0.8 }}
+          >
+            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">Наши тренеры</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {cmsData?.teamSection?.coaches ? cmsData.teamSection.coaches.map((coach, index) => (
+                  <motion.div
+                    key={index}
+                    className="bg-white rounded-2xl p-6 group hover:bg-gray-50 transition-all duration-300"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                  >
+                    {/* Photo */}
+                    {coach.photo ? (
+                      <img 
+                        src={coach.photo} 
+                        alt={coach.name}
+                        className="w-32 h-32 mx-auto rounded-2xl object-cover mb-4"
+                      />
+                    ) : (
+                      <div className="w-32 h-32 mx-auto rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mb-4">
+                        <Users className="w-16 h-16 text-white" />
+                      </div>
+                    )}
+                    
+                    {/* Content */}
+                    <div className="text-center">
+                      <h4 className="text-xl font-bold text-gray-900 mb-1">{coach.name}</h4>
+                      <p className="text-primary-blue font-medium mb-3">{coach.role}</p>
+                      
+                      <div className="flex flex-wrap justify-center gap-1 mb-4">
+                        {coach.experience && (
+                          <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
+                            {coach.experience}
+                          </span>
+                        )}
+                        {coach.specialization && (
+                          <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
+                            {coach.specialization}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {coach.achievements && coach.achievements.length > 0 && (
+                        <div className="space-y-2 mb-4">
+                          {coach.achievements.map((achievement: string, idx: number) => (
+                            <span key={idx} className="block text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                              {achievement}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {coach.description && (
+                        <p className="text-sm text-gray-600 leading-relaxed">
+                          {coach.description}
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                )) : [
+                  {
+                    name: "Елена Петрова",
+                    role: "Старший тренер",
+                    experience: "8 лет опыта",
+                    specialization: "Техника игры",
+                    achievements: ["КМС по бадминтону", "Призёр чемпионата области"],
+                    description: "Специализируется на работе с начинающими игроками и развитии правильной техники ударов."
+                  },
+                  {
+                    name: "Дмитрий Козлов",
+                    role: "Тренер по физподготовке",
+                    experience: "6 лет опыта",
+                    specialization: "Физическая подготовка",
+                    achievements: ["Мастер спорта", "Сертифицированный фитнес-тренер"],
+                    description: "Отвечает за физическую подготовку спортсменов и профилактику травм."
+                  },
+                  {
+                    name: "Анна Смирнова",
+                    role: "Детский тренер",
+                    experience: "5 лет опыта",
+                    specialization: "Работа с детьми",
+                    achievements: ["КМС по бадминтону", "Педагогическое образование"],
+                    description: "Специализируется на обучении детей от 6 до 16 лет, создании игровой атмосферы на тренировках."
+                  }
+                ].map((coach, index) => (
+                  <motion.div
+                    key={index}
+                    className="bg-white rounded-2xl p-6 group hover:bg-gray-50 transition-all duration-300"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                  >
+                    {/* Photo */}
+                    <div className="w-32 h-32 mx-auto rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mb-4">
+                      <Users className="w-16 h-16 text-white" />
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="text-center">
+                      <h4 className="text-xl font-bold text-gray-900 mb-1">{coach.name}</h4>
+                      <p className="text-primary-blue font-medium mb-3">{coach.role}</p>
+                      
+                      <div className="flex flex-wrap justify-center gap-1 mb-4">
+                        <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
+                          {coach.experience}
+                        </span>
+                        <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
+                          {coach.specialization}
+                        </span>
+                      </div>
+                      
+                      <div className="space-y-2 mb-4">
+                        {coach.achievements.map((achievement, idx) => (
+                          <span key={idx} className="block text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                            {achievement}
+                          </span>
+                        ))}
+                      </div>
+                      
+                      <p className="text-sm text-gray-600 leading-relaxed">
+                        {coach.description}
+                      </p>
+                    </div>
                   </motion.div>
                 ))}
-              </>
-            )}
-            {activeTab === 'facility' && (
-              <>
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  transition={{ duration: 0.5, delay: 0.1 }} 
-                  className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-r from-primary-blue to-blue-600 rounded-xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Профессиональные корты</h3>
-                  <p className="text-gray-600 leading-relaxed">4 качественных площадки с современным покрытием, разметкой и освещением для турниров.</p>
-                </motion.div>
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  transition={{ duration: 0.5, delay: 0.2 }} 
-                  className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-r from-primary-yellow to-yellow-600 rounded-xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Heart className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Зона отдыха</h3>
-                  <p className="text-gray-600 leading-relaxed">Разминка, стрейчинг, восстановление, кофе-корнер и фирменный мерч клуба.</p>
-                </motion.div>
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  transition={{ duration: 0.5, delay: 0.3 }} 
-                  className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-r from-primary-orange to-red-600 rounded-xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Calendar className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Сервис записи</h3>
-                  <p className="text-gray-600 leading-relaxed">Онлайн-расписание, оплата и напоминания — все удобно с телефона.</p>
-                </motion.div>
-              </>
-            )}
-          </motion.div>
+              </div>
+            </motion.div>
         </div>
       </section>
 
@@ -600,7 +691,7 @@ const About: FC = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, amount: 0.2 }}
                             transition={{ duration: 0.5, delay: idx * 0.1 }}
-                            className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-blue/20"
+                            className="group bg-white rounded-2xl p-6"
                           >
                             <div className="mb-3 inline-flex items-center gap-2">
                               <span className="px-3 py-1 text-xs font-semibold rounded-full bg-primary-blue/10 text-primary-blue">
