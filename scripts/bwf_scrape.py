@@ -151,6 +151,82 @@ def discover_from_official_lists(limit: int = 40) -> list[str]:
     return uniq[:limit]
 
 
+def parse_bwf_main_pages(page_url: str, limit: int = 40) -> list[dict]:
+    """Parse BWF main pages (bwfbadminton.com) that contain links to latest news from all tournaments."""
+    try:
+        html = fetch(page_url)
+    except Exception as e:
+        print(f"Failed to fetch {page_url}: {e}")
+        return []
+    
+    soup = BeautifulSoup(html, 'lxml')
+    items: list[dict] = []
+    seen = set()
+    
+    # Look for all news links on the page
+    for a in soup.select('a[href]'):
+        href = a.get('href') or ''
+        if not href or '/news' not in href:
+            continue
+            
+        # Convert to absolute URL
+        if href.startswith('http'):
+            href_abs = href
+        else:
+            href_abs = to_abs_url(page_url, href)
+            
+        try:
+            u = urlparse(href_abs)
+            if not (u.scheme and is_official_host((u.hostname or '').lower())):
+                continue
+        except Exception:
+            continue
+            
+        if href_abs in seen:
+            continue
+        seen.add(href_abs)
+        
+        # Get title from link text or title attribute
+        title = (a.get('title') or a.get_text(' ', strip=True) or '').strip()
+        if not title or len(title) < 10:
+            continue
+            
+        # Look for image in the same container
+        card = a.parent if a.parent else a
+        img = ''
+        img_el = card.select_one('img[src], img[data-src]') if hasattr(card, 'select_one') else None
+        if img_el:
+            img = img_el.get('src') or img_el.get('data-src') or ''
+            if img:
+                img = to_abs_url(href_abs, img)
+        
+        # Look for preview text
+        preview = ''
+        p = card.select_one('p') if hasattr(card, 'select_one') else None
+        if p:
+            preview = p.get_text(' ', strip=True)
+            
+        # Try to extract date from URL or text
+        date_raw = ''
+        url_date_match = re.search(r'/(\d{4})/(\d{1,2})/(\d{1,2})/', href_abs)
+        if url_date_match:
+            year, month, day = url_date_match.groups()
+            date_raw = f"{year}-{month.zfill(2)}-{day.zfill(2)}T00:00:00+00:00"
+        
+        items.append({
+            'title': remove_date_from_title(title),
+            'href': href_abs,
+            'img': img,
+            'preview': (preview or '')[:220],
+            'date': normalize_date_iso(date_raw or ''),
+        })
+        
+        if len(items) >= limit:
+            break
+    
+    return items
+
+
 def discover_links_via_google(limit: int = 30) -> list[str]:
     params = {
         'q': 'site:bwfbadminton.com when:365d',
@@ -944,8 +1020,10 @@ def scrape() -> dict:
     # Championships site - check both news page and main page
     champ_items = []
     default_pages = [
-        'https://bwfworldchampionships.bwfbadminton.com/',  # Main page first (has latest)
-        'https://bwfworldchampionships.bwfbadminton.com/news/',  # News page second
+        'https://bwfbadminton.com/news/',  # Official BWF news (has latest from all tournaments)
+        'https://bwfbadminton.com/',  # BWF main page (latest highlights)
+        'https://bwfworldchampionships.bwfbadminton.com/news/',  # Championships news
+        'https://bwfworldchampionships.bwfbadminton.com/',  # Championships main page
     ]
     # Allow overriding/adding pages via env var (comma-separated)
     extra = os.environ.get('BWF_CHAMP_URLS', '').strip()
@@ -962,15 +1040,27 @@ def scrape() -> dict:
 
     # Parse all pages first, then deduplicate
     for url in champ_pages:
-        if BWF_MODE == 'list_only':
-            part = parse_championships_list_only(url, limit=40)
-        else:
-            part = parse_championships_overview(url, limit=40)
-        if part:
-            champ_items.extend(part)
-            print(f"Found {len(part)} items from {url}")
-        else:
-            print(f"No items found from {url}")
+        print(f"Scraping from: {url}")
+        try:
+            # Choose parser based on URL
+            if 'bwfbadminton.com' in url and 'worldchampionships' not in url:
+                # Use BWF main pages parser for bwfbadminton.com
+                part = parse_bwf_main_pages(url, limit=40)
+            elif BWF_MODE == 'list_only':
+                part = parse_championships_list_only(url, limit=40)
+            else:
+                part = parse_championships_overview(url, limit=40)
+            if part:
+                champ_items.extend(part)
+                print(f"Found {len(part)} items from {url}")
+                # Show first few titles for debugging
+                titles = [item.get('title', 'No title')[:50] for item in part[:3]]
+                print(f"Sample titles: {titles}")
+            else:
+                print(f"No items found from {url}")
+        except Exception as e:
+            print(f"Error scraping {url}: {e}")
+            continue
 
     print(f"Total items before deduplication: {len(champ_items)}")
 

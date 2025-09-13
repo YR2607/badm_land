@@ -141,10 +141,10 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
       const next = path.getPointAtLength(Math.min(total, len + 1));
       const angle = Math.atan2(next.y - pt.y, next.x - pt.x) * (180 / Math.PI);
 
-      // Центруем 44x44 воланчик относительно точки
+      // Центруем 28x28 воланчик относительно точки
       shuttleRef.current.setAttribute(
         'transform',
-        `translate(${pt.x}, ${pt.y}) rotate(${angle}) translate(-22, -22)`
+        `translate(${pt.x}, ${pt.y}) rotate(${angle}) translate(-14, -14)`
       );
     };
 
@@ -214,9 +214,9 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
             {cmsData?.timeline?.title || 'История развития клуба'}
           </h3>
           
-          <div className="relative min-h-[620px]" ref={containerRef}>
-            {/* Wavy timeline path */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 620" preserveAspectRatio="none">
+          <div className="relative min-h-[400px] md:min-h-[620px]" ref={containerRef}>
+            {/* Wavy timeline path - скрыт на мобильных */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 1000 620" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="tlGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#1e3a8a" />
@@ -230,13 +230,13 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
               {/* Извилистый путь, проходящий через всю высоту */}
               <path ref={pathRef} id="timelinePath" d="M 50 40 C 250 80, 200 160, 420 200 S 620 320, 820 300 S 700 440, 500 480 S 300 560, 150 600" fill="none" stroke="url(#tlGrad)" strokeWidth="4" strokeLinecap="round" strokeDasharray="10 14" />
 
-              {/* Воланчик-изображение, двигается по пути при скролле */}
+              {/* Воланчик-изображение, двигается по пути при скролле - уменьшенный размер */}
               <g ref={shuttleRef}>
-                <image href="/shuttle.png" width="44" height="44" x="0" y="0" preserveAspectRatio="xMidYMid meet" />
+                <image href="/shuttle.png" width="28" height="28" x="0" y="0" preserveAspectRatio="xMidYMid meet" />
               </g>
             </svg>
 
-            <div className="space-y-8 relative">
+            <div className="space-y-6 md:space-y-8 relative">
               {milestones.map((milestone, index) => {
                 const mp = milestoneProgressPoints[index];
                 const isActive = scrollProgress >= mp - 0.02;
@@ -244,35 +244,35 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
                 return (
                 <motion.div
                   key={index}
-                  className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                  className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-col md:flex-row`}
                   initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   style={{ marginTop: index === 0 ? '20px' : undefined }}
                 >
-                  <div className={`w-1/2 ${isLeft ? 'pl-8 text-left' : 'pr-8 text-right'} relative`}>
+                  <div className={`w-full md:w-1/2 ${isLeft ? 'md:pl-8 md:text-left' : 'md:pr-8 md:text-right'} text-center md:text-left px-4 md:px-0 relative`}>
                     {isActive && (
                       <>
-                        {/* Тонкая вертикальная полоса у края (не рамка) */}
-                        <div className={`absolute top-3 bottom-3 ${isLeft ? 'left-0' : 'right-0'} w-[2px] bg-gradient-to-b from-primary-yellow/60 to-primary-blue/60`}></div>
+                        {/* Тонкая вертикальная полоса у края (не рамка) - скрыта на мобильных */}
+                        <div className={`hidden md:block absolute top-3 bottom-3 ${isLeft ? 'left-0' : 'right-0'} w-[2px] bg-gradient-to-b from-primary-yellow/60 to-primary-blue/60`}></div>
                         {/* Деликатное свечение позади карточки */}
                         <div className="absolute -inset-2 bg-gradient-to-r from-primary-yellow/10 to-primary-blue/10 blur-xl rounded-2xl"></div>
                       </>
                     )}
-                    <div className={`relative bg-white rounded-lg p-4 transition-transform duration-300 ${isActive ? 'scale-[1.02]' : ''}`}>
-                      <div className={`text-2xl font-bold mb-1 ${isActive ? 'text-primary-yellow' : 'text-primary-blue'}`}>{milestone.year}</div>
-                      <h4 className={`text-lg font-semibold mb-2 ${isActive ? 'text-primary-blue' : 'text-gray-900'}`}>{milestone.title}</h4>
-                      <p className="text-gray-600">{milestone.description}</p>
+                    <div className={`relative bg-white rounded-lg p-4 md:p-6 transition-transform duration-300 shadow-sm ${isActive ? 'scale-[1.02]' : ''}`}>
+                      <div className={`text-xl md:text-2xl font-bold mb-2 ${isActive ? 'text-primary-yellow' : 'text-primary-blue'}`}>{milestone.year}</div>
+                      <h4 className={`text-base md:text-lg font-semibold mb-2 ${isActive ? 'text-primary-blue' : 'text-gray-900'}`}>{milestone.title}</h4>
+                      <p className="text-sm md:text-base text-gray-600 leading-relaxed">{milestone.description}</p>
                       {/* Аккуратная линия-подчеркивание снизу */}
                       <div className={`absolute left-0 bottom-0 h-[2px] bg-gradient-to-r from-primary-yellow to-primary-blue transition-all duration-500 ${isActive ? 'w-full' : 'w-0'}`}></div>
                     </div>
                   </div>
                   
-                  {/* Соединительная точка заменена на пустое пространство (путь проходит позади) */}
-                  <div className="w-4" />
+                  {/* Соединительная точка заменена на пустое пространство (путь проходит позади) - скрыта на мобильных */}
+                  <div className="hidden md:block w-4" />
                   
-                  <div className="w-1/2"></div>
+                  <div className="hidden md:block md:w-1/2"></div>
                 </motion.div>
               );})}
             </div>
@@ -281,14 +281,14 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
 
         {/* Call to Action */}
         <motion.div
-          className="text-center mt-16"
+          className="text-center mt-16 px-4"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
           <motion.div 
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-blue to-primary-yellow text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+            className="inline-flex items-center px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary-blue to-primary-yellow text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer max-w-full"
             whileHover={{ 
               scale: 1.05,
               boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
@@ -298,10 +298,11 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
             <motion.div
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.6 }}
+              className="flex-shrink-0"
             >
               {getCallToActionIcon(cmsData?.callToAction?.icon || 'Star')}
             </motion.div>
-            <span className="font-semibold text-lg">
+            <span className="font-semibold text-sm sm:text-base md:text-lg text-center leading-tight">
               {cmsData?.callToAction?.text || 'Станьте частью нашей истории успеха!'}
             </span>
           </motion.div>

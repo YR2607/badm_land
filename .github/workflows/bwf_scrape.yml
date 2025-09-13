@@ -32,11 +32,11 @@ jobs:
           SCRAPINGBEE_KEY: ${{ secrets.SCRAPINGBEE_KEY }}
           # Default: parse ONLY from championships main and news pages (diverse per-card images)
           BWF_CHAMP_ONLY: '1'
-          BWF_CHAMP_URLS: 'https://bwfworldchampionships.bwfbadminton.com/,https://bwfworldchampionships.bwfbadminton.com/news/'
+          BWF_CHAMP_URLS: 'https://bwfbadminton.com/news/,https://bwfbadminton.com/,https://bwfworldchampionships.bwfbadminton.com/news/,https://bwfworldchampionships.bwfbadminton.com/'
           # Force proxy for championship domain to avoid consent/cookie HTML on CI
           BWF_FORCE_PROXY: '1'
-          # Use list-only mode on CI to avoid article fetch instability
-          BWF_MODE: 'list_only'
+          # Use default mode to get full article data and latest news
+          # BWF_MODE: 'list_only'
         run: |
           echo "Starting BWF scraper..."
           python scripts/bwf_scrape.py
