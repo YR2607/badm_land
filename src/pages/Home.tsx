@@ -14,6 +14,9 @@ const Home: FC = () => {
     const loadCmsData = async () => {
       try {
         const data = await fetchHomePage();
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Home page CMS data loaded:', data);
+        }
         if (data) {
           setCmsData(data);
         }

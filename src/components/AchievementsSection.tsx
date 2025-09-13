@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Medal, Users, Calendar, Star, Award } from 'lucide-react';
+import { Trophy, Medal, Star, Award, Crown, Target, Heart, Zap } from 'lucide-react';
 
 interface AchievementsSectionProps {
   cmsData?: {
@@ -34,16 +34,6 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
   const shuttleRef = useRef<SVGGElement | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  function getIconComponent(iconName: string) {
-    switch (iconName) {
-      case 'Trophy': return <Trophy className="w-8 h-8" />;
-      case 'Medal': return <Medal className="w-8 h-8" />;
-      case 'Users': return <Users className="w-8 h-8" />;
-      case 'Calendar': return <Calendar className="w-8 h-8" />;
-      case 'Award': return <Award className="w-8 h-8" />;
-      default: return <Star className="w-8 h-8" />;
-    }
-  }
 
   function getCallToActionIcon(iconName: string) {
     switch (iconName) {
@@ -55,42 +45,53 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
 
   const defaultAchievements = [
     {
-      icon: <Trophy className="w-8 h-8" />,
+      icon: <Crown className="w-8 h-8" />,
       title: 'Чемпионы Молдовы',
       count: '15',
       description: 'Наших воспитанников стали чемпионами страны',
-      color: 'from-yellow-500 to-yellow-600'
+      color: 'from-yellow-500 to-amber-600'
     },
     {
-      icon: <Medal className="w-8 h-8" />,
+      icon: <Target className="w-8 h-8" />,
       title: 'Медали на турнирах',
       count: '47',
       description: 'Завоеванных медалей на национальных соревнованиях',
-      color: 'from-blue-500 to-blue-600'
+      color: 'from-emerald-500 to-teal-600'
     },
     {
-      icon: <Users className="w-8 h-8" />,
+      icon: <Heart className="w-8 h-8" />,
       title: 'Активных спортсменов',
       count: '500+',
       description: 'Регулярно тренируются в нашем клубе',
-      color: 'from-green-500 to-green-600'
+      color: 'from-rose-500 to-pink-600'
     },
     {
-      icon: <Calendar className="w-8 h-8" />,
+      icon: <Zap className="w-8 h-8" />,
       title: 'Лет успешной работы',
       count: '15',
       description: 'Развиваем бадминтон в Молдове с 2010 года',
-      color: 'from-purple-500 to-purple-600'
+      color: 'from-violet-500 to-purple-600'
     }
   ];
 
-  const achievements = cmsData?.achievements?.map(item => ({
-    icon: getIconComponent(item.icon),
-    title: item.title,
-    count: item.count,
-    description: item.description,
-    color: item.color || 'from-blue-500 to-blue-600'
-  })) || defaultAchievements;
+  // Fixed icons but CMS text - merge CMS data with default icons
+  const achievements = defaultAchievements.map((defaultItem, index) => {
+    const cmsItem = cmsData?.achievements?.[index];
+    return {
+      icon: defaultItem.icon, // Always use default icon
+      title: cmsItem?.title || defaultItem.title, // CMS title or fallback
+      count: cmsItem?.count || defaultItem.count, // CMS count or fallback
+      description: cmsItem?.description || defaultItem.description, // CMS description or fallback
+      color: defaultItem.color // Always use default color
+    };
+  });
+
+  // Debug logging
+  if (process.env.NODE_ENV === 'development') {
+    console.log('AchievementsSection - CMS Data:', cmsData);
+    console.log('AchievementsSection - Using achievements:', achievements);
+    console.log('AchievementsSection - Default achievements:', defaultAchievements);
+  }
 
   const defaultMilestones = [
     {
@@ -167,9 +168,14 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="section-title">
-            {cmsData?.title || 'Наши Достижения'}
-          </h2>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 via-yellow-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300">
+              <Medal className="w-8 h-8 text-white drop-shadow-sm" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+              {cmsData?.title || 'Наши Достижения'}
+            </h2>
+          </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             {cmsData?.subtitle || 'За годы работы мы достигли впечатляющих результатов и воспитали множество талантливых спортсменов'}
           </p>
