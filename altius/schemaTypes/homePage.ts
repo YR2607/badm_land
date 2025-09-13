@@ -13,21 +13,69 @@ export default defineType({
     }),
     defineField({
       name: 'hero',
-      title: 'Hero секция',
-      type: 'heroSection'
-    }),
-    defineField({
-      name: 'aboutSection',
-      title: 'Секция "О клубе"',
+      title: 'Hero Section',
       type: 'object',
       options: {
         collapsible: true,
-        collapsed: false
+        collapsed: false,
       },
       fields: [
-        { name: 'title', title: 'Заголовок', type: 'string' },
-        { name: 'description', title: 'Описание', type: 'text' },
-        { name: 'image', title: 'Изображение', type: 'image' }
+        {
+          name: 'badge',
+          title: 'Badge',
+          type: 'object',
+          fields: [
+            {
+              name: 'icon',
+              title: 'Icon',
+              type: 'string',
+              description: 'Lucide icon name (e.g., Award, Trophy, Star)'
+            },
+            {
+              name: 'text',
+              title: 'Text',
+              type: 'string'
+            }
+          ]
+        },
+        {
+          name: 'title',
+          title: 'Main Title',
+          type: 'string'
+        },
+        {
+          name: 'subtitle',
+          title: 'Subtitle',
+          type: 'string'
+        },
+        {
+          name: 'description',
+          title: 'Description',
+          type: 'text',
+          description: 'Main description text below the title'
+        },
+        {
+          name: 'statistics',
+          title: 'Statistics',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {
+                  name: 'number',
+                  title: 'Number',
+                  type: 'string'
+                },
+                {
+                  name: 'description',
+                  title: 'Description',
+                  type: 'string'
+                }
+              ]
+            }
+          ]
+        }
       ]
     }),
     defineField({
@@ -36,7 +84,7 @@ export default defineType({
       type: 'object',
       options: {
         collapsible: true,
-        collapsed: false
+        collapsed: false,
       },
       fields: [
         { name: 'title', title: 'Заголовок', type: 'string' },
@@ -51,8 +99,15 @@ export default defineType({
             fields: [
               { name: 'title', title: 'Название', type: 'string' },
               { name: 'description', title: 'Описание', type: 'text' },
-              { name: 'icon', title: 'Иконка', type: 'string' },
-              { name: 'price', title: 'Цена', type: 'string' }
+              { name: 'icon', title: 'Иконка (Users, User, Trophy, Clock)', type: 'string' },
+              { name: 'color', title: 'Цвет градиента', type: 'string' },
+              { 
+                name: 'features', 
+                title: 'Особенности', 
+                type: 'array', 
+                of: [{ type: 'string' }] 
+              },
+              { name: 'price', title: 'Цена', type: 'string' },
             ]
           }]
         }
@@ -68,6 +123,7 @@ export default defineType({
       },
       fields: [
         { name: 'title', title: 'Заголовок', type: 'string' },
+        { name: 'subtitle', title: 'Подзаголовок', type: 'text' },
         {
           name: 'achievements',
           title: 'Достижения',
@@ -77,11 +133,58 @@ export default defineType({
             name: 'achievement',
             fields: [
               { name: 'title', title: 'Название', type: 'string' },
+              { name: 'count', title: 'Цифра', type: 'string' },
               { name: 'description', title: 'Описание', type: 'text' },
-              { name: 'icon', title: 'Иконка', type: 'string' }
+              { name: 'icon', title: 'Иконка (Trophy, Medal, Users, Calendar)', type: 'string' },
+              { name: 'color', title: 'Цвет градиента', type: 'string' }
             ]
           }]
+        },
+        {
+          name: 'timeline',
+          title: 'История развития',
+          type: 'object',
+          fields: [
+            { name: 'title', title: 'Заголовок таймлайна', type: 'string' },
+            {
+              name: 'milestones',
+              title: 'Этапы развития',
+              type: 'array',
+              of: [{
+                type: 'object',
+                name: 'milestone',
+                fields: [
+                  { name: 'year', title: 'Год', type: 'string' },
+                  { name: 'title', title: 'Название', type: 'string' },
+                  { name: 'description', title: 'Описание', type: 'text' }
+                ]
+              }]
+            }
+          ]
+        },
+        {
+          name: 'callToAction',
+          title: 'Призыв к действию',
+          type: 'object',
+          fields: [
+            { name: 'text', title: 'Текст', type: 'string' },
+            { name: 'icon', title: 'Иконка (Star, Trophy, Award)', type: 'string' }
+          ]
         }
+      ]
+    }),
+    defineField({
+      name: 'newsSection',
+      title: 'Секция новостей BWF',
+      type: 'object',
+      options: {
+        collapsible: true,
+        collapsed: false
+      },
+      fields: [
+        { name: 'title', title: 'Заголовок', type: 'string' },
+        { name: 'subtitle', title: 'Подзаголовок', type: 'text' },
+        { name: 'enabled', title: 'Показывать секцию', type: 'boolean' }
       ]
     }),
     defineField({

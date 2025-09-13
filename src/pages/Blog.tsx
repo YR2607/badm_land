@@ -134,7 +134,7 @@ const Blog: FC = () => {
         id: `cms-${idx}-${i?.publishedAt || ''}`,
         title: i?.title || '',
         excerpt: i?.description || '',
-        image: i?.cover || undefined,
+        image: i?.cover || i?.coverUrl || undefined,
         date: i?.publishedAt || new Date().toISOString(),
         category: (i?.kind === 'event' ? 'event' : 'news') as 'news' | 'event',
         author: undefined,

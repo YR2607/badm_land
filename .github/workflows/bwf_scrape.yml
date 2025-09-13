@@ -2,8 +2,13 @@ name: BWF Scrape Daily
 
 on:
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '0 5,11,17 * * *'  # Run 3 times daily: 5 AM, 11 AM, 5 PM UTC
   workflow_dispatch: {}
+  push:
+    branches: [ main ]
+    paths:
+      - 'scripts/bwf_scrape.py'
+      - '.github/workflows/bwf_scrape.yml'
 
 jobs:
   scrape:
@@ -33,7 +38,9 @@ jobs:
           # Use list-only mode on CI to avoid article fetch instability
           BWF_MODE: 'list_only'
         run: |
+          echo "Starting BWF scraper..."
           python scripts/bwf_scrape.py
+          echo "Scraper completed with exit code: $?"
       - name: Show scraped items count
         run: |
           python -c "import json; j=json.load(open('public/data/bwf_news.json','r',encoding='utf-8')); print('items:', len(j.get('items') or [])); print('first_titles:', [it.get('title') for it in (j.get('items') or [])][:3])"

@@ -1006,8 +1006,17 @@ def scrape() -> dict:
 
 
 def main():
-    new_data = scrape()
-    new_items = list(new_data.get('items', []))
+    print(f"Starting BWF scraper at {datetime.now(timezone.utc).isoformat()}")
+    print(f"Environment: BWF_MODE={BWF_MODE}, BWF_FORCE_PROXY={BWF_FORCE_PROXY}")
+    print(f"API Keys available: SCRAPERAPI_KEY={'Yes' if SCRAPERAPI_KEY else 'No'}, SCRAPINGBEE_KEY={'Yes' if SCRAPINGBEE_KEY else 'No'}")
+    
+    try:
+        new_data = scrape()
+        new_items = list(new_data.get('items', []))
+        print(f"Scraped {len(new_items)} new items")
+    except Exception as e:
+        print(f"Error during scraping: {e}")
+        new_items = []
 
     # Load previous items if exist
     old_items = []
@@ -1016,7 +1025,9 @@ def main():
             with open(OUT_PATH, 'r', encoding='utf-8') as f:
                 prev = json.load(f)
                 old_items = list(prev.get('items', []))
-        except Exception:
+                print(f"Loaded {len(old_items)} previous items")
+        except Exception as e:
+            print(f"Error loading previous items: {e}")
             old_items = []
 
     # If scrape failed (no items), keep previous content to avoid empty site

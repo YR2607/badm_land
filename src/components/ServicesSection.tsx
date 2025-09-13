@@ -11,12 +11,23 @@ interface ServicesSectionProps {
       features?: string[];
       price: string;
       icon: string;
+      color: string;
     }>;
   };
 }
 
 const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
-  const services = [
+  function getIconComponent(iconName: string) {
+    switch (iconName) {
+      case 'Users': return <Users className="w-8 h-8" />;
+      case 'User': return <User className="w-8 h-8" />;
+      case 'Trophy': return <Trophy className="w-8 h-8" />;
+      case 'Clock': return <Clock className="w-8 h-8" />;
+      default: return <Star className="w-8 h-8" />;
+    }
+  }
+
+  const defaultServices = [
     {
       icon: <Users className="w-8 h-8" />,
       title: 'Групповые тренировки',
@@ -51,6 +62,15 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
     }
   ];
 
+  const services = cmsData?.services?.map(item => ({
+    icon: getIconComponent(item.icon),
+    title: item.title,
+    description: item.description,
+    features: item.features || [],
+    price: item.price,
+    color: item.color || 'from-blue-500 to-blue-600'
+  })) || defaultServices;
+
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,17 +82,17 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl font-bold font-display text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             {cmsData?.title || 'Наши Услуги'}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {cmsData?.subtitle || 'Широкий спектр услуг для игроков любого уровня - от начинающих до профессионалов'}
+            {cmsData?.subtitle || 'Профессиональные тренировки для всех уровней подготовки'}
           </p>
         </motion.div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {(cmsData?.services || services).slice(0, 3).map((service: any, index: number) => (
+          {services.slice(0, 3).map((service: any, index: number) => (
             <motion.div
               key={index}
               className="relative group"

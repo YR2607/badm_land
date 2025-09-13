@@ -236,36 +236,32 @@ export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
   return albums as CmsAlbum[];
 }
 
-export type CmsHomePage = {
-  title: string;
-  hero: {
+export interface CmsHomePage {
+  title?: string;
+  hero?: {
     badge?: { icon: string; text: string };
     title: string;
     subtitle: string;
+    description?: string;
     statistics?: Array<{ number: string; description: string }>;
-  };
-  aboutSection?: {
-    title: string;
-    description: string;
-    image?: string;
-  };
-  servicesSection?: {
-    title: string;
-    subtitle: string;
-    services: Array<{
-      title: string;
-      description: string;
-      icon: string;
-      price: string;
-    }>;
   };
   achievementsSection?: {
     title: string;
-    achievements: Array<{
+    subtitle?: string;
+    achievements: Array<{ title: string; count: string; description: string; icon: string; color: string }>;
+    timeline?: {
       title: string;
-      description: string;
+      milestones: Array<{ year: string; title: string; description: string }>;
+    };
+    callToAction?: {
+      text: string;
       icon: string;
-    }>;
+    };
+  };
+  servicesSection?: {
+    title: string;
+    subtitle?: string;
+    services: Array<{ title: string; description: string; features?: string[]; price: string; icon: string; color: string }>;
   };
   ctaSection?: {
     title: string;
@@ -294,26 +290,17 @@ export const fetchHomePage = async (): Promise<CmsHomePage | null> => {
   try {
     const data = await client.fetch(`
       *[_type == "homePage"][0] {
+        title,
         hero {
+          badge {
+            icon,
+            text
+          },
           title,
           subtitle,
           description,
-          ctaText,
-          ctaLink,
-          backgroundImage {
-            asset->{
-              _id,
-              url
-            },
-            alt
-          }
-        },
-        achievementsSection {
-          title,
-          subtitle,
-          achievements[] {
+          statistics[] {
             number,
-            label,
             description
           }
         },
@@ -324,11 +311,52 @@ export const fetchHomePage = async (): Promise<CmsHomePage | null> => {
             title,
             description,
             icon,
-            features[]
+            price,
+            features[],
+            color
           }
+        },
+        achievementsSection {
+          title,
+          subtitle,
+          achievements[] {
+            title,
+            count,
+            description,
+            icon,
+            color
+          },
+          timeline {
+            title,
+            milestones[] {
+              year,
+              title,
+              description
+            }
+          },
+          callToAction {
+            text,
+            icon
+          }
+        },
+        newsSection {
+          title,
+          subtitle,
+          enabled
+        },
+        ctaSection {
+          title,
+          description,
+          buttonText,
+          buttonLink
         }
       }
     `);
+    
+    // Добавим логирование в development режиме
+    if (process.env.NODE_ENV === 'development') {
+      console.log('CMS Data received:', JSON.stringify(data, null, 2));
+    }
     
     // Кэшируем только в production
     if (data && process.env.NODE_ENV !== 'development') {
@@ -527,6 +555,212 @@ export const fetchServicesPage = async (): Promise<CmsServicesPage | null> => {
   }
 }
 
+export type CmsGym = {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  detailedDescription?: any[];
+  heroImage?: string;
+  badge?: string;
+  badgeColor?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  mapUrl?: string;
+  gallery?: string[];
+  features?: string[];
+  hasChildren?: boolean;
+  hasAdults?: boolean;
+  schedule?: {
+    children?: {
+      title: string;
+      times: string;
+      details: string;
+    };
+    adults?: {
+      title: string;
+      times: string;
+      details: string;
+    };
+  };
+  pricing?: {
+    children?: {
+      monthly: string;
+      single: string;
+      trial: string;
+    };
+    adults?: {
+      monthly: string;
+      single: string;
+      trial: string;
+    };
+  };
+  trainers?: Array<{
+    name: string;
+    experience: string;
+    specialization: string;
+    photo?: string;
+  }>;
+};
+
+export const fetchGyms = async (): Promise<CmsGym[]> => {
+  const cacheKey = 'gyms';
+  
+  // В development режиме пропускаем кэш для получения свежих данных
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsGym[]>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+  }
+
+  if (!client) return [];
+  
+  try {
+    const query = groq`*[_type == "gym"] | order(_createdAt asc) {
+      "id": _id,
+      name,
+      "slug": slug.current,
+      description,
+      detailedDescription,
+      "heroImage": heroImage.asset->url,
+      badge,
+      badgeColor,
+      address,
+      phone,
+      email,
+      mapUrl,
+      "gallery": gallery[].asset->url,
+      features,
+      hasChildren,
+      hasAdults,
+      schedule {
+        children {
+          title,
+          times,
+          details
+        },
+        adults {
+          title,
+          times,
+          details
+        }
+      },
+      pricing {
+        children {
+          monthly,
+          single,
+          trial
+        },
+        adults {
+          monthly,
+          single,
+          trial
+        }
+      },
+      trainers[]-> {
+        name,
+        experience,
+        specialization,
+        "photo": photo.asset->url
+      }
+    }`;
+    const gyms = await client.fetch(query);
+    const result = gyms || [];
+    
+    // Кэшируем только в production
+    if (process.env.NODE_ENV !== 'development') {
+      cmsCache.set(cacheKey, result);
+    }
+    
+    return result;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching gyms:', error);
+    }
+    return [];
+  }
+};
+
+export const fetchGymBySlug = async (slug: string): Promise<CmsGym | null> => {
+  const cacheKey = `gym-${slug}`;
+  
+  // В development режиме пропускаем кэш для получения свежих данных
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsGym>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+  }
+
+  if (!client) return null;
+  
+  try {
+    const query = groq`*[_type == "gym" && slug.current == $slug][0] {
+      "id": _id,
+      name,
+      "slug": slug.current,
+      description,
+      detailedDescription,
+      "heroImage": heroImage.asset->url,
+      badge,
+      badgeColor,
+      address,
+      phone,
+      email,
+      mapUrl,
+      "gallery": gallery[].asset->url,
+      features,
+      hasChildren,
+      hasAdults,
+      schedule {
+        children {
+          title,
+          times,
+          details
+        },
+        adults {
+          title,
+          times,
+          details
+        }
+      },
+      pricing {
+        children {
+          monthly,
+          single,
+          trial
+        },
+        adults {
+          monthly,
+          single,
+          trial
+        }
+      },
+      trainers[]-> {
+        name,
+        experience,
+        specialization,
+        "photo": photo.asset->url
+      }
+    }`;
+    const gym = await client.fetch(query, { slug });
+    
+    // Кэшируем только в production
+    if (gym && process.env.NODE_ENV !== 'development') {
+      cmsCache.set(cacheKey, gym);
+    }
+    
+    return gym;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching gym:', error);
+    }
+    return null;
+  }
+};
+
 export const sanityClient = client;
 
 export async function fetchClubEmbeds(): Promise<any[]> {
@@ -543,8 +777,14 @@ export async function fetchClubEmbeds(): Promise<any[]> {
   if (!client) return [];
   
   try {
-    const query = groq`*[_type == "clubEmbed"] | order(_createdAt desc) {
-      title, url, description
+    const query = groq`*[_type == "clubEmbed"] | order(publishedAt desc) {
+      title, 
+      url, 
+      description,
+      kind,
+      publishedAt,
+      "cover": cover.asset->url,
+      coverUrl
     }`;
     const embeds = await client.fetch(query);
     const result = embeds || [];

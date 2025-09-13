@@ -7,6 +7,7 @@ interface HeroProps {
     badge?: { icon: string; text: string };
     title: string;
     subtitle: string;
+    description?: string;
     statistics?: Array<{ number: string; description: string }>;
   };
 }
@@ -91,7 +92,7 @@ const Hero = ({ cmsData }: HeroProps) => {
             <span className="text-2xl md:text-3xl lg:text-4xl font-light text-primary-yellow italic font-display">{cmsData?.subtitle || 'Бадминтонный клуб'}</span>
           </motion.h1>
           <motion.p className="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto leading-relaxed" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.6 }}>
-            Профессиональные тренировки, современное оборудование и дружелюбная атмосфера в самом современном бадминтонном клубе Кишинева
+            {cmsData?.description || 'Профессиональные тренировки, современное оборудование и дружелюбная атмосфера в самом современном бадминтонном клубе Кишинева'}
           </motion.p>
           <motion.div className="flex flex-col sm:flex-row gap-6 justify-center mb-12" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.6 }}>
             <button className="px-10 py-5 bg-gradient-to-r from-primary-yellow to-primary-orange text-white font-medium rounded-2xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 tracking-wide">

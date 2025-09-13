@@ -1,15 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Medal, Users, Calendar, Star } from 'lucide-react';
+import { Trophy, Medal, Users, Calendar, Star, Award } from 'lucide-react';
 
 interface AchievementsSectionProps {
   cmsData?: {
     title: string;
+    subtitle?: string;
     achievements: Array<{
       title: string;
+      count: string;
       description: string;
       icon: string;
+      color: string;
     }>;
+    timeline?: {
+      title: string;
+      milestones: Array<{
+        year: string;
+        title: string;
+        description: string;
+      }>;
+    };
+    callToAction?: {
+      text: string;
+      icon: string;
+    };
   };
 }
 
@@ -18,6 +33,25 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
   const pathRef = useRef<SVGPathElement | null>(null);
   const shuttleRef = useRef<SVGGElement | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  function getIconComponent(iconName: string) {
+    switch (iconName) {
+      case 'Trophy': return <Trophy className="w-8 h-8" />;
+      case 'Medal': return <Medal className="w-8 h-8" />;
+      case 'Users': return <Users className="w-8 h-8" />;
+      case 'Calendar': return <Calendar className="w-8 h-8" />;
+      case 'Award': return <Award className="w-8 h-8" />;
+      default: return <Star className="w-8 h-8" />;
+    }
+  }
+
+  function getCallToActionIcon(iconName: string) {
+    switch (iconName) {
+      case 'Trophy': return <Trophy className="w-5 h-5 mr-2" />;
+      case 'Award': return <Award className="w-5 h-5 mr-2" />;
+      default: return <Star className="w-5 h-5 mr-2" />;
+    }
+  }
 
   const defaultAchievements = [
     {
@@ -50,7 +84,15 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
     }
   ];
 
-  const milestones = [
+  const achievements = cmsData?.achievements?.map(item => ({
+    icon: getIconComponent(item.icon),
+    title: item.title,
+    count: item.count,
+    description: item.description,
+    color: item.color || 'from-blue-500 to-blue-600'
+  })) || defaultAchievements;
+
+  const defaultMilestones = [
     {
       year: '2010',
       title: 'Основание клуба',
@@ -77,6 +119,8 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
       description: 'Полное обновление оборудования и инфраструктуры'
     }
   ];
+
+  const milestones = cmsData?.timeline?.milestones || defaultMilestones;
   const milestoneProgressPoints = milestones.map((_, i) => (i + 1) / (milestones.length + 1));
 
   useEffect(() => {
@@ -124,16 +168,16 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="section-title">
-            Наши Достижения
+            {cmsData?.title || 'Наши Достижения'}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            За годы работы мы достигли впечатляющих результатов и воспитали множество талантливых спортсменов
+            {cmsData?.subtitle || 'За годы работы мы достигли впечатляющих результатов и воспитали множество талантливых спортсменов'}
           </p>
         </motion.div>
 
         {/* Achievement Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {(cmsData?.achievements || defaultAchievements).map((achievement: any, index: number) => (
+          {achievements.map((achievement: any, index: number) => (
             <motion.div
               key={index}
               className="bg-white rounded-3xl p-8 text-center group transition-all duration-300"
@@ -161,7 +205,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">
-            История развития клуба
+            {cmsData?.timeline?.title || 'История развития клуба'}
           </h3>
           
           <div className="relative min-h-[620px]" ref={containerRef}>
@@ -237,10 +281,24 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-blue to-primary-yellow text-white rounded-full">
-            <Star className="w-5 h-5 mr-2" />
-            <span className="font-medium">Станьте частью нашей истории успеха!</span>
-          </div>
+          <motion.div 
+            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-blue to-primary-yellow text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+            }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <motion.div
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.6 }}
+            >
+              {getCallToActionIcon(cmsData?.callToAction?.icon || 'Star')}
+            </motion.div>
+            <span className="font-semibold text-lg">
+              {cmsData?.callToAction?.text || 'Станьте частью нашей истории успеха!'}
+            </span>
+          </motion.div>
         </motion.div>
       </div>
     </section>

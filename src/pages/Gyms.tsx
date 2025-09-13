@@ -1,43 +1,62 @@
-import { FC, useState } from 'react';
-import { CheckCircle, Clock, Phone, MapPin, Filter, Users, ArrowLeft, Zap } from 'lucide-react';
+import { useState, useEffect, type FC } from 'react';
+import { MapPin, Phone, Clock, ArrowLeft, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-// CMS interface for future integration
-// interface CmsGymsPage {
-//   title: string;
-//   hero: {
-//     badge?: { icon: string; text: string };
-//     title: string;
-//     subtitle: string;
-//     statistics?: Array<{ number: string; description: string }>;
-//   };
-//   introSection?: {
-//     title: string;
-//     description: string;
-//   };
-// }
+import { fetchGyms, type CmsGym } from '../lib/cms';
 
 const Gyms: FC = () => {
-  const [gymFilter, setGymFilter] = useState<'all' | 'children' | 'adults'>('all');
-  const [selectedGym, setSelectedGym] = useState<number | null>(null);
+  const [cmsGyms, setCmsGyms] = useState<CmsGym[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedGym, setSelectedGym] = useState<CmsGym | null>(null);
+  const [filter, setFilter] = useState<'all' | 'children' | 'adults'>('all');
 
-  // Comprehensive gym data
-  const gyms = [
+  // Загружаем данные из CMS
+  useEffect(() => {
+    const loadGyms = async () => {
+      try {
+        setLoading(true);
+        const gymsData = await fetchGyms();
+        setCmsGyms(gymsData);
+        setError(null);
+      } catch (err) {
+        setError('Ошибка загрузки данных спортзалов');
+        console.error('Error loading gyms:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadGyms();
+  }, []);
+
+  // Используем CMS данные или fallback
+  const gyms = cmsGyms.length > 0 ? cmsGyms : [
     {
-      id: 1,
+      id: '1',
       name: 'Малая Малиан, 24',
+      slug: 'malaya-malian-24',
       description: 'Центральная локация в сердце города',
       badge: 'Зал №1',
       badgeColor: 'from-blue-500 to-indigo-600',
       hasChildren: true,
       hasAdults: true,
-      image: '/api/placeholder/400/300',
-      gallery: ['/api/placeholder/400/300', '/api/placeholder/400/300', '/api/placeholder/400/300'],
-      address: 'ул. Малая Малиан, 24, Кишинев',
-      phone: '+373 22 123-456',
-      email: 'maliamilian@altius.md',
-      mapUrl: 'https://maps.google.com/?q=Малая+Малиан+24+Кишинев',
-      features: ['Гибкое расписание', 'Центральное расположение', 'Парковка', 'Раздевалки'],
+      address: 'ул. Малая Малиан, 24',
+      phone: '+373 60 123 456',
+      email: 'malaya@altius.md',
+      mapUrl: 'https://maps.google.com/?q=Малая+Малиан+24',
+      gallery: [
+        '/images/gym1-1.jpg',
+        '/images/gym1-2.jpg',
+        '/images/gym1-3.jpg',
+        '/images/gym1-4.jpg'
+      ],
+      features: [
+        'Профессиональные корты',
+        'Раздевалки с душевыми',
+        'Парковка',
+        'Кондиционер',
+        'Прокат инвентаря'
+      ],
       schedule: {
         children: {
           title: 'Детские группы',
@@ -78,20 +97,29 @@ const Gyms: FC = () => {
       ]
     },
     {
-      id: 2,
-      name: 'Улица 31 августа 1989',
-      description: 'Специализированный детский центр',
+      id: '2',
+      name: 'ул. 31 августа 1989',
+      slug: 'august-31-1989',
+      description: 'Современный зал с новым оборудованием',
       badge: 'Зал №2',
-      badgeColor: 'from-orange-500 to-red-500',
+      badgeColor: 'from-green-500 to-emerald-600',
       hasChildren: true,
-      hasAdults: false,
-      image: '/api/placeholder/400/300',
-      gallery: ['/api/placeholder/400/300', '/api/placeholder/400/300'],
-      address: 'ул. 31 августа 1989, Кишинев',
-      phone: '+373 22 234-567',
-      email: 'august31@altius.md',
-      mapUrl: 'https://maps.google.com/?q=31+августа+1989+Кишинев',
-      features: ['Только детские группы', 'Удобный район', 'Детская площадка', 'Кафетерий'],
+      hasAdults: true,
+      address: 'ул. 31 августа 1989, 15',
+      phone: '+373 60 234 567',
+      email: 'august@altius.md',
+      mapUrl: 'https://maps.google.com/?q=31+августа+1989+15',
+      gallery: [
+        '/images/gym2-1.jpg',
+        '/images/gym2-2.jpg',
+        '/images/gym2-3.jpg'
+      ],
+      features: [
+        'Только детские группы',
+        'Удобный район',
+        'Детская площадка',
+        'Кафетерий'
+      ],
       schedule: {
         children: {
           title: 'Детские группы',
@@ -116,20 +144,30 @@ const Gyms: FC = () => {
       ]
     },
     {
-      id: 3,
+      id: '3',
       name: 'Ион Крянге, 1',
+      slug: 'ion-creanga-1',
       description: 'Профессиональный тренировочный центр',
       badge: 'Зал №3 - Премиум',
       badgeColor: 'from-yellow-500 to-amber-500',
       hasChildren: true,
       hasAdults: true,
-      image: '/api/placeholder/400/300',
-      gallery: ['/api/placeholder/400/300', '/api/placeholder/400/300', '/api/placeholder/400/300', '/api/placeholder/400/300'],
-      address: 'ул. Ион Крянге, 1, Кишинев',
-      phone: '+373 22 345-678',
+      address: 'ул. Ион Крянге, 1',
+      phone: '+373 60 345 678',
       email: 'creanga@altius.md',
-      mapUrl: 'https://maps.google.com/?q=Ион+Крянге+1+Кишинев',
-      features: ['Группа совершенствования', 'Профессиональное оборудование', 'Видеоанализ', 'Сауна'],
+      mapUrl: 'https://maps.google.com/?q=Ион+Крянге+1',
+      gallery: [
+        '/images/gym3-1.jpg',
+        '/images/gym3-2.jpg',
+        '/images/gym3-3.jpg',
+        '/images/gym3-4.jpg'
+      ],
+      features: [
+        'Группа совершенствования',
+        'Профессиональное оборудование',
+        'Видеоанализ',
+        'Сауна'
+      ],
       schedule: {
         children: {
           title: 'Группа совершенствования',
@@ -173,13 +211,43 @@ const Gyms: FC = () => {
 
   // Filter gyms based on selected filter
   const filteredGyms = gyms.filter(gym => {
-    if (gymFilter === 'all') return true;
-    if (gymFilter === 'children') return gym.hasChildren;
-    if (gymFilter === 'adults') return gym.hasAdults;
+    if (filter === 'all') return true;
+    if (filter === 'children') return gym.hasChildren;
+    if (filter === 'adults') return gym.hasAdults;
     return true;
   });
 
-  const currentGym = selectedGym ? gyms.find(g => g.id === selectedGym) : null;
+  const handleGymSelect = (gymId: string) => {
+    const gym = gyms.find(g => g.id === gymId);
+    setSelectedGym(gym || null);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Загрузка спортзалов...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Попробовать снова
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
@@ -363,7 +431,7 @@ const Gyms: FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
-                <Zap className="w-4 h-4 text-yellow-300" />
+                <span className="text-lg">🏸</span>
                 <span className="text-sm font-medium">Современные спортзалы</span>
               </div>
               
@@ -418,78 +486,35 @@ const Gyms: FC = () => {
           {/* Filter Buttons - Modern Design */}
           <div className="flex flex-wrap justify-center gap-3 mb-16">
             <button
-              onClick={() => {
-                setGymFilter('all');
-                if (selectedGym) setSelectedGym(null);
-              }}
-              className={`group relative flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold transition-all duration-150 ${
-                gymFilter === 'all' 
-                  ? 'bg-gradient-to-r from-primary-blue to-primary-orange text-white shadow-lg shadow-primary-blue/25' 
-                  : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-lg border border-gray-200/50'
-              }`}
-            >
-              <div className={`p-2 rounded-xl transition-colors ${
-                gymFilter === 'all' ? 'bg-white/20' : 'bg-primary-blue/10 group-hover:bg-primary-blue/20'
+              onClick={() => setFilter('all')}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                filter === 'all'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'bg-white text-gray-600 hover:bg-gray-50'
               }`}>
-                <Filter className="w-4 h-4" />
-              </div>
               Все залы
-              {gymFilter === 'all' && (
-                <motion.div
-                  layoutId="activeFilter"
-                  className="absolute inset-0 bg-gradient-to-r from-primary-blue to-primary-orange rounded-2xl -z-10"
-                />
-              )}
             </button>
             
             <button
-              onClick={() => {
-                setGymFilter('children');
-                if (selectedGym) setSelectedGym(null);
-              }}
-              className={`group relative flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold transition-all duration-150 ${
-                gymFilter === 'children' 
-                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/25' 
-                  : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-lg border border-gray-200/50'
-              }`}
-            >
-              <div className={`p-2 rounded-xl transition-colors ${
-                gymFilter === 'children' ? 'bg-white/20' : 'bg-green-50 group-hover:bg-green-100'
+              onClick={() => setFilter('children')}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                filter === 'children'
+                  ? 'bg-green-600 text-white shadow-lg'
+                  : 'bg-white text-gray-600 hover:bg-gray-50'
               }`}>
-                <span className="text-lg">👨‍👩‍👧‍👦</span>
-              </div>
+              <span className="text-lg">👨‍👩‍👧‍👦</span>
               Детские группы
-              {gymFilter === 'children' && (
-                <motion.div
-                  layoutId="activeFilter"
-                  className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl -z-10"
-                />
-              )}
             </button>
             
             <button
-              onClick={() => {
-                setGymFilter('adults');
-                if (selectedGym) setSelectedGym(null);
-              }}
-              className={`group relative flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold transition-all duration-150 ${
-                gymFilter === 'adults' 
-                  ? 'bg-gradient-to-r from-primary-orange to-red-500 text-white shadow-lg shadow-primary-orange/25' 
-                  : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-lg border border-gray-200/50'
-              }`}
-            >
-              <div className={`p-2 rounded-xl transition-colors ${
-                gymFilter === 'adults' ? 'bg-white/20' : 'bg-primary-orange/10 group-hover:bg-primary-orange/20'
+              onClick={() => setFilter('adults')}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                filter === 'adults'
+                  ? 'bg-orange-600 text-white shadow-lg'
+                  : 'bg-white text-gray-600 hover:bg-gray-50'
               }`}>
-                <span className="text-lg">🏸</span>
-              </div>
+              <span className="text-lg">🏸</span>
               Любители
-              {gymFilter === 'adults' && (
-                <motion.div
-                  layoutId="activeFilter"
-                  className="absolute inset-0 bg-gradient-to-r from-primary-orange to-red-500 rounded-2xl -z-10"
-                />
-              )}
             </button>
           </div>
 
@@ -506,13 +531,13 @@ const Gyms: FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.05 }}
                     whileHover={{ y: -4 }}
-                    onClick={() => setSelectedGym(gym.id)}
+                    onClick={() => handleGymSelect(gym.id)}
                   >
                     
                     <div className="relative">
                       <div className="relative overflow-hidden">
                         <img 
-                          src={gym.image} 
+                          src={gym.heroImage || gym.gallery?.[0] || '/images/gym-placeholder.jpg'} 
                           alt={gym.name}
                           className="w-full h-56 object-cover transition-transform duration-200 group-hover:scale-102"
                         />
@@ -551,7 +576,7 @@ const Gyms: FC = () => {
                       
                       {/* Features */}
                       <div className="space-y-3 mb-8">
-                        {gym.features.slice(0, 3).map((feature, idx) => (
+                        {gym.features?.slice(0, 3).map((feature, idx) => (
                           <div key={idx} className="flex items-center gap-3 text-gray-700">
                             <div className="w-2 h-2 bg-gradient-to-r from-primary-blue to-primary-orange rounded-full" />
                             <span className="font-medium">{feature}</span>
@@ -586,7 +611,7 @@ const Gyms: FC = () => {
             </>
           ) : (
             /* Detailed Gym View */
-            currentGym && (
+            selectedGym && (
               <motion.div
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -606,17 +631,17 @@ const Gyms: FC = () => {
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
                   <div className="relative h-64 md:h-80">
                     <img 
-                      src={currentGym.image} 
-                      alt={currentGym.name}
+                      src={selectedGym.heroImage || selectedGym.gallery?.[0] || '/images/gym-placeholder.jpg'} 
+                      alt={selectedGym.name}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                     <div className="absolute bottom-6 left-6 text-white">
-                      <div className={`inline-block px-3 py-1 rounded-full bg-gradient-to-r ${currentGym.badgeColor} text-xs font-semibold mb-2`}>
-                        {currentGym.badge}
+                      <div className={`inline-block px-3 py-1 rounded-full bg-gradient-to-r ${selectedGym.badgeColor} text-xs font-semibold mb-2`}>
+                        {selectedGym.badge}
                       </div>
-                      <h1 className="text-3xl md:text-4xl font-bold mb-2">{currentGym.name}</h1>
-                      <p className="text-lg opacity-90">{currentGym.description}</p>
+                      <h1 className="text-3xl md:text-4xl font-bold mb-2">{selectedGym.name}</h1>
+                      <p className="text-lg opacity-90">{selectedGym.description}</p>
                     </div>
                   </div>
                 </div>
@@ -633,25 +658,25 @@ const Gyms: FC = () => {
                       </h2>
                       
                       <div className="space-y-4">
-                        {currentGym.schedule.children && (
+                        {selectedGym.schedule?.children && (
                           <div className="bg-green-50 rounded-xl p-4 border-l-4 border-green-400">
                             <h3 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
                               <span className="text-xl">👨‍👩‍👧‍👦</span>
-                              {currentGym.schedule.children.title}
+                              {selectedGym.schedule?.children?.title}
                             </h3>
-                            <p className="text-green-700 font-medium mb-1">{currentGym.schedule.children.times}</p>
-                            <p className="text-green-600 text-sm">{currentGym.schedule.children.details}</p>
+                            <p className="text-green-700 font-medium mb-1">{selectedGym.schedule?.children?.times}</p>
+                            <p className="text-green-600 text-sm">{selectedGym.schedule?.children?.details}</p>
                           </div>
                         )}
                         
-                        {currentGym.schedule.adults && (
+                        {selectedGym.schedule?.adults && (
                           <div className="bg-blue-50 rounded-xl p-4 border-l-4 border-blue-400">
                             <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
                               <span className="text-xl">🏸</span>
-                              {currentGym.schedule.adults.title}
+                              {selectedGym.schedule?.adults?.title}
                             </h3>
-                            <p className="text-blue-700 font-medium mb-1">{currentGym.schedule.adults.times}</p>
-                            <p className="text-blue-600 text-sm">{currentGym.schedule.adults.details}</p>
+                            <p className="text-blue-700 font-medium mb-1">{selectedGym.schedule?.adults?.times}</p>
+                            <p className="text-blue-600 text-sm">{selectedGym.schedule?.adults?.details}</p>
                           </div>
                         )}
                       </div>
@@ -667,7 +692,7 @@ const Gyms: FC = () => {
                       </h2>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {currentGym.pricing.children && (
+                        {selectedGym.pricing?.children && (
                           <div className="border border-green-200 rounded-xl p-4">
                             <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
                               <span>👨‍👩‍👧‍👦</span>
@@ -676,21 +701,21 @@ const Gyms: FC = () => {
                             <div className="space-y-2 text-sm">
                               <div className="flex justify-between">
                                 <span>Месячный абонемент:</span>
-                                <span className="font-semibold">{currentGym.pricing.children.monthly}</span>
+                                <span className="font-semibold">{selectedGym.pricing?.children?.monthly}</span>
                               </div>
                               <div className="flex justify-between">
                                 <span>Разовое занятие:</span>
-                                <span className="font-semibold">{currentGym.pricing.children.single}</span>
+                                <span className="font-semibold">{selectedGym.pricing?.children?.single}</span>
                               </div>
                               <div className="flex justify-between text-green-600">
                                 <span>Пробное занятие:</span>
-                                <span className="font-semibold">{currentGym.pricing.children.trial}</span>
+                                <span className="font-semibold">{selectedGym.pricing?.children?.trial}</span>
                               </div>
                             </div>
                           </div>
                         )}
                         
-                        {currentGym.pricing.adults && (
+                        {selectedGym.pricing?.adults && (
                           <div className="border border-blue-200 rounded-xl p-4">
                             <h3 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
                               <span>🏸</span>
@@ -699,15 +724,15 @@ const Gyms: FC = () => {
                             <div className="space-y-2 text-sm">
                               <div className="flex justify-between">
                                 <span>Месячный абонемент:</span>
-                                <span className="font-semibold">{currentGym.pricing.adults.monthly}</span>
+                                <span className="font-semibold">{selectedGym.pricing?.adults?.monthly}</span>
                               </div>
                               <div className="flex justify-between">
                                 <span>Разовое занятие:</span>
-                                <span className="font-semibold">{currentGym.pricing.adults.single}</span>
+                                <span className="font-semibold">{selectedGym.pricing?.adults?.single}</span>
                               </div>
                               <div className="flex justify-between text-blue-600">
                                 <span>Пробное занятие:</span>
-                                <span className="font-semibold">{currentGym.pricing.adults.trial}</span>
+                                <span className="font-semibold">{selectedGym.pricing?.adults?.trial}</span>
                               </div>
                             </div>
                           </div>
@@ -719,11 +744,11 @@ const Gyms: FC = () => {
                     <div className="bg-white rounded-2xl shadow-lg p-6">
                       <h2 className="text-2xl font-bold text-gray-900 mb-6">Фото зала</h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {currentGym.gallery.map((photo, idx) => (
+                        {selectedGym.gallery?.map((photo, idx) => (
                           <div key={idx} className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
                             <img 
                               src={photo} 
-                              alt={`${currentGym.name} фото ${idx + 1}`}
+                              alt={`${selectedGym.name} фото ${idx + 1}`}
                               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                             />
                           </div>
@@ -746,7 +771,7 @@ const Gyms: FC = () => {
                           <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
                           <div>
                             <p className="text-sm text-gray-600">Адрес</p>
-                            <p className="font-medium">{currentGym.address}</p>
+                            <p className="font-medium">{selectedGym.address}</p>
                           </div>
                         </div>
                         
@@ -754,8 +779,8 @@ const Gyms: FC = () => {
                           <Phone className="w-5 h-5 text-gray-400 mt-0.5" />
                           <div>
                             <p className="text-sm text-gray-600">Телефон</p>
-                            <a href={`tel:${currentGym.phone}`} className="font-medium text-blue-600 hover:text-blue-800">
-                              {currentGym.phone}
+                            <a href={`tel:${selectedGym.phone}`} className="font-medium text-blue-600 hover:text-blue-800">
+                              {selectedGym.phone}
                             </a>
                           </div>
                         </div>
@@ -766,42 +791,44 @@ const Gyms: FC = () => {
                           </svg>
                           <div>
                             <p className="text-sm text-gray-600">Email</p>
-                            <a href={`mailto:${currentGym.email}`} className="font-medium text-blue-600 hover:text-blue-800">
-                              {currentGym.email}
+                            <a href={`mailto:${selectedGym.email}`} className="font-medium text-blue-600 hover:text-blue-800">
+                              {selectedGym.email}
                             </a>
                           </div>
                         </div>
                       </div>
                       
                       <div className="mt-6 space-y-3">
-                        <button className={`w-full py-3 px-4 bg-gradient-to-r ${currentGym.badgeColor} text-white rounded-lg font-medium hover:shadow-md transition-all duration-200`}>
+                        <button className={`w-full py-3 px-4 bg-gradient-to-r ${selectedGym.badgeColor} text-white rounded-lg font-medium hover:shadow-md transition-all duration-200`}>
                           <div className="flex items-center justify-center gap-2">
                             <Phone className="w-4 h-4" />
                             Записаться на тренировку
                           </div>
                         </button>
                         
-                        <button 
-                          onClick={() => window.open(currentGym.mapUrl, '_blank')}
-                          className="w-full py-3 px-4 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                        <a 
+                          href={selectedGym.mapUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                         >
-                          <div className="flex items-center justify-center gap-2">
-                            <MapPin className="w-4 h-4" />
-                            Показать на карте
-                          </div>
-                        </button>
+                          <MapPin className="w-5 h-5" />
+                          Открыть на карте
+                        </a>
                       </div>
                     </div>
 
                     {/* Trainers */}
                     <div className="bg-white rounded-2xl shadow-lg p-6">
                       <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <Users className="w-5 h-5 text-blue-500" />
-                        Наши тренеры
+                        <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                        </svg>
+                        Тренеры
                       </h2>
                       
                       <div className="space-y-4">
-                        {currentGym.trainers.map((trainer, idx) => (
+                        {selectedGym.trainers?.map((trainer: any, idx: number) => (
                           <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
                             <img 
                               src={trainer.photo} 
@@ -822,7 +849,7 @@ const Gyms: FC = () => {
                     <div className="bg-white rounded-2xl shadow-lg p-6">
                       <h2 className="text-xl font-bold text-gray-900 mb-4">Особенности зала</h2>
                       <div className="space-y-2">
-                        {currentGym.features.map((feature, idx) => (
+                        {selectedGym.features?.map((feature: string, idx: number) => (
                           <div key={idx} className="flex items-center gap-2">
                             <CheckCircle className="w-4 h-4 text-green-500" />
                             <span className="text-sm text-gray-700">{feature}</span>
