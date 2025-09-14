@@ -10,6 +10,7 @@ const useCdn = false; // Отключаем CDN для получения све
 
 const client = createClient({ projectId, dataset, apiVersion, useCdn });
 
+export { client };
 export const isCmsEnabled = Boolean(projectId && dataset && apiVersion);
 
 export type CmsImage = { url: string; alt?: string };

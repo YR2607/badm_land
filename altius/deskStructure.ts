@@ -412,7 +412,18 @@ const deskStructure = (S: any) =>
       // Справочники
       S.listItem()
         .title('👥 Команда')
-        .child(S.documentTypeList('trainer').title('Тренеры')),
+        .child(
+          S.list()
+            .title('Команда')
+            .items([
+              S.listItem()
+                .title('👨‍🏫 Тренеры')
+                .child(S.documentTypeList('trainer').title('Тренеры')),
+              S.listItem()
+                .title('👑 Основатель')
+                .child(S.documentTypeList('founder').title('Основатель')),
+            ])
+        ),
       
       S.divider(),
       

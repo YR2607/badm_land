@@ -4,8 +4,9 @@ import post from './post'
 import page from './page'
 import galleryAlbum from './galleryAlbum'
 import gallerySection from './gallerySection'
-import clubEmbed from './clubEmbed'
+import tournamentCategory from './tournamentCategory'
 import eventEmbed from './eventEmbed'
+import clubEmbed from './clubEmbed'
 
 // New CMS schemas
 import heroSection from './heroSection'
@@ -19,10 +20,25 @@ import trainer from './trainer'
 import founder from './founder'
 
 export const schemaTypes = [
-  // Original schemas
-  post, author, category, page, galleryAlbum, gallerySection, clubEmbed, eventEmbed,
-  // New page schemas
-  heroSection, homePage, aboutPage, servicesPage, gymsPage, contactPage,
-  // Content schemas
-  gym, trainer, founder
+  // Basic content types
+  author,
+  category,
+  post,
+  page,
+  galleryAlbum,
+  gallerySection,
+  tournamentCategory,
+  eventEmbed,
+  clubEmbed,
+
+  // New CMS schemas
+  heroSection,
+  homePage,
+  aboutPage,
+  servicesPage,
+  gymsPage,
+  contactPage,
+  gym,
+  trainer,
+  founder
 ]
