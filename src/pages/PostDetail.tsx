@@ -37,7 +37,21 @@ const PostDetail: React.FC = () => {
         <h1 className="text-4xl font-display font-bold mt-4 mb-4">{post.title}</h1>
         {post.image && (
           <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-gray-100 mb-6">
-            <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+            <img 
+              src={post.image.includes('fbcdn.net') || post.image.includes('facebook.com') 
+                ? `/api/image-proxy?url=${encodeURIComponent(post.image)}` 
+                : post.image
+              } 
+              alt={post.title} 
+              className="w-full h-full object-cover" 
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const fallback = target.parentElement?.querySelector('.fallback-bg') as HTMLElement;
+                if (fallback) fallback.style.display = 'block';
+              }}
+            />
+            <div className="fallback-bg w-full h-full bg-gradient-to-br from-gray-300 to-gray-400" style={{ display: 'none' }} />
           </div>
         )}
         <div className="prose max-w-none">

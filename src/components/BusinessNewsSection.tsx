@@ -88,10 +88,25 @@ const BusinessNewsSection: FC = () => {
                   <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
                     <div className={`${index === 1 ? 'h-56 md:h-72 lg:h-[28rem]' : 'h-56'} relative overflow-hidden`}>
                       {news.img ? (
-                        <img src={news.img} alt={news.title} className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]" />
-                      ) : (
-                        <div className={`absolute inset-0 bg-gradient-to-br from-orange-500 to-red-500`} />
-                      )}
+                        <img 
+                          src={news.img.includes('fbcdn.net') || news.img.includes('facebook.com') 
+                            ? `/api/image-proxy?url=${encodeURIComponent(news.img)}` 
+                            : news.img
+                          } 
+                          alt={news.title} 
+                          className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const fallback = target.parentElement?.querySelector('.fallback-bg') as HTMLElement;
+                            if (fallback) fallback.style.display = 'block';
+                          }}
+                        />
+                      ) : null}
+                      <div 
+                        className="fallback-bg absolute inset-0 bg-gradient-to-br from-orange-500 to-red-500"
+                        style={{ display: news.img ? 'none' : 'block' }}
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                     </div>
                     <div className="p-5 flex-1 flex flex-col">

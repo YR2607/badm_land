@@ -499,21 +499,24 @@ const Blog: FC = () => {
                     <div className="h-48 rounded-lg mb-4 overflow-hidden bg-gray-100">
                       {news.image ? (
                         <img 
-                          src={news.image} 
+                          src={news.image.includes('fbcdn.net') || news.image.includes('facebook.com') 
+                            ? `/api/image-proxy?url=${encodeURIComponent(news.image)}` 
+                            : news.image
+                          } 
                           alt={news.title} 
                           className="w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-[1.02]"
                           style={{
-                            aspectRatio: '16/9',
-                            objectFit: 'cover',
+                            filter: 'brightness(0.9) contrast(1.1)',
                           }}
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
-                            target.style.objectFit = 'contain';
+                            target.style.display = 'none';
+                            const fallback = target.parentElement?.querySelector('.fallback-bg') as HTMLElement;
+                            if (fallback) fallback.style.display = 'block';
                           }}
                         />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
-                      )}
+                      ) : null}
+                      <div className="fallback-bg w-full h-full bg-gradient-to-br from-gray-300 to-gray-400" style={{ display: news.image ? 'none' : 'block' }} />
                     </div>
                     <div className="flex items-center justify-between mb-3">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColor((news as any).category)}`}>{getCategoryLabel((news as any).category)}</span>

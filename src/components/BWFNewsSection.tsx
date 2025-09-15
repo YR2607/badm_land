@@ -55,10 +55,25 @@ const BWFNewsSection: FC = () => {
             <a key={it.href} href={it.href} target="_blank" rel="noreferrer" className="group rounded-2xl bg-white overflow-hidden border border-gray-100 hover:shadow-md transition-all">
               <div className="h-48 bg-gray-100 overflow-hidden">
                 {it.img ? (
-                  <img src={it.img} alt={it.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform" />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange" />
-                )}
+                  <img 
+                    src={it.img.includes('fbcdn.net') || it.img.includes('facebook.com') 
+                      ? `/api/image-proxy?url=${encodeURIComponent(it.img)}` 
+                      : it.img
+                    } 
+                    alt={it.title} 
+                    className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const fallback = target.parentElement?.querySelector('.fallback-bg') as HTMLElement;
+                      if (fallback) fallback.style.display = 'block';
+                    }}
+                  />
+                ) : null}
+                <div 
+                  className={`fallback-bg w-full h-full bg-gradient-to-br from-primary-blue to-primary-orange ${it.img ? 'hidden' : 'block'}`}
+                  style={{ display: it.img ? 'none' : 'block' }}
+                />
               </div>
               <div className="p-5">
                 <div className="text-xs text-gray-500 mb-2">{it.date || ''}</div>
