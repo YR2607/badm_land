@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Globe, Search, Filter, ArrowRight } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { fetchClubEmbeds } from '../lib/cms';
+import { proxied } from '../utils/blockFacebookImages';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
 
@@ -134,7 +135,7 @@ const Blog: FC = () => {
         id: `cms-${idx}-${i?.publishedAt || ''}`,
         title: i?.title || '',
         excerpt: i?.description || '',
-        image: i?.cover || i?.coverUrl || undefined,
+        image: proxied(i?.cover || i?.coverUrl),
         date: i?.publishedAt || new Date().toISOString(),
         category: (i?.kind === 'event' ? 'event' : 'news') as 'news' | 'event',
         author: undefined,
@@ -499,10 +500,7 @@ const Blog: FC = () => {
                     <div className="h-48 rounded-lg mb-4 overflow-hidden bg-gray-100">
                       {news.image ? (
                         <img 
-                          src={news.image.includes('fbcdn.net') || news.image.includes('facebook.com') 
-                            ? `/api/image-proxy?url=${encodeURIComponent(news.image)}` 
-                            : news.image
-                          } 
+                          src={proxied(news.image)} 
                           alt={news.title} 
                           className="w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-[1.02]"
                           style={{

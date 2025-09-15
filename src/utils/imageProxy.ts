@@ -1,14 +1,8 @@
+import { proxied } from './blockFacebookImages';
+
 // Утилита для проксирования Facebook изображений
 export function getProxiedImageUrl(originalUrl: string): string {
-  if (!originalUrl) return '';
-  
-  // Проверяем, является ли это Facebook изображением
-  if (originalUrl.includes('fbcdn.net') || originalUrl.includes('facebook.com')) {
-    return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
-  }
-  
-  // Для других изображений возвращаем оригинальный URL
-  return originalUrl;
+  return proxied(originalUrl);
 }
 
 // Компонент для безопасной загрузки изображений с fallback

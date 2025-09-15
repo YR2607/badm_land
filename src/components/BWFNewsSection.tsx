@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import { proxied } from '../utils/blockFacebookImages'
 
 type Item = { title: string; href: string; img?: string; preview?: string; date?: string }
 
@@ -56,10 +57,7 @@ const BWFNewsSection: FC = () => {
               <div className="h-48 bg-gray-100 overflow-hidden">
                 {it.img ? (
                   <img 
-                    src={it.img.includes('fbcdn.net') || it.img.includes('facebook.com') 
-                      ? `/api/image-proxy?url=${encodeURIComponent(it.img)}` 
-                      : it.img
-                    } 
+                    src={proxied(it.img)} 
                     alt={it.title} 
                     className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]"
                     onError={(e) => {

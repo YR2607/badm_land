@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { proxied } from '../utils/blockFacebookImages';
 import { isCmsEnabled, sanityClient } from '../lib/cms';
 import groq from 'groq';
 
@@ -38,10 +39,7 @@ const PostDetail: React.FC = () => {
         {post.image && (
           <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-gray-100 mb-6">
             <img 
-              src={post.image.includes('fbcdn.net') || post.image.includes('facebook.com') 
-                ? `/api/image-proxy?url=${encodeURIComponent(post.image)}` 
-                : post.image
-              } 
+              src={proxied(post.image)} 
               alt={post.title} 
               className="w-full h-full object-cover" 
               onError={(e) => {
