@@ -152,6 +152,88 @@
     "heroTitle": "Contact Us",
     "heroSubtitle": "We are always ready to answer your questions",
     "heroDescription": "Call, write or visit us at any of our gyms",
+    "hero": {
+      "badge": "Contact Us",
+      "title": "Contact Us",
+      "subtitle": "We are always ready to answer your questions and help you start training",
+      "stats": {
+        "support": "Support",
+        "locations": "Locations",
+        "response": "Response"
+      }
+    },
+    "info": {
+      "address": {
+        "title": "Address",
+        "content": "Chisinau, Malaya Malian str. 24\nHall №1 - main"
+      },
+      "phone": {
+        "title": "Phone",
+        "content": "+373 60 123 456\n+373 60 234 567"
+      },
+      "email": {
+        "title": "Email",
+        "content": "info@altius.md\ntraining@altius.md"
+      },
+      "hours": {
+        "title": "Working Hours",
+        "content": "Mon-Fri: 08:00 - 22:00\nSat-Sun: 09:00 - 20:00"
+      },
+      "title": "Useful Information",
+      "location": {
+        "title": "Gym Selection",
+        "description": "Choose the nearest gym for convenient training"
+      },
+      "booking": {
+        "title": "Training Booking",
+        "description": "Call in advance to book group and individual sessions"
+      },
+      "schedule": {
+        "title": "Schedule",
+        "description": "Current schedule is always available by phone and on the website"
+      }
+    },
+    "locations": {
+      "badge": "Our Locations",
+      "title": "Where to Find Us",
+      "subtitle": "3 modern gyms in different districts of Chisinau"
+    },
+    "gyms": {
+      "gym1": {
+        "name": "Malaya Malian Gym",
+        "type": "Main Gym",
+        "badge": "Main",
+        "address": "Malaya Malian str. 24",
+        "description": "Main gym with professional equipment",
+        "hours": "Mon-Sun: 08:00 - 22:00"
+      },
+      "gym2": {
+        "name": "31 August Gym",
+        "type": "Family Gym",
+        "badge": "Family",
+        "address": "31 August 1989 str. 15",
+        "description": "Family training gym with children's playground",
+        "hours": "Mon-Sun: 09:00 - 21:00"
+      },
+      "gym3": {
+        "name": "Ion Creanga Gym",
+        "type": "Premium Gym",
+        "badge": "Premium",
+        "address": "Ion Creanga str. 1",
+        "description": "Premium gym with additional services",
+        "hours": "Mon-Sun: 07:00 - 23:00"
+      },
+      "features": {
+        "kids": "Kids Groups",
+        "adults": "Adult Groups",
+        "parking": "Parking",
+        "playground": "Playground",
+        "cafeteria": "Cafeteria",
+        "advanced": "Advanced Level",
+        "sauna": "Sauna"
+      },
+      "openMap": "Open on Map"
+    },
     "phone": "Phone",
     "email": "Email",
     "address": "Address",

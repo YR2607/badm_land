@@ -197,10 +197,92 @@
   },
   "contact": {
     "title": "Contact",
-    "subtitle": "Contactează-ne",
-    "heroTitle": "Contactează-ne",
-    "heroSubtitle": "Suntem mereu gata să răspundem la întrebările tale",
-    "heroDescription": "Sună, scrie sau vizitează-ne la oricare dintre sălile noastre",
+    "subtitle": "Luați legătura cu noi",
+    "heroTitle": "Contactați-ne",
+    "heroSubtitle": "Suntem întotdeauna gata să răspundem la întrebările dumneavoastră",
+    "heroDescription": "Sunați, scrieți sau vizitați-ne la oricare dintre sălile noastre",
+    "hero": {
+      "badge": "Contactați-ne",
+      "title": "Contactați-ne",
+      "subtitle": "Suntem întotdeauna gata să răspundem la întrebările dumneavoastră și să vă ajutăm să începeți antrenamentele",
+      "stats": {
+        "support": "Suport",
+        "locations": "Locații",
+        "response": "Răspuns"
+      }
+    },
+    "info": {
+      "address": {
+        "title": "Adresă",
+        "content": "Chișinău, str. Malaya Malian 24\nSala №1 - principală"
+      },
+      "phone": {
+        "title": "Telefon",
+        "content": "+373 60 123 456\n+373 60 234 567"
+      },
+      "email": {
+        "title": "Email",
+        "content": "info@altius.md\ntraining@altius.md"
+      },
+      "hours": {
+        "title": "Ore de lucru",
+        "content": "Lun-Vin: 08:00 - 22:00\nSâm-Dum: 09:00 - 20:00"
+      },
+      "title": "Informații utile",
+      "location": {
+        "title": "Selectarea sălii",
+        "description": "Alegeți sala cea mai apropiată pentru antrenamente convenabile"
+      },
+      "booking": {
+        "title": "Rezervarea antrenamentelor",
+        "description": "Sunați în avans pentru a rezerva sesiuni de grup și individuale"
+      },
+      "schedule": {
+        "title": "Program",
+        "description": "Programul actual este întotdeauna disponibil prin telefon și pe site"
+      }
+    },
+    "locations": {
+      "badge": "Locațiile noastre",
+      "title": "Unde să ne găsiți",
+      "subtitle": "3 săli moderne în diferite sectoare ale Chișinăului"
+    },
+    "gyms": {
+      "gym1": {
+        "name": "Sala Malaya Malian",
+        "type": "Sala principală",
+        "badge": "Principală",
+        "address": "str. Malaya Malian 24",
+        "description": "Sala principală cu echipament profesional",
+        "hours": "Lun-Dum: 08:00 - 22:00"
+      },
+      "gym2": {
+        "name": "Sala 31 August",
+        "type": "Sala de familie",
+        "badge": "Familie",
+        "address": "str. 31 August 1989, 15",
+        "description": "Sala pentru antrenamente de familie cu loc de joacă pentru copii",
+        "hours": "Lun-Dum: 09:00 - 21:00"
+      },
+      "gym3": {
+        "name": "Sala Ion Creangă",
+        "type": "Sala premium",
+        "badge": "Premium",
+        "address": "str. Ion Creangă 1",
+        "description": "Sala premium cu servicii suplimentare",
+        "hours": "Lun-Dum: 07:00 - 23:00"
+      },
+      "features": {
+        "kids": "Grupuri copii",
+        "adults": "Grupuri adulți",
+        "parking": "Parcare",
+        "playground": "Loc de joacă",
+        "cafeteria": "Cafenea",
+        "advanced": "Nivel avansat",
+        "sauna": "Saună"
+      },
+      "openMap": "Deschide pe hartă"
+    },
     "phone": "Telefon",
     "email": "Email",
     "address": "Adresă",
@@ -211,10 +293,10 @@
     "subject": "Subiect",
     "send": "Trimite",
     "contactForm": "Formular de contact",
-    "getInTouch": "Contactează-ne",
-    "visitUs": "Vizitează-ne",
-    "callUs": "Sună-ne",
-    "emailUs": "Scrie-ne"
+    "getInTouch": "Luați legătura",
+    "visitUs": "Vizitați-ne",
+    "callUs": "Sunați-ne",
+    "emailUs": "Scrieți-ne"
   },
   "gyms": {
     "title": "Sălile noastre",
