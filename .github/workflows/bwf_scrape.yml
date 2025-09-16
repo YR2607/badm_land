@@ -2,7 +2,7 @@ name: BWF Scrape Daily
 
 on:
   schedule:
-    - cron: '0 5,11,17 * * *'  # Run 3 times daily: 5 AM, 11 AM, 5 PM UTC
+    - cron: '0 */4 * * *'  # Run every 4 hours: 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC
   workflow_dispatch: {}
   push:
     branches: [ main ]

@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Header: React.FC = () => {
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === '/';
@@ -17,13 +20,13 @@ const Header: React.FC = () => {
   }, [isHome]);
 
   const navItems = [
-    { path: '/', label: 'Главная' },
-    { path: '/about', label: 'О клубе' },
-    { path: '/gallery', label: 'Галерея' },
-    { path: '/services', label: 'Услуги' },
-    { path: '/gyms', label: 'Спортзалы' },
-    { path: '/blog', label: 'Новости' },
-    { path: '/contact', label: 'Контакты' }
+    { path: '/', label: t('navigation.home') },
+    { path: '/about', label: t('navigation.about') },
+    { path: '/gallery', label: t('navigation.gallery') },
+    { path: '/services', label: t('navigation.services') },
+    { path: '/gyms', label: t('navigation.gyms') },
+    { path: '/blog', label: t('navigation.news') },
+    { path: '/contact', label: t('navigation.contacts') }
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -57,9 +60,7 @@ const Header: React.FC = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/contact" className={`${isHome && !scrolled ? 'bg-white/15 text-white border border-white/30 hover:bg-white/25' : 'btn-secondary' } px-5 py-2 rounded-lg font-medium transition-colors`}>
-              Записаться
-            </Link>
+            <LanguageSwitcher />
           </div>
 
           <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -76,9 +77,9 @@ const Header: React.FC = () => {
                 {item.label}
               </Link>
             ))}
-            <Link to="/contact" className="block btn-primary text-center" onClick={() => setIsMenuOpen(false)}>
-              Записаться
-            </Link>
+            <div className="pt-2 border-t border-gray-200">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Award } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface HeroProps {
   cmsData?: {
@@ -13,6 +14,7 @@ interface HeroProps {
 }
 
 const Hero = ({ cmsData }: HeroProps) => {
+  const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const finishedRef = useRef<boolean>(false);
@@ -84,30 +86,30 @@ const Hero = ({ cmsData }: HeroProps) => {
         <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
           <motion.div className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
             <Award className="w-5 h-5 text-primary-yellow mr-2" />
-            <span className="text-sm font-medium text-white">Профессиональный клуб с 2010 года</span>
+            <span className="text-sm font-medium text-white">{t('hero.badge', 'Профессиональный клуб с 2010 года')}</span>
           </motion.div>
           <motion.h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-display mb-8 leading-tight" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}>
-            <span className="text-white">{cmsData?.title || 'ALTIUS'}</span>
+            <span className="text-white">{cmsData?.title || t('hero.title')}</span>
             <br />
-            <span className="text-2xl md:text-3xl lg:text-4xl font-light text-primary-yellow italic font-display">{cmsData?.subtitle || 'Бадминтонный клуб'}</span>
+            <span className="text-2xl md:text-3xl lg:text-4xl font-light text-primary-yellow italic font-display">{cmsData?.subtitle || t('hero.subtitle')}</span>
           </motion.h1>
           <motion.p className="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto leading-relaxed" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.6 }}>
-            {cmsData?.description || 'Профессиональные тренировки, современное оборудование и дружелюбная атмосфера в самом современном бадминтонном клубе Кишинева'}
+            {cmsData?.description || t('hero.description')}
           </motion.p>
           <motion.div className="flex flex-col sm:flex-row gap-6 justify-center mb-12" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.6 }}>
             <button className="px-10 py-5 bg-gradient-to-r from-primary-yellow to-primary-orange text-white font-medium rounded-2xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 tracking-wide">
-              Записаться на пробное занятие
+              {t('hero.joinButton')}
               <ArrowRight className="ml-3 w-5 h-5 inline" />
             </button>
             <button className="px-10 py-5 bg-white/10 backdrop-blur-md text-white font-medium rounded-2xl border border-white/30 hover:bg-white/20 transition-all duration-500 shadow-xl tracking-wide">
-              Посмотреть видео
+              {t('hero.learnMoreButton')}
             </button>
           </motion.div>
         </motion.div>
       </div>
       <motion.div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-primary-orange" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.6 }}>
         <div className="flex flex-col items-center space-y-2">
-          <span className="text-sm">Прокрутите вниз</span>
+          <span className="text-sm">{t('hero.scrollDown', 'Прокрутите вниз')}</span>
           <div className="w-6 h-10 border-2 border-primary-orange/50 rounded-full flex justify-center">
             <div className="w-1 h-3 bg-primary-orange rounded-full mt-2 animate-bounce"></div>
           </div>

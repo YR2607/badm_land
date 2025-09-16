@@ -4,12 +4,14 @@ import { Globe, Search, Filter, ArrowRight } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { fetchClubEmbeds } from '../lib/cms';
 import { proxied } from '../utils/blockFacebookImages';
+import { useTranslation } from 'react-i18next';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
 
 // We rely only on automated feeds on this page
 
 const Blog: FC = () => {
+  const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -74,12 +76,12 @@ const Blog: FC = () => {
     };
     load();
     
-    // Добавляем интервал для периодического обновления CMS данных
+    // Add interval for periodic CMS data updates
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') {
         load();
       }
-    }, 30000); // Обновляем каждые 30 секунд
+    }, 30000); // Update every 30 seconds
     
     const onFocus = () => load();
     const onVisibility = () => { if (document.visibilityState === 'visible') load(); };
@@ -96,10 +98,10 @@ const Blog: FC = () => {
   // No manual embeds: we rely only on automated FB/BWF feeds
 
   const categories = [
-    { value: 'all', label: 'Все', icon: <Filter className="w-4 h-4" /> },
-    { value: 'world', label: 'Мировые новости', icon: <Globe className="w-4 h-4" /> },
-    { value: 'news', label: 'Новости клуба', icon: <Filter className="w-4 h-4" /> },
-    { value: 'event', label: 'События', icon: <Filter className="w-4 h-4" /> },
+    { value: 'all', label: t('news.categories.all'), icon: <Filter className="w-4 h-4" /> },
+    { value: 'world', label: t('news.categories.world'), icon: <Globe className="w-4 h-4" /> },
+    { value: 'news', label: t('news.categories.club'), icon: <Filter className="w-4 h-4" /> },
+    { value: 'event', label: t('news.categories.events'), icon: <Filter className="w-4 h-4" /> },
   ];
 
   const merged = useMemo(() => {
@@ -198,9 +200,9 @@ const Blog: FC = () => {
 
   const getCategoryLabel = (category: string) => {
     switch (category) {
-      case 'news': return 'Новости клуба';
-      case 'world': return 'Мировые новости';
-      case 'event': return 'События';
+      case 'news': return t('news.categories.club');
+      case 'world': return t('news.categories.world');
+      case 'event': return t('news.categories.events');
       default: return category;
     }
   };
@@ -412,15 +414,15 @@ const Blog: FC = () => {
             <div className="text-center text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                 <span className="text-lg">📰</span>
-                <span className="text-sm font-medium">Свежие новости</span>
+                <span className="text-sm font-medium">{t('news.hero.badge')}</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                Новости и События
+                {t('news.hero.title')}
               </h1>
               
               <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                Следите за последними новостями нашего клуба и мировыми событиями в бадминтоне
+                {t('news.hero.subtitle')}
               </p>
               
               {/* Statistics */}
@@ -432,7 +434,7 @@ const Blog: FC = () => {
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">50+</div>
-                  <div className="text-blue-100">Статей опубликовано</div>
+                  <div className="text-blue-100">{t('news.hero.stats.articles')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -442,7 +444,7 @@ const Blog: FC = () => {
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">20+</div>
-                  <div className="text-blue-100">Событий освещено</div>
+                  <div className="text-blue-100">{t('news.hero.stats.events')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -452,7 +454,7 @@ const Blog: FC = () => {
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">5</div>
-                  <div className="text-blue-100">Категорий новостей</div>
+                  <div className="text-blue-100">{t('news.hero.stats.categories')}</div>
                 </motion.div>
               </div>
             </div>
@@ -465,7 +467,7 @@ const Blog: FC = () => {
           <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
             <motion.div className="relative flex-grow max-w-md" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input type="text" placeholder="Поиск новостей..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent" />
+              <input type="text" placeholder={t('news.searchPlaceholder')} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent" />
             </motion.div>
             <motion.div className="flex flex-wrap gap-2" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
               {categories.map((category) => (
@@ -487,9 +489,9 @@ const Blog: FC = () => {
           <div className="sr-only" id="club-news" />
           <div className="sr-only" id="event-news" />
           {loading && merged.length === 0 ? (
-            <Empty text="Загрузка..." />
+            <Empty text={t('news.loadingText')} />
           ) : filteredNews.length === 0 ? (
-            <Empty text="Пока нет материалов" />
+            <Empty text={t('news.noNews')} />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {pageItems.map((news, index) => {
@@ -525,7 +527,7 @@ const Blog: FC = () => {
                     <div className="flex items-center justify-between">
                       {(news as any).author && (<span className="text-sm text-gray-500">{(news as any).author}</span>)}
                       <span className="flex items-center text-primary-blue group-hover:translate-x-2 transition-transform">
-                        <span className="mr-2 text-sm font-medium">Читать</span>
+                        <span className="mr-2 text-sm font-medium">{t('news.readMore')}</span>
                         <ArrowRight size={16} />
                       </span>
                     </div>
@@ -552,17 +554,17 @@ const Blog: FC = () => {
                 onClick={() => page > 1 && setPage(p => Math.max(1, p - 1))}
                 disabled={page <= 1}
               >
-                ← Предыдущая
+                ← {t('common.previous')}
               </button>
               <div className="text-sm text-gray-600">
-                Страница {page} из {totalPages} • Показано {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filteredNews.length)} из {filteredNews.length}
+                {t('common.page')} {page} {t('common.of')} {totalPages} • {t('common.showing')} {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filteredNews.length)} {t('common.of')} {filteredNews.length}
               </div>
               <button
                 className={`px-4 py-2 rounded-lg border text-sm font-medium ${page < totalPages ? 'bg-white hover:bg-gray-50 border-gray-300 text-gray-900' : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'}`}
                 onClick={() => page < totalPages && setPage(p => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
               >
-                Следующая →
+                {t('common.next')} →
               </button>
             </div>
           </div>

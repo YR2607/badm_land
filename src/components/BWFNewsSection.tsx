@@ -11,8 +11,16 @@ const BWFNewsSection: FC = () => {
     let alive = true
     const run = async () => {
       try {
-        const r = await fetch('/api/bwf-news?refresh=1', { cache: 'no-store' })
-        const data = await r.json()
+        // Try API endpoint first (for production), fallback to static file (for development)
+        let data
+        try {
+          const r = await fetch('/api/bwf-news?refresh=1', { cache: 'no-store' })
+          data = await r.json()
+        } catch {
+          // Fallback to static JSON file for development
+          const r = await fetch('/data/bwf_news.json', { cache: 'no-store' })
+          data = await r.json()
+        }
         if (!alive) return
         const arr: Item[] = (data?.items || []) as Item[]
         const sorted = arr

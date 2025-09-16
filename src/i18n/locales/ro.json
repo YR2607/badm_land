@@ -1,0 +1,288 @@
+{
+  "navigation": {
+    "home": "Acasă",
+    "about": "Despre",
+    "services": "Servicii",
+    "gyms": "Săli",
+    "gallery": "Galerie",
+    "contacts": "Contact",
+    "news": "Știri",
+    "language": "Limba"
+  },
+  "hero": {
+    "title": "ALTIUS",
+    "subtitle": "Club profesional de badminton în Chișinău",
+    "description": "Antrenament pentru toate nivelurile de pregătire cu antrenori experimentați în facilități moderne",
+    "joinButton": "Alătură-te nouă",
+    "learnMoreButton": "Urmărește videoul",
+    "badge": "Club profesional din 2010",
+    "scrollDown": "Derulează în jos"
+  },
+  "stats": {
+    "members": "Membri",
+    "trainers": "Antrenori",
+    "courts": "Terenuri",
+    "years": "Ani de experiență"
+  },
+  "services": {
+    "hero": {
+      "badge": "Antrenament Profesional",
+      "title": "Serviciile Noastre",
+      "subtitle": "Alegeți formatul potrivit de antrenament pentru a vă atinge obiectivele",
+      "stats": {
+        "students": "500+ elevi",
+        "experience": "15+ ani experiență",
+        "formats": "3 formate de antrenament"
+      }
+    },
+    "groupTraining": {
+      "title": "Antrenament în Grup",
+      "subtitle": "Pentru începători și amatori",
+      "description": "Lecții în grupuri de până la 8 persoane cu antrenori experimentați. Potrivit pentru toate nivelurile de pregătire.",
+      "features": [
+        "Învățarea tehnicilor de bază",
+        "Abilități tactice",
+        "Pregătire fizică",
+        "Practică de joc",
+        "Atmosferă prietenoasă"
+      ],
+      "badge": "Popular"
+    },
+    "individual": {
+      "title": "Antrenament Individual",
+      "subtitle": "Abordare personală",
+      "description": "Unu la unu cu antrenorul pentru eficiență maximă de învățare și progres rapid.",
+      "features": {
+        "program": "Program individual",
+        "schedule": "Program flexibil",
+        "attention": "100% atenția antrenorului",
+        "progress": "Progres rapid",
+        "analysis": "Analiză video a tehnicii"
+      },
+      "badge": "Eficient"
+    },
+    "competition": {
+      "title": "Pregătire pentru Competiții",
+      "subtitle": "Pentru sportivi",
+      "description": "Antrenament specializat pentru participarea la turnee și competiții de diferite niveluri.",
+      "features": {
+        "technical": "Măiestrie tehnică",
+        "tactical": "Pregătire tactică",
+        "psychological": "Stabilitate psihologică",
+        "sparring": "Practică de sparring",
+        "analysis": "Analiza jocului adversarilor"
+      },
+      "badge": "Pro"
+    },
+    "pricing": {
+      "title": "Costul antrenamentelor",
+      "subtitle": "Alege planul potrivit",
+      "perSession": "per sesiune",
+      "perMonth": "pe lună",
+      "monthly": "Lunar",
+      "annual": "Anual",
+      "currency": "lei",
+      "discount": "Reducere 10% la plata pentru 3 luni",
+      "signUp": "Înscrie-te"
+    },
+    "comparison": {
+      "title": "Compararea Formatelor",
+      "subtitle": "Alegeți opțiunea optimă pentru dumneavoastră",
+      "parameter": "Parametru",
+      "groupSize": "Mărimea grupului",
+      "individualPlan": "Plan individual",
+      "videoAnalysis": "Analiză video",
+      "competitivePractice": "Practică competitivă",
+      "scheduleFlexibility": "Flexibilitatea programului",
+      "values": {
+        "upTo8": "Până la 8 persoane",
+        "oneOnOne": "1 la 1",
+        "twoToFour": "2-4 persoane",
+        "optional": "Opțional",
+        "yes": "Da",
+        "clubGames": "Jocuri de club",
+        "onRequest": "La cerere",
+        "regularly": "Regulat",
+        "fixed": "Fix",
+        "full": "Completă",
+        "high": "Înaltă"
+      }
+    },
+    "gyms": {
+      "title": "Sălile Noastre",
+      "subtitle": "3 săli moderne în diferite cartiere ale orașului",
+      "viewAll": "Vezi toate sălile"
+    },
+    "faq": {
+      "title": "Întrebări Frecvente",
+      "subtitle": "Răspunsuri la întrebări populare despre antrenament",
+      "questions": {
+        "howToSignUp": {
+          "q": "Cum să mă înscriu la antrenament?",
+          "a": "Sunați-ne sau completați formularul de pe site. Vom găsi un timp și o sală convenabile pentru dumneavoastră."
+        },
+        "trialSession": {
+          "q": "Există o sesiune de probă?",
+          "a": "Da, puteți participa la prima sesiune gratuit pentru a cunoaște antrenorul și formatul."
+        },
+        "equipment": {
+          "q": "Am nevoie de echipament propriu?",
+          "a": "Rachetele și fluturașii sunt furnizați de club. Aveți nevoie doar de încălțăminte și îmbrăcăminte sport."
+        }
+      }
+    },
+    "cta": {
+      "title": "Gata să începeți antrenamentul?",
+      "subtitle": "Înscrie-te la o sesiune de probă astăzi",
+      "contact": "Contactează-ne",
+      "call": "Sună"
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "Despre Noi",
+      "title": "Clubul de Badminton ALTIUS",
+      "subtitle": "Antrenament profesional de badminton în Chișinău din 2010"
+    },
+    "stats": {
+      "experience": "15+",
+      "experienceDesc": "Ani de Experiență",
+      "participants": "500+",
+      "participantsDesc": "Elevi Mulțumiți",
+      "courts": "3",
+      "courtsDesc": "Terenuri Moderne",
+      "tournaments": "50+",
+      "tournamentsDesc": "Turnee Organizate"
+    },
+    "values": {
+      "title": "Valorile Noastre",
+      "subtitle": "Ce ne face speciali",
+      "professionalism": "Profesionalism",
+      "professionalismDesc": "Antrenament de înaltă calitate cu antrenori certificați și echipament modern",
+      "friendliness": "Atmosferă Prietenoasă",
+      "friendlinessDesc": "Mediu primitor pentru jucători de toate vârstele și nivelurile de pregătire",
+      "results": "Focus pe Rezultate",
+      "resultsDesc": "Abordare individuală pentru fiecare elev pentru a obține progres maxim"
+    },
+    "team": {
+      "title": "Echipa Noastră",
+      "subtitle": "Cunoaște antrenorii noștri profesioniști",
+      "founder": "Fondator și Antrenor Principal",
+      "masterSport": "Maestru în Sport",
+      "founderName": "Alexei Petrov",
+      "founderRole": "Antrenor Principal și Fondator al Clubului",
+      "founderExp1": "15+ ani de experiență în antrenament",
+      "founderExp2": "Maestru în Sport la Badminton",
+      "founderExp3": "A antrenat peste 500 de elevi",
+      "founderDesc1": "Alexei a fondat ALTIUS în 2010 cu viziunea de a dezvolta badmintonul în Moldova. Abordarea sa profesională și dedicarea au ajutat sute de elevi să-și atingă obiectivele.",
+      "founderDesc2": "Sub conducerea sa, clubul a devenit unul dintre centrele de antrenament de badminton de frunte din Chișinău, cunoscut pentru antrenamentul de înaltă calitate și atmosfera prietenoasă.",
+      "founderQuote": "Fiecare elev este unic, iar obiectivul nostru este să ajutăm fiecare persoană să-și atingă potențialul maxim în badminton.",
+      "coaches": "Antrenorii Noștri"
+    },
+    "history": {
+      "title": "Istoria Noastră",
+      "subtitle": "Călătoria de creștere și dezvoltare",
+      "development": "Dezvoltarea Clubului",
+      "showAll": "Arată Toate Evenimentele"
+    },
+    "roadmap": {
+      "title": "Foaia de Parcurs pentru Dezvoltare",
+      "subtitle": "Planurile și realizările noastre",
+      "scrollHint": "Derulează pentru a explora călătoria noastră",
+      "swipeHint": "Glisează pentru a naviga",
+      "done": "Finalizat",
+      "inProgress": "În Progres",
+      "planned": "Planificat"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Contactează-ne",
+    "heroTitle": "Contactează-ne",
+    "heroSubtitle": "Suntem mereu gata să răspundem la întrebările tale",
+    "heroDescription": "Sună, scrie sau vizitează-ne la oricare dintre sălile noastre",
+    "phone": "Telefon",
+    "email": "Email",
+    "address": "Adresă",
+    "workingHours": "Ore de lucru",
+    "sendMessage": "Trimite mesaj",
+    "name": "Nume",
+    "message": "Mesaj",
+    "subject": "Subiect",
+    "send": "Trimite",
+    "contactForm": "Formular de contact",
+    "getInTouch": "Contactează-ne",
+    "visitUs": "Vizitează-ne",
+    "callUs": "Sună-ne",
+    "emailUs": "Scrie-ne"
+  },
+  "gyms": {
+    "title": "Sălile Noastre",
+    "subtitle": "Săli moderne în diferite cartiere ale orașului",
+    "heroTitle": "Săli de sport",
+    "heroSubtitle": "Săli moderne cu echipament profesional",
+    "heroDescription": "3 săli în diferite cartiere din Chișinău pentru confortul tău"
+  },
+  "gallery": {
+    "title": "Galerie",
+    "subtitle": "Fotografii ale clubului nostru, antrenori, antrenamente și turnee",
+    "heroTitle": "Galeria Clubului",
+    "heroSubtitle": "Vezi sălile noastre și atmosfera de antrenament",
+    "heroDescription": "Fotografii de la antrenamente, turnee și viața de zi cu zi a clubului",
+    "sections": {
+      "hall": "Săli de Antrenament",
+      "coaches": "Antrenorii Noștri",
+      "trainings": "Sesiuni de Antrenament",
+      "tournaments": "Turnee"
+    },
+    "other": "Altele",
+    "noMaterials": "Nu sunt materiale disponibile încă",
+    "cmsNotConfigured": "Conținutul galeriei va fi disponibil în curând",
+    "searchTournament": "Caută turnee...",
+    "allYears": "Toți Anii",
+    "reset": "Resetează Filtrele",
+    "close": "Închide",
+    "photo": "Fotografii",
+    "video": "Videoclipuri",
+    "photosComingSoon": "Fotografiile vor fi disponibile în curând",
+    "videosComingSoon": "Videoclipurile vor fi disponibile în curând",
+    "showMore": "Arată Mai Mult",
+    "previous": "Anterior",
+    "next": "Următorul"
+  },
+  "news": {
+    "title": "Știri și Evenimente",
+    "subtitle": "Urmărește ultimele știri de la clubul nostru și evenimentele mondiale de badminton",
+    "categories": {
+      "all": "Toate",
+      "world": "Știri mondiale",
+      "club": "Știri club",
+      "events": "Evenimente"
+    },
+    "searchPlaceholder": "Caută știri...",
+    "readMore": "Citește",
+    "loadingText": "Se încarcă...",
+    "noNews": "Nu există materiale încă"
+  },
+  "footer": {
+    "description": "Club profesional de badminton în Chișinău",
+    "quickLinks": "Link-uri rapide",
+    "followUs": "Urmărește-ne",
+    "allRightsReserved": "Toate drepturile rezervate"
+  },
+  "common": {
+    "loading": "Se încarcă...",
+    "error": "Nu s-au putut încărca datele",
+    "retry": "Încearcă din nou",
+    "readMore": "Citește mai mult",
+    "close": "Închide",
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "submit": "Trimite",
+    "next": "Următoarea",
+    "previous": "Precedenta",
+    "page": "Pagina",
+    "of": "din",
+    "showing": "Se afișează"
+  }
+}

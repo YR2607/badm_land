@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import { lazy, Suspense } from 'react';
+import './i18n';
 import Home from './pages/Home';
 import Blog from './pages/Blog';
 

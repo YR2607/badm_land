@@ -1,9 +1,11 @@
 import { type FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight } from 'lucide-react';
 import { fetchAboutPage, CmsAboutPage } from '../lib/cms';
 
 const About: FC = () => {
+  const { t } = useTranslation();
   const [cmsData, setCmsData] = useState<CmsAboutPage | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAllHistory, setShowAllHistory] = useState(false);
@@ -23,7 +25,7 @@ const About: FC = () => {
         if (process.env.NODE_ENV === 'development') {
           console.error('Failed to load CMS data:', error);
         }
-        setError('Не удалось загрузить данные');
+        setError(t('common.error'));
       }
     };
 
@@ -69,16 +71,16 @@ const About: FC = () => {
   };
 
   const stats = [
-    { number: '1+', label: 'год опыта', icon: <Clock className="w-6 h-6" />, color: 'from-primary-blue to-blue-600', description: 'С 2024 года развиваем бадминтон в регионе' },
-    { number: '120+', label: 'активных участников', icon: <Users className="w-6 h-6" />, color: 'from-primary-yellow to-yellow-600', description: 'Игроки всех возрастов и уровней подготовки' },
-    { number: '4', label: 'профессиональных корта', icon: <MapPin className="w-6 h-6" />, color: 'from-primary-orange to-red-600', description: 'Современное оборудование и освещение' },
-    { number: '15+', label: 'турниров проведено', icon: <Award className="w-6 h-6" />, color: 'from-primary-blue to-blue-700', description: 'Внутренние и выездные соревнования' }
+    { number: '1+', label: t('about.stats.experience'), icon: <Clock className="w-6 h-6" />, color: 'from-primary-blue to-blue-600', description: t('about.stats.experienceDesc') },
+    { number: '120+', label: t('about.stats.participants'), icon: <Users className="w-6 h-6" />, color: 'from-primary-yellow to-yellow-600', description: t('about.stats.participantsDesc') },
+    { number: '4', label: t('about.stats.courts'), icon: <MapPin className="w-6 h-6" />, color: 'from-primary-orange to-red-600', description: t('about.stats.courtsDesc') },
+    { number: '15+', label: t('about.stats.tournaments'), icon: <Award className="w-6 h-6" />, color: 'from-primary-blue to-blue-700', description: t('about.stats.tournamentsDesc') }
   ];
 
   const values = [
-    { icon: <Target className="w-8 h-8" />, title: 'Профессионализм', description: 'Высокие стандарты обучения и сертифицированные тренеры' },
-    { icon: <Heart className="w-8 h-8" />, title: 'Дружелюбие', description: 'Теплая атмосфера и поддержка для игроков всех уровней' },
-    { icon: <Award className="w-8 h-8" />, title: 'Результат', description: 'Ориентация на достижение целей каждого участника' }
+    { icon: <Target className="w-8 h-8" />, title: t('about.values.professionalism'), description: t('about.values.professionalismDesc') },
+    { icon: <Heart className="w-8 h-8" />, title: t('about.values.friendliness'), description: t('about.values.friendlinessDesc') },
+    { icon: <Award className="w-8 h-8" />, title: t('about.values.results'), description: t('about.values.resultsDesc') }
   ];
 
   const timeline: Array<{ year: string; title: string; text: string }> = [
@@ -110,7 +112,7 @@ const About: FC = () => {
             onClick={() => window.location.reload()} 
             className="px-4 py-2 bg-primary-blue text-white rounded hover:bg-blue-600"
           >
-            Попробовать снова
+            {t('common.retry')}
           </button>
         </div>
       </div>
@@ -301,7 +303,7 @@ const About: FC = () => {
             <div className="text-center text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                 <Trophy className="w-4 h-4 text-yellow-300" />
-                <span className="text-sm font-medium">Профессиональный клуб с 2024 года</span>
+                <span className="text-sm font-medium">{t('about.hero.badge')}</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
@@ -309,7 +311,7 @@ const About: FC = () => {
               </h1>
               
               <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                {cmsData?.hero?.subtitle || 'Профессиональные тренировки, современное оборудование и дружелюбная атмосфера'}
+                {cmsData?.hero?.subtitle || t('about.hero.subtitle')}
               </p>
               
               {/* Statistics */}
@@ -321,7 +323,7 @@ const About: FC = () => {
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">120+</div>
-                  <div className="text-blue-100">Активных участников</div>
+                  <div className="text-blue-100">{t('about.stats.participants')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -331,7 +333,7 @@ const About: FC = () => {
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">1+</div>
-                  <div className="text-blue-100">Год опыта</div>
+                  <div className="text-blue-100">{t('about.stats.experience')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -341,7 +343,7 @@ const About: FC = () => {
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">15+</div>
-                  <div className="text-blue-100">Турниров проведено</div>
+                  <div className="text-blue-100">{t('about.stats.tournaments')}</div>
                 </motion.div>
               </div>
             </div>
@@ -395,10 +397,10 @@ const About: FC = () => {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">
-              Наша команда
+              {t('about.team.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Опытные специалисты, которые помогут вам достичь новых высот в бадминтоне
+              {t('about.team.subtitle')}
             </p>
           </motion.div>
 
@@ -411,7 +413,7 @@ const About: FC = () => {
               viewport={{ once: true }} 
               transition={{ duration: 0.8 }}
             >
-              <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">Основатель клуба</h3>
+              <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.founder')}</h3>
               
               <div className="bg-white rounded-2xl p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
@@ -429,17 +431,17 @@ const About: FC = () => {
                       </div>
                     )}
                     <span className="inline-block bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm font-medium">
-                      {cmsData?.teamSection?.founder?.achievements?.[0] || "Мастер спорта"}
+                      {cmsData?.teamSection?.founder?.achievements?.[0] || t('about.team.masterSport')}
                     </span>
                   </div>
                   
                   {/* Content Section */}
                   <div className="lg:col-span-2 text-center lg:text-left">
                     <h4 className="text-3xl font-bold text-gray-900 mb-2">
-                      {cmsData?.teamSection?.founder?.name || "Александр Иванов"}
+                      {cmsData?.teamSection?.founder?.name || t('about.team.founderName')}
                     </h4>
                     <p className="text-lg text-primary-blue font-medium mb-6">
-                      {cmsData?.teamSection?.founder?.role || "Основатель и директор клуба"}
+                      {cmsData?.teamSection?.founder?.role || t('about.team.founderRole')}
                     </p>
                     
                     <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
@@ -451,9 +453,9 @@ const About: FC = () => {
                         ))
                       ) : (
                         <>
-                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">15 лет опыта</span>
-                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">Международный уровень</span>
-                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">120+ учеников</span>
+                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">{t('about.team.founderExp1')}</span>
+                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">{t('about.team.founderExp2')}</span>
+                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">{t('about.team.founderExp3')}</span>
                         </>
                       )}
                     </div>
@@ -468,17 +470,15 @@ const About: FC = () => {
                       ) : (
                         <>
                           <p>
-                            Мастер спорта по бадминтону с 15-летним опытом игры на профессиональном уровне. 
-                            Участник международных турниров и чемпионатов Европы.
+                            {t('about.team.founderDesc1')}
                           </p>
                           <p>
-                            В 2024 году основал клуб Altius с целью создания профессиональной среды для развития 
-                            бадминтона в регионе. Под его руководством клуб стал домом для более чем 120 активных игроков.
+                            {t('about.team.founderDesc2')}
                           </p>
                         </>
                       )}
                       <blockquote className="italic text-gray-700 border-l-3 border-primary-blue pl-4">
-                        "{cmsData?.teamSection?.founder?.quote || 'Бадминтон — это не просто спорт, это образ жизни, который учит дисциплине, стратегическому мышлению и командной работе.'}"
+                        "{cmsData?.teamSection?.founder?.quote || t('about.team.founderQuote')}"
                       </blockquote>
                     </div>
                   </div>
@@ -494,7 +494,7 @@ const About: FC = () => {
             viewport={{ once: true }} 
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">Наши тренеры</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.coaches')}</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {cmsData?.teamSection?.coaches ? cmsData.teamSection.coaches.map((coach, index) => (
@@ -642,10 +642,10 @@ const About: FC = () => {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">
-              Наша история и планы
+              {t('about.history.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              От первых шагов до амбициозных целей — путь развития клуба Altius
+              {t('about.history.subtitle')}
             </p>
           </motion.div>
 
@@ -657,7 +657,7 @@ const About: FC = () => {
             viewport={{ once: true }} 
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">История развития</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.history.development')}</h3>
             
             {/* Timeline with years as dividers */}
             {(() => {
@@ -719,7 +719,7 @@ const About: FC = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        {showAllHistory ? 'Свернуть историю' : 'Показать всю историю'}
+                        {showAllHistory ? t('about.history.collapse') : t('about.history.showAll')}
                       </motion.button>
                     </div>
                   )}
@@ -735,9 +735,9 @@ const About: FC = () => {
             viewport={{ once: true }} 
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">Планы развития</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.roadmap.title')}</h3>
             <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-              Наши цели и проекты на ближайшее время
+              {t('about.roadmap.subtitle')}
             </p>
 
             {/* Interactive Horizontal Scrollable Roadmap - Full Width */}
@@ -745,7 +745,7 @@ const About: FC = () => {
               {/* Scroll hint */}
               <div className="flex items-center justify-center gap-2 mb-6 text-sm text-gray-500 px-4 sm:px-6 lg:px-8">
                 <ArrowRight className="w-4 h-4 animate-pulse" />
-                <span>Прокрутите мышкой для просмотра планов</span>
+                <span>{t('about.roadmap.scrollHint')}</span>
                 <ArrowRight className="w-4 h-4 animate-pulse" />
               </div>
               
@@ -792,17 +792,17 @@ const About: FC = () => {
                               {r.status === 'done' ? (
                                 <>
                                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                                  Готово
+                                  {t('about.roadmap.done')}
                                 </>
                               ) : r.status === 'progress' ? (
                                 <>
                                   <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                                  В процессе
+                                  {t('about.roadmap.inProgress')}
                                 </>
                               ) : (
                                 <>
                                   <div className="w-2 h-2 rounded-full bg-gray-400" />
-                                  Запланировано
+                                  {t('about.roadmap.planned')}
                                 </>
                               )}
                             </span>
@@ -840,7 +840,7 @@ const About: FC = () => {
                     <div className="w-1 h-1 rounded-full bg-gray-400" />
                     <div className="w-1 h-1 rounded-full bg-gray-400" />
                   </div>
-                  <span>Свайпните для просмотра</span>
+                  <span>{t('about.roadmap.swipeHint')}</span>
                   <div className="flex gap-1">
                     <div className="w-1 h-1 rounded-full bg-gray-400" />
                     <div className="w-1 h-1 rounded-full bg-gray-400" />
@@ -868,10 +868,10 @@ const About: FC = () => {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-6">
-              Наши ценности
+              {t('about.values.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Принципы, которые лежат в основе нашей работы и формируют культуру клуба
+              {t('about.values.subtitle')}
             </p>
           </motion.div>
 

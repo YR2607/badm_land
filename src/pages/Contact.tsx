@@ -2,8 +2,10 @@ import { type FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { fetchPageBySlug, isCmsEnabled, CmsPage } from '../lib/cms';
+import { useTranslation } from 'react-i18next';
 
 const Contact: FC = () => {
+  const { t } = useTranslation();
   const [page, setPage] = useState<CmsPage | null>(null);
   useEffect(() => {
     (async () => {
@@ -15,10 +17,10 @@ const Contact: FC = () => {
 
 
   const contactInfo = [
-    { icon: <MapPin className="w-6 h-6" />, title: 'Адрес', content: 'ул. Примерная 123, Кишинев, Молдова', color: 'from-primary-blue to-blue-600' },
-    { icon: <Phone className="w-6 h-6" />, title: 'Телефон', content: '+373 60 123 456', color: 'from-primary-orange to-orange-600' },
-    { icon: <Mail className="w-6 h-6" />, title: 'Email', content: 'info@altius.md', color: 'from-primary-yellow to-yellow-600' },
-    { icon: <Clock className="w-6 h-6" />, title: 'Часы работы', content: 'Пн-Пт: 06:00-22:00\nСб-Вс: 08:00-20:00', color: 'from-gray-600 to-gray-800' }
+    { icon: <MapPin className="w-6 h-6" />, title: t('contact.info.address.title'), content: t('contact.info.address.content'), color: 'from-primary-blue to-blue-600' },
+    { icon: <Phone className="w-6 h-6" />, title: t('contact.info.phone.title'), content: t('contact.info.phone.content'), color: 'from-primary-orange to-orange-600' },
+    { icon: <Mail className="w-6 h-6" />, title: t('contact.info.email.title'), content: t('contact.info.email.content'), color: 'from-primary-yellow to-yellow-600' },
+    { icon: <Clock className="w-6 h-6" />, title: t('contact.info.hours.title'), content: t('contact.info.hours.content'), color: 'from-gray-600 to-gray-800' }
   ];
 
   return (
@@ -219,15 +221,15 @@ const Contact: FC = () => {
             <div className="text-center text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                 <Mail className="w-4 h-4 text-yellow-300" />
-                <span className="text-sm font-medium">Мы всегда на связи</span>
+                <span className="text-sm font-medium">{t('contact.hero.badge')}</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                Свяжитесь с нами
+                {t('contact.hero.title')}
               </h1>
               
               <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                {page?.heroSubtitle || 'Готовы начать свой путь в бадминтоне? Мы ждем вас!'}
+                {page?.heroSubtitle || t('contact.hero.subtitle')}
               </p>
               
               {/* Statistics */}
@@ -239,7 +241,7 @@ const Contact: FC = () => {
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">24/7</div>
-                  <div className="text-blue-100">Поддержка клиентов</div>
+                  <div className="text-blue-100">{t('contact.hero.stats.support')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -249,7 +251,7 @@ const Contact: FC = () => {
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">3</div>
-                  <div className="text-blue-100">Локации для связи</div>
+                  <div className="text-blue-100">{t('contact.hero.stats.locations')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -259,7 +261,7 @@ const Contact: FC = () => {
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">100%</div>
-                  <div className="text-blue-100">Ответ на сообщения</div>
+                  <div className="text-blue-100">{t('contact.hero.stats.response')}</div>
                 </motion.div>
               </div>
             </div>
@@ -303,13 +305,13 @@ const Contact: FC = () => {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-800 mb-6">
               <MapPin className="w-4 h-4" />
-              <span className="text-sm font-medium">3 удобные локации</span>
+              <span className="text-sm font-medium">{t('contact.locations.badge')}</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-6">
-              Как нас найти
+              {t('contact.locations.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Выберите наиболее удобную для вас локацию. Каждый зал оборудован всем необходимым для комфортных тренировок.
+              {t('contact.locations.subtitle')}
             </p>
           </motion.div>
 
@@ -329,12 +331,12 @@ const Contact: FC = () => {
                       <MapPin className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900">Зал №1</h3>
-                      <p className="text-sm text-blue-600 font-medium">Центральная локация</p>
+                      <h3 className="text-xl font-bold text-gray-900">{t('contact.gyms.gym1.name')}</h3>
+                      <p className="text-sm text-blue-600 font-medium">{t('contact.gyms.gym1.type')}</p>
                     </div>
                   </div>
                   <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                    Популярный
+                    {t('contact.gyms.gym1.badge')}
                   </span>
                 </div>
                 
@@ -342,8 +344,8 @@ const Contact: FC = () => {
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-gray-900">ул. Малая Малиан, 24</p>
-                      <p className="text-sm text-gray-600">Центр города, легко добраться</p>
+                      <p className="font-semibold text-gray-900">{t('contact.gyms.gym1.address')}</p>
+                      <p className="text-sm text-gray-600">{t('contact.gyms.gym1.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -354,14 +356,14 @@ const Contact: FC = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Clock className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                    <span className="text-gray-600 text-sm">Пн-Вс: 08:00-22:00</span>
+                    <span className="text-gray-600 text-sm">{t('contact.gyms.gym1.hours')}</span>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">Детские группы</span>
-                  <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">Взрослые группы</span>
-                  <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">Парковка</span>
+                  <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">{t('contact.gyms.features.kids')}</span>
+                  <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">{t('contact.gyms.features.adults')}</span>
+                  <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">{t('contact.gyms.features.parking')}</span>
                 </div>
 
                 <button 
@@ -369,7 +371,7 @@ const Contact: FC = () => {
                   className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-medium group-hover:scale-105"
                 >
                   <MapPin className="w-4 h-4 mr-2" />
-                  Открыть на карте
+                  {t('contact.gyms.openMap')}
                   <ExternalLink className="w-4 h-4 ml-2" />
                 </button>
               </div>
@@ -390,12 +392,12 @@ const Contact: FC = () => {
                       <MapPin className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900">Зал №2</h3>
-                      <p className="text-sm text-green-600 font-medium">Детский центр</p>
+                      <h3 className="text-xl font-bold text-gray-900">{t('contact.gyms.gym2.name')}</h3>
+                      <p className="text-sm text-green-600 font-medium">{t('contact.gyms.gym2.type')}</p>
                     </div>
                   </div>
                   <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                    Для детей
+                    {t('contact.gyms.gym2.badge')}
                   </span>
                 </div>
                 
@@ -403,8 +405,8 @@ const Contact: FC = () => {
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-gray-900">ул. 31 августа 1989, 15</p>
-                      <p className="text-sm text-gray-600">Современный детский центр</p>
+                      <p className="font-semibold text-gray-900">{t('contact.gyms.gym2.address')}</p>
+                      <p className="text-sm text-gray-600">{t('contact.gyms.gym2.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -415,14 +417,14 @@ const Contact: FC = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Clock className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-gray-600 text-sm">Пн-Пт: 16:00-18:00</span>
+                    <span className="text-gray-600 text-sm">{t('contact.gyms.gym2.hours')}</span>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Детские группы</span>
-                  <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Детская площадка</span>
-                  <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Кафетерий</span>
+                  <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium">{t('contact.gyms.features.kids')}</span>
+                  <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium">{t('contact.gyms.features.playground')}</span>
+                  <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium">{t('contact.gyms.features.cafeteria')}</span>
                 </div>
 
                 <button 
@@ -430,7 +432,7 @@ const Contact: FC = () => {
                   className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 font-medium group-hover:scale-105"
                 >
                   <MapPin className="w-4 h-4 mr-2" />
-                  Открыть на карте
+                  {t('contact.gyms.openMap')}
                   <ExternalLink className="w-4 h-4 ml-2" />
                 </button>
               </div>
@@ -451,12 +453,12 @@ const Contact: FC = () => {
                       <MapPin className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900">Зал №3</h3>
-                      <p className="text-sm text-amber-600 font-medium">Премиум зал</p>
+                      <h3 className="text-xl font-bold text-gray-900">{t('contact.gyms.gym3.name')}</h3>
+                      <p className="text-sm text-amber-600 font-medium">{t('contact.gyms.gym3.type')}</p>
                     </div>
                   </div>
                   <span className="bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                    Премиум
+                    {t('contact.gyms.gym3.badge')}
                   </span>
                 </div>
                 
@@ -464,8 +466,8 @@ const Contact: FC = () => {
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-gray-900">ул. Ион Крянге, 1</p>
-                      <p className="text-sm text-gray-600">Профессиональный центр</p>
+                      <p className="font-semibold text-gray-900">{t('contact.gyms.gym3.address')}</p>
+                      <p className="text-sm text-gray-600">{t('contact.gyms.gym3.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -476,14 +478,14 @@ const Contact: FC = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Clock className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                    <span className="text-gray-600 text-sm">Пн-Вс: 09:00-21:00</span>
+                    <span className="text-gray-600 text-sm">{t('contact.gyms.gym3.hours')}</span>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">Совершенствование</span>
-                  <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">Взрослые группы</span>
-                  <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">Сауна</span>
+                  <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">{t('contact.gyms.features.advanced')}</span>
+                  <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">{t('contact.gyms.features.adults')}</span>
+                  <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-medium">{t('contact.gyms.features.sauna')}</span>
                 </div>
 
                 <button 
@@ -491,7 +493,7 @@ const Contact: FC = () => {
                   className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-xl hover:from-amber-600 hover:to-yellow-600 transition-all duration-300 font-medium group-hover:scale-105"
                 >
                   <MapPin className="w-4 h-4 mr-2" />
-                  Открыть на карте
+                  {t('contact.gyms.openMap')}
                   <ExternalLink className="w-4 h-4 ml-2" />
                 </button>
               </div>
@@ -506,28 +508,28 @@ const Contact: FC = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="mt-16 bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
           >
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Полезная информация</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">{t('contact.info.title')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <MapPin className="w-6 h-6 text-blue-600" />
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Удобное расположение</h4>
-                <p className="text-sm text-gray-600">Все залы доступны на общественном транспорте и имеют парковку</p>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('contact.info.location.title')}</h4>
+                <p className="text-sm text-gray-600">{t('contact.info.location.description')}</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Phone className="w-6 h-6 text-green-600" />
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Предварительная запись</h4>
-                <p className="text-sm text-gray-600">Рекомендуем звонить заранее для уточнения расписания</p>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('contact.info.booking.title')}</h4>
+                <p className="text-sm text-gray-600">{t('contact.info.booking.description')}</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Clock className="w-6 h-6 text-amber-600" />
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Гибкое расписание</h4>
-                <p className="text-sm text-gray-600">Разные время работы для максимального удобства</p>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('contact.info.schedule.title')}</h4>
+                <p className="text-sm text-gray-600">{t('contact.info.schedule.description')}</p>
               </div>
             </div>
           </motion.div>

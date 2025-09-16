@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <footer className="bg-primary-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -14,8 +16,7 @@ const Footer: React.FC = () => {
               <span className="text-3xl font-display font-bold">Altius</span>
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
-              Профессиональный бадминтонный клуб в Кишиневе. Мы предлагаем тренировки для всех уровней, 
-              от начинающих до профессиональных спортсменов.
+              {t('footer.description')}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="w-10 h-10 bg-primary-blue rounded-full flex items-center justify-center hover:bg-opacity-80 transition-colors">
@@ -37,19 +38,19 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-primary-yellow">Быстрые ссылки</h3>
+            <h3 className="text-lg font-semibold mb-4 text-primary-yellow">{t('footer.quickLinks')}</h3>
             <ul className="space-y-2">
-              <li><Link to="/" className="text-gray-300 hover:text-white transition-colors">Главная</Link></li>
-              <li><Link to="/about" className="text-gray-300 hover:text-white transition-colors">О клубе</Link></li>
-              <li><Link to="/services" className="text-gray-300 hover:text-white transition-colors">Услуги</Link></li>
-              <li><Link to="/blog" className="text-gray-300 hover:text-white transition-colors">Новости</Link></li>
-              <li><Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Контакты</Link></li>
+              <li><Link to="/" className="text-gray-300 hover:text-white transition-colors">{t('navigation.home')}</Link></li>
+              <li><Link to="/about" className="text-gray-300 hover:text-white transition-colors">{t('navigation.about')}</Link></li>
+              <li><Link to="/services" className="text-gray-300 hover:text-white transition-colors">{t('navigation.services')}</Link></li>
+              <li><Link to="/blog" className="text-gray-300 hover:text-white transition-colors">{t('navigation.news')}</Link></li>
+              <li><Link to="/contact" className="text-gray-300 hover:text-white transition-colors">{t('navigation.contacts')}</Link></li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-primary-yellow">Контакты</h3>
+            <h3 className="text-lg font-semibold mb-4 text-primary-yellow">{t('contact.title')}</h3>
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <MapPin className="text-primary-orange mt-1" size={18} />
@@ -76,7 +77,7 @@ const Footer: React.FC = () => {
 
         <div className="mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Altius Badminton Club. Все права защищены.
+            © 2024 Altius Badminton Club. {t('footer.allRightsReserved')}
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link to="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">

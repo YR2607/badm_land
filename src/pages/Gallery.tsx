@@ -1,17 +1,20 @@
 import { type FC, useEffect, useRef, useState } from 'react';
 import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '../lib/cms';
 import { Image as ImageIcon, Video as VideoIcon, ChevronDown, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
-const sections = [
-  { id: 'hall', title: 'Наш зал', gradient: 'from-blue-500 to-blue-600' },
-  { id: 'coaches', title: 'Наши тренера', gradient: 'from-yellow-500 to-orange-500' },
-  { id: 'trainings', title: 'Наши тренировки', gradient: 'from-green-500 to-teal-500' },
-  { id: 'tournaments', title: 'Наши турниры', gradient: 'from-purple-500 to-indigo-500' },
+const getSections = (t: any) => [
+  { id: 'hall', title: t('gallery.sections.hall'), gradient: 'from-blue-500 to-blue-600' },
+  { id: 'coaches', title: t('gallery.sections.coaches'), gradient: 'from-yellow-500 to-orange-500' },
+  { id: 'trainings', title: t('gallery.sections.trainings'), gradient: 'from-green-500 to-teal-500' },
+  { id: 'tournaments', title: t('gallery.sections.tournaments'), gradient: 'from-purple-500 to-indigo-500' },
 ];
 
 type TournamentCategory = { id: string; name: string; gradient: string; photos: string[]; videos: string[]; year?: number; tags?: string[]; cover?: string };
 
 const Gallery: FC = () => {
+  const { t } = useTranslation();
+  const sections = getSections(t);
   const [overlayCatId, setOverlayCatId] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string>('hall');
   const [lightbox, setLightbox] = useState<{ items: { type: 'image'|'video'; src: string; alt?: string }[]; index: number } | null>(null);
@@ -158,7 +161,7 @@ const Gallery: FC = () => {
 
   const filteredCats = applyFilters(categories);
   const groupedByYear = filteredCats.reduce<Record<string, TournamentCategory[]>>((acc, c: any) => {
-    const y = c.year ? String(c.year) : 'Другое';
+    const y = c.year ? String(c.year) : t('gallery.other');
     acc[y] = acc[y] || [];
     acc[y].push(c);
     return acc;
@@ -172,8 +175,8 @@ const Gallery: FC = () => {
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
-          <h1 className="section-title">Галерея</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">Фотографии нашего клуба, тренеров, тренировок и турниров</p>
+          <h1 className="section-title">{t('gallery.title')}</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">{t('gallery.subtitle')}</p>
         </div>
 
         <div className="sticky top-16 z-20 -mt-6 mb-12 bg-white/80 backdrop-blur px-2 py-3 rounded-full">
@@ -203,7 +206,7 @@ const Gallery: FC = () => {
                   ))}
                 </div>
               ) : (sectionImages[s.id] || []).length === 0 ? (
-                <Empty text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
+                <Empty text={isCmsEnabled ? t('gallery.noMaterials') : t('gallery.cmsNotConfigured')} />
               ) : (
                 <div className="columns-1 sm:columns-2 md:columns-3 gap-5 space-y-5">
                   {(sectionImages[s.id] || []).map((src, i) => (
@@ -222,13 +225,13 @@ const Gallery: FC = () => {
                   {Array.from({ length: 6 }).map((_, i) => (<SkeletonCard key={i} />))}
                 </div>
               ) : categories.length === 0 ? (
-                <Empty text={isCmsEnabled ? 'Нет материалов' : 'CMS не настроена'} />
+                <Empty text={isCmsEnabled ? t('gallery.noMaterials') : t('gallery.cmsNotConfigured')} />
               ) : (
                 <>
                   <div className="sticky top-16 z-10 mb-6 bg-white/80 backdrop-blur rounded-xl p-3 flex flex-wrap items-center gap-3">
-                    <input value={filters.q} onChange={e => setFilters(f => ({ ...f, q: e.target.value }))} placeholder="Поиск турнира..." className="px-3 py-2 border rounded-lg text-sm" />
+                    <input value={filters.q} onChange={e => setFilters(f => ({ ...f, q: e.target.value }))} placeholder={t('gallery.searchTournament')} className="px-3 py-2 border rounded-lg text-sm" />
                     <select value={String(filters.year)} onChange={e => setFilters(f => ({ ...f, year: e.target.value === 'all' ? 'all' : Number(e.target.value) }))} className="px-3 py-2 border rounded-lg text-sm">
-                      <option value="all">Все годы</option>
+                      <option value="all">{t('gallery.allYears')}</option>
                       {years.map(y => (<option key={y} value={y}>{y}</option>))}
                     </select>
                     <div className="flex flex-wrap gap-2">
@@ -237,7 +240,7 @@ const Gallery: FC = () => {
                       ))}
                     </div>
                     {(filters.q || filters.year !== 'all' || filters.tags.length) ? (
-                      <button className="ml-auto text-sm text-gray-600 inline-flex items-center" onClick={() => setFilters({ q: '', year: 'all', tags: [] })}><X className="w-4 h-4 mr-1" />Сбросить</button>
+                      <button className="ml-auto text-sm text-gray-600 inline-flex items-center" onClick={() => setFilters({ q: '', year: 'all', tags: [] })}><X className="w-4 h-4 mr-1" />{t('gallery.reset')}</button>
                     ) : null}
                   </div>
 
@@ -302,12 +305,12 @@ const Gallery: FC = () => {
                           <div className="bg-white h-full max-w-7xl mx-auto flex flex-col md:rounded-2xl md:border md:shadow-xl overflow-hidden">
                             {/* Header */}
                             <div className="flex items-center gap-3 p-4 border-b sticky top-0 bg-white z-10">
-                              <button className="px-3 py-1 rounded-lg border text-sm" onClick={closeOverlay}>Закрыть</button>
+                              <button className="px-3 py-1 rounded-lg border text-sm" onClick={closeOverlay}>{t('gallery.close')}</button>
                               <div className="font-semibold text-gray-900">{cat.name}{cat.year ? ` • ${cat.year}` : ''}</div>
                               <div className="ml-auto flex items-center gap-2">
-                                {(['photo','video'] as const).map((t) => (
-                                  <button key={t} className={`px-4 py-2 rounded-full text-sm font-medium ${ activeTab === t ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 border hover:bg-primary-blue/10'}`} onClick={() => setTabByCat((prev) => ({ ...prev, [cat.id]: t }))}>
-                                    {t === 'photo' ? 'Фото' : 'Видео'}
+                                {(['photo','video'] as const).map((tabType) => (
+                                  <button key={tabType} className={`px-4 py-2 rounded-full text-sm font-medium ${ activeTab === tabType ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 border hover:bg-primary-blue/10'}`} onClick={() => setTabByCat((prev) => ({ ...prev, [cat.id]: tabType }))}>
+                                    {tabType === 'photo' ? t('gallery.photo') : t('gallery.video')}
                                   </button>
                                 ))}
                               </div>
@@ -317,7 +320,7 @@ const Gallery: FC = () => {
                             <div className="flex-1 overflow-auto px-4 py-6" ref={overlayScrollRef}>
                               {activeTab === 'photo' ? (
                                 photos.length === 0 ? (
-                                  <Empty text="Фото скоро появятся" />
+                                  <Empty text={t('gallery.photosComingSoon')} />
                                 ) : (
                                   <>
                                     <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
@@ -330,14 +333,14 @@ const Gallery: FC = () => {
                                   </div>
                                     {canMore && (
                                       <div className="mt-6 text-center">
-                                        <button className="px-5 py-2 rounded-lg border text-sm" onClick={() => loadMore(cat.id)}>Показать ещё</button>
+                                        <button className="px-5 py-2 rounded-lg border text-sm" onClick={() => loadMore(cat.id)}>{t('gallery.showMore')}</button>
                                       </div>
                                     )}
                                   </>
                                 )
                               ) : (
                                 cat.videos.length === 0 ? (
-                                  <Empty text="Видео скоро появятся" />
+                                  <Empty text={t('gallery.videosComingSoon')} />
                                 ) : (
                                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                                     {cat.videos.map((src: string, i: number) => (
@@ -363,9 +366,9 @@ const Gallery: FC = () => {
 
       {lightbox && (
         <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center" role="dialog" aria-modal="true" onClick={closeLightbox}>
-          <button className="absolute top-6 right-6 text-white text-xl" onClick={closeLightbox} aria-label="Закрыть">✕</button>
-          <button className="absolute left-4 md:left-8 text-white text-3xl" onClick={(e) => { e.stopPropagation(); prevItem(); }} aria-label="Предыдущее">‹</button>
-          <button className="absolute right-4 md:right-8 text-white text-3xl" onClick={(e) => { e.stopPropagation(); nextItem(); }} aria-label="Следующее">›</button>
+          <button className="absolute top-6 right-6 text-white text-xl" onClick={closeLightbox} aria-label={t('gallery.close')}>✕</button>
+          <button className="absolute left-4 md:left-8 text-white text-3xl" onClick={(e) => { e.stopPropagation(); prevItem(); }} aria-label={t('gallery.previous')}>‹</button>
+          <button className="absolute right-4 md:right-8 text-white text-3xl" onClick={(e) => { e.stopPropagation(); nextItem(); }} aria-label={t('gallery.next')}>›</button>
           <div className="max-w-5xl w-full px-4" onClick={(e) => e.stopPropagation()}>
             {lightbox.items[lightbox.index].type === 'image' ? (
               <img src={lightbox.items[lightbox.index].src} alt={lightbox.items[lightbox.index].alt || ''} className="w-full h-auto object-contain rounded-2xl" />

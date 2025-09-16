@@ -1,9 +1,11 @@
 import { FC, useState, useEffect } from 'react';
 import { CheckCircle, Clock, Sparkles, Zap, Target, ChevronDown, Phone, Users, Star, Award, User, Calendar, Trophy, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { fetchServicesPage, CmsServicesPage } from '../lib/cms';
 
 const Services: FC = () => {
+  const { t } = useTranslation();
   const [cmsData, setCmsData] = useState<CmsServicesPage | null>(null);
   const [error, setError] = useState<string | null>(null);
   
@@ -18,7 +20,7 @@ const Services: FC = () => {
         if (process.env.NODE_ENV === 'development') {
           console.error('Failed to load CMS data:', error);
         }
-        setError('Не удалось загрузить данные');
+        setError(t('common.error'));
       }
     };
 
@@ -29,19 +31,13 @@ const Services: FC = () => {
     {
       id: 'group',
       icon: <Users className="w-8 h-8" />,
-      title: 'Групповые тренировки',
-      subtitle: 'Для начинающих и любителей',
-      description: 'Тренировки в небольших группах до 8 человек с профессиональными тренерами. Идеально для изучения основ и социализации.',
+      title: t('services.groupTraining.title'),
+      subtitle: t('services.groupTraining.subtitle', 'Для начинающих и любителей'),
+      description: t('services.groupTraining.description'),
       priceMonthly: '200',
       pricePerSession: '60',
       originalPrice: '280',
-      features: [
-        { icon: <Target className="w-4 h-4" />, text: 'Все уровни подготовки' },
-        { icon: <Zap className="w-4 h-4" />, text: 'Современное оборудование' },
-        { icon: <Clock className="w-4 h-4" />, text: 'Гибкое расписание' },
-        { icon: <Users className="w-4 h-4" />, text: 'Дружелюбная атмосфера' },
-        { icon: <Award className="w-4 h-4" />, text: 'Прогресс отслеживание' }
-      ],
+      features: t('services.groupTraining.features', { returnObjects: true }) as string[],
       gradient: 'from-blue-500 via-blue-600 to-indigo-600',
       bgGradient: 'from-blue-50 to-indigo-50',
       popular: false,
@@ -50,53 +46,53 @@ const Services: FC = () => {
     {
       id: 'individual',
       icon: <User className="w-8 h-8" />,
-      title: 'Индивидуальные занятия',
-      subtitle: 'Максимальный результат',
-      description: 'Персональные тренировки с личным тренером для быстрого прогресса. Индивидуальный подход к каждому ученику.',
+      title: t('services.individual.title'),
+      subtitle: t('services.individual.subtitle'),
+      description: t('services.individual.description'),
       priceMonthly: '1400',
       pricePerSession: '400',
       originalPrice: '1800',
       features: [
-        { icon: <Target className="w-4 h-4" />, text: 'Индивидуальная программа' },
-        { icon: <Calendar className="w-4 h-4" />, text: 'Гибкий график' },
-        { icon: <Sparkles className="w-4 h-4" />, text: 'Максимальное внимание' },
-        { icon: <Zap className="w-4 h-4" />, text: 'Быстрый прогресс' },
-        { icon: <Target className="w-4 h-4" />, text: 'Видеоанализ техники' }
+        { icon: <Target className="w-4 h-4" />, text: t('services.individual.features.program') },
+        { icon: <Calendar className="w-4 h-4" />, text: t('services.individual.features.schedule') },
+        { icon: <Sparkles className="w-4 h-4" />, text: t('services.individual.features.attention') },
+        { icon: <Zap className="w-4 h-4" />, text: t('services.individual.features.progress') },
+        { icon: <Target className="w-4 h-4" />, text: t('services.individual.features.analysis') }
       ],
       gradient: 'from-orange-500 via-red-500 to-pink-500',
       bgGradient: 'from-orange-50 to-pink-50',
       popular: true,
-      badge: 'Популярно'
+      badge: t('services.individual.badge')
     },
     {
       id: 'competition',
       icon: <Trophy className="w-8 h-8" />,
-      title: 'Подготовка к соревнованиям',
-      subtitle: 'Профессиональный уровень',
-      description: 'Специализированная подготовка для участия в турнирах и соревнованиях. Для серьезных спортсменов.',
+      title: t('services.competition.title'),
+      subtitle: t('services.competition.subtitle'),
+      description: t('services.competition.description'),
       priceMonthly: '500',
       pricePerSession: null,
       originalPrice: '650',
       features: [
-        { icon: <Target className="w-4 h-4" />, text: 'Техническая подготовка' },
-        { icon: <Sparkles className="w-4 h-4" />, text: 'Тактическое планирование' },
-        { icon: <Award className="w-4 h-4" />, text: 'Психологическая поддержка' },
-        { icon: <Users className="w-4 h-4" />, text: 'Спарринг партнеры' },
-        { icon: <Zap className="w-4 h-4" />, text: 'Анализ соперников' }
+        { icon: <Target className="w-4 h-4" />, text: t('services.competition.features.technical') },
+        { icon: <Sparkles className="w-4 h-4" />, text: t('services.competition.features.tactical') },
+        { icon: <Award className="w-4 h-4" />, text: t('services.competition.features.psychological') },
+        { icon: <Users className="w-4 h-4" />, text: t('services.competition.features.sparring') },
+        { icon: <Zap className="w-4 h-4" />, text: t('services.competition.features.analysis') }
       ],
       gradient: 'from-yellow-500 via-amber-500 to-orange-500',
       bgGradient: 'from-yellow-50 to-amber-50',
       popular: false,
-      badge: 'Про'
+      badge: t('services.competition.badge')
     }
   ];
 
   const [billing, setBilling] = useState<'monthly' | 'per_session'>('monthly');
 
   const faqs: Array<{ q: string; a: string }> = [
-    { q: 'Как записаться на тренировку?', a: 'Оставьте заявку через контактную форму на странице Контакты или позвоните нам — подберём удобное время и группу.' },
-    { q: 'Можно ли прийти на пробное занятие?', a: 'Да, у нас есть пробная тренировка. Свяжитесь с администратором, чтобы согласовать дату и время.' },
-    { q: 'Нужен ли свой инвентарь?', a: 'Ракетки и воланы предоставим на первых занятиях. Позже поможем выбрать подходящее оборудование.' },
+    { q: t('services.faq.questions.howToSignUp.q'), a: t('services.faq.questions.howToSignUp.a') },
+    { q: t('services.faq.questions.trialSession.q'), a: t('services.faq.questions.trialSession.a') },
+    { q: t('services.faq.questions.equipment.q'), a: t('services.faq.questions.equipment.a') },
   ];
 
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -110,7 +106,7 @@ const Services: FC = () => {
             onClick={() => window.location.reload()} 
             className="px-4 py-2 bg-primary-blue text-white rounded hover:bg-blue-600"
           >
-            Попробовать снова
+            {t('common.retry')}
           </button>
         </div>
       </div>
@@ -335,15 +331,15 @@ const Services: FC = () => {
             <div className="text-center text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                 <Sparkles className="w-4 h-4 text-yellow-300" />
-                <span className="text-sm font-medium">Профессиональные тренировки</span>
+                <span className="text-sm font-medium">{t('services.hero.badge')}</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                {cmsData?.hero?.title || 'Наши услуги'}
+                {cmsData?.hero?.title || t('services.hero.title')}
               </h1>
               
               <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                {cmsData?.hero?.subtitle || 'Выберите идеальный формат тренировок для достижения ваших целей в бадминтоне'}
+                {cmsData?.hero?.subtitle || t('services.hero.subtitle')}
               </p>
               
               {/* Statistics with Entrance Animations Only */}
@@ -355,7 +351,7 @@ const Services: FC = () => {
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">500+</div>
-                  <div className="text-blue-100">Довольных учеников</div>
+                  <div className="text-blue-100">{t('services.hero.stats.students')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -365,7 +361,7 @@ const Services: FC = () => {
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">15+</div>
-                  <div className="text-blue-100">Лет опыта</div>
+                  <div className="text-blue-100">{t('services.hero.stats.experience')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -375,7 +371,7 @@ const Services: FC = () => {
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">3</div>
-                  <div className="text-blue-100">Формата тренировок</div>
+                  <div className="text-blue-100">{t('services.hero.stats.formats')}</div>
                 </motion.div>
               </div>
             </div>
@@ -389,10 +385,10 @@ const Services: FC = () => {
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">
-              Выберите свой формат
+              {t('services.pricing.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Каждый формат тренировок разработан для достижения конкретных целей
+              {t('services.pricing.subtitle')}
             </p>
           </div>
 
@@ -407,7 +403,7 @@ const Services: FC = () => {
                 }`} 
                 onClick={() => setBilling('monthly')}
               >
-                Месячная подписка
+                {t('services.pricing.monthly')}
               </button>
               <button 
                 className={`px-6 py-3 text-sm font-medium rounded-xl transition-all duration-300 ${
@@ -417,7 +413,7 @@ const Services: FC = () => {
                 }`} 
                 onClick={() => setBilling('per_session')}
               >
-                За занятие
+                {t('services.pricing.perSession')}
               </button>
             </div>
           </div>
@@ -486,18 +482,18 @@ const Services: FC = () => {
                       </span>
                       {(billing === 'monthly' ? service.priceMonthly : service.pricePerSession) !== '—' && (
                         <>
-                          <span className="text-lg text-gray-600">лей</span>
+                          <span className="text-lg text-gray-600">{t('services.pricing.currency')}</span>
                           <span className="text-sm text-gray-500">
-                            {billing === 'monthly' ? '/месяц' : '/занятие'}
+                            {billing === 'monthly' ? t('services.pricing.perMonth') : t('services.pricing.perSessionShort')}
                           </span>
                         </>
                       )}
                     </div>
                     {service.originalPrice && (
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-400 line-through">{service.originalPrice} лей</span>
+                        <span className="text-sm text-gray-400 line-through">{service.originalPrice} {t('services.pricing.currency')}</span>
                         <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                          Скидка {Math.round((1 - parseInt(billing === 'monthly' ? service.priceMonthly : service.pricePerSession || '0') / parseInt(service.originalPrice)) * 100)}%
+                          {t('services.pricing.discount')} {Math.round((1 - parseInt(billing === 'monthly' ? service.priceMonthly : service.pricePerSession || '0') / parseInt(service.originalPrice)) * 100)}%
                         </span>
                       </div>
                     )}
@@ -506,7 +502,7 @@ const Services: FC = () => {
                   {/* CTA Button */}
                   <button className={`relative z-10 w-full py-4 px-6 rounded-2xl font-semibold text-white bg-gradient-to-r ${service.gradient} hover:shadow-lg transition-all duration-300`}>
                     <div className="flex items-center justify-center gap-2">
-                      <span>Записаться</span>
+                      <span>{t('services.pricing.signUp')}</span>
                       <ArrowRight className="w-5 h-5" />
                     </div>
                   </button>
@@ -533,15 +529,15 @@ const Services: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h3 className="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">Сравнение форматов</h3>
-            <p className="text-lg text-gray-600">Выберите формат, который лучше всего подходит для ваших целей</p>
+            <h3 className="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">{t('services.comparison.title')}</h3>
+            <p className="text-lg text-gray-600">{t('services.comparison.subtitle')}</p>
           </motion.div>
           
           <div className="overflow-x-auto">
             <div className="min-w-[720px] rounded-3xl bg-white/80 backdrop-blur-sm border border-gray-200/50 shadow-2xl overflow-hidden">
               {/* Header */}
               <div className="grid grid-cols-4 gap-0 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-                <div className="px-6 py-4 text-sm font-medium">Параметр</div>
+                <div className="px-6 py-4 text-sm font-medium">{t('services.comparison.parameter')}</div>
                 {services.map((s) => (
                   <div key={s.id} className="px-6 py-4 text-sm font-semibold flex items-center gap-2">
                     <span className={`inline-block w-3 h-3 rounded-full bg-gradient-to-r ${s.gradient} shadow-sm`} />
@@ -553,11 +549,11 @@ const Services: FC = () => {
               {/* Rows */}
               <div className="divide-y divide-gray-100">
                 {[
-                  { k: 'Размер группы', v: ['до 8 человек', '1 на 1', '2–4 человека'] },
-                  { k: 'Индивидуальный план', v: ['Опционально', 'Да', 'Да'] },
-                  { k: 'Видеоанализ техники', v: ['Опционально', 'Да', 'Да'] },
-                  { k: 'Соревновательная практика', v: ['Клубные игры', 'По запросу', 'Регулярно'] },
-                  { k: 'Гибкость расписания', v: ['Фиксированное', 'Полная', 'Высокая'] },
+                  { k: t('services.comparison.groupSize'), v: [t('services.comparison.values.upTo8'), t('services.comparison.values.oneOnOne'), t('services.comparison.values.twoToFour')] },
+                  { k: t('services.comparison.individualPlan'), v: [t('services.comparison.values.optional'), t('services.comparison.values.yes'), t('services.comparison.values.yes')] },
+                  { k: t('services.comparison.videoAnalysis'), v: [t('services.comparison.values.optional'), t('services.comparison.values.yes'), t('services.comparison.values.yes')] },
+                  { k: t('services.comparison.competitivePractice'), v: [t('services.comparison.values.clubGames'), t('services.comparison.values.onRequest'), t('services.comparison.values.regularly')] },
+                  { k: t('services.comparison.scheduleFlexibility'), v: [t('services.comparison.values.fixed'), t('services.comparison.values.full'), t('services.comparison.values.high')] },
                 ].map((row, i, array) => (
                   <div key={i} className={`grid grid-cols-4 hover:bg-blue-50/50 transition-colors duration-200 ${i === array.length - 1 ? 'rounded-b-3xl overflow-hidden' : ''}`}>
                     <div className="px-6 py-4 text-sm font-medium text-gray-900 bg-gray-50/50">{row.k}</div>
@@ -566,22 +562,22 @@ const Services: FC = () => {
                         {val === 'Да' ? (
                           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-medium border border-emerald-200">
                             <CheckCircle className="w-3 h-3" />
-                            Да
+                            {t('services.comparison.values.yes')}
                           </span>
                         ) : val === 'Опционально' ? (
                           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-100 text-amber-800 text-xs font-medium border border-amber-200">
                             <Clock className="w-3 h-3" />
-                            Опционально
+                            {t('services.comparison.values.optional')}
                           </span>
                         ) : val === 'Полная' ? (
                           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-xs font-medium border border-green-200">
                             <Sparkles className="w-3 h-3" />
-                            Полная
+                            {t('services.comparison.values.full')}
                           </span>
                         ) : val === 'Высокая' ? (
                           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium border border-blue-200">
                             <Zap className="w-3 h-3" />
-                            Высокая
+                            {t('services.comparison.values.high')}
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium border border-gray-200">
@@ -615,9 +611,9 @@ const Services: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-6">Наши спортзалы</h2>
+            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-6">{t('services.gyms.title')}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Удобные локации с профессиональным оборудованием для тренировок по бадминтону
+              {t('services.gyms.subtitle')}
             </p>
             
             <motion.a
@@ -627,7 +623,7 @@ const Services: FC = () => {
               whileTap={{ scale: 0.95 }}
             >
               <span className="text-lg">🏸</span>
-              Посмотреть все залы
+              {t('services.gyms.viewAll')}
               <ArrowRight className="w-5 h-5" />
             </motion.a>
           </motion.div>
@@ -650,8 +646,8 @@ const Services: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">Часто задаваемые вопросы</h2>
-            <p className="text-xl text-gray-600">Ответы на популярные вопросы о наших услугах</p>
+            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">{t('services.faq.title')}</h2>
+            <p className="text-xl text-gray-600">{t('services.faq.subtitle')}</p>
           </motion.div>
 
           <div className="space-y-4">
@@ -698,7 +694,7 @@ const Services: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Готовы начать тренировки?
+            {t('services.cta.title')}
           </motion.h2>
           <motion.p 
             className="text-xl opacity-90 mb-8 max-w-2xl mx-auto"
@@ -707,7 +703,7 @@ const Services: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Свяжитесь с нами сегодня и получите персональную консультацию по выбору программы тренировок
+            {t('services.cta.subtitle')}
           </motion.p>
           <motion.div 
             className="flex flex-col sm:flex-row gap-4 justify-center"
@@ -720,14 +716,14 @@ const Services: FC = () => {
               href="/contact"
               className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
             >
-              Связаться с нами
+              {t('services.cta.contact')}
             </a>
             <a
               href="tel:+37322000000"
               className="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-blue-600 transition-colors"
             >
               <Phone className="w-5 h-5 mr-2" />
-              Позвонить сейчас
+              {t('services.cta.call')}
             </a>
           </motion.div>
         </div>

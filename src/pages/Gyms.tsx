@@ -2,8 +2,10 @@ import { useState, useEffect, type FC } from 'react';
 import { MapPin, Phone, Clock, ArrowLeft, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fetchGyms, type CmsGym } from '../lib/cms';
+import { useTranslation } from 'react-i18next';
 
 const Gyms: FC = () => {
+  const { t } = useTranslation();
   const [cmsGyms, setCmsGyms] = useState<CmsGym[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +21,7 @@ const Gyms: FC = () => {
         setCmsGyms(gymsData);
         setError(null);
       } catch (err) {
-        setError('Ошибка загрузки данных спортзалов');
+        setError(t('common.error'));
         console.error('Error loading gyms:', err);
       } finally {
         setLoading(false);
@@ -227,7 +229,7 @@ const Gyms: FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Загрузка спортзалов...</p>
+          <p className="text-gray-600">{t('gyms.loading')}</p>
         </div>
       </div>
     );
@@ -242,7 +244,7 @@ const Gyms: FC = () => {
             onClick={() => window.location.reload()} 
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Попробовать снова
+            {t('common.retry')}
           </button>
         </div>
       </div>
@@ -432,15 +434,15 @@ const Gyms: FC = () => {
             <div className="text-center text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                 <span className="text-lg">🏸</span>
-                <span className="text-sm font-medium">Современные спортзалы</span>
+                <span className="text-sm font-medium">{t('gyms.hero.badge')}</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                Наши Спортзалы
+                {t('gyms.hero.title')}
               </h1>
               
               <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                Выберите удобную локацию для тренировок в современных залах с профессиональным оборудованием
+                {t('gyms.hero.subtitle')}
               </p>
               
               {/* Statistics */}
@@ -452,7 +454,7 @@ const Gyms: FC = () => {
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">3</div>
-                  <div className="text-blue-100">Спортивных зала</div>
+                  <div className="text-blue-100">{t('gyms.hero.stats.facilities')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -462,7 +464,7 @@ const Gyms: FC = () => {
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">6</div>
-                  <div className="text-blue-100">Кортов для игры</div>
+                  <div className="text-blue-100">{t('gyms.hero.stats.courts')}</div>
                 </motion.div>
                 
                 <motion.div 
@@ -472,7 +474,7 @@ const Gyms: FC = () => {
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
                   <div className="text-4xl font-bold text-yellow-300 mb-2">2</div>
-                  <div className="text-blue-100">Локации в городе</div>
+                  <div className="text-blue-100">{t('gyms.hero.stats.locations')}</div>
                 </motion.div>
               </div>
             </div>
@@ -492,7 +494,7 @@ const Gyms: FC = () => {
                   ? 'bg-blue-600 text-white shadow-lg'
                   : 'bg-white text-gray-600 hover:bg-gray-50'
               }`}>
-              Все залы
+              {t('gyms.filters.all')}
             </button>
             
             <button
@@ -514,7 +516,7 @@ const Gyms: FC = () => {
                   : 'bg-white text-gray-600 hover:bg-gray-50'
               }`}>
               <span className="text-lg">🏸</span>
-              Любители
+              {t('gyms.filters.adults')}
             </button>
           </div>
 
@@ -587,7 +589,7 @@ const Gyms: FC = () => {
                       {/* Action Button */}
                       <button className="w-full bg-gradient-to-r from-primary-blue to-primary-orange text-white py-4 rounded-2xl font-bold text-lg hover:shadow-lg transition-all duration-200">
                         <span className="flex items-center justify-center gap-2">
-                          Подробнее
+                          {t('gyms.moreDetails')}
                           →
                         </span>
                       </button>
@@ -604,8 +606,8 @@ const Gyms: FC = () => {
                   transition={{ duration: 0.5 }}
                 >
                   <div className="text-6xl mb-4">🏸</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Залы не найдены</h3>
-                  <p className="text-gray-600">Попробуйте изменить фильтр для поиска подходящих залов</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('gyms.noGymsFound')}</h3>
+                  <p className="text-gray-600">{t('gyms.tryChangeFilter')}</p>
                 </motion.div>
               )}
             </>
@@ -624,7 +626,7 @@ const Gyms: FC = () => {
                   className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   <ArrowLeft className="w-5 h-5" />
-                  Назад к выбору залов
+                  {t('gyms.backToSelection')}
                 </button>
 
                 {/* Gym Header */}
@@ -654,7 +656,7 @@ const Gyms: FC = () => {
                     <div className="bg-white rounded-2xl shadow-lg p-6">
                       <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                         <Clock className="w-6 h-6 text-blue-500" />
-                        Расписание тренировок
+                        {t('gyms.schedule.title')}
                       </h2>
                       
                       <div className="space-y-4">
@@ -688,7 +690,7 @@ const Gyms: FC = () => {
                         <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                         </svg>
-                        Стоимость занятий
+                        {t('gyms.pricing.title')}
                       </h2>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -696,19 +698,19 @@ const Gyms: FC = () => {
                           <div className="border border-green-200 rounded-xl p-4">
                             <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
                               <span>👨‍👩‍👧‍👦</span>
-                              Детские группы
+                              {t('gyms.pricing.childrenGroups')}
                             </h3>
                             <div className="space-y-2 text-sm">
                               <div className="flex justify-between">
-                                <span>Месячный абонемент:</span>
+                                <span>{t('gyms.pricing.monthly')}:</span>
                                 <span className="font-semibold">{selectedGym.pricing?.children?.monthly}</span>
                               </div>
                               <div className="flex justify-between">
-                                <span>Разовое занятие:</span>
+                                <span>{t('gyms.pricing.single')}:</span>
                                 <span className="font-semibold">{selectedGym.pricing?.children?.single}</span>
                               </div>
                               <div className="flex justify-between text-green-600">
-                                <span>Пробное занятие:</span>
+                                <span>{t('gyms.pricing.trial')}:</span>
                                 <span className="font-semibold">{selectedGym.pricing?.children?.trial}</span>
                               </div>
                             </div>
@@ -719,19 +721,19 @@ const Gyms: FC = () => {
                           <div className="border border-blue-200 rounded-xl p-4">
                             <h3 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
                               <span>🏸</span>
-                              Взрослые группы
+                              {t('gyms.pricing.adultGroups')}
                             </h3>
                             <div className="space-y-2 text-sm">
                               <div className="flex justify-between">
-                                <span>Месячный абонемент:</span>
+                                <span>{t('gyms.pricing.monthly')}:</span>
                                 <span className="font-semibold">{selectedGym.pricing?.adults?.monthly}</span>
                               </div>
                               <div className="flex justify-between">
-                                <span>Разовое занятие:</span>
+                                <span>{t('gyms.pricing.single')}:</span>
                                 <span className="font-semibold">{selectedGym.pricing?.adults?.single}</span>
                               </div>
                               <div className="flex justify-between text-blue-600">
-                                <span>Пробное занятие:</span>
+                                <span>{t('gyms.pricing.trial')}:</span>
                                 <span className="font-semibold">{selectedGym.pricing?.adults?.trial}</span>
                               </div>
                             </div>
@@ -742,7 +744,7 @@ const Gyms: FC = () => {
 
                     {/* Gallery */}
                     <div className="bg-white rounded-2xl shadow-lg p-6">
-                      <h2 className="text-2xl font-bold text-gray-900 mb-6">Фото зала</h2>
+                      <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('gyms.gallery.title')}</h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {selectedGym.gallery?.map((photo, idx) => (
                           <div key={idx} className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
@@ -763,14 +765,14 @@ const Gyms: FC = () => {
                     <div className="bg-white rounded-2xl shadow-lg p-6">
                       <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <Phone className="w-5 h-5 text-blue-500" />
-                        Контакты
+                        {t('gyms.contact.title')}
                       </h2>
                       
                       <div className="space-y-3">
                         <div className="flex items-start gap-3">
                           <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
                           <div>
-                            <p className="text-sm text-gray-600">Адрес</p>
+                            <p className="text-sm text-gray-600">{t('gyms.contact.address')}</p>
                             <p className="font-medium">{selectedGym.address}</p>
                           </div>
                         </div>
@@ -778,7 +780,7 @@ const Gyms: FC = () => {
                         <div className="flex items-start gap-3">
                           <Phone className="w-5 h-5 text-gray-400 mt-0.5" />
                           <div>
-                            <p className="text-sm text-gray-600">Телефон</p>
+                            <p className="text-sm text-gray-600">{t('gyms.contact.phone')}</p>
                             <a href={`tel:${selectedGym.phone}`} className="font-medium text-blue-600 hover:text-blue-800">
                               {selectedGym.phone}
                             </a>
@@ -790,7 +792,7 @@ const Gyms: FC = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                           </svg>
                           <div>
-                            <p className="text-sm text-gray-600">Email</p>
+                            <p className="text-sm text-gray-600">{t('gyms.contact.email')}</p>
                             <a href={`mailto:${selectedGym.email}`} className="font-medium text-blue-600 hover:text-blue-800">
                               {selectedGym.email}
                             </a>
@@ -802,7 +804,7 @@ const Gyms: FC = () => {
                         <button className={`w-full py-3 px-4 bg-gradient-to-r ${selectedGym.badgeColor} text-white rounded-lg font-medium hover:shadow-md transition-all duration-200`}>
                           <div className="flex items-center justify-center gap-2">
                             <Phone className="w-4 h-4" />
-                            Записаться на тренировку
+                            {t('gyms.contact.signUp')}
                           </div>
                         </button>
                         
@@ -813,7 +815,7 @@ const Gyms: FC = () => {
                           className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                         >
                           <MapPin className="w-5 h-5" />
-                          Открыть на карте
+                          {t('gyms.contact.openMap')}
                         </a>
                       </div>
                     </div>
@@ -824,7 +826,7 @@ const Gyms: FC = () => {
                         <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                         </svg>
-                        Тренеры
+                        {t('gyms.trainers.title')}
                       </h2>
                       
                       <div className="space-y-4">
@@ -847,7 +849,7 @@ const Gyms: FC = () => {
 
                     {/* Features */}
                     <div className="bg-white rounded-2xl shadow-lg p-6">
-                      <h2 className="text-xl font-bold text-gray-900 mb-4">Особенности зала</h2>
+                      <h2 className="text-xl font-bold text-gray-900 mb-4">{t('gyms.features.title')}</h2>
                       <div className="space-y-2">
                         {selectedGym.features?.map((feature: string, idx: number) => (
                           <div key={idx} className="flex items-center gap-2">
