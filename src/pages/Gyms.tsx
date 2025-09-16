@@ -505,7 +505,7 @@ const Gyms: FC = () => {
                   : 'bg-white text-gray-600 hover:bg-gray-50'
               }`}>
               <span className="text-lg">👨‍👩‍👧‍👦</span>
-              Детские группы
+              {t('gyms.filters.children')}
             </button>
             
             <button
@@ -565,13 +565,13 @@ const Gyms: FC = () => {
                         {gym.hasChildren && (
                           <span className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-2xl text-sm font-semibold border border-green-200/50">
                             <span className="text-base">👨‍👩‍👧‍👦</span>
-                            Детские
+                            {t('gyms.tags.children')}
                           </span>
                         )}
                         {gym.hasAdults && (
                           <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-primary-blue rounded-2xl text-sm font-semibold border border-primary-blue/20">
                             <span className="text-base">🏸</span>
-                            Взрослые
+                            {t('gyms.tags.adults')}
                           </span>
                         )}
                       </div>

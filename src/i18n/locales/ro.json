@@ -217,11 +217,46 @@
     "emailUs": "Scrie-ne"
   },
   "gyms": {
-    "title": "Sălile Noastre",
-    "subtitle": "Săli moderne în diferite cartiere ale orașului",
-    "heroTitle": "Săli de sport",
+    "title": "Sălile noastre",
+    "subtitle": "Facilități moderne în diferite sectoare ale orașului",
+    "heroTitle": "Săli sportive",
     "heroSubtitle": "Săli moderne cu echipament profesional",
-    "heroDescription": "3 săli în diferite cartiere din Chișinău pentru confortul tău"
+    "heroDescription": "3 săli în diferite sectoare din Chișinău pentru confortul dumneavoastră",
+    "hero": {
+      "badge": "Facilități profesionale",
+      "title": "Sălile noastre",
+      "subtitle": "Facilități moderne cu echipament profesional în diferite sectoare din Chișinău",
+      "stats": {
+        "facilities": "Săli",
+        "courts": "Terenuri",
+        "locations": "Sectoare"
+      }
+    },
+    "filters": {
+      "all": "Toate sălile",
+      "children": "Grupuri copii",
+      "adults": "Grupuri adulți"
+    },
+    "tags": {
+      "children": "Copii",
+      "adults": "Adulți"
+    },
+    "moreDetails": "Mai multe detalii",
+    "noGymsFound": "Nu s-au găsit săli",
+    "tryChangeFilter": "Încercați să schimbați filtrul",
+    "backToSelection": "Înapoi la selectarea sălii",
+    "schedule": {
+      "title": "Program"
+    },
+    "pricing": {
+      "title": "Prețuri",
+      "childrenGroups": "Grupuri copii",
+      "adultGroups": "Grupuri adulți",
+      "monthly": "Abonament lunar",
+      "single": "Ședință unică",
+      "trial": "Ședință de probă"
+    },
+    "loading": "Se încarcă sălile..."
   },
   "gallery": {
     "title": "Galerie",
@@ -252,15 +287,25 @@
   },
   "news": {
     "title": "Știri și Evenimente",
-    "subtitle": "Urmărește ultimele știri de la clubul nostru și evenimentele mondiale de badminton",
+    "subtitle": "Urmăriți ultimele știri de la clubul nostru și evenimentele mondiale de badminton",
+    "hero": {
+      "badge": "Știri și Media",
+      "title": "Știri și Evenimente",
+      "subtitle": "Urmăriți ultimele știri de la clubul nostru și evenimentele mondiale de badminton",
+      "stats": {
+        "articles": "Articole",
+        "events": "Evenimente",
+        "categories": "Categorii"
+      }
+    },
     "categories": {
       "all": "Toate",
       "world": "Știri mondiale",
       "club": "Știri club",
       "events": "Evenimente"
     },
-    "searchPlaceholder": "Caută știri...",
-    "readMore": "Citește",
+    "searchPlaceholder": "Căutare știri...",
+    "readMore": "Citește mai mult",
     "loadingText": "Se încarcă...",
     "noNews": "Nu există materiale încă"
   },

@@ -5,7 +5,7 @@
     "services": "Services",
     "gyms": "Gyms",
     "gallery": "Gallery",
-    "contacts": "Contact",
+    "contacts": "Contacts",
     "news": "News",
     "language": "Language"
   },
@@ -16,7 +16,7 @@
     "joinButton": "Join Us",
     "learnMoreButton": "Watch Video",
     "badge": "Professional club since 2010",
-    "scrollDown": "Scroll Down"
+    "scrollDown": "Scroll down"
   },
   "stats": {
     "members": "Members",
@@ -51,91 +51,99 @@
     "individual": {
       "title": "Individual Training",
       "subtitle": "Personal approach",
-      "description": "One-on-one with a coach for maximum learning efficiency and rapid progress.",
-      "features": {
-        "program": "Individual program",
-        "schedule": "Flexible schedule",
-        "attention": "100% coach attention",
-        "progress": "Rapid progress",
-        "analysis": "Video technique analysis"
-      },
+      "description": "One-on-one sessions with a coach for maximum progress and individual attention.",
+      "features": [
+        "Personal training program",
+        "Individual approach",
+        "Flexible schedule",
+        "Quick progress",
+        "Technical analysis"
+      ],
       "badge": "Effective"
     },
     "competition": {
-      "title": "Competition Preparation",
-      "subtitle": "For athletes",
-      "description": "Specialized training for participation in tournaments and competitions of various levels.",
-      "features": {
-        "technical": "Technical mastery",
-        "tactical": "Tactical preparation",
-        "psychological": "Psychological stability",
-        "sparring": "Sparring practice",
-        "analysis": "Opponent game analysis"
-      },
-      "badge": "Pro"
+      "title": "Competition Training",
+      "subtitle": "For advanced players",
+      "description": "Intensive training for tournament preparation and competitive play.",
+      "features": [
+        "Tournament preparation",
+        "Advanced techniques",
+        "Tactical training",
+        "Mental preparation",
+        "Competition experience"
+      ],
+      "badge": "Professional"
     },
     "pricing": {
-      "title": "Training Costs",
-      "subtitle": "Choose the right plan",
-      "perSession": "per session",
-      "perMonth": "per month",
+      "title": "Pricing",
+      "subtitle": "Choose your plan",
       "monthly": "Monthly",
       "annual": "Annual",
-      "currency": "MDL",
-      "discount": "10% discount when paying for 3 months",
-      "signUp": "Sign Up"
-    },
-    "comparison": {
-      "title": "Format Comparison",
-      "subtitle": "Choose the optimal option for yourself",
-      "parameter": "Parameter",
-      "groupSize": "Group size",
-      "individualPlan": "Individual plan",
-      "videoAnalysis": "Video analysis",
-      "competitivePractice": "Competitive practice",
-      "scheduleFlexibility": "Schedule flexibility",
-      "values": {
-        "upTo8": "Up to 8 people",
-        "oneOnOne": "1 on 1",
-        "twoToFour": "2-4 people",
-        "optional": "Optional",
-        "yes": "Yes",
-        "clubGames": "Club games",
-        "onRequest": "On request",
-        "regularly": "Regularly",
-        "fixed": "Fixed",
-        "full": "Full",
+      "save": "Save 20%",
+      "mostPopular": "Most Popular",
+      "getStarted": "Get Started",
+      "features": "What's included:",
+      "priority": {
+        "low": "Low",
+        "medium": "Medium",
         "high": "High"
       }
     },
     "gyms": {
       "title": "Our Gyms",
-      "subtitle": "3 modern gyms in different districts of the city",
-      "viewAll": "View all gyms"
+      "subtitle": "3 modern facilities in different districts of the city",
+      "viewAll": "View All Gyms"
     },
     "faq": {
       "title": "Frequently Asked Questions",
-      "subtitle": "Answers to popular questions about training",
-      "questions": {
-        "howToSignUp": {
-          "q": "How to sign up for training?",
-          "a": "Call us or fill out the form on the website. We will find a convenient time and gym for you."
-        },
-        "trialSession": {
-          "q": "Is there a trial session?",
-          "a": "Yes, you can attend the first session for free to meet the coach and format."
-        },
-        "equipment": {
-          "q": "Do I need my own equipment?",
-          "a": "Rackets and shuttlecocks are provided by the club. You only need sports shoes and clothing."
-        }
-      }
+      "subtitle": "Everything you need to know about our services"
     },
     "cta": {
-      "title": "Ready to start training?",
-      "subtitle": "Sign up for a trial session today",
-      "contact": "Contact us",
-      "call": "Call"
+      "title": "Ready to start?",
+      "subtitle": "Join our badminton community today",
+      "button": "Start Training"
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "About ALTIUS",
+      "title": "Professional Badminton Club",
+      "subtitle": "We have been developing badminton in Moldova since 2010",
+      "description": "Our mission is to make badminton accessible to everyone and help each player reach their potential"
+    },
+    "stats": {
+      "experience": "15+",
+      "experienceDesc": "Years of Experience",
+      "participants": "500+",
+      "participantsDesc": "Happy Students",
+      "courts": "3",
+      "courtsDesc": "Modern Courts",
+      "tournaments": "50+",
+      "tournamentsDesc": "Tournaments Organized"
+    },
+    "values": {
+      "title": "Our Values",
+      "subtitle": "What makes us special",
+      "professionalism": "Professionalism",
+      "professionalismDesc": "High-quality training with certified coaches and modern equipment",
+      "friendliness": "Friendly Atmosphere",
+      "friendlinessDesc": "Welcoming environment for players of all ages and skill levels",
+      "results": "Focus on Results",
+      "resultsDesc": "Individual approach to each student to achieve maximum progress"
+    },
+    "team": {
+      "title": "Our Team",
+      "subtitle": "Meet our professional coaches",
+      "experience": "Experience",
+      "specialization": "Specialization"
+    },
+    "history": {
+      "title": "Our History",
+      "subtitle": "The path from idea to leading badminton club"
+    },
+    "roadmap": {
+      "title": "Development Plans",
+      "subtitle": "Our goals for the coming years"
     }
   },
   "contact": {
@@ -161,10 +169,45 @@
   },
   "gyms": {
     "title": "Our Gyms",
-    "subtitle": "Modern gyms in different districts of the city",
+    "subtitle": "Modern facilities in different districts of the city",
     "heroTitle": "Sports Halls",
     "heroSubtitle": "Modern halls with professional equipment",
-    "heroDescription": "3 halls in different districts of Chisinau for your convenience"
+    "heroDescription": "3 halls in different districts of Chisinau for your convenience",
+    "hero": {
+      "badge": "Professional Facilities",
+      "title": "Our Gyms",
+      "subtitle": "Modern facilities with professional equipment in different districts of Chisinau",
+      "stats": {
+        "facilities": "Facilities",
+        "courts": "Courts",
+        "locations": "Districts"
+      }
+    },
+    "filters": {
+      "all": "All Gyms",
+      "children": "Children Groups",
+      "adults": "Adult Groups"
+    },
+    "tags": {
+      "children": "Children",
+      "adults": "Adults"
+    },
+    "moreDetails": "More Details",
+    "noGymsFound": "No gyms found",
+    "tryChangeFilter": "Try changing the filter",
+    "backToSelection": "Back to gym selection",
+    "schedule": {
+      "title": "Schedule"
+    },
+    "pricing": {
+      "title": "Pricing",
+      "childrenGroups": "Children Groups",
+      "adultGroups": "Adult Groups",
+      "monthly": "Monthly subscription",
+      "single": "Single session",
+      "trial": "Trial session"
+    },
+    "loading": "Loading gyms..."
   },
   "gallery": {
     "title": "Gallery",
@@ -194,8 +237,18 @@
     "next": "Next"
   },
   "news": {
-    "title": "News and Events",
+    "title": "News & Events",
     "subtitle": "Follow the latest news from our club and world badminton events",
+    "hero": {
+      "badge": "News & Media",
+      "title": "News & Events",
+      "subtitle": "Follow the latest news from our club and world badminton events",
+      "stats": {
+        "articles": "Articles",
+        "events": "Events",
+        "categories": "Categories"
+      }
+    },
     "categories": {
       "all": "All",
       "world": "World News",
@@ -203,66 +256,9 @@
       "events": "Events"
     },
     "searchPlaceholder": "Search news...",
-    "readMore": "Read",
+    "readMore": "Read More",
     "loadingText": "Loading...",
     "noNews": "No materials yet"
-  },
-  "about": {
-    "hero": {
-      "badge": "About Us",
-      "title": "ALTIUS Badminton Club",
-      "subtitle": "Professional badminton training in Chisinau since 2010"
-    },
-    "stats": {
-      "experience": "15+",
-      "experienceDesc": "Years of Experience",
-      "participants": "500+",
-      "participantsDesc": "Happy Students",
-      "courts": "3",
-      "courtsDesc": "Modern Courts",
-      "tournaments": "50+",
-      "tournamentsDesc": "Tournaments Organized"
-    },
-    "values": {
-      "title": "Our Values",
-      "subtitle": "What makes us special",
-      "professionalism": "Professionalism",
-      "professionalismDesc": "High-quality training with certified coaches and modern equipment",
-      "friendliness": "Friendly Atmosphere",
-      "friendlinessDesc": "Welcoming environment for players of all ages and skill levels",
-      "results": "Focus on Results",
-      "resultsDesc": "Individual approach to each student to achieve maximum progress"
-    },
-    "team": {
-      "title": "Our Team",
-      "subtitle": "Meet our professional coaches",
-      "founder": "Founder & Head Coach",
-      "masterSport": "Master of Sports",
-      "founderName": "Alexei Petrov",
-      "founderRole": "Head Coach & Club Founder",
-      "founderExp1": "15+ years of coaching experience",
-      "founderExp2": "Master of Sports in Badminton",
-      "founderExp3": "Trained over 500 students",
-      "founderDesc1": "Alexei founded ALTIUS in 2010 with a vision to develop badminton in Moldova. His professional approach and dedication have helped hundreds of students achieve their goals.",
-      "founderDesc2": "Under his leadership, the club has become one of the leading badminton training centers in Chisinau, known for its high-quality coaching and friendly atmosphere.",
-      "founderQuote": "Every student is unique, and our goal is to help each person reach their maximum potential in badminton.",
-      "coaches": "Our Coaches"
-    },
-    "history": {
-      "title": "Our History",
-      "subtitle": "Journey of growth and development",
-      "development": "Club Development",
-      "showAll": "Show All Events"
-    },
-    "roadmap": {
-      "title": "Development Roadmap",
-      "subtitle": "Our plans and achievements",
-      "scrollHint": "Scroll to explore our journey",
-      "swipeHint": "Swipe to navigate",
-      "done": "Completed",
-      "inProgress": "In Progress",
-      "planned": "Planned"
-    }
   },
   "footer": {
     "description": "Professional badminton club in Chisinau",
@@ -273,8 +269,8 @@
   "common": {
     "loading": "Loading...",
     "error": "Failed to load data",
-    "retry": "Try Again",
-    "readMore": "Read More",
+    "retry": "Try again",
+    "readMore": "Read more",
     "close": "Close",
     "save": "Save",
     "cancel": "Cancel",
