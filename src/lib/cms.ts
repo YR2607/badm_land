@@ -574,6 +574,10 @@ export type CmsServicesPage = {
       icon: string;
       ageGroup?: string;
       duration?: string;
+      pricing?: {
+        monthly?: string;
+        perSession?: string;
+      };
     }>;
   };
   seo?: {

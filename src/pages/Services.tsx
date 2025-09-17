@@ -27,6 +27,36 @@ const Services: FC = () => {
     loadCmsData();
   }, []);
 
+  // Функция для получения цены из CMS или fallback
+  const getServicePricing = (serviceId: string, type: 'monthly' | 'perSession') => {
+    const cmsService = cmsData?.servicesSection?.services?.find(s => 
+      s.title.toLowerCase().includes(serviceId === 'group' ? 'группов' : 
+                                    serviceId === 'individual' ? 'индивидуал' : 'соревнован')
+    );
+    
+    if (cmsService?.pricing) {
+      return type === 'monthly' ? cmsService.pricing.monthly : cmsService.pricing.perSession;
+    }
+    
+    // Fallback цены
+    const fallbackPrices = {
+      group: { monthly: '200', perSession: '60', original: '280' },
+      individual: { monthly: '1400', perSession: '400', original: '1800' },
+      competition: { monthly: '500', perSession: null, original: '650' }
+    };
+    
+    return fallbackPrices[serviceId as keyof typeof fallbackPrices]?.[type] || '0';
+  };
+
+  const getOriginalPrice = (serviceId: string) => {
+    const fallbackPrices = {
+      group: '280',
+      individual: '1800', 
+      competition: '650'
+    };
+    return fallbackPrices[serviceId as keyof typeof fallbackPrices] || '0';
+  };
+
   const services = [
     {
       id: 'group',
@@ -34,9 +64,9 @@ const Services: FC = () => {
       title: t('services.groupTraining.title'),
       subtitle: t('services.groupTraining.subtitle', 'Для начинающих и любителей'),
       description: t('services.groupTraining.description'),
-      priceMonthly: '200',
-      pricePerSession: '60',
-      originalPrice: '280',
+      priceMonthly: getServicePricing('group', 'monthly'),
+      pricePerSession: getServicePricing('group', 'perSession'),
+      originalPrice: getOriginalPrice('group'),
       features: t('services.groupTraining.features', { returnObjects: true }) as string[],
       gradient: 'from-blue-500 via-blue-600 to-indigo-600',
       bgGradient: 'from-blue-50 to-indigo-50',
@@ -49,9 +79,9 @@ const Services: FC = () => {
       title: t('services.individual.title'),
       subtitle: t('services.individual.subtitle'),
       description: t('services.individual.description'),
-      priceMonthly: '1400',
-      pricePerSession: '400',
-      originalPrice: '1800',
+      priceMonthly: getServicePricing('individual', 'monthly'),
+      pricePerSession: getServicePricing('individual', 'perSession'),
+      originalPrice: getOriginalPrice('individual'),
       features: [
         { icon: <Target className="w-4 h-4" />, text: t('services.individual.features.program') },
         { icon: <Calendar className="w-4 h-4" />, text: t('services.individual.features.schedule') },
@@ -70,9 +100,9 @@ const Services: FC = () => {
       title: t('services.competition.title'),
       subtitle: t('services.competition.subtitle'),
       description: t('services.competition.description'),
-      priceMonthly: '500',
-      pricePerSession: null,
-      originalPrice: '650',
+      priceMonthly: getServicePricing('competition', 'monthly'),
+      pricePerSession: getServicePricing('competition', 'perSession'),
+      originalPrice: getOriginalPrice('competition'),
       features: [
         { icon: <Target className="w-4 h-4" />, text: t('services.competition.features.technical') },
         { icon: <Sparkles className="w-4 h-4" />, text: t('services.competition.features.tactical') },
