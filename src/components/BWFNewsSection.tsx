@@ -11,18 +11,44 @@ const BWFNewsSection: FC = () => {
     let alive = true
     const run = async () => {
       try {
-        // Try API endpoint first (for production), fallback to static file (for development)
+        // Prioritize static JSON file (updated by GitHub Actions) over unreliable API
         let data
+        let dataSource = 'unknown'
+        
         try {
-          const r = await fetch('/api/bwf-news?refresh=1', { cache: 'no-store' })
-          data = await r.json()
-        } catch {
-          // Fallback to static JSON file for development
-          const r = await fetch('/data/bwf_news.json', { cache: 'no-store' })
-          data = await r.json()
+          // Try static JSON file first (updated by GitHub Actions every 4 hours)
+          const r = await fetch('/data/bwf_news.json', { 
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' }
+          })
+          if (r.ok) {
+            data = await r.json()
+            dataSource = 'static'
+          }
+        } catch (staticError) {
+          console.warn('Failed to load static BWF news:', staticError)
         }
+        
+        // Fallback to API endpoint if static file fails
+        if (!data || !data.items || data.items.length === 0) {
+          try {
+            const r = await fetch('/api/bwf-news?refresh=1', { cache: 'no-store' })
+            if (r.ok) {
+              data = await r.json()
+              dataSource = 'api'
+            }
+          } catch (apiError) {
+            console.warn('Failed to load BWF news from API:', apiError)
+          }
+        }
+        
         if (!alive) return
-        const arr: Item[] = (data?.items || []) as Item[]
+        
+        if (!data || !data.items) {
+          throw new Error('Нет данных о новостях BWF')
+        }
+        
+        const arr: Item[] = (data.items || []) as Item[]
         const sorted = arr
           .slice()
           .sort((a: any, b: any) => {
@@ -30,10 +56,13 @@ const BWFNewsSection: FC = () => {
             const db = new Date(b?.date || 0).getTime()
             return db - da
           })
+        
+        console.log(`BWF news loaded from ${dataSource}, ${sorted.length} articles`)
         setItems(sorted)
       } catch (e: any) {
         if (!alive) return
-        setError(e?.message || 'Ошибка загрузки')
+        console.error('BWF news loading error:', e)
+        setError(e?.message || 'Ошибка загрузки новостей BWF')
       }
     }
     run()
