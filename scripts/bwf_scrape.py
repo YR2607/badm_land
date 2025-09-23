@@ -22,7 +22,9 @@ OUT_PATH = os.path.join(ROOT, 'public', 'data', 'bwf_news.json')
 OVERRIDES_PATH = os.path.join(ROOT, 'scripts', 'image_overrides.json')
 
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (compatible; AltiusSiteBot/1.0; +https://badm-land-main.vercel.app)'
+    'User-Agent': 'Mozilla/5.0 (compatible; AltiusSiteBot/1.0; +https://badm-land-main.vercel.app)',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9'
 }
 
 SCRAPERAPI_KEY = os.getenv('SCRAPERAPI_KEY')
@@ -33,6 +35,10 @@ BWF_MODE = (os.getenv('BWF_MODE', '').strip().lower() or 'default')  # 'default'
 
 def is_official_host(host: str) -> bool:
     return host == 'bwfbadminton.com' or host.endswith('.bwfbadminton.com')
+
+def is_main_host(host: str) -> bool:
+    """Return True only for the primary site host (no subdomains)."""
+    return (host or '').lower() == 'bwfbadminton.com'
 
 
 _MONTH_RE = r"(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)"
@@ -134,7 +140,8 @@ def discover_from_official_lists(limit: int = 40) -> list[str]:
         abs_url = to_abs_url(base, href)
         try:
             u = urlparse(abs_url)
-            if is_official_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path):
+            # Strictly require the main site host and a news path
+            if is_main_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path):
                 links.append(u.geturl())
         except Exception:
             continue
@@ -177,7 +184,8 @@ def parse_bwf_main_pages(page_url: str, limit: int = 40) -> list[dict]:
             
         try:
             u = urlparse(href_abs)
-            if not (u.scheme and is_official_host((u.hostname or '').lower())):
+            # Only accept links from the main site host
+            if not (u.scheme and is_main_host((u.hostname or '').lower())):
                 continue
         except Exception:
             continue
@@ -500,7 +508,7 @@ def parse_listing_latest(base: str, limit: int = 40) -> list[dict]:
         href_abs = to_abs_url(base, href)
         try:
             u = urlparse(href_abs)
-            if not (u.scheme and is_official_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path)):
+            if not (u.scheme and is_main_host((u.hostname or '').lower()) and re.search(r'/news/[^/].+', u.path)):
                 return
         except Exception:
             return
@@ -1039,14 +1047,49 @@ def scrape() -> dict:
             except Exception:
                 return datetime.min.replace(tzinfo=timezone.utc)
         uniq_o.sort(key=get_date_o, reverse=True)
+        # If we found some items and the newest item is recent enough, return them.
         if uniq_o:
-            print(f"Official latest: {len(uniq_o)} items (top 5 titles): {[it.get('title') for it in uniq_o[:5]]}")
+            newest = uniq_o[0].get('date') if uniq_o else ''
+            print(f"Official latest: {len(uniq_o)} items; newest={newest}; sample={[it.get('title') for it in uniq_o[:5]]}")
             return {
                 'scraped_at': datetime.now(timezone.utc).isoformat(),
                 'items': uniq_o[:20],
             }
     except Exception as e:
         print(f"Official latest parse failed: {e}")
+
+    # Stage 0b: Broader parse from BWF main pages if Latest News block not found
+    try:
+        print("Trying broader parse on BWF main pages ...")
+        broad_items = []
+        for u in ['https://bwfbadminton.com/news/', 'https://bwfbadminton.com/']:
+            part = parse_bwf_main_pages(u, limit=50)
+            if part:
+                broad_items.extend(part)
+        # Deduplicate and sort
+        seen_b = set()
+        uniq_b = []
+        for it in broad_items:
+            h = it.get('href')
+            if not h or h in seen_b:
+                continue
+            seen_b.add(h)
+            uniq_b.append(it)
+        def get_date_b(item):
+            ds = item.get('date', '')
+            try:
+                return date_parser.parse(ds) if ds else datetime.min.replace(tzinfo=timezone.utc)
+            except Exception:
+                return datetime.min.replace(tzinfo=timezone.utc)
+        uniq_b.sort(key=get_date_b, reverse=True)
+        if uniq_b:
+            print(f"BWF main pages parsed: {len(uniq_b)} items; newest={uniq_b[0].get('date')}; sample={[it.get('title') for it in uniq_b[:5]]}")
+            return {
+                'scraped_at': datetime.now(timezone.utc).isoformat(),
+                'items': uniq_b[:20],
+            }
+    except Exception as e:
+        print(f"BWF main pages parse failed: {e}")
 
     # Stage 1: Try Google News RSS for latest BWF articles (works without proxy)
     google_items = []
