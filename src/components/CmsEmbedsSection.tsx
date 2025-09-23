@@ -179,11 +179,10 @@ const CmsEmbedsSection: FC = () => {
                 <article className="group cursor-pointer h-full">
                   <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
                     <div className={`${index === 1 ? 'h-64 md:h-80 lg:h-96' : 'h-48 md:h-56'} relative overflow-hidden bg-gray-100`}>
-                      {it.coverUrl ? (
+                      {it.cover ? (
                         <img 
-                          src={it.coverUrl} 
+                          src={it.cover} 
                           alt={it.title} 
-                          referrerPolicy="no-referrer" 
                           className="absolute inset-0 w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-[1.02]"
                           style={{
                             aspectRatio: '16/9',
@@ -194,10 +193,11 @@ const CmsEmbedsSection: FC = () => {
                             target.style.objectFit = 'contain';
                           }}
                         />
-                      ) : it.cover ? (
+                      ) : it.coverUrl ? (
                         <img 
-                          src={it.cover} 
+                          src={it.coverUrl} 
                           alt={it.title} 
+                          referrerPolicy="no-referrer" 
                           className="absolute inset-0 w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-[1.02]"
                           style={{
                             aspectRatio: '16/9',

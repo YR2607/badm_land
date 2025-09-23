@@ -718,21 +718,6 @@ def parse_article(url: str) -> dict | None:
         if low_tw.endswith(('.jpg', '.jpeg', '.png', '.webp')) and twitter_img not in [c[0] for c in candidates]:
             if not (any(k in low_tw for k in bad_keywords) or any(term in low_tw for term in generic_image_terms)):
                 candidates.append((twitter_img, 75))
-                height = int(node['height'])
-                
-            # Adjust priority based on size (larger images are better)
-            if width and height:
-                area = width * height
-                if area > 500 * 500:  # Large images get higher priority
-                    priority += 10
-                elif area < 100 * 100:  # Very small images get lower priority
-                    priority -= 10
-                    
-            # Check if image is above the fold (in first 5 images)
-            if i < 5:
-                priority += 5
-                
-            candidates.append((abs_src, priority))
     
     # Sort candidates by priority (highest first)
     candidates.sort(key=lambda x: -x[1])
@@ -1017,7 +1002,53 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
 
 
 def scrape() -> dict:
-    # First try Google News RSS for latest BWF articles (works without proxy)
+    # Stage 0: Try official BWF news page first (what user expects to be the source of truth)
+    try:
+        print("Trying official BWF 'Latest News' page ...")
+        official_items = parse_listing_latest('https://bwfbadminton.com', limit=40)
+        # Enrich dates from URL if missing and normalize
+        def enrich_official_dates(items: list[dict]) -> list[dict]:
+            out = []
+            for it in items:
+                href = it.get('href') or ''
+                date_raw = it.get('date') or ''
+                if not date_raw and href:
+                    m = re.search(r'/(\d{4})/(\d{1,2})/(\d{1,2})/', href)
+                    if m:
+                        y, mo, d = m.group(1), m.group(2), m.group(3)
+                        date_raw = f"{y}-{mo.zfill(2)}-{d.zfill(2)}T00:00:00+00:00"
+                it2 = dict(it)
+                it2['date'] = normalize_date_iso(date_raw or '')
+                it2['title'] = remove_date_from_title(it.get('title') or '')
+                out.append(it2)
+            return out
+        official_items = enrich_official_dates(official_items)
+        # Dedupe by href and sort by date desc
+        seen_o = set()
+        uniq_o = []
+        for it in official_items:
+            h = it.get('href')
+            if not h or h in seen_o:
+                continue
+            seen_o.add(h)
+            uniq_o.append(it)
+        def get_date_o(item):
+            ds = item.get('date', '')
+            try:
+                return date_parser.parse(ds) if ds else datetime.min.replace(tzinfo=timezone.utc)
+            except Exception:
+                return datetime.min.replace(tzinfo=timezone.utc)
+        uniq_o.sort(key=get_date_o, reverse=True)
+        if uniq_o:
+            print(f"Official latest: {len(uniq_o)} items (top 5 titles): {[it.get('title') for it in uniq_o[:5]]}")
+            return {
+                'scraped_at': datetime.now(timezone.utc).isoformat(),
+                'items': uniq_o[:20],
+            }
+    except Exception as e:
+        print(f"Official latest parse failed: {e}")
+
+    # Stage 1: Try Google News RSS for latest BWF articles (works without proxy)
     google_items = []
     try:
         print("Trying Google News RSS for BWF articles...")
