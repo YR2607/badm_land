@@ -1017,7 +1017,45 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
 
 
 def scrape() -> dict:
-    # Championships site - check both news page and main page
+    # First try Google News RSS for latest BWF articles (works without proxy)
+    google_items = []
+    try:
+        print("Trying Google News RSS for BWF articles...")
+        google_items = discover_links_via_google(limit=30)
+        print(f"Found {len(google_items)} articles via Google News")
+        
+        # Convert Google links to article data
+        parsed_google = []
+        for link in google_items[:15]:  # Limit to avoid rate limits
+            try:
+                # Try to parse article without proxy first
+                art = parse_article(link)
+                if art and art.get('title'):
+                    parsed_google.append(art)
+                    print(f"Parsed: {art['title'][:60]}...")
+            except Exception as e:
+                print(f"Failed to parse {link}: {e}")
+                continue
+        
+        if parsed_google:
+            print(f"Successfully parsed {len(parsed_google)} articles from Google News")
+            # Sort by date and return
+            def get_date(item):
+                date_str = item.get('date', '')
+                try:
+                    return date_parser.parse(date_str) if date_str else datetime.min.replace(tzinfo=timezone.utc)
+                except:
+                    return datetime.min.replace(tzinfo=timezone.utc)
+            
+            items = sorted(parsed_google, key=get_date, reverse=True)[:20]
+            return {
+                'scraped_at': datetime.now(timezone.utc).isoformat(),
+                'items': items,
+            }
+    except Exception as e:
+        print(f"Google News approach failed: {e}")
+    
+    # Fallback to direct BWF scraping (requires proxy)
     champ_items = []
     default_pages = [
         'https://bwfbadminton.com/news/',  # Official BWF news (has latest from all tournaments)
