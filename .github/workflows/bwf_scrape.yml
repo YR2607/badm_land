@@ -32,7 +32,7 @@ jobs:
           SCRAPINGBEE_KEY: ${{ secrets.SCRAPINGBEE_KEY }}
           # Default: parse ONLY from championships main and news pages (diverse per-card images)
           BWF_CHAMP_ONLY: '1'
-          BWF_CHAMP_URLS: 'https://bwfbadminton.com/news/,https://bwfbadminton.com/,https://bwfworldchampionships.bwfbadminton.com/news/,https://bwfworldchampionships.bwfbadminton.com/'
+          BWF_CHAMP_URLS: 'https://bwfbadminton.com/news/,https://bwfbadminton.com/,https://bwfworldchampionships.bwfbadminton.com/news/,https://bwfworldchampionships.bwfbadminton.com/,https://bwfworldtour.bwfbadminton.com/news/,https://bwfworldtour.bwfbadminton.com/'
           # Force proxy for championship domain to avoid consent/cookie HTML on CI
           BWF_FORCE_PROXY: '1'
           # Use default mode to get full article data and latest news
@@ -59,13 +59,29 @@ jobs:
         with:
           name: bwf_news_json
           path: public/data/bwf_news.json
-      - name: Commit and push
+      - name: Check for changes and commit
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add public/data/bwf_news.json
-          git commit -m "chore(scrape): update BWF news JSON - $(date '+%Y-%m-%d %H:%M')" || echo "No changes"
-          git push
+          
+          # Check if file was actually updated
+          if [ -f "public/data/bwf_news.json" ]; then
+            echo "BWF news file exists, checking for changes..."
+            git add public/data/bwf_news.json
+            
+            # Only commit if there are actual changes
+            if git diff --staged --quiet; then
+              echo "No changes to BWF news data"
+            else
+              echo "Changes detected, committing..."
+              git commit -m "chore(scrape): update BWF news JSON - $(date '+%Y-%m-%d %H:%M UTC')"
+              git push
+              echo "Successfully pushed BWF news updates"
+            fi
+          else
+            echo "ERROR: BWF news file not found!"
+            exit 1
+          fi
       - name: Note about Vercel auto-deploy
         run: |
           echo "Vercel will automatically deploy when we push to main branch"
