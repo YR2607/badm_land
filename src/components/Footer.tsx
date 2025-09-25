@@ -54,21 +54,21 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <MapPin className="text-primary-orange mt-1" size={18} />
-                <span className="text-gray-300">Кишинев, ул. Примерная 123</span>
+                <span className="text-gray-300">{t('footer.contact.address', 'Chișinău, str. Example 123')}</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="text-primary-blue" size={18} />
-                <span className="text-gray-300">+373 60 123 456</span>
+                <span className="text-gray-300">{t('footer.contact.phone', '+373 60 123 456')}</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="text-primary-yellow" size={18} />
-                <span className="text-gray-300">info@altius.md</span>
+                <span className="text-gray-300">{t('footer.contact.email', 'info@altius.md')}</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Clock className="text-primary-orange mt-1" size={18} />
                 <div className="text-gray-300">
-                  <div>Пн-Пт: 06:00-22:00</div>
-                  <div>Сб-Вс: 08:00-20:00</div>
+                  <div>{t('footer.contact.hours.weekdays', 'Mon-Fri: 06:00-22:00')}</div>
+                  <div>{t('footer.contact.hours.weekends', 'Sat-Sun: 08:00-20:00')}</div>
                 </div>
               </li>
             </ul>
@@ -77,14 +77,14 @@ const Footer: React.FC = () => {
 
         <div className="mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Altius Badminton Club. {t('footer.allRightsReserved')}
+            © {new Date().getFullYear()} Altius Badminton Club. {t('footer.allRightsReserved')}
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link to="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
-              Политика конфиденциальности
+              {t('footer.legal.privacy', 'Политика конфиденциальности')}
             </Link>
             <Link to="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
-              Условия использования
+              {t('footer.legal.terms', 'Условия использования')}
             </Link>
           </div>
         </div>

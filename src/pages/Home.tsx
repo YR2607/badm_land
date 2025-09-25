@@ -8,31 +8,25 @@ import CmsEmbedsSection from '../components/CmsEmbedsSection';
 import { fetchHomePage, CmsHomePage } from '../lib/cms';
 
 const Home: FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [cmsData, setCmsData] = useState<CmsHomePage | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadCmsData = async () => {
       try {
-        const data = await fetchHomePage();
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Home page CMS data loaded:', data);
-        }
+        const data = await fetchHomePage(i18n.language as 'ru' | 'en' | 'ro');
         if (data) {
           setCmsData(data);
         }
       } catch (error) {
-        if (process.env.NODE_ENV === 'development') {
-          console.error('Failed to load CMS data:', error);
-        }
         // Set error state for user feedback
         setError(t('common.error'));
       }
     };
 
     loadCmsData();
-  }, []);
+  }, [i18n.language]);
 
   if (error) {
     return (

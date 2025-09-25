@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Calendar, ArrowRight, Globe, Zap, Trophy, Clock } from 'lucide-react';
 import { NewsItem } from '../types';
 import { mockNews } from '../data/mockData';
+import { useTranslation } from 'react-i18next';
 
 const ExtendedNewsSection: React.FC = () => {
   const featuredNews = mockNews.filter(news => news.featured)[0];
@@ -10,13 +11,12 @@ const ExtendedNewsSection: React.FC = () => {
   const worldNews = mockNews.filter(news => news.category === 'world').slice(0, 3);
   const events = mockNews.filter(news => news.category === 'event').slice(0, 3);
 
+  const { t, i18n } = useTranslation();
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
+    const map: Record<string, string> = { ru: 'ru-RU', en: 'en-US', ro: 'ro-RO' };
+    const loc = map[i18n.language] || 'ru-RU';
+    return date.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   const getCategoryIcon = (category: string) => {
@@ -70,10 +70,10 @@ const ExtendedNewsSection: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="section-title">
-            Новости и События
+            {t('home.newsSection.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Следите за последними новостями клуба и мировыми событиями в бадминтоне
+            {t('home.newsSection.subtitle')}
           </p>
         </motion.div>
 
@@ -99,7 +99,7 @@ const ExtendedNewsSection: React.FC = () => {
                   <div className="flex items-center space-x-2 mb-4">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColor(featuredNews.category)}`}>
                       {getCategoryIcon(featuredNews.category)}
-                      <span className="ml-1">{getCategoryLabel(featuredNews.category)}</span>
+                      <span className="ml-1">{featuredNews.category === 'news' ? t('home.newsSection.category.news') : (featuredNews.category === 'event' ? t('home.newsSection.category.events') : t('home.newsSection.world'))}</span>
                     </span>
                     <span className="text-sm text-gray-500">{formatDate(featuredNews.date)}</span>
                   </div>
@@ -108,7 +108,7 @@ const ExtendedNewsSection: React.FC = () => {
                   </h3>
                   <p className="text-gray-600 mb-6 text-lg">{featuredNews.content.substring(0, 200)}...</p>
                   <div className="flex items-center text-primary-blue group-hover:translate-x-2 transition-transform">
-                    <span className="mr-2 font-medium">Читать полностью</span>
+                    <span className="mr-2 font-medium">{t('common.readMore')}</span>
                     <ArrowRight size={20} />
                   </div>
                 </div>
@@ -130,10 +130,10 @@ const ExtendedNewsSection: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold text-gray-900 flex items-center">
                 <Zap className="w-6 h-6 text-primary-blue mr-2" />
-                Новости клуба
+                {t('home.ubf.clubTitle')}
               </h3>
               <button className="text-primary-blue hover:text-primary-blue/80 text-sm font-medium">
-                Все новости
+                {t('home.worldNews.viewAll')}
               </button>
             </div>
             <div className="space-y-4">
@@ -176,10 +176,10 @@ const ExtendedNewsSection: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold text-gray-900 flex items-center">
                 <Globe className="w-6 h-6 text-primary-orange mr-2" />
-                Мировые новости
+                {t('home.worldNews.title')}
               </h3>
               <button className="text-primary-orange hover:text-primary-orange/80 text-sm font-medium">
-                Все новости
+                {t('home.worldNews.viewAll')}
               </button>
             </div>
             <div className="space-y-4">
@@ -222,10 +222,10 @@ const ExtendedNewsSection: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold text-gray-900 flex items-center">
                 <Trophy className="w-6 h-6 text-primary-yellow mr-2" />
-                События и турниры
+                {t('home.ubf.eventsTitle')}
               </h3>
               <button className="text-primary-yellow hover:text-primary-yellow/80 text-sm font-medium">
-                Все события
+                {t('home.events.viewAll', 'All events')}
               </button>
             </div>
             <div className="space-y-4">
@@ -271,11 +271,11 @@ const ExtendedNewsSection: React.FC = () => {
         >
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="btn-primary">
-              Все новости и события
+              {t('home.newsSection.viewAll')}
               <ArrowRight className="ml-2 w-5 h-5" />
             </button>
             <button className="btn-secondary">
-              Календарь мероприятий
+              {t('home.ubf.btnCalendar')}
               <Calendar className="ml-2 w-5 h-5" />
             </button>
           </div>

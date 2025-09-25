@@ -11,8 +11,8 @@
   },
   "hero": {
     "title": "ALTIUS",
-    "subtitle": "Club profesional de badminton în Chișinău",
-    "description": "Antrenament pentru toate nivelurile de pregătire cu antrenori experimentați în facilități moderne",
+    "subtitle": "Creăm campionii de mâine și popularizăm badmintonul în Moldova.",
+    "description": "Clubul nostru este locul unde fiecare își poate găsi drumul către succes.",
     "joinButton": "Alătură-te nouă",
     "learnMoreButton": "Urmărește videoul",
     "badge": "Club profesional din 2010",
@@ -79,6 +79,7 @@
       "subtitle": "Alege planul potrivit",
       "perSession": "per sesiune",
       "perMonth": "pe lună",
+      "perSessionShort": "per sesiune",
       "monthly": "Lunar",
       "annual": "Anual",
       "currency": "lei",
@@ -164,6 +165,21 @@
       "results": "Focus pe Rezultate",
       "resultsDesc": "Abordare individuală pentru fiecare elev pentru a obține progres maxim"
     },
+    "timeline": {
+      "2024": {
+        "q1": { "title": "Lansarea Altius", "text": "Am deschis ușile și am avut primele înscrieri pentru adulți și adolescenți." },
+        "q2": { "title": "Formarea nucleului echipei", "text": "Am stabilizat orarul, am format primul grup al clubului și am pornit ratingul de bază." },
+        "q3": { "title": "Primele trofee", "text": "Membrii clubului au obținut locuri premiate la turnee locale." },
+        "q4": { "title": "Rezumatul sezonului", "text": "Am organizat finalul de sezon al clubului și am premiat cei mai buni sportivi și antrenori." }
+      },
+      "2025": {
+        "q1": { "title": "Școala de juniori", "text": "Am lansat grupe pentru copii, cantonamente-test și programe individuale." },
+        "q2": { "title": "Liga clubului", "text": "Meciuri interne regulate și mini-ligi pe niveluri." },
+        "q3": { "title": "Extinderea participării", "text": "Turnee în deplasare, parteneriate și sparring cu cluburi din regiune." },
+        "q4": { "title": "Altius Cup", "text": "Turneu deschis al clubului cu invitați și ceremonie festivă." }
+      }
+    },
+    
     "team": {
       "title": "Echipa Noastră",
       "subtitle": "Cunoaște antrenorii noștri profesioniști",
@@ -177,7 +193,33 @@
       "founderDesc1": "Alexei a fondat ALTIUS în 2010 cu viziunea de a dezvolta badmintonul în Moldova. Abordarea sa profesională și dedicarea au ajutat sute de elevi să-și atingă obiectivele.",
       "founderDesc2": "Sub conducerea sa, clubul a devenit unul dintre centrele de antrenament de badminton de frunte din Chișinău, cunoscut pentru antrenamentul de înaltă calitate și atmosfera prietenoasă.",
       "founderQuote": "Fiecare elev este unic, iar obiectivul nostru este să ajutăm fiecare persoană să-și atingă potențialul maxim în badminton.",
-      "coaches": "Antrenorii Noștri"
+      "coaches": "Antrenorii Noștri",
+      "defaults": {
+        "0": {
+          "name": "Elena Petrova",
+          "role": "Antrenor principal",
+          "experience": "8 ani de experiență",
+          "specialization": "Tehnică",
+          "achievements": ["CM la badminton", "Medaliată la campionatul regional"],
+          "description": "Specializată în lucrul cu începătorii și dezvoltarea tehnicii corecte a loviturilor."
+        },
+        "1": {
+          "name": "Dmitri Kozlov",
+          "role": "Antrenor de pregătire fizică",
+          "experience": "6 ani de experiență",
+          "specialization": "Pregătire fizică",
+          "achievements": ["Maestru al sportului", "Antrenor de fitness certificat"],
+          "description": "Responsabil de pregătirea fizică și prevenirea accidentărilor."
+        },
+        "2": {
+          "name": "Anna Smirnova",
+          "role": "Antrenor pentru copii",
+          "experience": "5 ani de experiență",
+          "specialization": "Lucru cu copiii",
+          "achievements": ["CM la badminton", "Studii pedagogice"],
+          "description": "Se concentrează pe antrenarea copiilor 6–16 ani într-o atmosferă jucăușă."
+        }
+      }
     },
     "history": {
       "title": "Istoria Noastră",
@@ -192,7 +234,13 @@
       "swipeHint": "Glisează pentru a naviga",
       "done": "Finalizat",
       "inProgress": "În Progres",
-      "planned": "Planificat"
+      "planned": "Planificat",
+      "items": {
+        "q3_2025": { "title": "Extinderea participării", "desc": "Deplasări la turnee, parteneriate și sparring cu cluburi regionale." },
+        "q4_2025": { "title": "Altius Cup", "desc": "Turneu deschis al clubului cu ceremonie și invitați." },
+        "q1_2026": { "title": "Academia U17", "desc": "Cantonamente regulate, teste, sprijin și calendar de competiții." },
+        "q2_2026": { "title": "Liga clubului 2.0", "desc": "Divizii pe niveluri, ratinguri, zile de meci și transmisiuni." }
+      }
     }
   },
   "contact": {
@@ -338,7 +386,15 @@
       "single": "Ședință unică",
       "trial": "Ședință de probă"
     },
-    "loading": "Se încarcă sălile..."
+    "loading": "Se încarcă sălile...",
+    "fallback": {
+      "byArrangement": "După înțelegere",
+      "flexibleSchedule": "Program flexibil adaptat nevoilor dvs.",
+      "weekdayDaily": "Antrenamente zilnice în timpul săptămânii",
+      "improvementGroup": "Grup de perfecționare",
+      "intensiveTraining": "Antrenamente intensive pentru pregătirea competițională",
+      "trainingForAdults": "Antrenamente pentru amatorii de badminton adulți"
+    }
   },
   "gallery": {
     "title": "Galerie",
@@ -395,7 +451,20 @@
     "description": "Club profesional de badminton în Chișinău",
     "quickLinks": "Link-uri rapide",
     "followUs": "Urmărește-ne",
-    "allRightsReserved": "Toate drepturile rezervate"
+    "allRightsReserved": "Toate drepturile rezervate",
+    "contact": {
+      "address": "Chișinău, str. Exemplu 123",
+      "phone": "+373 60 123 456",
+      "email": "info@altius.md",
+      "hours": {
+        "weekdays": "Lun-Vin: 06:00-22:00",
+        "weekends": "Sâm-Dum: 08:00-20:00"
+      }
+    },
+    "legal": {
+      "privacy": "Politica de confidențialitate",
+      "terms": "Termeni de utilizare"
+    }
   },
   "common": {
     "loading": "Se încarcă...",
@@ -411,5 +480,117 @@
     "page": "Pagina",
     "of": "din",
     "showing": "Se afișează"
+  }
+  ,
+  "home": {
+    "achievements": {
+      "title": "Realizările noastre",
+      "subtitle": "De-a lungul anilor am obținut rezultate impresionante și am format mulți sportivi talentați",
+      "items": {
+        "champions": {
+          "title": "Campioni ai Moldovei",
+          "description": "Elevii noștri au devenit campioni naționali"
+        },
+        "medals": {
+          "title": "Medalii la turnee",
+          "description": "Medalii câștigate la competiții naționale"
+        },
+        "athletes": {
+          "title": "Sportivi activi",
+          "description": "Se antrenează regulat în clubul nostru"
+        },
+        "years": {
+          "title": "Ani de activitate de succes",
+          "description": "Dezvoltăm badmintonul în Moldova din 2010"
+        }
+      },
+      "timeline": {
+        "title": "Istoria dezvoltării clubului",
+        "defaults": {
+          "2010": {
+            "title": "Fondarea clubului",
+            "description": "Deschiderea primei săli cu 4 terenuri"
+          },
+          "2015": {
+            "title": "Extindere",
+            "description": "Deschiderea celei de-a doua săli, creșterea la 200 de membri"
+          },
+          "2018": {
+            "title": "Recunoaștere internațională",
+            "description": "Primele medalii la turnee internaționale"
+          },
+          "2020": {
+            "title": "Centru de pregătire",
+            "description": "Statut oficial de centru regional de pregătire"
+          },
+          "2024": {
+            "title": "Modernizare",
+            "description": "Actualizare completă a echipamentelor și infrastructurii"
+          }
+        }
+      },
+      "cta": "Devino parte din povestea noastră de succes!"
+    },
+    "services": {
+      "title": "Serviciile noastre",
+      "subtitle": "Antrenament profesional pentru toate nivelurile",
+      "more": "Află mai mult"
+    },
+    "worldNews": {
+      "title": "Știri mondiale",
+      "noMaterials": "Nu există materiale",
+      "viewAll": "Vezi toate știrile",
+      "tagWorld": "🌍 Lume"
+    },
+    "embeds": {
+      "title": "Știrile clubului și evenimente",
+      "noMaterials": "Nu există materiale",
+      "badgeEvent": "🎫 Eveniment",
+      "badgeClub": "🏸 Club",
+      "viewAll": "Arată toate știrile"
+    },
+    "newsSection": {
+      "title": "Știri și Evenimente",
+      "subtitle": "Urmăriți ultimele știri ale clubului și evenimentele mondiale de badminton",
+      "category": {
+        "news": "Știri",
+        "events": "Evenimente"
+      },
+      "latest": "Știri recente",
+      "world": "Știri mondiale",
+      "viewAll": "Toate știrile și evenimentele"
+    },
+    "bwf": {
+      "title": "BWF — Știri mondiale",
+      "subtitle": "Știri colectate automat de pe bwfbadminton.com",
+      "loading": "Se încarcă știrile BWF...",
+      "noMaterials": "Nu există materiale",
+      "noData": "Nu există date despre știrile BWF",
+      "error": "Nu s-au putut încărca știrile BWF",
+      "readOn": "Citește pe bwfbadminton.com →"
+    },
+    "events": {
+      "title": "Evenimente",
+      "noItems": "Nu există evenimente deocamdată",
+      "badge": "🎫 Eveniment",
+      "viewAll": "Toate evenimentele"
+    },
+    "ubf": {
+      "title": "Știri și Evenimente",
+      "subtitle1": "Urmăriți ultimele știri ale clubului și evenimentele mondiale de badminton.",
+      "subtitle2": "Rămâneți la curent cu toate evenimentele importante din comunitatea noastră sportivă.",
+      "clubTitle": "Știri ale clubului",
+      "worldTitle": "Știri mondiale",
+      "eventsTitle": "Evenimente",
+      "ctaTitle": "Nu ratați evenimente importante!",
+      "ctaSubtitle": "Abonați-vă la newsletter pentru a primi actualizări despre turnee, masterclass-uri și știrile clubului.",
+      "btnAllNews": "Toate știrile",
+      "btnCalendar": "Calendar evenimente"
+    },
+    "clubNews": {
+      "title": "Știri ale clubului",
+      "badge": "🏸 Club",
+      "readOnFb": "Citește pe Facebook"
+    }
   }
 }

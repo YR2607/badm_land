@@ -2,24 +2,24 @@ import { FC, useState, useEffect } from 'react';
 import { CheckCircle, Clock, Sparkles, Zap, Target, ChevronDown, Phone, Users, Star, Award, User, Calendar, Trophy, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { fetchServicesPage, CmsServicesPage } from '../lib/cms';
+import { fetchServicesPage, CmsServicesPage, fetchServicesHero, type CmsHero } from '../lib/cms';
 
 const Services: FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [cmsData, setCmsData] = useState<CmsServicesPage | null>(null);
+  const [heroData, setHeroData] = useState<CmsHero | null>(null);
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     const loadCmsData = async () => {
       try {
-        const data = await fetchServicesPage();
-        if (data) {
-          setCmsData(data);
-        }
+        const [data, hero] = await Promise.all([
+          fetchServicesPage(),
+          fetchServicesHero(i18n.language as string),
+        ]);
+        if (data) setCmsData(data);
+        if (hero) setHeroData(hero);
       } catch (error) {
-        if (process.env.NODE_ENV === 'development') {
-          console.error('Failed to load CMS data:', error);
-        }
         setError(t('common.error'));
       }
     };
@@ -57,65 +57,47 @@ const Services: FC = () => {
     return fallbackPrices[serviceId as keyof typeof fallbackPrices] || '0';
   };
 
-  const services = [
-    {
-      id: 'group',
-      icon: <Users className="w-8 h-8" />,
-      title: t('services.groupTraining.title'),
-      subtitle: t('services.groupTraining.subtitle', 'Для начинающих и любителей'),
-      description: t('services.groupTraining.description'),
-      priceMonthly: getServicePricing('group', 'monthly'),
-      pricePerSession: getServicePricing('group', 'perSession'),
-      originalPrice: getOriginalPrice('group'),
-      features: t('services.groupTraining.features', { returnObjects: true }) as string[],
-      gradient: 'from-blue-500 via-blue-600 to-indigo-600',
-      bgGradient: 'from-blue-50 to-indigo-50',
-      popular: false,
-      badge: null
-    },
-    {
-      id: 'individual',
-      icon: <User className="w-8 h-8" />,
-      title: t('services.individual.title'),
-      subtitle: t('services.individual.subtitle'),
-      description: t('services.individual.description'),
-      priceMonthly: getServicePricing('individual', 'monthly'),
-      pricePerSession: getServicePricing('individual', 'perSession'),
-      originalPrice: getOriginalPrice('individual'),
-      features: [
-        { icon: <Target className="w-4 h-4" />, text: t('services.individual.features.program') },
-        { icon: <Calendar className="w-4 h-4" />, text: t('services.individual.features.schedule') },
-        { icon: <Sparkles className="w-4 h-4" />, text: t('services.individual.features.attention') },
-        { icon: <Zap className="w-4 h-4" />, text: t('services.individual.features.progress') },
-        { icon: <Target className="w-4 h-4" />, text: t('services.individual.features.analysis') }
-      ],
-      gradient: 'from-orange-500 via-red-500 to-pink-500',
-      bgGradient: 'from-orange-50 to-pink-50',
-      popular: true,
-      badge: t('services.individual.badge')
-    },
-    {
-      id: 'competition',
-      icon: <Trophy className="w-8 h-8" />,
-      title: t('services.competition.title'),
-      subtitle: t('services.competition.subtitle'),
-      description: t('services.competition.description'),
-      priceMonthly: getServicePricing('competition', 'monthly'),
-      pricePerSession: getServicePricing('competition', 'perSession'),
-      originalPrice: getOriginalPrice('competition'),
-      features: [
-        { icon: <Target className="w-4 h-4" />, text: t('services.competition.features.technical') },
-        { icon: <Sparkles className="w-4 h-4" />, text: t('services.competition.features.tactical') },
-        { icon: <Award className="w-4 h-4" />, text: t('services.competition.features.psychological') },
-        { icon: <Users className="w-4 h-4" />, text: t('services.competition.features.sparring') },
-        { icon: <Zap className="w-4 h-4" />, text: t('services.competition.features.analysis') }
-      ],
-      gradient: 'from-yellow-500 via-amber-500 to-orange-500',
-      bgGradient: 'from-yellow-50 to-amber-50',
-      popular: false,
-      badge: t('services.competition.badge')
-    }
+  const gradientList = [
+    { gradient: 'from-blue-500 via-indigo-500 to-purple-500', bgGradient: 'from-blue-50 to-indigo-50' },
+    { gradient: 'from-green-500 via-emerald-500 to-teal-500', bgGradient: 'from-green-50 to-emerald-50' },
+    { gradient: 'from-yellow-500 via-amber-500 to-orange-500', bgGradient: 'from-yellow-50 to-amber-50' },
   ];
+
+  const getIcon = (name?: string) => {
+    switch ((name || '').toLowerCase()) {
+      case 'users': return <Users className="w-8 h-8" />;
+      case 'user': return <User className="w-8 h-8" />;
+      case 'award': return <Award className="w-8 h-8" />;
+      case 'trophy': return <Trophy className="w-8 h-8" />;
+      case 'star': return <Star className="w-8 h-8" />;
+      case 'zap': return <Zap className="w-8 h-8" />;
+      case 'target': return <Target className="w-8 h-8" />;
+      case 'clock': return <Clock className="w-8 h-8" />;
+      case 'phone': return <Phone className="w-8 h-8" />;
+      case 'calendar': return <Calendar className="w-8 h-8" />;
+      case 'sparkles': return <Sparkles className="w-8 h-8" />;
+      default: return <Users className="w-8 h-8" />;
+    }
+  };
+
+  const services = (cmsData?.servicesSection?.services || []).map((s, idx) => {
+      const g = gradientList[idx % gradientList.length];
+      return {
+        id: `cms-${idx}`,
+        icon: getIcon(s.icon),
+        title: s.title,
+        subtitle: '',
+        description: s.description,
+        features: (s.features || []).map(ft => ({ icon: <CheckCircle className="w-4 h-4" />, text: ft })),
+        gradient: g.gradient,
+        bgGradient: g.bgGradient,
+        popular: idx === 1,
+        badge: '',
+        priceMonthly: s.pricing?.monthly || '—',
+        pricePerSession: s.pricing?.perSession || '—',
+        originalPrice: undefined,
+      };
+    });
 
   const [billing, setBilling] = useState<'monthly' | 'per_session'>('monthly');
 
@@ -359,18 +341,30 @@ const Services: FC = () => {
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
-                <Sparkles className="w-4 h-4 text-yellow-300" />
-                <span className="text-sm font-medium">{t('services.hero.badge')}</span>
-              </div>
+              {heroData?.badge?.text ? (
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
+                  <Sparkles className="w-4 h-4 text-yellow-300" />
+                  <span className="text-sm font-medium">{heroData.badge.text}</span>
+                </div>
+              ) : (
+                <div className="text-sm text-white/70 mb-6">Hero (badge) не заполнен в CMS</div>
+              )}
               
-              <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                {cmsData?.hero?.title || t('services.hero.title')}
-              </h1>
+              {heroData?.title ? (
+                <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+                  {heroData.title}
+                </h1>
+              ) : (
+                <div className="text-white/70 mb-6">Hero (title) не заполнен в CMS</div>
+              )}
               
-              <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                {cmsData?.hero?.subtitle || t('services.hero.subtitle')}
-              </p>
+              {heroData?.subtitle ? (
+                <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
+                  {heroData.subtitle}
+                </p>
+              ) : (
+                <div className="text-white/70 mb-8">Hero (subtitle) не заполнен в CMS</div>
+              )}
               
               {/* Statistics with Entrance Animations Only */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
@@ -450,6 +444,9 @@ const Services: FC = () => {
 
           {/* Enhanced Service Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {services.length === 0 && (
+              <div className="col-span-full text-center text-gray-400">Список услуг не заполнен в CMS</div>
+            )}
             {services.map((service, index) => (
               <motion.div
                 key={service.id}
@@ -589,22 +586,22 @@ const Services: FC = () => {
                     <div className="px-6 py-4 text-sm font-medium text-gray-900 bg-gray-50/50">{row.k}</div>
                     {row.v.map((val, j) => (
                       <div key={j} className="px-6 py-4 text-sm">
-                        {val === 'Да' ? (
+                        {val === t('services.comparison.values.yes') ? (
                           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-medium border border-emerald-200">
                             <CheckCircle className="w-3 h-3" />
                             {t('services.comparison.values.yes')}
                           </span>
-                        ) : val === 'Опционально' ? (
+                        ) : val === t('services.comparison.values.optional') ? (
                           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-100 text-amber-800 text-xs font-medium border border-amber-200">
                             <Clock className="w-3 h-3" />
                             {t('services.comparison.values.optional')}
                           </span>
-                        ) : val === 'Полная' ? (
+                        ) : val === t('services.comparison.values.full') ? (
                           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-xs font-medium border border-green-200">
                             <Sparkles className="w-3 h-3" />
                             {t('services.comparison.values.full')}
                           </span>
-                        ) : val === 'Высокая' ? (
+                        ) : val === t('services.comparison.values.high') ? (
                           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium border border-blue-200">
                             <Zap className="w-3 h-3" />
                             {t('services.comparison.values.high')}

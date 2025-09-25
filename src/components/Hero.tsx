@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Award } from 'lucide-react';
+import { ArrowRight, Award, Trophy, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface HeroProps {
@@ -85,8 +85,19 @@ const Hero = ({ cmsData }: HeroProps) => {
         {/* increased top padding so video is visible under transparent header */}
         <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
           <motion.div className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
-            <Award className="w-5 h-5 text-primary-yellow mr-2" />
-            <span className="text-sm font-medium text-white">{t('hero.badge', 'Профессиональный клуб с 2010 года')}</span>
+            {(() => {
+              const name = cmsData?.badge?.icon || 'Award';
+              switch (name) {
+                case 'Trophy':
+                  return <Trophy className="w-5 h-5 text-primary-yellow mr-2" />;
+                case 'Star':
+                  return <Star className="w-5 h-5 text-primary-yellow mr-2" />;
+                case 'Award':
+                default:
+                  return <Award className="w-5 h-5 text-primary-yellow mr-2" />;
+              }
+            })()}
+            <span className="text-sm font-medium text-white">{cmsData?.badge?.text || t('hero.badge', 'Профессиональный клуб с 2010 года')}</span>
           </motion.div>
           <motion.h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-display mb-8 leading-tight" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}>
             <span className="text-white">{cmsData?.title || t('hero.title')}</span>

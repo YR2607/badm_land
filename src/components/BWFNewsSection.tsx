@@ -1,9 +1,11 @@
 import { FC, useEffect, useState } from 'react'
 import { proxied } from '../utils/blockFacebookImages'
+import { useTranslation } from 'react-i18next'
 
 type Item = { title: string; href: string; img?: string; preview?: string; date?: string }
 
 const BWFNewsSection: FC = () => {
+  const { t, i18n } = useTranslation()
   const [items, setItems] = useState<Item[] | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -45,7 +47,7 @@ const BWFNewsSection: FC = () => {
         if (!alive) return
         
         if (!data || !data.items) {
-          throw new Error('Нет данных о новостях BWF')
+          throw new Error(t('home.bwf.noData', 'Нет данных о новостях BWF'))
         }
         
         const arr: Item[] = (data.items || []) as Item[]
@@ -62,7 +64,7 @@ const BWFNewsSection: FC = () => {
       } catch (e: any) {
         if (!alive) return
         console.error('BWF news loading error:', e)
-        setError(e?.message || 'Ошибка загрузки новостей BWF')
+        setError(e?.message || t('home.bwf.error', 'Ошибка загрузки новостей BWF'))
       }
     }
     run()
@@ -78,15 +80,15 @@ const BWFNewsSection: FC = () => {
   }, [])
 
   if (error) return <div className="text-center text-red-500 py-6">{error}</div>
-  if (!items) return <div className="text-center text-gray-500 py-6">Загрузка новостей BWF...</div>
-  if (items.length === 0) return <div className="text-center text-gray-500 py-6">Нет материалов</div>
+  if (!items) return <div className="text-center text-gray-500 py-6">{t('home.bwf.loading', 'Загрузка новостей BWF...')}</div>
+  if (items.length === 0) return <div className="text-center text-gray-500 py-6">{t('home.bwf.noMaterials', 'Нет материалов')}</div>
 
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900">BWF — Мировые новости</h2>
-          <p className="text-gray-600">Автоматически собранные новости с bwfbadminton.com</p>
+          <h2 className="text-3xl font-bold text-gray-900">{t('home.bwf.title', 'BWF — Мировые новости')}</h2>
+          <p className="text-gray-600">{t('home.bwf.subtitle', 'Автоматически собранные новости с bwfbadminton.com')}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {items.map((it: Item) => (
@@ -111,10 +113,10 @@ const BWFNewsSection: FC = () => {
                 />
               </div>
               <div className="p-5">
-                <div className="text-xs text-gray-500 mb-2">{it.date || ''}</div>
+                <div className="text-xs text-gray-500 mb-2">{new Date(it.date || '').toLocaleDateString((({ru:'ru-RU',en:'en-US',ro:'ro-RO'}) as any)[i18n.language] || 'ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{it.title}</h3>
                 {it.preview && <p className="text-sm text-gray-600 line-clamp-3">{it.preview}</p>}
-                <div className="mt-4 text-primary-blue text-sm font-medium">Читать на bwfbadminton.com →</div>
+                <div className="mt-4 text-primary-blue text-sm font-medium">{t('home.bwf.readOn', 'Читать на bwfbadminton.com →')}</div>
               </div>
             </a>
           ))}

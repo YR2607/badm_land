@@ -1,16 +1,20 @@
 import { FC, useEffect, useState } from 'react'
 import { proxied } from '../utils/blockFacebookImages'
+import { useTranslation } from 'react-i18next'
 
 type EventItem = { title: string; url: string; image?: string; date?: string; excerpt?: string }
 
-const formatDate = (dateString?: string) => {
+const formatDate = (dateString?: string, locale: string = 'ru') => {
   if (!dateString) return ''
   const date = new Date(dateString)
   if (isNaN(date.getTime())) return ''
-  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+  const map: Record<string, string> = { ru: 'ru-RU', en: 'en-US', ro: 'ro-RO' }
+  const loc = map[locale] || 'ru-RU'
+  return date.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 const EventsSection: FC = () => {
+  const { t, i18n } = useTranslation()
   const [items, setItems] = useState<EventItem[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string>('')
@@ -57,7 +61,7 @@ const EventsSection: FC = () => {
         setItems(mapped)
       } catch (e: any) {
         if (!alive) return
-        setError(e?.message || 'Не удалось загрузить события')
+        setError(e?.message || t('common.error'))
       } finally {
         if (alive) setLoading(false)
       }
@@ -86,14 +90,14 @@ const EventsSection: FC = () => {
               </svg>
             </div>
             <div className="text-left">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">События</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{t('home.events.title')}</h2>
             </div>
           </div>
         </div>
 
-        {loading && (<div className="text-center text-gray-500 py-8">Загрузка…</div>)}
+        {loading && (<div className="text-center text-gray-500 py-8">{t('common.loading')}</div>)}
         {!loading && error && (<div className="text-center text-red-500 py-8">{error}</div>)}
-        {!loading && !error && items.length === 0 && (<div className="text-center text-gray-500 py-8">Пока нет событий</div>)}
+        {!loading && !error && items.length === 0 && (<div className="text-center text-gray-500 py-8">{t('home.events.noItems')}</div>)}
 
         {!loading && !error && items.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:auto-rows-[1fr]">
@@ -127,16 +131,16 @@ const EventsSection: FC = () => {
                           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                             <path d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 0 0 2-2v-8H3v8a2 2 0 0 0 2 2Z" />
                           </svg>
-                          <span className="text-xs md:text-sm font-medium">{formatDate(news.date)}</span>
+                          <span className="text-xs md:text-sm font-medium">{formatDate(news.date, i18n.language)}</span>
                         </div>
-                        <div className="px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold text-white bg-gradient-to-r from-purple-500 to-fuchsia-500">🎫 Событие</div>
+                        <div className="px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold text-white bg-gradient-to-r from-purple-500 to-fuchsia-500">{t('home.events.badge', '🎫 Event')}</div>
                       </div>
                       <h3 className={`font-bold text-gray-900 leading-snug mb-2 break-words whitespace-normal ${index === 1 ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'}`}>{news.title}</h3>
                       {news.excerpt && (
                         <p className={`text-gray-600 leading-relaxed ${index === 1 ? 'text-base md:text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>{news.excerpt}</p>
                       )}
                       <div className="mt-4 flex items-center space-x-2 text-primary-blue transition-all duration-300">
-                        <span className="text-sm font-semibold">Подробнее</span>
+                        <span className="text-sm font-semibold">{t('common.readMore')}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>

@@ -2,11 +2,12 @@ import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight } from 'lucide-react';
-import { fetchAboutPage, CmsAboutPage } from '../lib/cms';
+import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero } from '../lib/cms';
 
 const About: FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [cmsData, setCmsData] = useState<CmsAboutPage | null>(null);
+  const [heroData, setHeroData] = useState<CmsHero | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -17,14 +18,13 @@ const About: FC = () => {
   useEffect(() => {
     const loadCmsData = async () => {
       try {
-        const data = await fetchAboutPage();
-        if (data) {
-          setCmsData(data);
-        }
+        const [data, hero] = await Promise.all([
+          fetchAboutPage(),
+          fetchAboutHero(i18n.language as string)
+        ]);
+        if (data) setCmsData(data);
+        if (hero) setHeroData(hero);
       } catch (error) {
-        if (process.env.NODE_ENV === 'development') {
-          console.error('Failed to load CMS data:', error);
-        }
         setError(t('common.error'));
       }
     };
@@ -77,6 +77,8 @@ const About: FC = () => {
     { number: '15+', label: t('about.stats.tournaments'), icon: <Award className="w-6 h-6" />, color: 'from-primary-blue to-blue-700', description: t('about.stats.tournamentsDesc') }
   ];
 
+  
+
   const values = [
     { icon: <Target className="w-8 h-8" />, title: t('about.values.professionalism'), description: t('about.values.professionalismDesc') },
     { icon: <Heart className="w-8 h-8" />, title: t('about.values.friendliness'), description: t('about.values.friendlinessDesc') },
@@ -84,24 +86,46 @@ const About: FC = () => {
   ];
 
   const timeline: Array<{ year: string; title: string; text: string }> = [
-    // 2024 — все кварталы
-    { year: '2024 Q1', title: 'Старт Altius', text: 'Открыли двери и провели первые наборы для взрослых и подростков.' },
-    { year: '2024 Q2', title: 'Формирование ядра команды', text: 'Стабилизировали расписание, собрали первую клубную группу и стартовали базовый рейтинг.' },
-    { year: '2024 Q3', title: 'Первые трофеи', text: 'Участники клуба взяли призовые места на локальных турнирах.' },
-    { year: '2024 Q4', title: 'Итоги сезона', text: 'Провели клубный финал года, наградили лучших игроков и тренеров.' },
-    // 2025 — все кварталы
-    { year: '2025 Q1', title: 'Школа юниоров', text: 'Запустили детские группы, тест‑сборы, индивидуальные программы.' },
-    { year: '2025 Q2', title: 'Клубная лига', text: 'Регулярные внутренние матчи и мини‑лиги по уровням.' },
-    { year: '2025 Q3', title: 'Расширение участия', text: 'Выездные турниры, партнёрства, спарринги с другими клубами региона.' },
-    { year: '2025 Q4', title: 'Altius Cup', text: 'Открытый турнир клуба с приглашёнными гостями и праздничной церемонией.' }
+    { year: '2024 Q1', title: t('about.timeline.2024.q1.title'), text: t('about.timeline.2024.q1.text') },
+    { year: '2024 Q2', title: t('about.timeline.2024.q2.title'), text: t('about.timeline.2024.q2.text') },
+    { year: '2024 Q3', title: t('about.timeline.2024.q3.title'), text: t('about.timeline.2024.q3.text') },
+    { year: '2024 Q4', title: t('about.timeline.2024.q4.title'), text: t('about.timeline.2024.q4.text') },
+    { year: '2025 Q1', title: t('about.timeline.2025.q1.title'), text: t('about.timeline.2025.q1.text') },
+    { year: '2025 Q2', title: t('about.timeline.2025.q2.title'), text: t('about.timeline.2025.q2.text') },
+    { year: '2025 Q3', title: t('about.timeline.2025.q3.title'), text: t('about.timeline.2025.q3.text') },
+    { year: '2025 Q4', title: t('about.timeline.2025.q4.title'), text: t('about.timeline.2025.q4.text') }
   ];
 
   const roadmap: Array<{ tag: string; title: string; desc: string; status: 'done' | 'progress' | 'planned' }> = [
-    { tag: '2025 Q3', title: 'Расширение участия', desc: 'Выезды на турниры, партнёрства и спарринги с клубами региона.', status: 'done' },
-    { tag: '2025 Q4', title: 'Altius Cup', desc: 'Открытый турнир клуба с церемонией и приглашёнными гостями.', status: 'progress' },
-    { tag: '2026 Q1', title: 'Академия U17', desc: 'Регулярные сборы, тесты, сопровождение и календарь стартов.', status: 'planned' },
-    { tag: '2026 Q2', title: 'Клубная лига 2.0', desc: 'Уровневые дивизионы, рейтинги, матч‑дни и трансляции.', status: 'planned' },
+    { tag: '2025 Q3', title: t('about.roadmap.items.q3_2025.title'), desc: t('about.roadmap.items.q3_2025.desc'), status: 'done' },
+    { tag: '2025 Q4', title: t('about.roadmap.items.q4_2025.title'), desc: t('about.roadmap.items.q4_2025.desc'), status: 'progress' },
+    { tag: '2026 Q1', title: t('about.roadmap.items.q1_2026.title'), desc: t('about.roadmap.items.q1_2026.desc'), status: 'planned' },
+    { tag: '2026 Q2', title: t('about.roadmap.items.q2_2026.title'), desc: t('about.roadmap.items.q2_2026.desc'), status: 'planned' },
   ];
+
+  // CMS-driven overrides (placed after defaults to avoid use-before-declaration)
+  const cmsTimeline: Array<{ year: string; title: string; text: string }> | undefined = cmsData?.historySection?.timeline?.map(it => ({
+    year: it.year,
+    title: it.title,
+    text: it.text
+  }));
+  const cmsShowAllByDefault = cmsData?.historySection?.showAllByDefault;
+  const effectiveTimeline = cmsTimeline || [];
+
+  const cmsRoadmap: Array<{ tag: string; title: string; desc: string; status: 'done' | 'progress' | 'planned' }> | undefined = cmsData?.roadmapSection?.roadmapItems?.map(it => ({
+    tag: it.tag,
+    title: it.title,
+    desc: it.description,
+    status: it.status
+  })) as any;
+  const effectiveRoadmap = cmsRoadmap || [];
+
+  // Initialize showAllHistory from CMS flag (once data loads)
+  useEffect(() => {
+    if (typeof cmsShowAllByDefault === 'boolean') {
+      setShowAllHistory(cmsShowAllByDefault);
+    }
+  }, [cmsShowAllByDefault]);
 
   if (error) {
     return (
@@ -303,15 +327,15 @@ const About: FC = () => {
             <div className="text-center text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                 <Trophy className="w-4 h-4 text-yellow-300" />
-                <span className="text-sm font-medium">{t('about.hero.badge')}</span>
+                <span className="text-sm font-medium">{heroData?.badge?.text || t('about.hero.badge')}</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                ALTIUS
+                {heroData?.title || t('about.hero.title')}
               </h1>
               
               <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                {cmsData?.hero?.subtitle || t('about.hero.subtitle')}
+                {heroData?.subtitle || cmsData?.hero?.subtitle || t('about.hero.subtitle')}
               </p>
               
               {/* Statistics */}
@@ -497,135 +521,73 @@ const About: FC = () => {
             <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.coaches')}</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {cmsData?.teamSection?.coaches ? cmsData.teamSection.coaches.map((coach, index) => (
-                  <motion.div
-                    key={index}
-                    className="bg-white rounded-2xl p-6 group hover:bg-gray-50 transition-all duration-300"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                  >
-                    {/* Photo */}
-                    {coach.photo ? (
-                      <img 
-                        src={coach.photo} 
-                        alt={coach.name}
-                        className="w-32 h-32 mx-auto rounded-2xl object-cover mb-4"
-                      />
-                    ) : (
-                      <div className="w-32 h-32 mx-auto rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mb-4">
-                        <Users className="w-16 h-16 text-white" />
-                      </div>
-                    )}
-                    
-                    {/* Content */}
-                    <div className="text-center">
-                      <h4 className="text-xl font-bold text-gray-900 mb-1">{coach.name}</h4>
-                      <p className="text-primary-blue font-medium mb-3">{coach.role}</p>
-                      
-                      <div className="flex flex-wrap justify-center gap-1 mb-4">
-                        {coach.experience && (
-                          <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
-                            {coach.experience}
-                          </span>
-                        )}
-                        {coach.specialization && (
-                          <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
-                            {coach.specialization}
-                          </span>
-                        )}
-                      </div>
-                      
-                      {coach.achievements && coach.achievements.length > 0 && (
-                        <div className="space-y-2 mb-4">
-                          {coach.achievements.map((achievement: string, idx: number) => (
-                            <span key={idx} className="block text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
-                              {achievement}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      
-                      {coach.description && (
-                        <p className="text-sm text-gray-600 leading-relaxed">
-                          {coach.description}
-                        </p>
-                      )}
-                    </div>
-                  </motion.div>
-                )) : [
-                  {
-                    name: "Елена Петрова",
-                    role: "Старший тренер",
-                    experience: "8 лет опыта",
-                    specialization: "Техника игры",
-                    achievements: ["КМС по бадминтону", "Призёр чемпионата области"],
-                    description: "Специализируется на работе с начинающими игроками и развитии правильной техники ударов."
-                  },
-                  {
-                    name: "Дмитрий Козлов",
-                    role: "Тренер по физподготовке",
-                    experience: "6 лет опыта",
-                    specialization: "Физическая подготовка",
-                    achievements: ["Мастер спорта", "Сертифицированный фитнес-тренер"],
-                    description: "Отвечает за физическую подготовку спортсменов и профилактику травм."
-                  },
-                  {
-                    name: "Анна Смирнова",
-                    role: "Детский тренер",
-                    experience: "5 лет опыта",
-                    specialization: "Работа с детьми",
-                    achievements: ["КМС по бадминтону", "Педагогическое образование"],
-                    description: "Специализируется на обучении детей от 6 до 16 лет, создании игровой атмосферы на тренировках."
-                  }
-                ].map((coach, index) => (
-                  <motion.div
-                    key={index}
-                    className="bg-white rounded-2xl p-6 group hover:bg-gray-50 transition-all duration-300"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                  >
-                    {/* Photo */}
+              {(cmsData?.teamSection?.coaches || []).length === 0 && (
+                <div className="col-span-full text-center text-gray-400 text-sm">
+                  Секция тренеров не заполнена в CMS
+                </div>
+              )}
+              {(cmsData?.teamSection?.coaches || []).map((coach: any, index: number) => (
+                <motion.div
+                  key={index}
+                  className="bg-white rounded-2xl p-6 group hover:bg-gray-50 transition-all duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  {/* Photo */}
+                  {coach.photo ? (
+                    <img 
+                      src={coach.photo} 
+                      alt={coach.name}
+                      className="w-32 h-32 mx-auto rounded-2xl object-cover mb-4"
+                    />
+                  ) : (
                     <div className="w-32 h-32 mx-auto rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mb-4">
                       <Users className="w-16 h-16 text-white" />
                     </div>
+                  )}
+                  
+                  {/* Content */}
+                  <div className="text-center">
+                    <h4 className="text-xl font-bold text-gray-900 mb-1">{coach.name}</h4>
+                    <p className="text-primary-blue font-medium mb-3">{coach.role}</p>
                     
-                    {/* Content */}
-                    <div className="text-center">
-                      <h4 className="text-xl font-bold text-gray-900 mb-1">{coach.name}</h4>
-                      <p className="text-primary-blue font-medium mb-3">{coach.role}</p>
-                      
-                      <div className="flex flex-wrap justify-center gap-1 mb-4">
+                    <div className="flex flex-wrap justify-center gap-1 mb-4">
+                      {coach.experience && (
                         <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
                           {coach.experience}
                         </span>
+                      )}
+                      {coach.specialization && (
                         <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
                           {coach.specialization}
                         </span>
-                      </div>
-                      
+                      )}
+                    </div>
+                    
+                    {coach.achievements && coach.achievements.length > 0 && (
                       <div className="space-y-2 mb-4">
-                        {coach.achievements.map((achievement, idx) => (
+                        {coach.achievements.map((achievement: string, idx: number) => (
                           <span key={idx} className="block text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
                             {achievement}
                           </span>
                         ))}
                       </div>
-                      
+                    )}
+                    
+                    {coach.description && (
                       <p className="text-sm text-gray-600 leading-relaxed">
                         {coach.description}
                       </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
             </motion.div>
         </div>
       </section>
-
       {/* Unified History + Roadmap Section */}
       <section className="py-20 bg-white relative overflow-hidden">
         {/* Background decorative elements */}
@@ -660,9 +622,11 @@ const About: FC = () => {
             <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.history.development')}</h3>
             
             {/* Timeline with years as dividers */}
-            {(() => {
+            {effectiveTimeline.length === 0 ? (
+              <div className="text-center text-gray-400 text-sm">Секция истории не заполнена в CMS</div>
+            ) : (() => {
               const getYear = (s: string) => (s.match(/\d{4}/)?.[0] || s);
-              const items = showAllHistory ? timeline : timeline.slice(0, VISIBLE_HISTORY_COUNT);
+              const items = showAllHistory ? effectiveTimeline : effectiveTimeline.slice(0, VISIBLE_HISTORY_COUNT);
               const groups: Record<string, typeof timeline> = {} as any;
               items.forEach((it) => {
                 const y = getYear(it.year);
@@ -743,11 +707,15 @@ const About: FC = () => {
             {/* Interactive Horizontal Scrollable Roadmap - Full Width */}
             <div className="relative -mx-4 sm:-mx-6 lg:-mx-8">
               {/* Scroll hint */}
-              <div className="flex items-center justify-center gap-2 mb-6 text-sm text-gray-500 px-4 sm:px-6 lg:px-8">
-                <ArrowRight className="w-4 h-4 animate-pulse" />
-                <span>{t('about.roadmap.scrollHint')}</span>
-                <ArrowRight className="w-4 h-4 animate-pulse" />
-              </div>
+              {effectiveRoadmap.length === 0 ? (
+                <div className="text-center text-gray-400 text-sm px-4 sm:px-6 lg:px-8">Секция планов не заполнена в CMS</div>
+              ) : (
+                <div className="flex items-center justify-center gap-2 mb-6 text-sm text-gray-500 px-4 sm:px-6 lg:px-8">
+                  <ArrowRight className="w-4 h-4 animate-pulse" />
+                  <span>{t('about.roadmap.scrollHint')}</span>
+                  <ArrowRight className="w-4 h-4 animate-pulse" />
+                </div>
+              )}
               
               {/* Scrollable container with full-width blur effects */}
               <div className="relative">
@@ -758,6 +726,7 @@ const About: FC = () => {
                 <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/90 via-white/60 to-transparent z-10 pointer-events-none" />
                 
                 {/* Scrollable content - full width */}
+                {effectiveRoadmap.length > 0 && (
                 <div 
                   className="roadmap-scroll-container overflow-x-auto pb-4 scrollbar-hide scroll-smooth cursor-grab select-none" 
                   style={{ scrollBehavior: 'smooth' }}
@@ -767,7 +736,7 @@ const About: FC = () => {
                   onMouseMove={handleMouseMove}
                 >
                   <div className="flex gap-6 min-w-max pl-8 pr-24">
-                    {roadmap.map((r, i) => (
+                    {effectiveRoadmap.map((r, i) => (
                       <motion.div 
                         key={i} 
                         initial={{ opacity: 0, x: 50 }} 
@@ -818,19 +787,22 @@ const About: FC = () => {
                     ))}
                   </div>
                 </div>
+                )}
               </div>
               
               {/* Enhanced scroll indicators with progress */}
-              <div className="flex justify-center mt-8 gap-3">
-                {roadmap.map((_, i) => (
-                  <div 
-                    key={i}
-                    className="w-3 h-3 rounded-full bg-primary-blue/20 hover:bg-primary-blue/40 transition-colors cursor-pointer"
-                    title={`План ${i + 1}: ${roadmap[i].title}`}
-                    onClick={() => scrollToCard(i)}
-                  />
-                ))}
-              </div>
+              {effectiveRoadmap.length > 0 && (
+                <div className="flex justify-center mt-8 gap-3">
+                  {effectiveRoadmap.map((_, i) => (
+                    <div 
+                      key={i}
+                      className="w-3 h-3 rounded-full bg-primary-blue/20 hover:bg-primary-blue/40 transition-colors cursor-pointer"
+                      title={`План ${i + 1}: ${effectiveRoadmap[i].title}`}
+                      onClick={() => scrollToCard(i)}
+                    />
+                  ))}
+                </div>
+              )}
               
               {/* Additional scroll hint for mobile */}
               <div className="md:hidden flex justify-center mt-4">

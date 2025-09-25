@@ -7,9 +7,19 @@ export default defineType({
   fields: [
     defineField({
       name: 'name',
-      title: 'Имя',
+      title: 'Имя (RU)',
       type: 'string',
       validation: r => r.required()
+    }),
+    defineField({
+      name: 'name_en',
+      title: 'Имя (EN)',
+      type: 'string'
+    }),
+    defineField({
+      name: 'name_ro',
+      title: 'Имя (RO)',
+      type: 'string'
     }),
     defineField({
       name: 'slug',
@@ -36,22 +46,64 @@ export default defineType({
     }),
     defineField({
       name: 'experience',
-      title: 'Опыт работы',
+      title: 'Опыт работы (RU)',
+      type: 'string'
+    }),
+    defineField({
+      name: 'experience_en',
+      title: 'Опыт работы (EN)',
+      type: 'string'
+    }),
+    defineField({
+      name: 'experience_ro',
+      title: 'Опыт работы (RO)',
       type: 'string'
     }),
     defineField({
       name: 'specialization',
-      title: 'Специализация',
+      title: 'Специализация (RU)',
+      type: 'string'
+    }),
+    defineField({
+      name: 'specialization_en',
+      title: 'Специализация (EN)',
+      type: 'string'
+    }),
+    defineField({
+      name: 'specialization_ro',
+      title: 'Специализация (RO)',
       type: 'string'
     }),
     defineField({
       name: 'description',
-      title: 'Описание',
+      title: 'Описание (RU)',
+      type: 'text'
+    }),
+    defineField({
+      name: 'description_en',
+      title: 'Описание (EN)',
+      type: 'text'
+    }),
+    defineField({
+      name: 'description_ro',
+      title: 'Описание (RO)',
       type: 'text'
     }),
     defineField({
       name: 'achievements',
-      title: 'Достижения',
+      title: 'Достижения (RU)',
+      type: 'array',
+      of: [{ type: 'string' }]
+    }),
+    defineField({
+      name: 'achievements_en',
+      title: 'Достижения (EN)',
+      type: 'array',
+      of: [{ type: 'string' }]
+    }),
+    defineField({
+      name: 'achievements_ro',
+      title: 'Достижения (RO)',
       type: 'array',
       of: [{ type: 'string' }]
     }),

@@ -1,28 +1,33 @@
 import { useState, useEffect, type FC } from 'react';
+import { Link } from 'react-router-dom';
 import { MapPin, Phone, Clock, ArrowLeft, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { fetchGyms, type CmsGym } from '../lib/cms';
+import { fetchGyms, type CmsGym, fetchGymsHero, type CmsHero } from '../lib/cms';
 import { useTranslation } from 'react-i18next';
 
 const Gyms: FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [cmsGyms, setCmsGyms] = useState<CmsGym[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedGym, setSelectedGym] = useState<CmsGym | null>(null);
   const [filter, setFilter] = useState<'all' | 'children' | 'adults'>('all');
+  const [heroData, setHeroData] = useState<CmsHero | null>(null);
 
   // Загружаем данные из CMS
   useEffect(() => {
     const loadGyms = async () => {
       try {
         setLoading(true);
-        const gymsData = await fetchGyms();
+        const [gymsData, hero] = await Promise.all([
+          fetchGyms(),
+          fetchGymsHero(i18n.language as string)
+        ]);
         setCmsGyms(gymsData);
+        if (hero) setHeroData(hero);
         setError(null);
       } catch (err) {
         setError(t('common.error'));
-        console.error('Error loading gyms:', err);
       } finally {
         setLoading(false);
       }
@@ -61,14 +66,14 @@ const Gyms: FC = () => {
       ],
       schedule: {
         children: {
-          title: 'Детские группы',
-          times: 'По договоренности',
-          details: 'Индивидуальный подход к расписанию для каждой группы'
+          title: t('gyms.filters.children'),
+          times: t('gyms.fallback.byArrangement'),
+          details: t('gyms.fallback.flexibleSchedule')
         },
         adults: {
-          title: 'Любители',
-          times: 'По договоренности', 
-          details: 'Гибкое расписание под ваши потребности'
+          title: t('gyms.tags.adults'),
+          times: t('gyms.fallback.byArrangement'), 
+          details: t('gyms.fallback.flexibleSchedule')
         }
       },
       pricing: {
@@ -124,9 +129,9 @@ const Gyms: FC = () => {
       ],
       schedule: {
         children: {
-          title: 'Детские группы',
+          title: t('gyms.filters.children'),
           times: 'Пн-Пт 16:00-18:00',
-          details: 'Ежедневные тренировки в будние дни'
+          details: t('gyms.fallback.weekdayDaily')
         }
       },
       pricing: {
@@ -165,21 +170,21 @@ const Gyms: FC = () => {
         '/images/gym3-4.jpg'
       ],
       features: [
-        'Группа совершенствования',
+        t('gyms.fallback.improvementGroup'),
         'Профессиональное оборудование',
         'Видеоанализ',
         'Сауна'
       ],
       schedule: {
         children: {
-          title: 'Группа совершенствования',
+          title: t('gyms.fallback.improvementGroup'),
           times: 'Пн,Ср,Чт,Пт 17:00-19:00 + СБ,ВС 09:00-12:00',
-          details: 'Интенсивные тренировки для подготовки к соревнованиям'
+          details: t('gyms.fallback.intensiveTraining')
         },
         adults: {
-          title: 'Любители',
+          title: t('gyms.tags.adults'),
           times: 'Пн,Ср,Пт 19:00-21:00',
-          details: 'Тренировки для взрослых любителей бадминтона'
+          details: t('gyms.fallback.trainingForAdults')
         }
       },
       pricing: {
@@ -432,18 +437,24 @@ const Gyms: FC = () => {
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
-                <span className="text-lg">🏸</span>
-                <span className="text-sm font-medium">{t('gyms.hero.badge')}</span>
-              </div>
+              {heroData?.badge?.text && (
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
+                  <span className="text-lg">🏸</span>
+                  <span className="text-sm font-medium">{heroData.badge.text}</span>
+                </div>
+              )}
               
-              <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                {t('gyms.hero.title')}
-              </h1>
+              {heroData?.title && (
+                <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+                  {heroData.title}
+                </h1>
+              )}
               
-              <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                {t('gyms.hero.subtitle')}
-              </p>
+              {heroData?.subtitle && (
+                <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
+                  {heroData.subtitle}
+                </p>
+              )}
               
               {/* Statistics */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
@@ -587,12 +598,15 @@ const Gyms: FC = () => {
                       </div>
                       
                       {/* Action Button */}
-                      <button className="w-full bg-gradient-to-r from-primary-blue to-primary-orange text-white py-4 rounded-2xl font-bold text-lg hover:shadow-lg transition-all duration-200">
-                        <span className="flex items-center justify-center gap-2">
+                      <Link
+                        to={`/gyms/${gym.slug}`}
+                        className="block w-full bg-gradient-to-r from-primary-blue to-primary-orange text-white py-4 rounded-2xl font-bold text-lg hover:shadow-lg transition-all duration-200 text-center"
+                      >
+                        <span className="inline-flex items-center justify-center gap-2">
                           {t('gyms.moreDetails')}
                           →
                         </span>
-                      </button>
+                      </Link>
                     </div>
                     
                   </motion.div>

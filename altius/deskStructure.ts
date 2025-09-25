@@ -112,8 +112,8 @@ const deskStructure = (S: any) =>
                 .title('🎯 Hero секция')
                 .child(
                   S.document()
-                    .schemaType('homePage')
-                    .documentId('homePage')
+                    .schemaType('homeHero')
+                    .documentId('homeHero')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -124,8 +124,8 @@ const deskStructure = (S: any) =>
                 .title('ℹ️ О клубе (секция)')
                 .child(
                   S.document()
-                    .schemaType('homePage')
-                    .documentId('homePage')
+                    .schemaType('homeAbout')
+                    .documentId('homeAbout')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -136,8 +136,8 @@ const deskStructure = (S: any) =>
                 .title('🏸 Услуги (секция)')
                 .child(
                   S.document()
-                    .schemaType('homePage')
-                    .documentId('homePage')
+                    .schemaType('homeServices')
+                    .documentId('homeServices')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -148,8 +148,8 @@ const deskStructure = (S: any) =>
                 .title('🏆 Достижения')
                 .child(
                   S.document()
-                    .schemaType('homePage')
-                    .documentId('homePage')
+                    .schemaType('homeAchievements')
+                    .documentId('homeAchievements')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -160,8 +160,8 @@ const deskStructure = (S: any) =>
                 .title('📞 CTA секция')
                 .child(
                   S.document()
-                    .schemaType('homePage')
-                    .documentId('homePage')
+                    .schemaType('homeCta')
+                    .documentId('homeCta')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -172,8 +172,8 @@ const deskStructure = (S: any) =>
                 .title('🔍 SEO настройки')
                 .child(
                   S.document()
-                    .schemaType('homePage')
-                    .documentId('homePage')
+                    .schemaType('homeSeo')
+                    .documentId('homeSeo')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -192,8 +192,8 @@ const deskStructure = (S: any) =>
                 .title('🎯 Hero секция')
                 .child(
                   S.document()
-                    .schemaType('aboutPage')
-                    .documentId('aboutPage')
+                    .schemaType('aboutHero')
+                    .documentId('aboutHero')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -204,8 +204,8 @@ const deskStructure = (S: any) =>
                 .title('📊 Статистика')
                 .child(
                   S.document()
-                    .schemaType('aboutPage')
-                    .documentId('aboutPage')
+                    .schemaType('aboutStats')
+                    .documentId('aboutStats')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -216,8 +216,8 @@ const deskStructure = (S: any) =>
                 .title('📋 Табы (Миссия, Тренеры, Залы)')
                 .child(
                   S.document()
-                    .schemaType('aboutPage')
-                    .documentId('aboutPage')
+                    .schemaType('aboutTabs')
+                    .documentId('aboutTabs')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -228,8 +228,8 @@ const deskStructure = (S: any) =>
                 .title('📅 История клуба')
                 .child(
                   S.document()
-                    .schemaType('aboutPage')
-                    .documentId('aboutPage')
+                    .schemaType('aboutHistory')
+                    .documentId('aboutHistory')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -240,8 +240,8 @@ const deskStructure = (S: any) =>
                 .title('🗺️ Планы развития')
                 .child(
                   S.document()
-                    .schemaType('aboutPage')
-                    .documentId('aboutPage')
+                    .schemaType('aboutRoadmap')
+                    .documentId('aboutRoadmap')
                     .views([
                       S.view.form()
                         .title('Редактировать')
@@ -272,8 +272,8 @@ const deskStructure = (S: any) =>
                 .title('🎯 Hero секция')
                 .child(
                   S.document()
-                    .schemaType('servicesPage')
-                    .documentId('servicesPage')
+                    .schemaType('servicesHero')
+                    .documentId('servicesHero')
                     .views([
                       S.view.form().title('Редактировать').icon(() => '✏️')
                     ])
@@ -282,8 +282,8 @@ const deskStructure = (S: any) =>
                 .title('🏸 Список услуг')
                 .child(
                   S.document()
-                    .schemaType('servicesPage')
-                    .documentId('servicesPage')
+                    .schemaType('servicesList')
+                    .documentId('servicesList')
                     .views([
                       S.view.form().title('Редактировать').icon(() => '✏️')
                     ])
@@ -292,8 +292,8 @@ const deskStructure = (S: any) =>
                 .title('💰 Тарифы')
                 .child(
                   S.document()
-                    .schemaType('servicesPage')
-                    .documentId('servicesPage')
+                    .schemaType('servicesPricing')
+                    .documentId('servicesPricing')
                     .views([
                       S.view.form().title('Редактировать').icon(() => '✏️')
                     ])
@@ -302,8 +302,8 @@ const deskStructure = (S: any) =>
                 .title('🔍 SEO настройки')
                 .child(
                   S.document()
-                    .schemaType('servicesPage')
-                    .documentId('servicesPage')
+                    .schemaType('servicesSeo')
+                    .documentId('servicesSeo')
                     .views([
                       S.view.form().title('Редактировать').icon(() => '✏️')
                     ])
@@ -317,77 +317,25 @@ const deskStructure = (S: any) =>
             .title('Спортзалы')
             .items([
               S.listItem()
-                .title('📄 Главная страница залов')
+                .title('🎯 Hero секция')
                 .child(
                   S.document()
-                    .schemaType('gymsPage')
-                    .documentId('gymsPage')
+                    .schemaType('gymsHero')
+                    .documentId('gymsHero')
                 ),
               S.divider(),
               S.listItem()
                 .title('🏢 Управление залами')
                 .child(S.documentTypeList('gym').title('Залы')),
-            ])
-        ),
-      S.listItem()
-        .title('📞 Контакты')
-        .child(
-          S.list()
-            .title('Контакты')
-            .items([
-              S.listItem()
-                .title('🎯 Hero секция')
-                .child(
-                  S.document()
-                    .schemaType('contactPage')
-                    .documentId('contactPage')
-                    .views([
-                      S.view.form().title('Редактировать').icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('📞 Контактная информация')
-                .child(
-                  S.document()
-                    .schemaType('contactPage')
-                    .documentId('contactPage')
-                    .views([
-                      S.view.form().title('Редактировать').icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('🏢 Контакты залов')
-                .child(
-                  S.document()
-                    .schemaType('contactPage')
-                    .documentId('contactPage')
-                    .views([
-                      S.view.form().title('Редактировать').icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('📝 Форма обратной связи')
-                .child(
-                  S.document()
-                    .schemaType('contactPage')
-                    .documentId('contactPage')
-                    .views([
-                      S.view.form().title('Редактировать').icon(() => '✏️')
-                    ])
-                ),
               S.listItem()
                 .title('🔍 SEO настройки')
                 .child(
                   S.document()
-                    .schemaType('contactPage')
-                    .documentId('contactPage')
-                    .views([
-                      S.view.form().title('Редактировать').icon(() => '✏️')
-                    ])
+                    .schemaType('gymsSeo')
+                    .documentId('gymsSeo')
                 ),
             ])
         ),
-      
       S.divider(),
       
       // Медиа контент

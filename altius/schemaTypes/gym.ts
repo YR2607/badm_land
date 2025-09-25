@@ -5,12 +5,9 @@ export default defineType({
   title: 'Спортзал',
   type: 'document',
   fields: [
-    defineField({
-      name: 'name',
-      title: 'Название зала',
-      type: 'string',
-      validation: r => r.required()
-    }),
+    defineField({ name: 'name', title: 'Название зала (RU)', type: 'string', validation: r => r.required() }),
+    defineField({ name: 'name_en', title: 'Название зала (EN)', type: 'string' }),
+    defineField({ name: 'name_ro', title: 'Название зала (RO)', type: 'string' }),
     defineField({
       name: 'slug',
       title: 'Slug',
@@ -20,11 +17,9 @@ export default defineType({
         maxLength: 96
       }
     }),
-    defineField({
-      name: 'description',
-      title: 'Краткое описание',
-      type: 'text'
-    }),
+    defineField({ name: 'description', title: 'Краткое описание (RU)', type: 'text' }),
+    defineField({ name: 'description_en', title: 'Краткое описание (EN)', type: 'text' }),
+    defineField({ name: 'description_ro', title: 'Краткое описание (RO)', type: 'text' }),
     defineField({
       name: 'detailedDescription',
       title: 'Подробное описание',
@@ -39,11 +34,9 @@ export default defineType({
         hotspot: true
       }
     }),
-    defineField({
-      name: 'badge',
-      title: 'Бейдж',
-      type: 'string'
-    }),
+    defineField({ name: 'badge', title: 'Бейдж (RU)', type: 'string' }),
+    defineField({ name: 'badge_en', title: 'Бейдж (EN)', type: 'string' }),
+    defineField({ name: 'badge_ro', title: 'Бейдж (RO)', type: 'string' }),
     defineField({
       name: 'badgeColor',
       title: 'Цвет бейджа',
@@ -88,12 +81,9 @@ export default defineType({
         }
       }]
     }),
-    defineField({
-      name: 'features',
-      title: 'Особенности зала',
-      type: 'array',
-      of: [{ type: 'string' }]
-    }),
+    defineField({ name: 'features', title: 'Особенности зала (RU)', type: 'array', of: [{ type: 'string' }] }),
+    defineField({ name: 'features_en', title: 'Особенности зала (EN)', type: 'array', of: [{ type: 'string' }] }),
+    defineField({ name: 'features_ro', title: 'Особенности зала (RO)', type: 'array', of: [{ type: 'string' }] }),
     defineField({
       name: 'hasChildren',
       title: 'Детские группы',
@@ -114,9 +104,13 @@ export default defineType({
           title: 'Детские группы',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Название', type: 'string' },
+            { name: 'title', title: 'Название (RU)', type: 'string' },
+            { name: 'title_en', title: 'Название (EN)', type: 'string' },
+            { name: 'title_ro', title: 'Название (RO)', type: 'string' },
             { name: 'times', title: 'Время', type: 'string' },
-            { name: 'details', title: 'Детали', type: 'text' }
+            { name: 'details', title: 'Детали (RU)', type: 'text' },
+            { name: 'details_en', title: 'Детали (EN)', type: 'text' },
+            { name: 'details_ro', title: 'Детали (RO)', type: 'text' }
           ]
         },
         {
@@ -124,9 +118,13 @@ export default defineType({
           title: 'Взрослые группы',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Название', type: 'string' },
+            { name: 'title', title: 'Название (RU)', type: 'string' },
+            { name: 'title_en', title: 'Название (EN)', type: 'string' },
+            { name: 'title_ro', title: 'Название (RO)', type: 'string' },
             { name: 'times', title: 'Время', type: 'string' },
-            { name: 'details', title: 'Детали', type: 'text' }
+            { name: 'details', title: 'Детали (RU)', type: 'text' },
+            { name: 'details_en', title: 'Детали (EN)', type: 'text' },
+            { name: 'details_ro', title: 'Детали (RO)', type: 'text' }
           ]
         }
       ]
@@ -141,9 +139,15 @@ export default defineType({
           title: 'Детские группы',
           type: 'object',
           fields: [
-            { name: 'monthly', title: 'Месячный абонемент', type: 'string' },
-            { name: 'single', title: 'Разовое занятие', type: 'string' },
-            { name: 'trial', title: 'Пробное занятие', type: 'string' }
+            { name: 'monthly', title: 'Месячный абонемент (RU)', type: 'string' },
+            { name: 'monthly_en', title: 'Месячный абонемент (EN)', type: 'string' },
+            { name: 'monthly_ro', title: 'Месячный абонемент (RO)', type: 'string' },
+            { name: 'single', title: 'Разовое занятие (RU)', type: 'string' },
+            { name: 'single_en', title: 'Разовое занятие (EN)', type: 'string' },
+            { name: 'single_ro', title: 'Разовое занятие (RO)', type: 'string' },
+            { name: 'trial', title: 'Пробное занятие (RU)', type: 'string' },
+            { name: 'trial_en', title: 'Пробное занятие (EN)', type: 'string' },
+            { name: 'trial_ro', title: 'Пробное занятие (RO)', type: 'string' }
           ]
         },
         {
@@ -151,9 +155,15 @@ export default defineType({
           title: 'Взрослые группы',
           type: 'object',
           fields: [
-            { name: 'monthly', title: 'Месячный абонемент', type: 'string' },
-            { name: 'single', title: 'Разовое занятие', type: 'string' },
-            { name: 'trial', title: 'Пробное занятие', type: 'string' }
+            { name: 'monthly', title: 'Месячный абонемент (RU)', type: 'string' },
+            { name: 'monthly_en', title: 'Месячный абонемент (EN)', type: 'string' },
+            { name: 'monthly_ro', title: 'Месячный абонемент (RO)', type: 'string' },
+            { name: 'single', title: 'Разовое занятие (RU)', type: 'string' },
+            { name: 'single_en', title: 'Разовое занятие (EN)', type: 'string' },
+            { name: 'single_ro', title: 'Разовое занятие (RO)', type: 'string' },
+            { name: 'trial', title: 'Пробное занятие (RU)', type: 'string' },
+            { name: 'trial_en', title: 'Пробное занятие (EN)', type: 'string' },
+            { name: 'trial_ro', title: 'Пробное занятие (RO)', type: 'string' }
           ]
         }
       ]

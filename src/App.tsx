@@ -10,6 +10,7 @@ import Blog from './pages/Blog';
 const About = lazy(() => import('./pages/About'));
 const Services = lazy(() => import('./pages/Services'));
 const Gyms = lazy(() => import('./pages/Gyms'));
+const GymDetail = lazy(() => import('./pages/GymDetail'));
 const Gallery = lazy(() => import('./pages/Gallery'));
 const Contact = lazy(() => import('./pages/Contact'));
 const PostDetail = lazy(() => import('./pages/PostDetail'));
@@ -31,6 +32,7 @@ function App() {
         <Route path="/gallery" element={<Suspense fallback={<PageLoader />}><Gallery /></Suspense>} />
         <Route path="/services" element={<Suspense fallback={<PageLoader />}><Services /></Suspense>} />
         <Route path="/gyms" element={<Suspense fallback={<PageLoader />}><Gyms /></Suspense>} />
+        <Route path="/gyms/:slug" element={<Suspense fallback={<PageLoader />}><GymDetail /></Suspense>} />
         <Route path="/contact" element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<Suspense fallback={<PageLoader />}><PostDetail /></Suspense>} />

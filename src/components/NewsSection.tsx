@@ -3,15 +3,19 @@ import { motion } from 'framer-motion';
 import { Calendar, ArrowRight, Globe, Zap } from 'lucide-react';
 import { NewsItem } from '../types';
 import { mockNews } from '../data/mockData';
+import { useTranslation } from 'react-i18next';
 
 const NewsSection: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const featuredNews = mockNews.filter(news => news.featured)[0];
   const latestNews = mockNews.filter(news => news.category === 'news').slice(0, 3);
   const worldNews = mockNews.filter(news => news.category === 'world').slice(0, 2);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', {
+    const map: Record<string, string> = { ru: 'ru-RU', en: 'en-US', ro: 'ro-RO' };
+    const loc = map[i18n.language] || 'ru-RU';
+    return date.toLocaleDateString(loc, {
       day: 'numeric',
       month: 'long',
       year: 'numeric'
@@ -54,10 +58,10 @@ const NewsSection: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl font-bold font-display text-gray-900 mb-4">
-            Новости и События
+            {t('home.newsSection.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Следите за последними новостями клуба и мировыми событиями в бадминтоне
+            {t('home.newsSection.subtitle')}
           </p>
         </motion.div>
 
@@ -84,7 +88,7 @@ const NewsSection: React.FC = () => {
                     <div className="flex items-center space-x-2 mb-3">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColor(featuredNews.category)}`}>
                         {getCategoryIcon(featuredNews.category)}
-                        <span className="ml-1 capitalize">{featuredNews.category === 'news' ? 'Новости' : 'События'}</span>
+                        <span className="ml-1 capitalize">{featuredNews.category === 'news' ? t('home.newsSection.category.news') : t('home.newsSection.category.events')}</span>
                       </span>
                       <span className="text-sm opacity-80">{formatDate(featuredNews.date)}</span>
                     </div>
@@ -93,7 +97,7 @@ const NewsSection: React.FC = () => {
                     </h3>
                     <p className="text-gray-200 mb-4">{featuredNews.excerpt}</p>
                     <div className="flex items-center text-primary-yellow group-hover:translate-x-2 transition-transform">
-                      <span className="mr-2">Читать далее</span>
+                      <span className="mr-2">{t('common.readMore')}</span>
                       <ArrowRight size={16} />
                     </div>
                   </div>
@@ -113,7 +117,7 @@ const NewsSection: React.FC = () => {
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                 <Zap className="w-5 h-5 text-primary-blue mr-2" />
-                Последние новости
+                {t('home.newsSection.latest')}
               </h3>
               <div className="space-y-4">
                 {latestNews.map((news, index) => (
@@ -144,7 +148,7 @@ const NewsSection: React.FC = () => {
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                 <Globe className="w-5 h-5 text-primary-orange mr-2" />
-                Мировые новости
+                {t('home.newsSection.world')}
               </h3>
               <div className="space-y-4">
                 {worldNews.map((news, index) => (
@@ -183,7 +187,7 @@ const NewsSection: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <button className="btn-primary">
-            Все новости и события
+            {t('home.newsSection.viewAll')}
             <ArrowRight className="ml-2 w-5 h-5" />
           </button>
         </motion.div>

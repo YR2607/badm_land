@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Trophy, Medal, Star, Award, Crown, Target, Heart, Zap } from 'lucide-react';
 
@@ -29,6 +30,7 @@ interface AchievementsSectionProps {
 }
 
 const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pathRef = useRef<SVGPathElement | null>(null);
   const shuttleRef = useRef<SVGGElement | null>(null);
@@ -43,48 +45,65 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
     }
   }
 
+  function getAchievementIcon(iconName?: string) {
+    switch (iconName) {
+      case 'Crown': return <Crown className="w-8 h-8" />;
+      case 'Target': return <Target className="w-8 h-8" />;
+      case 'Heart': return <Heart className="w-8 h-8" />;
+      case 'Zap': return <Zap className="w-8 h-8" />;
+      case 'Trophy': return <Trophy className="w-8 h-8" />;
+      case 'Award': return <Award className="w-8 h-8" />;
+      case 'Medal': return <Medal className="w-8 h-8" />;
+      case 'Star': return <Star className="w-8 h-8" />;
+      default: return null;
+    }
+  }
+
   const defaultAchievements = [
     {
       icon: <Crown className="w-8 h-8" />,
-      title: 'Чемпионы Молдовы',
+      title: t('home.achievements.items.champions.title'),
       count: '15',
-      description: 'Наших воспитанников стали чемпионами страны',
+      description: t('home.achievements.items.champions.description'),
       color: 'from-yellow-500 to-amber-600'
     },
     {
       icon: <Target className="w-8 h-8" />,
-      title: 'Медали на турнирах',
+      title: t('home.achievements.items.medals.title'),
       count: '47',
-      description: 'Завоеванных медалей на национальных соревнованиях',
+      description: t('home.achievements.items.medals.description'),
       color: 'from-emerald-500 to-teal-600'
     },
     {
       icon: <Heart className="w-8 h-8" />,
-      title: 'Активных спортсменов',
+      title: t('home.achievements.items.athletes.title'),
       count: '500+',
-      description: 'Регулярно тренируются в нашем клубе',
+      description: t('home.achievements.items.athletes.description'),
       color: 'from-rose-500 to-pink-600'
     },
     {
       icon: <Zap className="w-8 h-8" />,
-      title: 'Лет успешной работы',
+      title: t('home.achievements.items.years.title'),
       count: '15',
-      description: 'Развиваем бадминтон в Молдове с 2010 года',
+      description: t('home.achievements.items.years.description'),
       color: 'from-violet-500 to-purple-600'
     }
   ];
 
-  // Fixed icons but CMS text - merge CMS data with default icons
-  const achievements = defaultAchievements.map((defaultItem, index) => {
-    const cmsItem = cmsData?.achievements?.[index];
-    return {
-      icon: defaultItem.icon, // Always use default icon
-      title: cmsItem?.title || defaultItem.title, // CMS title or fallback
-      count: cmsItem?.count || defaultItem.count, // CMS count or fallback
-      description: cmsItem?.description || defaultItem.description, // CMS description or fallback
-      color: defaultItem.color // Always use default color
-    };
-  });
+  // Prefer CMS items when provided; fallback to translated defaults
+  const achievements = (cmsData?.achievements && cmsData.achievements.length > 0
+    ? cmsData.achievements.map((cmsItem, index) => {
+        const fallback = defaultAchievements[index % defaultAchievements.length];
+        return {
+          icon: getAchievementIcon(cmsItem.icon) || fallback.icon,
+          title: cmsItem.title || fallback.title,
+          count: cmsItem.count || fallback.count,
+          description: cmsItem.description || fallback.description,
+          color: cmsItem.color || fallback.color
+        };
+      })
+    : defaultAchievements
+  );
 
   // Debug logging
   if (process.env.NODE_ENV === 'development') {
@@ -96,28 +115,28 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
   const defaultMilestones = [
     {
       year: '2010',
-      title: 'Основание клуба',
-      description: 'Открытие первого зала с 4 кортами'
+      title: t('home.achievements.timeline.defaults.2010.title'),
+      description: t('home.achievements.timeline.defaults.2010.description')
     },
     {
       year: '2015',
-      title: 'Расширение',
-      description: 'Открытие второго зала, рост до 200 участников'
+      title: t('home.achievements.timeline.defaults.2015.title'),
+      description: t('home.achievements.timeline.defaults.2015.description')
     },
     {
       year: '2018',
-      title: 'Международное признание',
-      description: 'Первые медали на международных турнирах'
+      title: t('home.achievements.timeline.defaults.2018.title'),
+      description: t('home.achievements.timeline.defaults.2018.description')
     },
     {
       year: '2020',
-      title: 'Центр подготовки',
-      description: 'Официальный статус регионального центра подготовки'
+      title: t('home.achievements.timeline.defaults.2020.title'),
+      description: t('home.achievements.timeline.defaults.2020.description')
     },
     {
       year: '2024',
-      title: 'Модернизация',
-      description: 'Полное обновление оборудования и инфраструктуры'
+      title: t('home.achievements.timeline.defaults.2024.title'),
+      description: t('home.achievements.timeline.defaults.2024.description')
     }
   ];
 
@@ -173,11 +192,11 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
               <Medal className="w-8 h-8 text-white drop-shadow-sm" />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-              {cmsData?.title || 'Наши Достижения'}
+              {cmsData?.title || t('home.achievements.title')}
             </h2>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {cmsData?.subtitle || 'За годы работы мы достигли впечатляющих результатов и воспитали множество талантливых спортсменов'}
+            {cmsData?.subtitle || t('home.achievements.subtitle')}
           </p>
         </motion.div>
 
@@ -211,7 +230,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">
-            {cmsData?.timeline?.title || 'История развития клуба'}
+            {cmsData?.timeline?.title || t('home.achievements.timeline.title')}
           </h3>
           
           <div className="relative min-h-[400px] md:min-h-[620px]" ref={containerRef}>
@@ -303,7 +322,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
               {getCallToActionIcon(cmsData?.callToAction?.icon || 'Star')}
             </motion.div>
             <span className="font-semibold text-sm sm:text-base md:text-lg text-center leading-tight">
-              {cmsData?.callToAction?.text || 'Станьте частью нашей истории успеха!'}
+              {cmsData?.callToAction?.text || t('home.achievements.cta')}
             </span>
           </motion.div>
         </motion.div>

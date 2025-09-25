@@ -29,6 +29,99 @@ export async function fetchGallerySections(): Promise<Record<string, string[]>> 
   return result;
 }
 
+export type CmsContactInfo = {
+  title?: string;
+  description?: string;
+  contacts: Array<{ type: 'phone'|'email'|'address'|'social'; label: string; value: string; icon?: string }>;
+};
+
+export async function fetchContactInfo(): Promise<CmsContactInfo | null> {
+  const cacheKey = 'contactInfo';
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsContactInfo>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(groq`*[_type == "contactInfo"][0]{ title, description, contacts[]{ type, label, value, icon } }`);
+    if (data && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, data);
+    return data || null;
+  } catch {
+    return null;
+  }
+}
+
+export type CmsContactGymCard = {
+  name: string; type?: string; badge?: string; address?: string; description?: string; hours?: string;
+};
+
+export async function fetchContactGymsCards(): Promise<CmsContactGymCard[]> {
+  const cacheKey = 'contactGymsCards';
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsContactGymCard[]>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(groq`*[_type == "contactGyms"][0]{ gyms[]->{ name, type, badge, address, description, hours } }`);
+    const list: CmsContactGymCard[] = data?.gyms || [];
+    if (list && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, list);
+    return list || [];
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchGymsHero(lang: string = 'ru'): Promise<CmsHero | null> {
+  const cacheKey = `gymsHero-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsHero>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "gymsHero"][0]{
+        content{
+          badge{icon, "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)},
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+          "subtitle": select($lang=="en" && defined(subtitle_en)=>subtitle_en, $lang=="ro" && defined(subtitle_ro)=>subtitle_ro, subtitle),
+          statistics[]{ number, "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description) }
+        }
+      }`,
+      { lang }
+    );
+    const hero: CmsHero | null = data?.content || null;
+    if (hero && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, hero);
+    return hero;
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function fetchContactHero(lang: string = 'ru'): Promise<CmsHero | null> {
+  const cacheKey = `contactHero-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsHero>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "contactHero"][0]{
+        content{
+          badge{icon, "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)},
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+          "subtitle": select($lang=="en" && defined(subtitle_en)=>subtitle_en, $lang=="ro" && defined(subtitle_ro)=>subtitle_ro, subtitle),
+          statistics[]{ number, "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description) }
+        }
+      }`,
+      { lang }
+    );
+    const hero: CmsHero | null = data?.content || null;
+    if (hero && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, hero);
+    return hero;
+  } catch (e) {
+    return null;
+  }
+}
+
 export type TournamentCategoryCms = {
   id: string;
   name: string;
@@ -110,9 +203,7 @@ export async function fetchPosts(): Promise<CmsPost[]> {
     
     return result;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching posts:', error);
-    }
+    // silence console in dev to keep clean
     return [];
   }
 }
@@ -168,9 +259,7 @@ export async function fetchPostBySlug(slug: string): Promise<CmsPost | null> {
     
     return post;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching post:', error);
-    }
+    // silence console in dev
     return null;
   }
 }
@@ -215,9 +304,7 @@ export async function fetchPageBySlug(slug: string): Promise<CmsPage | null> {
     
     return page || null;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching page:', error);
-    }
+    // silence console in dev
     return null;
   }
 }
@@ -277,8 +364,8 @@ export interface CmsHomePage {
   };
 };
 
-export const fetchHomePage = async (): Promise<CmsHomePage | null> => {
-  const cacheKey = 'homePage';
+export const fetchHomePage = async (lang: string = 'ru'): Promise<CmsHomePage | null> => {
+  const cacheKey = `homePage-${lang}`;
   
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
@@ -293,71 +380,61 @@ export const fetchHomePage = async (): Promise<CmsHomePage | null> => {
       *[_type == "homePage"][0] {
         title,
         hero {
-          badge {
-            icon,
-            text
-          },
-          title,
-          subtitle,
-          description,
-          statistics[] {
-            number,
-            description
-          }
+          badge { icon, "text": select($lang == "en" && defined(text_en) => text_en, $lang == "ro" && defined(text_ro) => text_ro, text) },
+          "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
+          "subtitle": select($lang == "en" && defined(subtitle_en) => subtitle_en, $lang == "ro" && defined(subtitle_ro) => subtitle_ro, subtitle),
+          "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description),
+          statistics[] { number, "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description) }
         },
         servicesSection {
-          title,
-          subtitle,
+          "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
+          "subtitle": select($lang == "en" && defined(subtitle_en) => subtitle_en, $lang == "ro" && defined(subtitle_ro) => subtitle_ro, subtitle),
           services[] {
-            title,
-            description,
+            "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
+            "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description),
             icon,
-            price,
-            features[],
+            "price": select($lang == "en" && defined(price_en) => price_en, $lang == "ro" && defined(price_ro) => price_ro, price),
+            "features": select($lang == "en" && defined(features_en) => features_en, $lang == "ro" && defined(features_ro) => features_ro, features),
             color
           }
         },
         achievementsSection {
-          title,
-          subtitle,
+          // Localized fields with RU default
+          "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
+          "subtitle": select($lang == "en" && defined(subtitle_en) => subtitle_en, $lang == "ro" && defined(subtitle_ro) => subtitle_ro, subtitle),
           achievements[] {
-            title,
+            "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
             count,
-            description,
+            "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description),
             icon,
             color
           },
           timeline {
-            title,
+            "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
             milestones[] {
               year,
-              title,
-              description
+              "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
+              "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description)
             }
           },
           callToAction {
-            text,
+            "text": select($lang == "en" && defined(text_en) => text_en, $lang == "ro" && defined(text_ro) => text_ro, text),
             icon
           }
         },
-        newsSection {
-          title,
-          subtitle,
-          enabled
+        newsSection { 
+          "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
+          "subtitle": select($lang == "en" && defined(subtitle_en) => subtitle_en, $lang == "ro" && defined(subtitle_ro) => subtitle_ro, subtitle),
+          enabled 
         },
-        ctaSection {
-          title,
-          description,
-          buttonText,
-          buttonLink
+        ctaSection { 
+          "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
+          "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description),
+          "buttonText": select($lang == "en" && defined(buttonText_en) => buttonText_en, $lang == "ro" && defined(buttonText_ro) => buttonText_ro, buttonText),
+          buttonLink 
         }
       }
-    `);
-    
-    // Добавим логирование в development режиме
-    if (process.env.NODE_ENV === 'development') {
-      console.log('CMS Data received:', JSON.stringify(data, null, 2));
-    }
+    `, { lang });
     
     // Кэшируем только в production
     if (data && process.env.NODE_ENV !== 'development') {
@@ -366,9 +443,7 @@ export const fetchHomePage = async (): Promise<CmsHomePage | null> => {
     
     return data;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching home page:', error);
-    }
+    // silence console in dev
     return null;
   }
 }
@@ -548,9 +623,7 @@ export const fetchAboutPage = async (): Promise<CmsAboutPage | null> => {
     
     return data;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching about page:', error);
-    }
+    // silence console in dev
     return null;
   }
 }
@@ -637,9 +710,7 @@ export const fetchServicesPage = async (): Promise<CmsServicesPage | null> => {
     
     return data;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching services page:', error);
-    }
+    // silence console in dev
     return null;
   }
 }
@@ -765,9 +836,7 @@ export const fetchGyms = async (): Promise<CmsGym[]> => {
     
     return result;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching gyms:', error);
-    }
+    // silence console in dev
     return [];
   }
 };
@@ -843,9 +912,7 @@ export const fetchGymBySlug = async (slug: string): Promise<CmsGym | null> => {
     
     return gym;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching gym:', error);
-    }
+    // silence console in dev
     return null;
   }
 };
@@ -885,9 +952,67 @@ export async function fetchClubEmbeds(): Promise<any[]> {
     
     return result;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching club embeds:', error);
-    }
+    // silence console in dev
     return [];
+  }
+}
+
+// --- Singletons: ABOUT & SERVICES HERO ---
+export type CmsHero = {
+  badge?: { icon?: string; text?: string };
+  title: string;
+  subtitle: string;
+  statistics?: Array<{ number: string; description: string }>;
+};
+
+export async function fetchAboutHero(lang: string = 'ru'): Promise<CmsHero | null> {
+  const cacheKey = `aboutHero-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsHero>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "aboutHero"][0]{
+        content{
+          badge{icon, "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)},
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+          "subtitle": select($lang=="en" && defined(subtitle_en)=>subtitle_en, $lang=="ro" && defined(subtitle_ro)=>subtitle_ro, subtitle),
+          statistics[]{ number, "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description) }
+        }
+      }`,
+      { lang }
+    );
+    const hero: CmsHero | null = data?.content || null;
+    if (hero && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, hero);
+    return hero;
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function fetchServicesHero(lang: string = 'ru'): Promise<CmsHero | null> {
+  const cacheKey = `servicesHero-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsHero>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "servicesHero"][0]{
+        content{
+          badge{icon, "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)},
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+          "subtitle": select($lang=="en" && defined(subtitle_en)=>subtitle_en, $lang=="ro" && defined(subtitle_ro)=>subtitle_ro, subtitle),
+          statistics[]{ number, "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description) }
+        }
+      }`,
+      { lang }
+    );
+    const hero: CmsHero | null = data?.content || null;
+    if (hero && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, hero);
+    return hero;
+  } catch (e) {
+    return null;
   }
 }

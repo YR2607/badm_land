@@ -1,12 +1,15 @@
 import { FC, useEffect, useMemo, useState } from 'react'
 import { fetchClubEmbeds } from '../lib/cms'
+import { useTranslation } from 'react-i18next'
 
-// Normalize date to nice RU format
-const formatDate = (dateString?: string | null) => {
+// Normalize date to locale format
+const formatDate = (dateString?: string | null, locale: string = 'ru') => {
   if (!dateString) return ''
   const date = new Date(dateString)
   if (isNaN(date.getTime())) return ''
-  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+  const map: Record<string, string> = { ru: 'ru-RU', en: 'en-US', ro: 'ro-RO' }
+  const loc = map[locale] || 'ru-RU'
+  return date.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 type EmbedItem = {
@@ -74,6 +77,7 @@ const imageFallbackClass = (kind: 'news' | 'event') => {
 }
 
 const CmsEmbedsSection: FC = () => {
+  const { t, i18n } = useTranslation()
   const [items, setItems] = useState<EmbedItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -105,7 +109,7 @@ const CmsEmbedsSection: FC = () => {
         setItems(mapped)
       } catch (e: any) {
         if (!alive) return
-        setError(e?.message || 'Ошибка загрузки материалов CMS')
+        setError(e?.message || t('common.error'))
       } finally {
         if (alive) setLoading(false)
       }
@@ -164,17 +168,17 @@ const CmsEmbedsSection: FC = () => {
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Новости клуба и события</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{t('home.embeds.title')}</h2>
         </div>
 
-        {loading && (<div className="text-center text-gray-500 py-8">Загрузка…</div>)}
+        {loading && (<div className="text-center text-gray-500 py-8">{t('common.loading')}</div>)}
         {!loading && error && (<div className="text-center text-red-500 py-8">{error}</div>)}
-        {!loading && !error && limited.length === 0 && (<div className="text-center text-gray-500 py-8">Нет материалов</div>)}
+        {!loading && !error && limited.length === 0 && (<div className="text-center text-gray-500 py-8">{t('home.embeds.noMaterials')}</div>)}
 
         {!loading && !error && limited.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:auto-rows-[1fr]">
             {limited.map((it, index) => {
-              const badge = it.kind === 'event' ? '🎫 Событие' : '🏸 Клуб'
+              const badge = it.kind === 'event' ? t('home.embeds.badgeEvent', '🎫 Event') : t('home.embeds.badgeClub', '🏸 Club')
               const card = (
                 <article className="group cursor-pointer h-full">
                   <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
@@ -236,7 +240,7 @@ const CmsEmbedsSection: FC = () => {
                           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                             <path d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 0 0 2-2v-8H3v8a2 2 0 0 0 2 2Z" />
                           </svg>
-                          <span className="text-xs md:text-sm font-medium">{formatDate(it.publishedAt || undefined)}</span>
+                          <span className="text-xs md:text-sm font-medium">{formatDate(it.publishedAt || undefined, i18n.language)}</span>
                         </div>
                         <div className={`px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold text-white ${badgeClass(it.kind)}`}>{badge}</div>
                       </div>
@@ -245,7 +249,7 @@ const CmsEmbedsSection: FC = () => {
                         <p className={`text-gray-600 ${index === 1 ? 'text-base md:text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>{it.description}</p>
                       )}
                       <div className="mt-4 flex items-center space-x-2 text-primary-blue transition-all duration-300">
-                        <span className="text-sm font-semibold">Читать далее</span>
+                        <span className="text-sm font-semibold">{t('common.readMore')}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
@@ -271,7 +275,7 @@ const CmsEmbedsSection: FC = () => {
             href="/blog#club-news" 
             className="inline-flex items-center px-6 py-3 bg-primary-blue text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md hover:shadow-lg"
           >
-            <span>Показать все новости</span>
+            <span>{t('home.embeds.viewAll')}</span>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Calendar, ArrowRight, Globe, Zap, Trophy, Clock, Heart } from 'lucide-react';
 import { NewsItem } from '../types';
 import { mockNews } from '../data/mockData';
+import { useTranslation } from 'react-i18next';
 
 const UBFStyleNewsSection: React.FC = () => {
   const featuredNews = mockNews.filter(news => news.featured)[0];
@@ -10,13 +11,12 @@ const UBFStyleNewsSection: React.FC = () => {
   const worldNews = mockNews.filter(news => news.category === 'world').slice(0, 3);
   const events = mockNews.filter(news => news.category === 'event').slice(0, 3);
 
+  const { t, i18n } = useTranslation();
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
+    const map: Record<string, string> = { ru: 'ru-RU', en: 'en-US', ro: 'ro-RO' };
+    const loc = map[i18n.language] || 'ru-RU';
+    return date.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   const getCategoryIcon = (category: string) => {
@@ -48,11 +48,11 @@ const UBFStyleNewsSection: React.FC = () => {
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case 'news':
-        return 'Новости клуба';
+        return t('home.ubf.clubTitle');
       case 'world':
-        return 'Мировые новости';
+        return t('home.ubf.worldTitle');
       case 'event':
-        return 'События';
+        return t('home.ubf.eventsTitle');
       default:
         return category;
     }
@@ -70,11 +70,11 @@ const UBFStyleNewsSection: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-bold font-display text-primary-black mb-6">
-            Новости и События
+            {t('home.ubf.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Следите за последними новостями клуба и мировыми событиями в бадминтоне. 
-            Будьте в курсе всех важных событий нашего спортивного сообщества.
+            {t('home.ubf.subtitle1')} 
+            {t('home.ubf.subtitle2')}
           </p>
         </motion.div>
 
@@ -129,7 +129,7 @@ const UBFStyleNewsSection: React.FC = () => {
                   </p>
                   
                   <div className="flex items-center text-primary-blue group-hover:translate-x-3 transition-transform duration-300">
-                    <span className="mr-3 font-semibold text-lg">Читать полностью</span>
+                    <span className="mr-3 font-semibold text-lg">{t('common.readMore')}</span>
                     <ArrowRight size={24} className="group-hover:scale-110 transition-transform" />
                   </div>
                 </div>
@@ -151,7 +151,7 @@ const UBFStyleNewsSection: React.FC = () => {
             <div className="text-center">
               <div className="inline-flex items-center px-6 py-3 bg-primary-blue rounded-full text-white mb-6">
                 <Zap className="w-6 h-6 mr-2" />
-                <span className="font-semibold text-lg">Новости клуба</span>
+                <span className="font-semibold text-lg">{t('home.ubf.clubTitle')}</span>
               </div>
             </div>
             
@@ -188,7 +188,7 @@ const UBFStyleNewsSection: React.FC = () => {
                       </p>
                       
                       <div className="flex items-center text-primary-blue group-hover:translate-x-2 transition-transform">
-                        <span className="text-sm font-medium">Подробнее</span>
+                        <span className="text-sm font-medium">{t('common.readMore')}</span>
                         <ArrowRight size={16} className="ml-1" />
                       </div>
                     </div>
@@ -209,7 +209,7 @@ const UBFStyleNewsSection: React.FC = () => {
             <div className="text-center">
               <div className="inline-flex items-center px-6 py-3 bg-primary-orange rounded-full text-white mb-6">
                 <Globe className="w-6 h-6 mr-2" />
-                <span className="font-semibold text-lg">Мировые новости</span>
+                <span className="font-semibold text-lg">{t('home.ubf.worldTitle')}</span>
               </div>
             </div>
             
@@ -244,7 +244,7 @@ const UBFStyleNewsSection: React.FC = () => {
                       </p>
                       
                       <div className="flex items-center text-primary-orange group-hover:translate-x-2 transition-transform">
-                        <span className="text-sm font-medium">Подробнее</span>
+                        <span className="text-sm font-medium">{t('common.readMore')}</span>
                         <ArrowRight size={16} className="ml-1" />
                       </div>
                     </div>
@@ -265,7 +265,7 @@ const UBFStyleNewsSection: React.FC = () => {
             <div className="text-center">
               <div className="inline-flex items-center px-6 py-3 bg-primary-yellow rounded-full text-white mb-6">
                 <Trophy className="w-6 h-6 mr-2" />
-                <span className="font-semibold text-lg">События</span>
+                <span className="font-semibold text-lg">{t('home.ubf.eventsTitle')}</span>
               </div>
             </div>
             
@@ -300,7 +300,7 @@ const UBFStyleNewsSection: React.FC = () => {
                       </p>
                       
                       <div className="flex items-center text-primary-yellow group-hover:translate-x-2 transition-transform">
-                        <span className="text-sm font-medium">Подробнее</span>
+                        <span className="text-sm font-medium">{t('common.readMore')}</span>
                         <ArrowRight size={16} className="ml-1" />
                       </div>
                     </div>
@@ -320,18 +320,18 @@ const UBFStyleNewsSection: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
         >
           <h3 className="text-3xl font-bold text-gray-900 mb-6">
-            Не пропустите важные события!
+            {t('home.ubf.ctaTitle')}
           </h3>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Подпишитесь на нашу рассылку и получайте уведомления о новых турнирах, мастер-классах и новостях клуба.
+            {t('home.ubf.ctaSubtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="px-8 py-4 bg-primary-blue text-white font-semibold rounded-xl hover:bg-primary-blue/90 transition-all duration-300 shadow-lg hover:shadow-xl">
-              Все новости
+              {t('home.ubf.btnAllNews')}
               <ArrowRight className="ml-2 w-5 h-5 inline" />
             </button>
             <button className="px-8 py-4 bg-primary-yellow text-white font-semibold rounded-xl hover:bg-primary-yellow/90 transition-all duration-300 shadow-lg hover:shadow-xl">
-              Календарь событий
+              {t('home.ubf.btnCalendar')}
               <Calendar className="ml-2 w-5 h-5 inline" />
             </button>
           </div>

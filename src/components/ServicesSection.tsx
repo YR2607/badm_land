@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Users, Star, UserCheck, Target, Calendar } from 'lucide-react';
+import { Users, Star, UserCheck, Target, Calendar, Trophy, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ServicesSectionProps {
   cmsData?: {
@@ -17,60 +18,34 @@ interface ServicesSectionProps {
 }
 
 const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
+  const { t } = useTranslation();
 
-  const defaultServices = [
-    {
-      icon: <Users className="w-8 h-8" />,
-      title: 'Групповые тренировки',
-      description: 'Тренировки в группах до 8 человек с профессиональными тренерами',
-      features: ['Все уровни подготовки', 'Современное оборудование', 'Гибкое расписание'],
-      price: 'от 200 лей',
-      color: 'from-blue-500 to-indigo-600'
-    },
-    {
-      icon: <UserCheck className="w-8 h-8" />,
-      title: 'Индивидуальные занятия',
-      description: 'Персональные тренировки с личным тренером для быстрого прогресса',
-      features: ['Индивидуальная программа', 'Гибкий график', 'Максимальное внимание'],
-      price: 'от 400 лей',
-      color: 'from-emerald-500 to-teal-600'
-    },
-    {
-      icon: <Target className="w-8 h-8" />,
-      title: 'Подготовка к соревнованиям',
-      description: 'Специализированная подготовка для участия в турнирах и соревнованиях',
-      features: ['Техническая подготовка', 'Тактическое планирование', 'Психологическая поддержка'],
-      price: 'от 500 лей',
-      color: 'from-amber-500 to-orange-600'
-    },
-    {
-      icon: <Calendar className="w-8 h-8" />,
-      title: 'Аренда корта',
-      description: 'Почасовая аренда кортов для игры с друзьями или тренировок',
-      features: ['8 современных кортов', 'Профессиональное покрытие', 'Удобное бронирование'],
-      price: 'от 100 лей/час',
-      color: 'from-slate-500 to-gray-600'
+  function getServiceIcon(name?: string) {
+    switch (name) {
+      case 'Users': return <Users className="w-8 h-8" />;
+      case 'User': return <UserCheck className="w-8 h-8" />;
+      case 'UserCheck': return <UserCheck className="w-8 h-8" />;
+      case 'Target': return <Target className="w-8 h-8" />;
+      case 'Calendar': return <Calendar className="w-8 h-8" />;
+      case 'Clock': return <Clock className="w-8 h-8" />;
+      case 'Trophy': return <Trophy className="w-8 h-8" />;
+      default: return <Users className="w-8 h-8" />;
     }
-  ];
+  }
 
-  // Fixed icons but CMS text - merge CMS data with default icons
-  const services = defaultServices.map((defaultItem, index) => {
-    const cmsItem = cmsData?.services?.[index];
-    return {
-      icon: defaultItem.icon, // Always use default icon
-      title: cmsItem?.title || defaultItem.title, // CMS title or fallback
-      description: cmsItem?.description || defaultItem.description, // CMS description or fallback
-      features: cmsItem?.features || defaultItem.features, // CMS features or fallback
-      price: cmsItem?.price || defaultItem.price, // CMS price or fallback
-      color: defaultItem.color // Always use default color
-    };
-  });
+  const services = (cmsData?.services || []).map((s) => ({
+    icon: getServiceIcon(s.icon),
+    title: s.title,
+    description: s.description,
+    features: s.features || [],
+    price: s.price,
+    color: s.color || 'from-blue-500 to-indigo-600'
+  }));
 
   // Debug logging
   if (process.env.NODE_ENV === 'development') {
     console.log('ServicesSection - CMS Data:', cmsData);
     console.log('ServicesSection - Using services:', services);
-    console.log('ServicesSection - Default services:', defaultServices);
   }
 
   return (
@@ -121,17 +96,17 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
               </svg>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-              {cmsData?.title || 'Наши Услуги'}
+              {cmsData?.title || t('home.services.title', 'Наши услуги')}
             </h2>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {cmsData?.subtitle || 'Профессиональные тренировки для всех уровней подготовки'}
+            {cmsData?.subtitle || t('home.services.subtitle', 'Профессиональные тренировки для всех уровней подготовки')}
           </p>
         </motion.div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.slice(0, 3).map((service: any, index: number) => (
+          {(services.length > 0 ? services.slice(0, 3) : []).map((service: any, index: number) => (
             <motion.div
               key={index}
               className="relative group"
@@ -164,7 +139,7 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
                 <div className="mt-auto">
                   <div className="text-2xl font-bold text-primary-blue mb-4">{service.price}</div>
                   <button className="w-full btn-secondary group-hover:bg-primary-blue group-hover:text-white transition-all duration-300">
-                    Узнать больше
+                    {t('home.services.more', 'Узнать больше')}
                   </button>
                 </div>
               </div>

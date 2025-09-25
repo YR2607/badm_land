@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { proxied } from '../utils/blockFacebookImages';
+import { useTranslation } from 'react-i18next';
 
 type WorldNewsItem = {
   title: string;
@@ -9,18 +10,17 @@ type WorldNewsItem = {
   date?: string;
 };
 
-const formatDate = (dateString?: string) => {
+const formatDate = (dateString?: string, locale: string = 'ru') => {
   if (!dateString) return '';
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return '';
-  return date.toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+  const map: Record<string, string> = { ru: 'ru-RU', en: 'en-US', ro: 'ro-RO' };
+  const loc = map[locale] || 'ru-RU';
+  return date.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
 };
 
 const BusinessNewsSection: FC = () => {
+  const { t, i18n } = useTranslation();
   const [worldNews, setWorldNews] = useState<WorldNewsItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
@@ -43,7 +43,7 @@ const BusinessNewsSection: FC = () => {
           .slice(0, 5);
         if (alive) setWorldNews(items);
       } catch (e: any) {
-        if (alive) setError(e?.message || 'Не удалось загрузить новости');
+        if (alive) setError(e?.message || t('common.error'));
       } finally {
         if (alive) setLoading(false);
       }
@@ -65,20 +65,20 @@ const BusinessNewsSection: FC = () => {
               </svg>
             </div>
             <div className="text-left">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Мировые новости</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{t('home.worldNews.title')}</h2>
             </div>
           </div>
         </div>
 
         {loading && (
-          <div className="text-center text-gray-500 py-8">Загрузка…</div>
+          <div className="text-center text-gray-500 py-8">{t('common.loading')}</div>
         )}
         {!loading && error && (
           <div className="text-center text-red-500 py-8">{error}</div>
         )}
 
         {!loading && !error && worldNews.length === 0 && (
-          <div className="text-center text-gray-500 py-8">Нет материалов</div>
+          <div className="text-center text-gray-500 py-8">{t('home.worldNews.noMaterials')}</div>
         )}
 
         {!loading && !error && worldNews.length > 0 && (
@@ -113,16 +113,16 @@ const BusinessNewsSection: FC = () => {
                           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                             <path d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 0 0 2-2v-8H3v8a2 2 0 0 0 2 2Z" />
                           </svg>
-                          <span className="text-xs md:text-sm font-medium">{formatDate(news.date)}</span>
+                          <span className="text-xs md:text-sm font-medium">{formatDate(news.date, i18n.language)}</span>
                         </div>
-                        <div className="px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500">🌍 Мир</div>
+                        <div className="px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500">{t('home.worldNews.tagWorld', '🌍 World')}</div>
                       </div>
                       <h3 className={`font-bold text-gray-900 leading-snug mb-2 break-words whitespace-normal ${index === 1 ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'}`}>{news.title}</h3>
                       {news.preview && (
                         <p className={`text-gray-600 leading-relaxed ${index === 1 ? 'text-base md:text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>{news.preview}</p>
                       )}
                       <div className="mt-4 flex items-center space-x-2 text-primary-blue transition-all duration-300">
-                        <span className="text-sm font-semibold">Читать далее</span>
+                        <span className="text-sm font-semibold">{t('common.readMore')}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
@@ -142,7 +142,7 @@ const BusinessNewsSection: FC = () => {
               href="/blog#world-news" 
               className="inline-flex items-center px-6 py-3 bg-primary-blue text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md hover:shadow-lg"
             >
-              <span>Смотреть все новости</span>
+              <span>{t('home.worldNews.viewAll')}</span>
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>

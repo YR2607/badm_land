@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { proxied } from '../utils/blockFacebookImages';
 import { isCmsEnabled, sanityClient } from '../lib/cms';
 import groq from 'groq';
 
 const PostDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { t } = useTranslation();
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,13 +30,13 @@ const PostDetail: React.FC = () => {
     load();
   }, [slug]);
 
-  if (loading) return <div className="max-w-3xl mx-auto px-4 py-16">Загрузка…</div>;
-  if (!post) return <div className="max-w-3xl mx-auto px-4 py-16">Материал не найден</div>;
+  if (loading) return <div className="max-w-3xl mx-auto px-4 py-16">{t('common.loading')}</div>;
+  if (!post) return <div className="max-w-3xl mx-auto px-4 py-16">{t('news.postNotFound', 'Материал не найден')}</div>;
 
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-3xl mx-auto px-4 py-10">
-        <Link to="/blog" className="text-primary-blue">← Назад к новостям</Link>
+        <Link to="/blog" className="text-primary-blue">← {t('news.backToList', 'Назад к новостям')}</Link>
         <h1 className="text-4xl font-display font-bold mt-4 mb-4">{post.title}</h1>
         {post.image && (
           <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-gray-100 mb-6">
