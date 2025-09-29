@@ -205,6 +205,11 @@
     "roadmap": {
       "title": "Development Plans",
       "subtitle": "Our goals for the coming years",
+      "scrollHint": "Scroll to explore our journey",
+      "swipeHint": "Swipe to navigate",
+      "done": "Done",
+      "inProgress": "In Progress",
+      "planned": "Planned",
       "items": {
         "q3_2025": { "title": "Expanding participation", "desc": "Trips to tournaments, partnerships and sparring with regional clubs." },
         "q4_2025": { "title": "Altius Cup", "desc": "Open club tournament with a ceremony and invited guests." },
