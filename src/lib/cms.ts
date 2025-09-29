@@ -543,13 +543,13 @@ export const fetchAboutPage = async (lang: string = 'ru'): Promise<CmsAboutPage 
         hero {
           badge {
             icon,
-            text
+            "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)
           },
-          title,
-          subtitle,
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+          "subtitle": select($lang=="en" && defined(subtitle_en)=>subtitle_en, $lang=="ro" && defined(subtitle_ro)=>subtitle_ro, subtitle),
           statistics[] {
             number,
-            description
+            "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description)
           }
         },
         teamSection {
@@ -579,7 +579,7 @@ export const fetchAboutPage = async (lang: string = 'ru'): Promise<CmsAboutPage 
           }
         },
         statsSection {
-          title,
+          "title": title,
           stats[] {
             number,
             label,
@@ -589,22 +589,22 @@ export const fetchAboutPage = async (lang: string = 'ru'): Promise<CmsAboutPage 
           }
         },
         historySection {
-          title,
-          subtitle,
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+          "subtitle": select($lang=="en" && defined(subtitle_en)=>subtitle_en, $lang=="ro" && defined(subtitle_ro)=>subtitle_ro, subtitle),
           showAllByDefault,
           timeline[] {
             year,
-            title,
-            text
+            "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+            "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)
           }
         },
         roadmapSection {
-          title,
-          subtitle,
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+          "subtitle": select($lang=="en" && defined(subtitle_en)=>subtitle_en, $lang=="ro" && defined(subtitle_ro)=>subtitle_ro, subtitle),
           roadmapItems[] {
             tag,
-            title,
-            description,
+            "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+            "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
             status
           }
         },
@@ -660,8 +660,8 @@ export type CmsServicesPage = {
   };
 };
 
-export const fetchServicesPage = async (): Promise<CmsServicesPage | null> => {
-  const cacheKey = 'servicesPage';
+export const fetchServicesPage = async (lang: string = 'ru'): Promise<CmsServicesPage | null> => {
+  const cacheKey = `servicesPage-${lang}`;
   
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
@@ -675,33 +675,27 @@ export const fetchServicesPage = async (): Promise<CmsServicesPage | null> => {
     const data = await client.fetch(`
       *[_type == "servicesPage"][0] {
         hero {
-          title,
-          subtitle,
-          description,
-          backgroundImage {
-            asset->{
-              _id,
-              url
-            },
-            alt
-          }
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+          "subtitle": select($lang=="en" && defined(subtitle_en)=>subtitle_en, $lang=="ro" && defined(subtitle_ro)=>subtitle_ro, subtitle),
+          "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
+          backgroundImage { asset->{ _id, url }, alt }
         },
         servicesSection {
-          title,
-          subtitle,
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+          "subtitle": select($lang=="en" && defined(subtitle_en)=>subtitle_en, $lang=="ro" && defined(subtitle_ro)=>subtitle_ro, subtitle),
           services[] {
-            title,
-            description,
+            "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
+            "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
             icon,
-            features[],
-            pricing {
-              monthly,
-              perSession
+            "features": select($lang=="en" && defined(features_en)=>features_en, $lang=="ro" && defined(features_ro)=>features_ro, features),
+            pricing { 
+              "monthly": select($lang=="en" && defined(monthly_en)=>monthly_en, $lang=="ro" && defined(monthly_ro)=>monthly_ro, monthly),
+              "perSession": select($lang=="en" && defined(perSession_en)=>perSession_en, $lang=="ro" && defined(perSession_ro)=>perSession_ro, perSession)
             }
           }
         }
       }
-    `);
+    `, { lang });
     
     // Кэшируем только в production
     if (data && process.env.NODE_ENV !== 'development') {
@@ -764,8 +758,8 @@ export type CmsGym = {
   }>;
 };
 
-export const fetchGyms = async (): Promise<CmsGym[]> => {
-  const cacheKey = 'gyms';
+export const fetchGyms = async (lang: string = 'ru'): Promise<CmsGym[]> => {
+  const cacheKey = `gyms-${lang}`;
   
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
@@ -780,53 +774,53 @@ export const fetchGyms = async (): Promise<CmsGym[]> => {
   try {
     const query = groq`*[_type == "gym"] | order(_createdAt asc) {
       "id": _id,
-      name,
+      "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
       "slug": slug.current,
-      description,
+      "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
       detailedDescription,
       "heroImage": heroImage.asset->url,
-      badge,
+      "badge": select($lang=="en" && defined(badge_en)=>badge_en, $lang=="ro" && defined(badge_ro)=>badge_ro, badge),
       badgeColor,
       address,
       phone,
       email,
       mapUrl,
       "gallery": gallery[].asset->url,
-      features,
+      "features": select($lang=="en" && defined(features_en)=>features_en, $lang=="ro" && defined(features_ro)=>features_ro, features),
       hasChildren,
       hasAdults,
       schedule {
         children {
-          title,
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
           times,
-          details
+          "details": select($lang=="en" && defined(details_en)=>details_en, $lang=="ro" && defined(details_ro)=>details_ro, details)
         },
         adults {
-          title,
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
           times,
-          details
+          "details": select($lang=="en" && defined(details_en)=>details_en, $lang=="ro" && defined(details_ro)=>details_ro, details)
         }
       },
       pricing {
         children {
-          monthly,
-          single,
-          trial
+          "monthly": select($lang=="en" && defined(monthly_en)=>monthly_en, $lang=="ro" && defined(monthly_ro)=>monthly_ro, monthly),
+          "single": select($lang=="en" && defined(single_en)=>single_en, $lang=="ro" && defined(single_ro)=>single_ro, single),
+          "trial": select($lang=="en" && defined(trial_en)=>trial_en, $lang=="ro" && defined(trial_ro)=>trial_ro, trial)
         },
         adults {
-          monthly,
-          single,
-          trial
+          "monthly": select($lang=="en" && defined(monthly_en)=>monthly_en, $lang=="ro" && defined(monthly_ro)=>monthly_ro, monthly),
+          "single": select($lang=="en" && defined(single_en)=>single_en, $lang=="ro" && defined(single_ro)=>single_ro, single),
+          "trial": select($lang=="en" && defined(trial_en)=>trial_en, $lang=="ro" && defined(trial_ro)=>trial_ro, trial)
         }
       },
       trainers[]-> {
-        name,
-        experience,
-        specialization,
+        "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
+        "experience": select($lang=="en" && defined(experience_en)=>experience_en, $lang=="ro" && defined(experience_ro)=>experience_ro, experience),
+        "specialization": select($lang=="en" && defined(specialization_en)=>specialization_en, $lang=="ro" && defined(specialization_ro)=>specialization_ro, specialization),
         "photo": photo.asset->url
       }
     }`;
-    const gyms = await client.fetch(query);
+    const gyms = await client.fetch(query, { lang });
     const result = gyms || [];
     
     // Кэшируем только в production
@@ -841,8 +835,8 @@ export const fetchGyms = async (): Promise<CmsGym[]> => {
   }
 };
 
-export const fetchGymBySlug = async (slug: string): Promise<CmsGym | null> => {
-  const cacheKey = `gym-${slug}`;
+export const fetchGymBySlug = async (slug: string, lang: string = 'ru'): Promise<CmsGym | null> => {
+  const cacheKey = `gym-${slug}-${lang}`;
   
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
@@ -857,53 +851,53 @@ export const fetchGymBySlug = async (slug: string): Promise<CmsGym | null> => {
   try {
     const query = groq`*[_type == "gym" && slug.current == $slug][0] {
       "id": _id,
-      name,
+      "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
       "slug": slug.current,
-      description,
+      "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
       detailedDescription,
       "heroImage": heroImage.asset->url,
-      badge,
+      "badge": select($lang=="en" && defined(badge_en)=>badge_en, $lang=="ro" && defined(badge_ro)=>badge_ro, badge),
       badgeColor,
       address,
       phone,
       email,
       mapUrl,
       "gallery": gallery[].asset->url,
-      features,
+      "features": select($lang=="en" && defined(features_en)=>features_en, $lang=="ro" && defined(features_ro)=>features_ro, features),
       hasChildren,
       hasAdults,
       schedule {
         children {
-          title,
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
           times,
-          details
+          "details": select($lang=="en" && defined(details_en)=>details_en, $lang=="ro" && defined(details_ro)=>details_ro, details)
         },
         adults {
-          title,
+          "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
           times,
-          details
+          "details": select($lang=="en" && defined(details_en)=>details_en, $lang=="ro" && defined(details_ro)=>details_ro, details)
         }
       },
       pricing {
         children {
-          monthly,
-          single,
-          trial
+          "monthly": select($lang=="en" && defined(monthly_en)=>monthly_en, $lang=="ro" && defined(monthly_ro)=>monthly_ro, monthly),
+          "single": select($lang=="en" && defined(single_en)=>single_en, $lang=="ro" && defined(single_ro)=>single_ro, single),
+          "trial": select($lang=="en" && defined(trial_en)=>trial_en, $lang=="ro" && defined(trial_ro)=>trial_ro, trial)
         },
         adults {
-          monthly,
-          single,
-          trial
+          "monthly": select($lang=="en" && defined(monthly_en)=>monthly_en, $lang=="ro" && defined(monthly_ro)=>monthly_ro, monthly),
+          "single": select($lang=="en" && defined(single_en)=>single_en, $lang=="ro" && defined(single_ro)=>single_ro, single),
+          "trial": select($lang=="en" && defined(trial_en)=>trial_en, $lang=="ro" && defined(trial_ro)=>trial_ro, trial)
         }
       },
       trainers[]-> {
-        name,
-        experience,
-        specialization,
+        "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
+        "experience": select($lang=="en" && defined(experience_en)=>experience_en, $lang=="ro" && defined(experience_ro)=>experience_ro, experience),
+        "specialization": select($lang=="en" && defined(specialization_en)=>specialization_en, $lang=="ro" && defined(specialization_ro)=>specialization_ro, specialization),
         "photo": photo.asset->url
       }
     }`;
-    const gym = await client.fetch(query, { slug });
+    const gym = await client.fetch(query, { slug, lang });
     
     // Кэшируем только в production
     if (gym && process.env.NODE_ENV !== 'development') {
