@@ -23,6 +23,11 @@ export default defineType({
       of: [{
         type: 'object',
         name: 'achievement',
+        fieldsets: [
+          { name: 'ru', title: 'Русский' },
+          { name: 'en', title: 'English' },
+          { name: 'ro', title: 'Română' },
+        ],
         fields: [
           { name: 'title', title: 'Название (RU)', type: 'string', fieldset: 'ru' },
           { name: 'title_en', title: 'Название (EN)', type: 'string', fieldset: 'en' },
