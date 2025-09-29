@@ -18,6 +18,11 @@ export default defineType({
       of: [{
         type: 'object',
         name: 'stat',
+        fieldsets: [
+          { name: 'ru', title: 'Русский' },
+          { name: 'en', title: 'English' },
+          { name: 'ro', title: 'Română' },
+        ],
         fields: [
           { name: 'number', title: 'Цифра', type: 'string' },
           { name: 'description', title: 'Описание (RU)', type: 'string', fieldset: 'ru' },

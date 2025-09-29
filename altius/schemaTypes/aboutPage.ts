@@ -51,6 +51,11 @@ export default defineType({
           of: [{
             type: 'object',
             name: 'value',
+            fieldsets: [
+              { name: 'ru', title: 'Русский' },
+              { name: 'en', title: 'English' },
+              { name: 'ro', title: 'Română' },
+            ],
             fields: [
               { name: 'title', title: 'Название', type: 'string' },
               { name: 'description', title: 'Описание (RU)', type: 'text', fieldset: 'ru' },
@@ -111,6 +116,11 @@ export default defineType({
           of: [{
             type: 'object',
             name: 'stat',
+            fieldsets: [
+              { name: 'ru', title: 'Русский' },
+              { name: 'en', title: 'English' },
+              { name: 'ro', title: 'Română' },
+            ],
             fields: [
               { name: 'number', title: 'Цифра', type: 'string' },
               { name: 'description', title: 'Описание (RU)', type: 'string', fieldset: 'ru' },
@@ -147,6 +157,11 @@ export default defineType({
           of: [{
             type: 'object',
             name: 'tab',
+            fieldsets: [
+              { name: 'ru', title: 'Русский' },
+              { name: 'en', title: 'English' },
+              { name: 'ro', title: 'Română' },
+            ],
             fields: [
               { name: 'key', title: 'Ключ', type: 'string' },
               { name: 'label', title: 'Название таба', type: 'string' },
@@ -182,6 +197,11 @@ export default defineType({
                 type: 'array',
                 of: [{
                   type: 'object',
+                  fieldsets: [
+                    { name: 'ru', title: 'Русский' },
+                    { name: 'en', title: 'English' },
+                    { name: 'ro', title: 'Română' },
+                  ],
                   fields: [
                     { name: 'name', title: 'Название', type: 'string' },
                     { name: 'description', title: 'Описание (RU)', type: 'text', fieldset: 'ru' },
@@ -225,6 +245,11 @@ export default defineType({
           of: [{
             type: 'object',
             name: 'timelineItem',
+            fieldsets: [
+              { name: 'ru', title: 'Русский' },
+              { name: 'en', title: 'English' },
+              { name: 'ro', title: 'Română' },
+            ],
             fields: [
               { name: 'year', title: 'Год', type: 'string' },
               { name: 'title', title: 'Заголовок (RU)', type: 'string', fieldset: 'ru' },
@@ -266,6 +291,11 @@ export default defineType({
           of: [{
             type: 'object',
             name: 'roadmapItem',
+            fieldsets: [
+              { name: 'ru', title: 'Русский' },
+              { name: 'en', title: 'English' },
+              { name: 'ro', title: 'Română' },
+            ],
             fields: [
               { name: 'tag', title: 'Тег', type: 'string' },
               { name: 'title', title: 'Заголовок (RU)', type: 'string', fieldset: 'ru' },

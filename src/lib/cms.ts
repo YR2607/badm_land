@@ -919,6 +919,51 @@ export const fetchGymBySlug = async (slug: string): Promise<CmsGym | null> => {
 
 export const sanityClient = client;
 
+// --- Standalone fetchers for fallback usage ---
+export async function fetchTrainers(lang: string = 'ru'): Promise<CmsTrainer[]> {
+  try {
+    const list = await client.fetch(
+      groq`*[_type == "trainer"] | order(_createdAt asc) {
+        "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
+        role,
+        "experience": select($lang=="en" && defined(experience_en)=>experience_en, $lang=="ro" && defined(experience_ro)=>experience_ro, experience),
+        "specialization": select($lang=="en" && defined(specialization_en)=>specialization_en, $lang=="ro" && defined(specialization_ro)=>specialization_ro, specialization),
+        "achievements": select($lang=="en" && defined(achievements_en)=>achievements_en, $lang=="ro" && defined(achievements_ro)=>achievements_ro, achievements),
+        "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
+        "photo": photo.asset->url
+      }`,
+      { lang }
+    );
+    return list || [];
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchFounder(lang: string = 'ru'): Promise<CmsFounder | null> {
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "founder"][0]{
+        "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
+        "role": select($lang=="en" && defined(role_en)=>role_en, $lang=="ro" && defined(role_ro)=>role_ro, role),
+        experience,
+        "achievements": select($lang=="en" && defined(achievements_en)=>achievements_en, $lang=="ro" && defined(achievements_ro)=>achievements_ro, achievements),
+        "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
+        "quote": select($lang=="en" && defined(quote_en)=>quote_en, $lang=="ro" && defined(quote_ro)=>quote_ro, quote),
+        stats[]{
+          "label": select($lang=="en" && defined(label_en)=>label_en, $lang=="ro" && defined(label_ro)=>label_ro, label),
+          value
+        },
+        "photo": photo.asset->url
+      }`,
+      { lang }
+    );
+    return data || null;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchClubEmbeds(): Promise<any[]> {
   const cacheKey = 'clubEmbeds';
   

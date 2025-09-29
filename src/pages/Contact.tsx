@@ -293,7 +293,7 @@ const Contact: FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {contactInfo.length === 0 && (
-              <div className="col-span-full text-center text-gray-400">Контактная информация не заполнена в CMS</div>
+              <div className="col-span-full text-center text-gray-400">{t('contact.emptySection')}</div>
             )}
             {contactInfo.map((info, index) => (
               <motion.div

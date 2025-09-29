@@ -2,7 +2,7 @@ import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight } from 'lucide-react';
-import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero } from '../lib/cms';
+import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchTrainers } from '../lib/cms';
 
 const About: FC = () => {
   const { t, i18n } = useTranslation();
@@ -22,7 +22,27 @@ const About: FC = () => {
           fetchAboutPage(i18n.language as string),
           fetchAboutHero(i18n.language as string)
         ]);
-        if (data) setCmsData(data);
+        if (data) {
+          // Fallback: если teamSection пустая — подгружаем из отдельных документов Founder/Trainers
+          if (!data.teamSection || (!data.teamSection.founder && (!data.teamSection.coaches || data.teamSection.coaches.length === 0))) {
+            const [founder, coaches] = await Promise.all([
+              fetchFounder(i18n.language as string),
+              fetchTrainers(i18n.language as string)
+            ]);
+            const merged: CmsAboutPage = {
+              ...data,
+              teamSection: {
+                title: data.teamSection?.title || '',
+                subtitle: data.teamSection?.subtitle || '',
+                founder: founder || undefined,
+                coaches: (coaches && coaches.length > 0) ? coaches : undefined,
+              }
+            } as any;
+            setCmsData(merged);
+          } else {
+            setCmsData(data);
+          }
+        }
         if (hero) setHeroData(hero);
       } catch (error) {
         setError(t('common.error'));
