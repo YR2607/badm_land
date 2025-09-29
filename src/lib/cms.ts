@@ -525,8 +525,8 @@ export type CmsAboutPage = {
   };
 };
 
-export const fetchAboutPage = async (): Promise<CmsAboutPage | null> => {
-  const cacheKey = 'aboutPage';
+export const fetchAboutPage = async (lang: string = 'ru'): Promise<CmsAboutPage | null> => {
+  const cacheKey = `aboutPage-${lang}`;
   
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
@@ -556,25 +556,25 @@ export const fetchAboutPage = async (): Promise<CmsAboutPage | null> => {
           title,
           subtitle,
           founder-> {
-            name,
-            role,
+            "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
+            "role": select($lang=="en" && defined(role_en)=>role_en, $lang=="ro" && defined(role_ro)=>role_ro, role),
             experience,
-            achievements[],
-            description,
-            quote,
+            "achievements": select($lang=="en" && defined(achievements_en)=>achievements_en, $lang=="ro" && defined(achievements_ro)=>achievements_ro, achievements),
+            "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
+            "quote": select($lang=="en" && defined(quote_en)=>quote_en, $lang=="ro" && defined(quote_ro)=>quote_ro, quote),
             stats[] {
-              label,
+              "label": select($lang=="en" && defined(label_en)=>label_en, $lang=="ro" && defined(label_ro)=>label_ro, label),
               value
             },
             "photo": photo.asset->url
           },
           coaches[]-> {
-            name,
+            "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
             role,
-            experience,
-            specialization,
-            achievements[],
-            description,
+            "experience": select($lang=="en" && defined(experience_en)=>experience_en, $lang=="ro" && defined(experience_ro)=>experience_ro, experience),
+            "specialization": select($lang=="en" && defined(specialization_en)=>specialization_en, $lang=="ro" && defined(specialization_ro)=>specialization_ro, specialization),
+            "achievements": select($lang=="en" && defined(achievements_en)=>achievements_en, $lang=="ro" && defined(achievements_ro)=>achievements_ro, achievements),
+            "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
             "photo": photo.asset->url
           }
         },
@@ -614,7 +614,7 @@ export const fetchAboutPage = async (): Promise<CmsAboutPage | null> => {
           keywords
         }
       }
-    `);
+    `, { lang });
     
     // Кэшируем только в production
     if (data && process.env.NODE_ENV !== 'development') {

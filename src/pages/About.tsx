@@ -19,7 +19,7 @@ const About: FC = () => {
     const loadCmsData = async () => {
       try {
         const [data, hero] = await Promise.all([
-          fetchAboutPage(),
+          fetchAboutPage(i18n.language as string),
           fetchAboutHero(i18n.language as string)
         ]);
         if (data) setCmsData(data);
