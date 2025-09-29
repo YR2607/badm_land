@@ -22,9 +22,17 @@ OUT_PATH = os.path.join(ROOT, 'public', 'data', 'bwf_news.json')
 OVERRIDES_PATH = os.path.join(ROOT, 'scripts', 'image_overrides.json')
 
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (compatible; AltiusSiteBot/1.0; +https://badm-land-main.vercel.app)',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.9'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'DNT': '1',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+    'Sec-Fetch-User': '?1',
+    'Cache-Control': 'max-age=0'
 }
 
 SCRAPERAPI_KEY = os.getenv('SCRAPERAPI_KEY')
@@ -89,22 +97,68 @@ def load_image_overrides() -> dict:
 
 def fetch(url: str, use_cloud: bool = True) -> str:
     host = (urlparse(url).hostname or '').lower()
-    # Championships site: fetch directly unless forced via proxy
-    if host.endswith('bwfworldchampionships.bwfbadminton.com') and not BWF_FORCE_PROXY:
-        r = requests.get(url, headers=HEADERS, timeout=40)
-        r.raise_for_status()
-        return r.text
-    if host.endswith('bwfworldchampionships.bwfbadminton.com') and BWF_FORCE_PROXY:
-        if SCRAPERAPI_KEY or SCRAPINGBEE_KEY:
-            return fetch_via_proxy(url)
+    
+    # For BWF sites, always try proxy first if available, then cloudscraper, then direct
     if is_official_host(host):
+        # Try proxy services first (most reliable for Cloudflare)
         if SCRAPERAPI_KEY or SCRAPINGBEE_KEY:
-            return fetch_via_proxy(url)
+            try:
+                return fetch_via_proxy(url)
+            except Exception as e:
+                print(f"Proxy failed for {url}: {e}")
+        
+        # Try cloudscraper (good for Cloudflare bypass)
         if use_cloud and cloudscraper is not None:
-            scraper = cloudscraper.create_scraper()
-            r = scraper.get(url, headers=HEADERS, timeout=60)
+            try:
+                scraper = cloudscraper.create_scraper(
+                    browser={
+                        'browser': 'chrome',
+                        'platform': 'windows',
+                        'desktop': True
+                    }
+                )
+                r = scraper.get(url, headers=HEADERS, timeout=60)
+                r.raise_for_status()
+                
+                # Check if we got blocked or received invalid content
+                content_lower = r.text.lower()
+                if 'cloudflare' in content_lower and 'blocked' in content_lower:
+                    raise Exception("Cloudflare blocked the request")
+                if 'attention required' in content_lower and 'cloudflare' in content_lower:
+                    raise Exception("Cloudflare challenge page received")
+                if len(r.text) < 1000:  # Suspiciously short response
+                    raise Exception("Received suspiciously short response")
+                
+                return r.text
+            except Exception as e:
+                print(f"Cloudscraper failed for {url}: {e}")
+        
+        # Try direct request with session and retries
+        try:
+            session = requests.Session()
+            session.headers.update(HEADERS)
+            
+            # Add some delay to avoid rate limiting
+            time.sleep(2)
+            
+            r = session.get(url, timeout=60)
             r.raise_for_status()
+            
+            # Check if we got blocked or received invalid content
+            content_lower = r.text.lower()
+            if 'cloudflare' in content_lower and 'blocked' in content_lower:
+                raise Exception("Cloudflare blocked the request")
+            if 'attention required' in content_lower and 'cloudflare' in content_lower:
+                raise Exception("Cloudflare challenge page received")
+            if len(r.text) < 1000:  # Suspiciously short response
+                raise Exception("Received suspiciously short response")
+            
             return r.text
+        except Exception as e:
+            print(f"Direct request failed for {url}: {e}")
+            raise
+    
+    # For non-BWF sites, use direct request
     r = requests.get(url, headers=HEADERS, timeout=60)
     r.raise_for_status()
     return r.text
@@ -235,38 +289,118 @@ def parse_bwf_main_pages(page_url: str, limit: int = 40) -> list[dict]:
     return items
 
 
-def discover_links_via_google(limit: int = 30) -> list[str]:
-    params = {
-        'q': 'site:bwfbadminton.com when:365d',
-        'hl': 'en-US',
-        'gl': 'US',
-        'ceid': 'US:en',
-    }
-    url = f'https://news.google.com/rss/search?{urlencode(params)}'
-    try:
-        xml = fetch(url, use_cloud=False)
-    except Exception:
-        return []
-    links: list[str] = []
-    for m in re.finditer(r'<item>([\s\S]*?)</item>', xml, re.I):
-        item = m.group(1)
-        link = ''
-        link_m = re.search(r'<link>([\s\S]*?)</link>', item, re.I)
-        if link_m:
-            link = link_m.group(1).strip()
-        desc_m = re.search(r'<description>([\s\S]*?)</description>', item, re.I)
-        if 'news.google.com' in (link or '') and desc_m:
-            m2 = re.search(r'href=\"(https?://[^\"]+?)\"', desc_m.group(1), re.I)
-            if m2:
-                link = unquote(m2.group(1))
+def discover_links_via_rss(limit: int = 20) -> list[dict]:
+    """Try to get BWF news from RSS feeds."""
+    items = []
+    
+    rss_urls = [
+        'https://bwfbadminton.com/feed/',
+        'https://bwfbadminton.com/feed/rss/',
+        'https://bwfworldtour.bwfbadminton.com/feed/',
+    ]
+    
+    for rss_url in rss_urls:
         try:
-            u = urlparse(link)
-            if u.scheme and is_official_host((u.hostname or '').lower()):
-                links.append(link)
-        except Exception:
-            pass
-        if len(links) >= limit:
-            break
+            print(f"Trying RSS feed: {rss_url}")
+            xml = fetch(rss_url, use_cloud=False)
+            
+            # Parse RSS XML
+            import xml.etree.ElementTree as ET
+            root = ET.fromstring(xml)
+            
+            # Find all item elements
+            for item in root.findall('.//item'):
+                title = item.find('title')
+                link = item.find('link')
+                description = item.find('description')
+                pub_date = item.find('pubDate')
+                
+                if title is not None and link is not None:
+                    item_data = {
+                        'title': remove_date_from_title(title.text or ''),
+                        'href': link.text or '',
+                        'preview': (description.text or '')[:220] if description is not None else '',
+                        'date': normalize_date_iso(pub_date.text or '') if pub_date is not None else '',
+                        'img': ''  # RSS usually doesn't have images
+                    }
+                    
+                    # Validate BWF link
+                    try:
+                        u = urlparse(item_data['href'])
+                        if u.scheme and is_official_host((u.hostname or '').lower()):
+                            items.append(item_data)
+                            print(f"Found RSS item: {item_data['title'][:50]}...")
+                    except Exception:
+                        continue
+                        
+                if len(items) >= limit:
+                    break
+                    
+        except Exception as e:
+            print(f"RSS feed {rss_url} failed: {e}")
+            continue
+    
+    print(f"RSS feeds yielded {len(items)} items")
+    return items
+
+
+def discover_links_via_google(limit: int = 30) -> list[str]:
+    """Discover BWF news links via Google News RSS."""
+    links: list[str] = []
+    
+    # Try multiple Google News search queries
+    queries = [
+        'site:bwfbadminton.com when:30d',
+        'site:bwfbadminton.com badminton news when:30d',
+        'site:bwfworldtour.bwfbadminton.com when:30d'
+    ]
+    
+    for query in queries:
+        try:
+            params = {
+                'q': query,
+                'hl': 'en-US',
+                'gl': 'US',
+                'ceid': 'US:en',
+            }
+            url = f'https://news.google.com/rss/search?{urlencode(params)}'
+            print(f"Trying Google News query: {query}")
+            
+            xml = fetch(url, use_cloud=False)
+            
+            for m in re.finditer(r'<item>([\s\S]*?)</item>', xml, re.I):
+                item = m.group(1)
+                link = ''
+                
+                # Extract link
+                link_m = re.search(r'<link>([\s\S]*?)</link>', item, re.I)
+                if link_m:
+                    link = link_m.group(1).strip()
+                
+                # Handle Google News redirect links
+                desc_m = re.search(r'<description>([\s\S]*?)</description>', item, re.I)
+                if 'news.google.com' in (link or '') and desc_m:
+                    m2 = re.search(r'href=\"(https?://[^\"]+?)\"', desc_m.group(1), re.I)
+                    if m2:
+                        link = unquote(m2.group(1))
+                
+                # Validate and add link
+                try:
+                    u = urlparse(link)
+                    if u.scheme and is_official_host((u.hostname or '').lower()):
+                        links.append(link)
+                        print(f"Found BWF link: {link}")
+                except Exception:
+                    pass
+                
+                if len(links) >= limit:
+                    break
+            
+        except Exception as e:
+            print(f"Google News query failed for '{query}': {e}")
+            continue
+    
+    # Deduplicate while preserving order
     seen = set()
     uniq = []
     for h in links:
@@ -274,6 +408,8 @@ def discover_links_via_google(limit: int = 30) -> list[str]:
             continue
         seen.add(h)
         uniq.append(h)
+    
+    print(f"Google News discovered {len(uniq)} unique BWF links")
     return uniq
 
 
@@ -1010,200 +1146,170 @@ def parse_championships_overview(page_url: str, limit: int = 40) -> list[dict]:
 
 
 def scrape() -> dict:
-    # Stage 0: Try official BWF news page first (what user expects to be the source of truth)
-    try:
-        print("Trying official BWF 'Latest News' page ...")
-        official_items = parse_listing_latest('https://bwfbadminton.com', limit=40)
-        # Enrich dates from URL if missing and normalize
-        def enrich_official_dates(items: list[dict]) -> list[dict]:
-            out = []
-            for it in items:
-                href = it.get('href') or ''
-                date_raw = it.get('date') or ''
-                if not date_raw and href:
-                    m = re.search(r'/(\d{4})/(\d{1,2})/(\d{1,2})/', href)
-                    if m:
-                        y, mo, d = m.group(1), m.group(2), m.group(3)
-                        date_raw = f"{y}-{mo.zfill(2)}-{d.zfill(2)}T00:00:00+00:00"
-                it2 = dict(it)
-                it2['date'] = normalize_date_iso(date_raw or '')
-                it2['title'] = remove_date_from_title(it.get('title') or '')
-                out.append(it2)
-            return out
-        official_items = enrich_official_dates(official_items)
-        # Dedupe by href and sort by date desc
-        seen_o = set()
-        uniq_o = []
-        for it in official_items:
-            h = it.get('href')
-            if not h or h in seen_o:
-                continue
-            seen_o.add(h)
-            uniq_o.append(it)
-        def get_date_o(item):
-            ds = item.get('date', '')
-            try:
-                return date_parser.parse(ds) if ds else datetime.min.replace(tzinfo=timezone.utc)
-            except Exception:
-                return datetime.min.replace(tzinfo=timezone.utc)
-        uniq_o.sort(key=get_date_o, reverse=True)
-        # If we found some items and the newest item is recent enough, return them.
-        if uniq_o:
-            newest = uniq_o[0].get('date') if uniq_o else ''
-            print(f"Official latest: {len(uniq_o)} items; newest={newest}; sample={[it.get('title') for it in uniq_o[:5]]}")
-            return {
-                'scraped_at': datetime.now(timezone.utc).isoformat(),
-                'items': uniq_o[:20],
-            }
-    except Exception as e:
-        print(f"Official latest parse failed: {e}")
-
-    # Stage 0b: Broader parse from BWF main pages if Latest News block not found
-    try:
-        print("Trying broader parse on BWF main pages ...")
-        broad_items = []
-        for u in ['https://bwfbadminton.com/news/', 'https://bwfbadminton.com/']:
-            part = parse_bwf_main_pages(u, limit=50)
-            if part:
-                broad_items.extend(part)
-        # Deduplicate and sort
-        seen_b = set()
-        uniq_b = []
-        for it in broad_items:
-            h = it.get('href')
-            if not h or h in seen_b:
-                continue
-            seen_b.add(h)
-            uniq_b.append(it)
-        def get_date_b(item):
-            ds = item.get('date', '')
-            try:
-                return date_parser.parse(ds) if ds else datetime.min.replace(tzinfo=timezone.utc)
-            except Exception:
-                return datetime.min.replace(tzinfo=timezone.utc)
-        uniq_b.sort(key=get_date_b, reverse=True)
-        if uniq_b:
-            print(f"BWF main pages parsed: {len(uniq_b)} items; newest={uniq_b[0].get('date')}; sample={[it.get('title') for it in uniq_b[:5]]}")
-            return {
-                'scraped_at': datetime.now(timezone.utc).isoformat(),
-                'items': uniq_b[:20],
-            }
-    except Exception as e:
-        print(f"BWF main pages parse failed: {e}")
-
-    # Stage 1: Try Google News RSS for latest BWF articles (works without proxy)
-    google_items = []
-    try:
-        print("Trying Google News RSS for BWF articles...")
-        google_items = discover_links_via_google(limit=30)
-        print(f"Found {len(google_items)} articles via Google News")
-        
-        # Convert Google links to article data
-        parsed_google = []
-        for link in google_items[:15]:  # Limit to avoid rate limits
-            try:
-                # Try to parse article without proxy first
-                art = parse_article(link)
-                if art and art.get('title'):
-                    parsed_google.append(art)
-                    print(f"Parsed: {art['title'][:60]}...")
-            except Exception as e:
-                print(f"Failed to parse {link}: {e}")
-                continue
-        
-        if parsed_google:
-            print(f"Successfully parsed {len(parsed_google)} articles from Google News")
-            # Sort by date and return
-            def get_date(item):
-                date_str = item.get('date', '')
-                try:
-                    return date_parser.parse(date_str) if date_str else datetime.min.replace(tzinfo=timezone.utc)
-                except:
-                    return datetime.min.replace(tzinfo=timezone.utc)
-            
-            items = sorted(parsed_google, key=get_date, reverse=True)[:20]
-            return {
-                'scraped_at': datetime.now(timezone.utc).isoformat(),
-                'items': items,
-            }
-    except Exception as e:
-        print(f"Google News approach failed: {e}")
+    """Main scraping function with multiple fallback strategies."""
+    all_items = []
     
-    # Fallback to direct BWF scraping (requires proxy)
-    champ_items = []
-    default_pages = [
-        'https://bwfbadminton.com/news/',  # Official BWF news (has latest from all tournaments)
-        'https://bwfbadminton.com/',  # BWF main page (latest highlights)
-        'https://bwfworldchampionships.bwfbadminton.com/news/',  # Championships news
-        'https://bwfworldchampionships.bwfbadminton.com/',  # Championships main page
+    # Strategy 0: RSS Feeds (most reliable, lightweight)
+    print("=== Strategy 0: RSS Feeds ===")
+    try:
+        rss_items = discover_links_via_rss(limit=30)
+        if rss_items:
+            print(f"RSS feeds yielded {len(rss_items)} items")
+            all_items.extend(rss_items)
+        else:
+            print("No items found via RSS feeds")
+    except Exception as e:
+        print(f"RSS strategy failed: {e}")
+    
+    # Strategy 1: Google News RSS (backup for RSS)
+    print("\n=== Strategy 1: Google News RSS ===")
+    try:
+        google_links = discover_links_via_google(limit=30)
+        if google_links:
+            print(f"Found {len(google_links)} links via Google News")
+            
+            # Parse articles from Google News links
+            for i, link in enumerate(google_links[:15]):  # Limit to avoid timeouts
+                try:
+                    print(f"Parsing article {i+1}/{min(15, len(google_links))}: {link}")
+                    art = parse_article(link)
+                    if art and art.get('title'):
+                        all_items.append(art)
+                        print(f"✓ Parsed: {art['title'][:60]}...")
+                    else:
+                        print(f"✗ Failed to parse article content")
+                except Exception as e:
+                    print(f"✗ Error parsing {link}: {e}")
+                    continue
+            
+            print(f"Google News strategy added {len([item for item in all_items if item.get('source') != 'rss'])} articles")
+        else:
+            print("No links found via Google News")
+    except Exception as e:
+        print(f"Google News strategy failed: {e}")
+    
+    # Strategy 2: Alternative News Sources
+    print("\n=== Strategy 2: Alternative News Sources ===")
+    try:
+        # Try badminton news aggregators and sports sites
+        alt_sources = [
+            'https://www.badmintoncentral.com/forums/index.php?forums/bwf-international-badminton.25/rss',
+            'https://www.badmintonplanet.com/feed/',
+        ]
+        
+        for source_url in alt_sources:
+            try:
+                print(f"Trying alternative source: {source_url}")
+                # This would need custom parsing for each source
+                # For now, skip to avoid complexity
+                pass
+            except Exception as e:
+                print(f"Alternative source {source_url} failed: {e}")
+                
+    except Exception as e:
+        print(f"Alternative sources strategy failed: {e}")
+    
+    # Strategy 3: Direct BWF site scraping (if we have good proxy/cloudscraper)
+    print("\n=== Strategy 3: Direct BWF scraping ===")
+    try:
+        # Try official BWF Latest News first
+        print("Trying BWF Latest News section...")
+        official_items = parse_listing_latest('https://bwfbadminton.com', limit=20)
+        if official_items:
+            print(f"Found {len(official_items)} items from Latest News")
+            all_items.extend(official_items)
+        
+        # Try broader BWF main pages
+        print("Trying BWF main pages...")
+        for url in ['https://bwfbadminton.com/news/', 'https://bwfbadminton.com/']:
+            try:
+                part = parse_bwf_main_pages(url, limit=20)
+                if part:
+                    print(f"Found {len(part)} items from {url}")
+                    all_items.extend(part)
+            except Exception as e:
+                print(f"Failed to parse {url}: {e}")
+                
+    except Exception as e:
+        print(f"Direct BWF scraping failed: {e}")
+    
+    # Strategy 4: BWF World Tour and Championships sites
+    print("\n=== Strategy 4: BWF Tournament sites ===")
+    tournament_urls = [
+        'https://bwfworldtour.bwfbadminton.com/news/',
+        'https://bwfworldchampionships.bwfbadminton.com/news/',
     ]
-    # Allow overriding/adding pages via env var (comma-separated)
-    extra = os.environ.get('BWF_CHAMP_URLS', '').strip()
-    extra_pages = [u.strip() for u in extra.split(',') if u.strip()] if extra else []
-    only = os.environ.get('BWF_CHAMP_ONLY', '').strip().lower() in ('1', 'true', 'yes')
-    # Deduplicate while preserving order. If ONLY is set and extras provided -> use only extras.
-    seen_pages = set()
-    champ_pages: list[str] = []
-    source_pages = (extra_pages if (only and extra_pages) else (extra_pages + default_pages))
-    for u in source_pages:
-        if u and (u not in seen_pages):
-            champ_pages.append(u)
-            seen_pages.add(u)
-
-    # Parse all pages first, then deduplicate
-    for url in champ_pages:
-        print(f"Scraping from: {url}")
+    
+    for url in tournament_urls:
         try:
-            # Choose parser based on URL
-            if 'bwfbadminton.com' in url and 'worldchampionships' not in url:
-                # Use BWF main pages parser for bwfbadminton.com
-                part = parse_bwf_main_pages(url, limit=40)
-            elif BWF_MODE == 'list_only':
-                part = parse_championships_list_only(url, limit=40)
+            print(f"Trying {url}...")
+            if BWF_MODE == 'list_only':
+                part = parse_championships_list_only(url, limit=15)
             else:
-                part = parse_championships_overview(url, limit=40)
+                part = parse_championships_overview(url, limit=15)
+            
             if part:
-                champ_items.extend(part)
                 print(f"Found {len(part)} items from {url}")
-                # Show first few titles for debugging
-                titles = [item.get('title', 'No title')[:50] for item in part[:3]]
-                print(f"Sample titles: {titles}")
+                all_items.extend(part)
             else:
                 print(f"No items found from {url}")
         except Exception as e:
             print(f"Error scraping {url}: {e}")
             continue
-
-    print(f"Total items before deduplication: {len(champ_items)}")
-
-    # Deduplicate by href
+    
+    print(f"\n=== Processing Results ===")
+    print(f"Total items collected: {len(all_items)}")
+    
+    # Deduplicate by href while preserving order
     seen = set()
     unique_items = []
-    for it in champ_items:
-        h = it.get('href')
-        if not h or h in seen:
+    for item in all_items:
+        href = item.get('href')
+        if not href or href in seen:
             continue
-        seen.add(h)
-        unique_items.append(it)
+        seen.add(href)
+        
+        # Normalize and enrich item
+        item_copy = dict(item)
+        item_copy['title'] = remove_date_from_title(item.get('title') or '')
+        
+        # Ensure date is properly formatted
+        date_raw = item.get('date') or ''
+        if not date_raw and href:
+            # Extract date from URL
+            m = re.search(r'/(\d{4})/(\d{1,2})/(\d{1,2})/', href)
+            if m:
+                y, mo, d = m.group(1), m.group(2), m.group(3)
+                date_raw = f"{y}-{mo.zfill(2)}-{d.zfill(2)}T00:00:00+00:00"
+        
+        item_copy['date'] = normalize_date_iso(date_raw or '')
+        unique_items.append(item_copy)
     
     print(f"Unique items after deduplication: {len(unique_items)}")
     
-    # Sort by date (newest first) and take top 20
-    def get_date(item):
+    # Sort by date (newest first)
+    def get_date_key(item):
         date_str = item.get('date', '')
         try:
-            from dateutil import parser
-            return parser.parse(date_str) if date_str else datetime.min.replace(tzinfo=timezone.utc)
+            return date_parser.parse(date_str) if date_str else datetime.min.replace(tzinfo=timezone.utc)
         except:
             return datetime.min.replace(tzinfo=timezone.utc)
     
-    items = sorted(unique_items, key=get_date, reverse=True)[:20]
-
-    print(f"Final result: {len(items)} items from championships site (news page + main page)")
+    sorted_items = sorted(unique_items, key=get_date_key, reverse=True)
+    final_items = sorted_items[:20]  # Take top 20 most recent
+    
+    if final_items:
+        newest_date = final_items[0].get('date', '')
+        oldest_date = final_items[-1].get('date', '')
+        print(f"Final result: {len(final_items)} items")
+        print(f"Date range: {newest_date} to {oldest_date}")
+        print(f"Sample titles: {[item.get('title', 'No title')[:50] for item in final_items[:3]]}")
+    else:
+        print("No items found from any strategy!")
     
     return {
         'scraped_at': datetime.now(timezone.utc).isoformat(),
-        'items': items,
+        'items': final_items,
     }
 
 

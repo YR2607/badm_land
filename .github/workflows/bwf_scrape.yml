@@ -30,15 +30,26 @@ jobs:
         env:
           SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
           SCRAPINGBEE_KEY: ${{ secrets.SCRAPINGBEE_KEY }}
-          # Default: parse ONLY from championships main and news pages (diverse per-card images)
-          BWF_CHAMP_ONLY: '1'
-          BWF_CHAMP_URLS: 'https://bwfbadminton.com/news/,https://bwfbadminton.com/,https://bwfworldchampionships.bwfbadminton.com/news/,https://bwfworldchampionships.bwfbadminton.com/,https://bwfworldtour.bwfbadminton.com/news/,https://bwfworldtour.bwfbadminton.com/'
-          # Force proxy for championship domain to avoid consent/cookie HTML on CI
+          # Force proxy for all BWF domains to avoid Cloudflare blocks
           BWF_FORCE_PROXY: '1'
           # Use default mode to get full article data and latest news
-          # BWF_MODE: 'list_only'
+          BWF_MODE: 'default'
+          # Enable verbose logging
+          PYTHONUNBUFFERED: '1'
         run: |
           echo "Starting BWF scraper..."
+          echo "Checking proxy keys availability:"
+          if [ -n "$SCRAPERAPI_KEY" ]; then
+            echo "✓ SCRAPERAPI_KEY is available (length: ${#SCRAPERAPI_KEY})"
+          else
+            echo "✗ SCRAPERAPI_KEY is not set"
+          fi
+          if [ -n "$SCRAPINGBEE_KEY" ]; then
+            echo "✓ SCRAPINGBEE_KEY is available (length: ${#SCRAPINGBEE_KEY})"
+          else
+            echo "✗ SCRAPINGBEE_KEY is not set"
+          fi
+          echo "Running scraper with enhanced strategies..."
           python scripts/bwf_scrape.py
           echo "Scraper completed with exit code: $?"
       - name: Show scraped items count
