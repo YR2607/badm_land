@@ -523,7 +523,7 @@ const About: FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {(cmsData?.teamSection?.coaches || []).length === 0 && (
                 <div className="col-span-full text-center text-gray-400 text-sm">
-                  Секция тренеров не заполнена в CMS
+                  {t('about.team.emptySection')}
                 </div>
               )}
               {(cmsData?.teamSection?.coaches || []).map((coach: any, index: number) => (
@@ -623,7 +623,7 @@ const About: FC = () => {
             
             {/* Timeline with years as dividers */}
             {effectiveTimeline.length === 0 ? (
-              <div className="text-center text-gray-400 text-sm">Секция истории не заполнена в CMS</div>
+              <div className="text-center text-gray-400 text-sm">{t('about.history.emptySection')}</div>
             ) : (() => {
               const getYear = (s: string) => (s.match(/\d{4}/)?.[0] || s);
               const items = showAllHistory ? effectiveTimeline : effectiveTimeline.slice(0, VISIBLE_HISTORY_COUNT);
@@ -708,7 +708,7 @@ const About: FC = () => {
             <div className="relative -mx-4 sm:-mx-6 lg:-mx-8">
               {/* Scroll hint */}
               {effectiveRoadmap.length === 0 ? (
-                <div className="text-center text-gray-400 text-sm px-4 sm:px-6 lg:px-8">Секция планов не заполнена в CMS</div>
+                <div className="text-center text-gray-400 text-sm px-4 sm:px-6 lg:px-8">{t('about.roadmap.emptySection')}</div>
               ) : (
                 <div className="flex items-center justify-center gap-2 mb-6 text-sm text-gray-500 px-4 sm:px-6 lg:px-8">
                   <ArrowRight className="w-4 h-4 animate-pulse" />

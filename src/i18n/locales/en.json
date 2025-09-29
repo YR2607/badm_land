@@ -142,6 +142,7 @@
     "team": {
       "title": "Our Team",
       "subtitle": "Meet our professional coaches",
+      "emptySection": "Coaches section is not filled in CMS",
       "experience": "Experience",
       "specialization": "Specialization",
       "founder": "Founder and Head Coach",
@@ -185,6 +186,9 @@
     "history": {
       "title": "Our History",
       "subtitle": "The path from idea to leading badminton club",
+      "emptySection": "History section is not filled in CMS",
+      "showAll": "Show All Events",
+      "collapse": "Collapse",
       "development": "Club Development"
     },
     "timeline": {
@@ -205,6 +209,7 @@
     "roadmap": {
       "title": "Development Plans",
       "subtitle": "Our goals for the coming years",
+      "emptySection": "Roadmap section is not filled in CMS",
       "scrollHint": "Scroll to explore our journey",
       "swipeHint": "Swipe to navigate",
       "done": "Done",

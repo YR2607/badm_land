@@ -225,11 +225,14 @@
       "title": "Istoria Noastră",
       "subtitle": "Călătoria de creștere și dezvoltare",
       "development": "Dezvoltarea Clubului",
-      "showAll": "Arată Toate Evenimentele"
+      "showAll": "Arată Toate Evenimentele",
+      "collapse": "Restrânge",
+      "emptySection": "Secțiunea istoriei nu este completată în CMS"
     },
     "roadmap": {
       "title": "Foaia de Parcurs pentru Dezvoltare",
       "subtitle": "Planurile și realizările noastre",
+      "emptySection": "Secțiunea planului nu este completată în CMS",
       "scrollHint": "Derulează pentru a explora călătoria noastră",
       "swipeHint": "Glisează pentru a naviga",
       "done": "Finalizat",
