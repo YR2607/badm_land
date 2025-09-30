@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight } from 'lucide-react';
 import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchTrainers, fetchAboutTabs } from '../lib/cms';
-import { HeroSkeleton } from '../components/Skeletons';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
 
@@ -364,9 +363,7 @@ const About: FC = () => {
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
-              {!heroData ? (
-                <HeroSkeleton />
-              ) : (
+              {heroData && (
                 <>
                   {heroData?.badge?.text && (
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
