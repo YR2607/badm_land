@@ -43,6 +43,8 @@ import contactForm from './singletons/contactForm'
 import contactSeo from './singletons/contactSeo'
 import gymsHero from './singletons/gymsHero'
 import gymsSeo from './singletons/gymsSeo'
+import navigation from './singletons/navigation'
+import footer from './singletons/footer'
 
 export const schemaTypes = [
   // Basic content types
@@ -92,4 +94,6 @@ export const schemaTypes = [
   contactSeo,
   gymsHero,
   gymsSeo,
+  navigation,
+  footer,
 ]

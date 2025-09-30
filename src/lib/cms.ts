@@ -1030,6 +1030,90 @@ export async function fetchAboutHero(lang: string = 'ru'): Promise<CmsHero | nul
   }
 }
 
+export async function fetchAboutTabs(lang: string = 'ru'): Promise<any> {
+  const cacheKey = `aboutTabs-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<any>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "aboutTabs"][0]{
+        "title": title,
+        "subtitle": subtitle,
+        tabs[]{
+          key,
+          label,
+          icon,
+          title,
+          "content": select($lang=="en" && defined(content_en)=>content_en, $lang=="ro" && defined(content_ro)=>content_ro, content)
+        }
+      }`,
+      { lang }
+    );
+    if (data && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, data);
+    return data || null;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchNavigation(lang: string = 'ru'): Promise<any> {
+  const cacheKey = `navigation-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<any>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "navigation"][0]{
+        menuItems[]{
+          key,
+          "label": select($lang=="en" && defined(label_en)=>label_en, $lang=="ro" && defined(label_ro)=>label_ro, label),
+          path,
+          order
+        }
+      }`,
+      { lang }
+    );
+    if (data && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, data);
+    return data || null;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchFooter(lang: string = 'ru'): Promise<any> {
+  const cacheKey = `footer-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<any>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "footer"][0]{
+        "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
+        quickLinks[]{
+          "label": select($lang=="en" && defined(label_en)=>label_en, $lang=="ro" && defined(label_ro)=>label_ro, label),
+          path
+        },
+        socialMedia,
+        contact{
+          address,
+          phone,
+          email,
+          "workingHours": select($lang=="en" && defined(workingHours_en)=>workingHours_en, $lang=="ro" && defined(workingHours_ro)=>workingHours_ro, workingHours)
+        }
+      }`,
+      { lang }
+    );
+    if (data && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, data);
+    return data || null;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchServicesHero(lang: string = 'ru'): Promise<CmsHero | null> {
   const cacheKey = `servicesHero-${lang}`;
   if (process.env.NODE_ENV !== 'development') {
