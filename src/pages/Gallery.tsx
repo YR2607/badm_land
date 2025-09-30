@@ -2,6 +2,8 @@ import { type FC, useEffect, useRef, useState } from 'react';
 import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '../lib/cms';
 import { Image as ImageIcon, Video as VideoIcon, ChevronDown, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Breadcrumbs from '../components/Breadcrumbs';
+import SEO from '../components/SEO';
 
 const getSections = (t: any) => [
   { id: 'hall', title: t('gallery.sections.hall'), gradient: 'from-blue-500 to-blue-600' },
@@ -173,6 +175,17 @@ const Gallery: FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO 
+        title={`Altius — ${t('navigation.gallery')}`}
+        description={t('gallery.subtitle')}
+        image="https://altius.md/og-gallery.jpg"
+      />
+      <Breadcrumbs
+        items={[
+          { label: t('navigation.home'), path: '/' },
+          { label: t('navigation.gallery') }
+        ]}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
           <h1 className="section-title">{t('gallery.title')}</h1>
@@ -211,7 +224,20 @@ const Gallery: FC = () => {
                 <div className="columns-1 sm:columns-2 md:columns-3 gap-5 space-y-5">
                   {(sectionImages[s.id] || []).map((src, i) => (
                     <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid border border-gray-100 hover:border-primary-blue/20 transition-colors">
-                      <img src={src} alt={s.title} loading="lazy" className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-[1.02]" onClick={() => openLightbox([{ type: 'image', src, alt: s.title }], 0)} />
+                      <img 
+                        src={src} 
+                        alt={`${s.title} — ${t('gallery.title')}`}
+                        loading="lazy" 
+                        className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-[1.02]" 
+                        onClick={() => openLightbox([{ type: 'image', src, alt: s.title }], 0)}
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          const fallback = document.createElement('div');
+                          fallback.className = 'w-full h-64 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center';
+                          fallback.innerHTML = '<svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>';
+                          e.currentTarget.parentElement?.appendChild(fallback);
+                        }}
+                      />
                       <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </figure>
                   ))}
@@ -256,10 +282,10 @@ const Gallery: FC = () => {
                               <div className="p-4 pt-6">
                                 <div className="h-28 rounded-xl overflow-hidden bg-gray-50 relative">
                                   {cat.cover ? (
-                                    <img src={cat.cover} alt={cat.name} className="w-full h-full object-cover" />
+                                    <img src={cat.cover} alt={`${cat.name}${cat.year ? ' • ' + cat.year : ''}`} className="w-full h-full object-cover" />
                                   ) : preview.length > 0 ? (
                                     <div className="grid grid-cols-3 gap-1 h-full">
-                                      {preview.map((src: string, i: number) => (<img key={i} src={src} alt={cat.name} className="w-full h-full object-cover" />))}
+                                      {preview.map((src: string, i: number) => (<img key={i} src={src} alt={`${cat.name}${cat.year ? ' • ' + cat.year : ''} — ${t('gallery.photo')}`} className="w-full h-full object-cover" />))}
                                     </div>
                                   ) : (
                                     <div className={`w-full h-full bg-gradient-to-r ${cat.gradient}`} />
@@ -365,10 +391,34 @@ const Gallery: FC = () => {
       </div>
 
       {lightbox && (
-        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center" role="dialog" aria-modal="true" onClick={closeLightbox}>
-          <button className="absolute top-6 right-6 text-white text-xl" onClick={closeLightbox} aria-label={t('gallery.close')}>✕</button>
-          <button className="absolute left-4 md:left-8 text-white text-3xl" onClick={(e) => { e.stopPropagation(); prevItem(); }} aria-label={t('gallery.previous')}>‹</button>
-          <button className="absolute right-4 md:right-8 text-white text-3xl" onClick={(e) => { e.stopPropagation(); nextItem(); }} aria-label={t('gallery.next')}>›</button>
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center" 
+          role="dialog" 
+          aria-modal="true" 
+          aria-label={t('gallery.imageViewer', 'Просмотр изображения')}
+          onClick={closeLightbox}
+        >
+          <button 
+            className="absolute top-6 right-6 text-white text-xl hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-white rounded-full w-10 h-10 flex items-center justify-center" 
+            onClick={closeLightbox} 
+            aria-label={t('gallery.close')}
+          >
+            ✕
+          </button>
+          <button 
+            className="absolute left-4 md:left-8 text-white text-3xl hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-white rounded-full w-12 h-12 flex items-center justify-center" 
+            onClick={(e) => { e.stopPropagation(); prevItem(); }} 
+            aria-label={t('gallery.previous')}
+          >
+            ‹
+          </button>
+          <button 
+            className="absolute right-4 md:right-8 text-white text-3xl hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-white rounded-full w-12 h-12 flex items-center justify-center" 
+            onClick={(e) => { e.stopPropagation(); nextItem(); }} 
+            aria-label={t('gallery.next')}
+          >
+            ›
+          </button>
           <div className="max-w-5xl w-full px-4" onClick={(e) => e.stopPropagation()}>
             {lightbox.items[lightbox.index].type === 'image' ? (
               <img src={lightbox.items[lightbox.index].src} alt={lightbox.items[lightbox.index].alt || ''} className="w-full h-auto object-contain rounded-2xl" />

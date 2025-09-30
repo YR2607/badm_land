@@ -36,7 +36,14 @@ const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center space-x-3">
-            <img src="/altLGOO.jpg" alt="Altius" className="h-9 w-9 rounded-lg object-cover" />
+            <img 
+              src="/altLGOO.jpg" 
+              alt="Altius" 
+              className="h-9 w-9 rounded-lg object-cover" 
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
             <span className={`text-3xl font-display font-semibold tracking-tight ${isHome && !scrolled ? 'text-white' : 'text-primary-black'}`}>Altius</span>
           </Link>
 
@@ -63,17 +70,34 @@ const Header: React.FC = () => {
             <LanguageSwitcher />
           </div>
 
-          <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button 
+            className="md:hidden p-2" 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? t('navigation.closeMenu', 'Закрыть меню') : t('navigation.openMenu', 'Открыть меню')}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+          >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
       {isMenuOpen && (
-        <div className="md:hidden glass">
+        <nav 
+          id="mobile-menu" 
+          className="md:hidden glass"
+          role="navigation"
+          aria-label={t('navigation.mobileMenu', 'Мобильное меню')}
+        >
           <div className="px-4 py-4 space-y-4">
             {navItems.map((item) => (
-              <Link key={item.path} to={item.path} className={`block text-base font-medium transition-colors duration-200 ${isActive(item.path) ? 'text-primary-blue' : 'text-gray-700 hover:text-primary-blue'}`} onClick={() => setIsMenuOpen(false)}>
+              <Link 
+                key={item.path} 
+                to={item.path} 
+                className={`block text-base font-medium transition-colors duration-200 ${isActive(item.path) ? 'text-primary-blue' : 'text-gray-700 hover:text-primary-blue'}`} 
+                onClick={() => setIsMenuOpen(false)}
+                aria-current={isActive(item.path) ? 'page' : undefined}
+              >
                 {item.label}
               </Link>
             ))}
@@ -81,7 +105,7 @@ const Header: React.FC = () => {
               <LanguageSwitcher />
             </div>
           </div>
-        </div>
+        </nav>
       )}
     </header>
   );

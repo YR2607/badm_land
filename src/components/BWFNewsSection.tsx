@@ -28,7 +28,7 @@ const BWFNewsSection: FC = () => {
             dataSource = 'static'
           }
         } catch (staticError) {
-          console.warn('Failed to load static BWF news:', staticError)
+          // Silently fail and try API fallback
         }
         
         // Fallback to API endpoint if static file fails
@@ -40,7 +40,7 @@ const BWFNewsSection: FC = () => {
               dataSource = 'api'
             }
           } catch (apiError) {
-            console.warn('Failed to load BWF news from API:', apiError)
+            // Silently fail
           }
         }
         
@@ -59,11 +59,9 @@ const BWFNewsSection: FC = () => {
             return db - da
           })
         
-        console.log(`BWF news loaded from ${dataSource}, ${sorted.length} articles`)
         setItems(sorted)
       } catch (e: any) {
         if (!alive) return
-        console.error('BWF news loading error:', e)
         setError(e?.message || t('home.bwf.error', 'Ошибка загрузки новостей BWF'))
       }
     }

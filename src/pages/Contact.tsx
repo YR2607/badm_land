@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { fetchPageBySlug, isCmsEnabled, CmsPage, fetchContactHero, type CmsHero, fetchContactInfo, type CmsContactInfo, fetchContactGymsCards, type CmsContactGymCard } from '../lib/cms';
 import { useTranslation } from 'react-i18next';
+import SEO from '../components/SEO';
+import JsonLd from '../components/JsonLd';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 const Contact: FC = () => {
   const { t, i18n } = useTranslation();
@@ -28,7 +31,7 @@ const Contact: FC = () => {
 
 
   const contactInfo = (contactCms?.contacts || []).map((c) => ({
-    icon: c.type === 'address' ? <MapPin className="w-6 h-6" /> : c.type === 'phone' ? <Phone className="w-6 h-6" /> : c.type === 'email' ? <Mail className="w-6 h-6" /> : <Clock className="w-6 h-6" />,
+    icon: c.type === 'address' ? <MapPin className="w-6 h-6" aria-hidden="true" /> : c.type === 'phone' ? <Phone className="w-6 h-6" aria-hidden="true" /> : c.type === 'email' ? <Mail className="w-6 h-6" aria-hidden="true" /> : <Clock className="w-6 h-6" aria-hidden="true" />,
     title: c.label,
     content: c.value,
     color: c.type === 'address' ? 'from-primary-blue to-blue-600' : c.type === 'phone' ? 'from-primary-orange to-orange-600' : c.type === 'email' ? 'from-primary-yellow to-yellow-600' : 'from-gray-600 to-gray-800'
@@ -38,6 +41,33 @@ const Contact: FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO 
+        title={`Altius — ${t('navigation.contacts')}`}
+        description={t('contact.heroDescription')}
+        image="https://altius.md/og-contact.jpg"
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "SportsActivityLocation",
+          "name": "Altius Badminton Club",
+          "url": "https://altius.md/contact",
+          "telephone": (contactCms?.contacts || []).find(c => c.type === 'phone')?.value || "+373 60 123 456",
+          "email": (contactCms?.contacts || []).find(c => c.type === 'email')?.value || "info@altius.md",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": (contactCms?.contacts || []).find(c => c.type === 'address')?.value || "Chișinău, str. Example 123",
+            "addressLocality": "Chișinău",
+            "addressCountry": "MD"
+          }
+        }}
+      />
+      <Breadcrumbs
+        items={[
+          { label: t('navigation.home'), path: '/' },
+          { label: t('navigation.contacts') }
+        ]}
+      />
       <section className="relative overflow-hidden py-20 bg-gradient-to-br from-primary-blue via-primary-blue/95 to-indigo-700">
         {/* Enhanced Badminton Court Background */}
         <div className="absolute inset-0">
@@ -291,7 +321,7 @@ const Contact: FC = () => {
       {/* Contact Info Cards */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" role="list" aria-label={t('contact.info.title', 'Полезная информация')}>
             {contactInfo.length === 0 && (
               <div className="col-span-full text-center text-gray-400">{t('contact.emptySection')}</div>
             )}
@@ -299,6 +329,7 @@ const Contact: FC = () => {
               <motion.div
                 key={index}
                 className="card text-center group hover:scale-105 transition-transform duration-300"
+                role="listitem"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -368,12 +399,13 @@ const Contact: FC = () => {
                     </div>
 
                     <button 
-                      onClick={() => window.open(`https://maps.google.com/?q=${encodeURIComponent(g.address || g.name)}`, '_blank')}
+                      onClick={() => window.open(`https://maps.google.com/?q=${encodeURIComponent(g.address || g.name)}`, '_blank', 'noopener')}
                       className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-medium group-hover:scale-105"
+                      aria-label={`${t('contact.openMap')} — ${g.name}${g.address ? ', ' + g.address : ''}`}
                     >
-                      <MapPin className="w-4 h-4 mr-2" />
-                      Открыть карту
-                      <ExternalLink className="w-4 h-4 ml-2" />
+                      <MapPin className="w-4 h-4 mr-2" aria-hidden="true" />
+                      {t('contact.openMap')}
+                      <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
                     </button>
                   </div>
                 </motion.div>

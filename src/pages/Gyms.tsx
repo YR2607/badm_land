@@ -4,6 +4,7 @@ import { MapPin, Phone, Clock, ArrowLeft, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fetchGyms, type CmsGym, fetchGymsHero, type CmsHero } from '../lib/cms';
 import { useTranslation } from 'react-i18next';
+import { GymCardSkeleton } from '../components/Skeletons';
 
 const Gyms: FC = () => {
   const { t, i18n } = useTranslation();
@@ -54,10 +55,13 @@ const Gyms: FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('gyms.loading')}</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <GymCardSkeleton key={i} />
+            ))}
+          </div>
         </div>
       </div>
     );

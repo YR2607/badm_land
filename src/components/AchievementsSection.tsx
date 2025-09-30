@@ -105,12 +105,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
     : defaultAchievements
   );
 
-  // Debug logging
-  if (process.env.NODE_ENV === 'development') {
-    console.log('AchievementsSection - CMS Data:', cmsData);
-    console.log('AchievementsSection - Using achievements:', achievements);
-    console.log('AchievementsSection - Default achievements:', defaultAchievements);
-  }
+  // Debug logging removed for production
 
   const defaultMilestones = [
     {

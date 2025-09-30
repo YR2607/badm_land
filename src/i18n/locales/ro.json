@@ -249,6 +249,7 @@
   "contact": {
     "title": "Contact",
     "subtitle": "Luați legătura cu noi",
+    "openMap": "Deschide Harta",
     "heroTitle": "Contactați-ne",
     "heroSubtitle": "Suntem întotdeauna gata să răspundem la întrebările dumneavoastră",
     "heroDescription": "Sunați, scrieți sau vizitați-ne la oricare dintre sălile noastre",
@@ -454,6 +455,13 @@
     "description": "Club profesional de badminton în Chișinău",
     "quickLinks": "Link-uri rapide",
     "followUs": "Urmărește-ne",
+    "socialMedia": "Rețele sociale",
+    "social": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "tiktok": "TikTok"
+    },
     "allRightsReserved": "Toate drepturile rezervate",
     "contact": {
       "address": "Chișinău, str. Exemplu 123",

@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight } from 'lucide-react';
 import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchTrainers, fetchAboutTabs } from '../lib/cms';
+import { HeroSkeleton } from '../components/Skeletons';
+import SEO from '../components/SEO';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 const About: FC = () => {
   const { t, i18n } = useTranslation();
@@ -170,6 +173,17 @@ const About: FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title={`Altius — ${t('navigation.about')}`}
+        description={t('about.hero.subtitle')}
+        image="https://altius.md/og-about.jpg"
+      />
+      <Breadcrumbs
+        items={[
+          { label: t('navigation.home'), path: '/' },
+          { label: t('navigation.about') }
+        ]}
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 bg-gradient-to-br from-primary-blue via-primary-blue/95 to-indigo-700">
         {/* Enhanced Badminton Court Background */}
@@ -350,18 +364,28 @@ const About: FC = () => {
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
-                <Trophy className="w-4 h-4 text-yellow-300" />
-                <span className="text-sm font-medium">{heroData?.badge?.text || t('about.hero.badge')}</span>
-              </div>
-              
-              <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                {heroData?.title || t('about.hero.title')}
-              </h1>
-              
-              <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
-                {heroData?.subtitle || cmsData?.hero?.subtitle || t('about.hero.subtitle')}
-              </p>
+              {!heroData ? (
+                <HeroSkeleton />
+              ) : (
+                <>
+                  {heroData?.badge?.text && (
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
+                      <Trophy className="w-4 h-4 text-yellow-300" />
+                      <span className="text-sm font-medium">{heroData.badge.text}</span>
+                    </div>
+                  )}
+                  {heroData?.title && (
+                    <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+                      {heroData.title}
+                    </h1>
+                  )}
+                  {heroData?.subtitle && (
+                    <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
+                      {heroData.subtitle}
+                    </p>
+                  )}
+                </>
+              )}
               
               {/* Statistics */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
@@ -454,7 +478,7 @@ const About: FC = () => {
           </motion.div>
 
           {/* Founder Section */}
-          {(cmsData?.teamSection?.founder || !cmsData) && (
+          {cmsData?.teamSection?.founder && (
             <motion.div 
               className="mb-20" 
               initial={{ opacity: 0, y: 30 }} 
@@ -480,56 +504,45 @@ const About: FC = () => {
                       </div>
                     )}
                     <span className="inline-block bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm font-medium">
-                      {cmsData?.teamSection?.founder?.achievements?.[0] || t('about.team.masterSport')}
+                      {cmsData?.teamSection?.founder?.achievements?.[0]}
                     </span>
                   </div>
                   
                   {/* Content Section */}
                   <div className="lg:col-span-2 text-center lg:text-left">
-                    <h4 className="text-3xl font-bold text-gray-900 mb-2">
-                      {cmsData?.teamSection?.founder?.name || t('about.team.founderName')}
-                    </h4>
-                    <p className="text-lg text-primary-blue font-medium mb-6">
-                      {cmsData?.teamSection?.founder?.role || t('about.team.founderRole')}
-                    </p>
+                    {cmsData?.teamSection?.founder?.name && (
+                      <h4 className="text-3xl font-bold text-gray-900 mb-2">
+                        {cmsData.teamSection.founder.name}
+                      </h4>
+                    )}
+                    {cmsData?.teamSection?.founder?.role && (
+                      <p className="text-lg text-primary-blue font-medium mb-6">
+                        {cmsData.teamSection.founder.role}
+                      </p>
+                    )}
                     
                     <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
-                      {cmsData?.teamSection?.founder?.stats ? (
-                        cmsData.teamSection.founder.stats.map((stat, index) => (
-                          <span key={index} className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">
-                            {stat.value}
-                          </span>
-                        ))
-                      ) : (
-                        <>
-                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">{t('about.team.founderExp1')}</span>
-                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">{t('about.team.founderExp2')}</span>
-                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">{t('about.team.founderExp3')}</span>
-                        </>
-                      )}
+                      {cmsData?.teamSection?.founder?.stats && cmsData.teamSection.founder.stats.map((stat, index) => (
+                        <span key={index} className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">
+                          {stat.value}
+                        </span>
+                      ))}
                     </div>
                     
-                    <div className="space-y-4 text-gray-600 leading-relaxed">
-                      {cmsData?.teamSection?.founder?.description ? (
+                    {cmsData?.teamSection?.founder?.description && (
+                      <div className="space-y-4 text-gray-600 leading-relaxed">
                         <div className="prose prose-gray max-w-none">
                           {cmsData.teamSection.founder.description.map((block: any, index: number) => (
                             <p key={index}>{block.children?.[0]?.text || ''}</p>
                           ))}
                         </div>
-                      ) : (
-                        <>
-                          <p>
-                            {t('about.team.founderDesc1')}
-                          </p>
-                          <p>
-                            {t('about.team.founderDesc2')}
-                          </p>
-                        </>
-                      )}
-                      <blockquote className="italic text-gray-700 border-l-3 border-primary-blue pl-4">
-                        "{cmsData?.teamSection?.founder?.quote || t('about.team.founderQuote')}"
-                      </blockquote>
-                    </div>
+                        {cmsData?.teamSection?.founder?.quote && (
+                          <blockquote className="italic text-gray-700 border-l-3 border-primary-blue pl-4">
+                            "{cmsData.teamSection.founder.quote}"
+                          </blockquote>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -537,6 +550,7 @@ const About: FC = () => {
           )}
 
           {/* Coaches Section */}
+          {cmsData?.teamSection?.coaches && (
           <motion.div 
             initial={{ opacity: 0, y: 30 }} 
             whileInView={{ opacity: 1, y: 0 }} 
@@ -546,11 +560,6 @@ const About: FC = () => {
             <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.coaches')}</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(cmsData?.teamSection?.coaches || []).length === 0 && (
-                <div className="col-span-full text-center text-gray-400 text-sm">
-                  {t('about.team.emptySection')}
-                </div>
-              )}
               {(cmsData?.teamSection?.coaches || []).map((coach: any, index: number) => (
                 <motion.div
                   key={index}
@@ -611,6 +620,7 @@ const About: FC = () => {
               ))}
             </div>
             </motion.div>
+          )}
         </div>
       </section>
       {/* Unified History + Roadmap Section */}

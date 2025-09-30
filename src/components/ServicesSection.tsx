@@ -42,11 +42,7 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
     color: s.color || 'from-blue-500 to-indigo-600'
   }));
 
-  // Debug logging
-  if (process.env.NODE_ENV === 'development') {
-    console.log('ServicesSection - CMS Data:', cmsData);
-    console.log('ServicesSection - Using services:', services);
-  }
+  // Debug logging removed for production
 
   return (
     <section className="py-20 bg-white">

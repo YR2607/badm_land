@@ -257,6 +257,7 @@
     "title": "Контакты",
     "subtitle": "Свяжитесь с нами",
     "emptySection": "Контактная информация не заполнена в CMS",
+    "openMap": "Открыть карту",
     "heroTitle": "Свяжитесь с нами",
     "heroSubtitle": "Мы всегда готовы ответить на ваши вопросы",
     "heroDescription": "Позвоните, напишите или приходите к нам в любой из наших залов",
@@ -464,6 +465,13 @@
     "description": "Профессиональный бадминтон клуб в Кишиневе",
     "quickLinks": "Быстрые ссылки",
     "followUs": "Следите за нами",
+    "socialMedia": "Социальные сети",
+    "social": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "tiktok": "TikTok"
+    },
     "allRightsReserved": "Все права защищены",
     "contact": {
       "address": "Кишинев, ул. Пример 123",

@@ -5,6 +5,9 @@ import { useLocation } from 'react-router-dom';
 import { fetchClubEmbeds } from '../lib/cms';
 import { proxied } from '../utils/blockFacebookImages';
 import { useTranslation } from 'react-i18next';
+import Breadcrumbs from '../components/Breadcrumbs';
+import SEO from '../components/SEO';
+import { NewsCardSkeleton } from '../components/Skeletons';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
 
@@ -216,6 +219,17 @@ const Blog: FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO 
+        title={`Altius — ${t('navigation.news')}`}
+        description={t('news.hero.subtitle')}
+        image="https://altius.md/og-blog.jpg"
+      />
+      <Breadcrumbs
+        items={[
+          { label: t('navigation.home'), path: '/' },
+          { label: t('navigation.news') }
+        ]}
+      />
       <section className="relative overflow-hidden py-20 bg-gradient-to-br from-primary-blue via-primary-blue/95 to-indigo-700">
         {/* Enhanced Badminton Court Background */}
         <div className="absolute inset-0">
@@ -489,7 +503,11 @@ const Blog: FC = () => {
           <div className="sr-only" id="club-news" />
           <div className="sr-only" id="event-news" />
           {loading && merged.length === 0 ? (
-            <Empty text={t('news.loadingText')} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <NewsCardSkeleton key={i} />
+              ))}
+            </div>
           ) : filteredNews.length === 0 ? (
             <Empty text={t('news.noNews')} />
           ) : (

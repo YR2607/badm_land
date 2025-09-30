@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { MapPin, Phone, Mail, ArrowLeft, Clock, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { fetchGymBySlug, type CmsGym } from '../lib/cms'
+import Breadcrumbs from '../components/Breadcrumbs'
+import SEO from '../components/SEO'
+import JsonLd from '../components/JsonLd'
 
 const GymDetail: FC = () => {
   const { slug } = useParams<{ slug: string }>()
@@ -56,6 +59,34 @@ const GymDetail: FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      <SEO 
+        title={`${gym.name} | Altius`}
+        description={gym.description || gym.badge || t('gyms.heroSubtitle', 'Современные залы с профессиональным оборудованием')}
+        image={gym.heroImage || (gym.gallery && gym.gallery[0]) || 'https://altius.md/og-gym.jpg'}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "SportsActivityLocation",
+          "name": gym.name,
+          "url": `https://altius.md/gyms/${slug}`,
+          "telephone": gym.phone || "+373 60 123 456",
+          "address": gym.address ? {
+            "@type": "PostalAddress",
+            "streetAddress": gym.address,
+            "addressLocality": "Chișinău",
+            "addressCountry": "MD"
+          } : undefined,
+          "image": [gym.heroImage || (gym.gallery && gym.gallery[0])].filter(Boolean)
+        }}
+      />
+      <Breadcrumbs 
+        items={[
+          { label: t('navigation.home'), path: '/' },
+          { label: t('navigation.gyms'), path: '/gyms' },
+          { label: gym.name }
+        ]}
+      />
       <section className="relative overflow-hidden">
         <div className="relative h-72 md:h-96">
           <img

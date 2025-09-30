@@ -1,0 +1,24 @@
+# robots.txt for Altius Badminton Club
+# https://altius.md
+
+User-agent: *
+Allow: /
+
+# Disallow admin panel
+Disallow: /admin/
+Disallow: /admin
+
+# Allow important pages
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /gyms
+Allow: /gallery
+Allow: /blog
+Allow: /contact
+
+# Sitemap location
+Sitemap: https://altius.md/sitemap.xml
+
+# Crawl delay (optional, helps prevent server overload)
+Crawl-delay: 1

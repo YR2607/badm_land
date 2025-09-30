@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Breadcrumbs from '../components/Breadcrumbs';
+import SEO from '../components/SEO';
 import { proxied } from '../utils/blockFacebookImages';
 import { isCmsEnabled, sanityClient } from '../lib/cms';
 import groq from 'groq';
@@ -35,6 +37,22 @@ const PostDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO 
+        title={post.title}
+        description={post.excerpt || ''}
+        image={post.image || 'https://altius.md/og-post.jpg'}
+        type="article"
+        author={post.author || 'Altius Badminton Club'}
+        publishedTime={post.date}
+        modifiedTime={post.date}
+      />
+      <Breadcrumbs
+        items={[
+          { label: t('navigation.home'), path: '/' },
+          { label: t('navigation.news'), path: '/blog' },
+          { label: post.title }
+        ]}
+      />
       <div className="max-w-3xl mx-auto px-4 py-10">
         <Link to="/blog" className="text-primary-blue">← {t('news.backToList', 'Назад к новостям')}</Link>
         <h1 className="text-4xl font-display font-bold mt-4 mb-4">{post.title}</h1>

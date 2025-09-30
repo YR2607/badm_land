@@ -12,23 +12,54 @@ const Footer: React.FC = () => {
           {/* Logo and Description */}
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <img src="/altLGOO.jpg" alt="Altius" className="h-10 w-auto object-contain" />
+              <img 
+                src="/altLGOO.jpg" 
+                alt="Altius" 
+                className="h-10 w-auto object-contain" 
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
               <span className="text-3xl font-display font-bold">Altius</span>
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
               {t('footer.description')}
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="w-10 h-10 bg-primary-blue rounded-full flex items-center justify-center hover:bg-opacity-80 transition-colors">
-                <Facebook size={20} />
+            <div className="flex space-x-4" role="list" aria-label={t('footer.socialMedia', 'Социальные сети')}>
+              <a 
+                href="#" 
+                className="w-10 h-10 bg-primary-blue rounded-full flex items-center justify-center hover:bg-opacity-80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2"
+                aria-label={t('footer.social.facebook', 'Facebook')}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Facebook size={20} aria-hidden="true" />
               </a>
-              <a href="#" className="w-10 h-10 bg-primary-orange rounded-full flex items-center justify-center hover:bg-opacity-80 transition-colors">
-                <Instagram size={20} />
+              <a 
+                href="#" 
+                className="w-10 h-10 bg-primary-orange rounded-full flex items-center justify-center hover:bg-opacity-80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-orange focus:ring-offset-2"
+                aria-label={t('footer.social.instagram', 'Instagram')}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Instagram size={20} aria-hidden="true" />
               </a>
-              <a href="#" className="w-10 h-10 bg-primary-yellow rounded-full flex items-center justify-center hover:bg-opacity-80 transition-colors">
-                <Youtube size={20} />
+              <a 
+                href="#" 
+                className="w-10 h-10 bg-primary-yellow rounded-full flex items-center justify-center hover:bg-opacity-80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-yellow focus:ring-offset-2"
+                aria-label={t('footer.social.youtube', 'YouTube')}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Youtube size={20} aria-hidden="true" />
               </a>
-              <a href="#" className="w-10 h-10 bg-white text-primary-black rounded-full flex items-center justify-center hover:bg-opacity-80 transition-colors" aria-label="TikTok">
+              <a 
+                href="#" 
+                className="w-10 h-10 bg-white text-primary-black rounded-full flex items-center justify-center hover:bg-opacity-80 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2" 
+                aria-label={t('footer.social.tiktok', 'TikTok')}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
                   <path d="M12.9 2h2.4c.2 1.4 1 2.7 2.2 3.6a7 7 0 0 0 2.5 1v2.3a9.2 9.2 0 0 1-4.7-1.5v6.5c0 3-2.4 5.5-5.5 5.5S5.3 17 5.3 14c0-3 2.4-5.4 5.4-5.4c.3 0 .6 0 .9.1v2.5a3 3 0 1 0 2.3 2.9V2z"/>
                 </svg>

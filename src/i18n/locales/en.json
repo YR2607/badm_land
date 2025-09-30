@@ -226,6 +226,7 @@
   "contact": {
     "title": "Contact",
     "subtitle": "Get in touch with us",
+    "openMap": "Open Map",
     "heroTitle": "Contact Us",
     "heroSubtitle": "We are always ready to answer your questions",
     "heroDescription": "Call, write or visit us at any of our gyms",
@@ -433,6 +434,13 @@
     "description": "Professional badminton club in Chisinau",
     "quickLinks": "Quick Links",
     "followUs": "Follow Us",
+    "socialMedia": "Social Media",
+    "social": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "tiktok": "TikTok"
+    },
     "allRightsReserved": "All rights reserved",
     "contact": {
       "address": "Chisinau, Example str. 123",

@@ -5,6 +5,8 @@ import BusinessNewsSection from '../components/BusinessNewsSection';
 import ServicesSection from '../components/ServicesSection';
 import AchievementsSection from '../components/AchievementsSection';
 import CmsEmbedsSection from '../components/CmsEmbedsSection';
+import SEO from '../components/SEO';
+import JsonLd from '../components/JsonLd';
 import { fetchHomePage, CmsHomePage } from '../lib/cms';
 
 const Home: FC = () => {
@@ -46,6 +48,21 @@ const Home: FC = () => {
 
   return (
     <div>
+      <SEO 
+        title="Altius - Бадминтонный клуб в Кишиневе | Профессиональные тренировки"
+        description="Профессиональный бадминтонный клуб Altius в Кишиневе. Тренировки для детей и взрослых, индивидуальные и групповые занятия, участие в турнирах. 15+ лет опыта, 500+ учеников."
+        keywords="бадминтон Кишинев, badminton Chisinau, спортивный клуб, тренировки бадминтон, детский бадминтон, взрослый бадминтон, Altius"
+        image="https://altius.md/og-home.jpg"
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Altius Badminton Club",
+          "url": "https://altius.md/",
+          "logo": "https://altius.md/altLGOO.jpg"
+        }}
+      />
       <Hero cmsData={cmsData?.hero} />
       <AchievementsSection cmsData={cmsData?.achievementsSection} />
       <ServicesSection cmsData={cmsData?.servicesSection} />

@@ -2,6 +2,8 @@ import { FC, useState, useEffect } from 'react';
 import { CheckCircle, Clock, Sparkles, Zap, Target, ChevronDown, Phone, Users, Star, Award, User, Calendar, Trophy, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import Breadcrumbs from '../components/Breadcrumbs';
+import SEO from '../components/SEO';
 import { fetchServicesPage, CmsServicesPage, fetchServicesHero, type CmsHero } from '../lib/cms';
 
 const Services: FC = () => {
@@ -127,6 +129,18 @@ const Services: FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <SEO 
+        title="Услуги - Тренировки по бадминтону | Altius"
+        description="Групповые и индивидуальные тренировки по бадминтону в Кишиневе. Программы для детей и взрослых, подготовка к соревнованиям. Цены от 200 MDL/месяц."
+        keywords="тренировки бадминтон, групповые занятия, индивидуальные тренировки, цены бадминтон, Кишинев"
+        image="https://altius.md/og-services.jpg"
+      />
+      <Breadcrumbs
+        items={[
+          { label: t('navigation.home'), path: '/' },
+          { label: t('navigation.services') }
+        ]}
+      />
       {/* HERO SECTION */}
       <section className="relative overflow-hidden py-20 bg-gradient-to-br from-primary-blue via-primary-blue/95 to-indigo-700">
         {/* Enhanced Badminton Court Background */}
@@ -341,29 +355,23 @@ const Services: FC = () => {
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
-              {heroData?.badge?.text ? (
+              {heroData?.badge?.text && (
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                   <Sparkles className="w-4 h-4 text-yellow-300" />
                   <span className="text-sm font-medium">{heroData.badge.text}</span>
                 </div>
-              ) : (
-                <div className="text-sm text-white/70 mb-6">Hero (badge) не заполнен в CMS</div>
               )}
               
-              {heroData?.title ? (
+              {heroData?.title && (
                 <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
                   {heroData.title}
                 </h1>
-              ) : (
-                <div className="text-white/70 mb-6">Hero (title) не заполнен в CMS</div>
               )}
               
-              {heroData?.subtitle ? (
+              {heroData?.subtitle && (
                 <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
                   {heroData.subtitle}
                 </p>
-              ) : (
-                <div className="text-white/70 mb-8">Hero (subtitle) не заполнен в CMS</div>
               )}
               
               {/* Statistics with Entrance Animations Only */}
