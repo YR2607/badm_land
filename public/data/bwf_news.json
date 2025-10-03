@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2025-10-03T00:10:38.947838+00:00",
+  "scraped_at": "2025-10-03T04:04:41.373156+00:00",
   "items": [
+    {
+      "title": "Humans of Shuttle Time: Alžbeta Peruňská",
+      "href": "https://bwfbadminton.com/news-single/2025/10/03/humans-of-shuttle-time-alzbeta-perunska/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Alzbeta-Perunska.jpg",
+      "preview": "",
+      "date": "2025-10-03T00:00:00+00:00"
+    },
     {
       "title": "Quiet Storm Rising",
       "href": "https://bwfworldtourfinals.bwfbadminton.com/news-single/2025/10/02/quiet-storm-rising/",
@@ -51,17 +58,17 @@
       "date": "2025-09-26T00:00:00+00:00"
     },
     {
-      "title": "The Week in Quotes",
-      "href": "https://bwfbadminton.com/news-single/2025/09/24/the-week-in-quotes-116/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/09/cr_20250921_1603_ChinaMasters2025_BPGE2416-400x310.jpg",
-      "preview": "",
-      "date": "2025-09-24T00:00:00+00:00"
-    },
-    {
       "title": "Where To Watch: SUWON VICTOR KOREA OPEN 2025",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/09/24/where-to-watch-swon-victor-korea-open-2025/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2018/12/0.-HSBC-BWF-World-Tour-Inside-Page.jpg",
       "preview": "Wednesday, September 24, 2025 TEXT BY BWF STAFF",
+      "date": "2025-09-24T00:00:00+00:00"
+    },
+    {
+      "title": "The Week in Quotes",
+      "href": "https://bwfbadminton.com/news-single/2025/09/24/the-week-in-quotes-116/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/09/cr_20250921_1603_ChinaMasters2025_BPGE2416-400x310.jpg",
+      "preview": "",
       "date": "2025-09-24T00:00:00+00:00"
     },
     {
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/09/cr_20250913_1209_HongKongOpen2025_BPMC9015-400x310.jpg",
       "preview": "",
       "date": "2025-09-13T00:00:00+00:00"
-    },
-    {
-      "title": "Hong Kong Open: Li Ends Four-Year Wait",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/09/12/hong-kong-open-li-ends-four-year-wait/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/09/cr_20250912_1407_HongKongOpen2025_BPGE4332-400x310.jpg",
-      "preview": "",
-      "date": "2025-09-12T00:00:00+00:00"
     }
   ]
 }
