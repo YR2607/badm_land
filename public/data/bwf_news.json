@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-10-04T08:04:04.431662+00:00",
+  "scraped_at": "2025-10-04T12:04:46.780159+00:00",
   "items": [
+    {
+      "title": "World Juniors: For Debutants Bhutan, a Historic Occasion",
+      "href": "https://bwfbadminton.com/news-single/2025/10/04/world-juniors-for-debutants-bhutan-a-historic-occasion/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/shared-image-9-1280x550.jpg",
+      "preview": "",
+      "date": "2025-10-04T00:00:00+00:00"
+    },
     {
       "title": "Humans of Shuttle Time: Alžbeta Peruňská",
       "href": "https://bwfbadminton.com/news-single/2025/10/03/humans-of-shuttle-time-alzbeta-perunska/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Alzbeta-Perunska.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Alzbeta-Perunska-400x310.jpg",
       "preview": "",
       "date": "2025-10-03T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/09/cr_20250914_1734_HongKongOpen2025_BPGE1157-400x310.jpg",
       "preview": "",
       "date": "2025-09-14T00:00:00+00:00"
-    },
-    {
-      "title": "Hong Kong Open: ‘Final, Finally’",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/09/13/hong-kong-open-final-finally/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/09/cr_20250913_1209_HongKongOpen2025_BPMC9015-400x310.jpg",
-      "preview": "",
-      "date": "2025-09-13T00:00:00+00:00"
     }
   ]
 }
