@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-10-05T12:04:48.732741+00:00",
+  "scraped_at": "2025-10-05T16:03:35.896318+00:00",
   "items": [
+    {
+      "title": "World Juniors: Innovation Takes Centre Stage",
+      "href": "https://bwfbadminton.com/news-single/2025/10/05/world-juniors-innovation-takes-centre-stage/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Tanvi-Sharma_WJC_Yen-1280x550.jpg",
+      "preview": "",
+      "date": "2025-10-05T00:00:00+00:00"
+    },
     {
       "title": "World Juniors: For Debutants Bhutan, a Historic Occasion",
       "href": "https://bwfbadminton.com/news-single/2025/10/04/world-juniors-for-debutants-bhutan-a-historic-occasion/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/shared-image-9-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/shared-image-9-400x310.jpg",
       "preview": "",
       "date": "2025-10-04T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/09/Hendra-Setiawan-Tony-Gunawan_WSC25-1-400x310.jpg",
       "preview": "",
       "date": "2025-09-15T00:00:00+00:00"
-    },
-    {
-      "title": "Hong Kong Open: Perfection from China",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/09/14/hong-kong-open-perfection-from-china/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/09/cr_20250914_1734_HongKongOpen2025_BPGE1157-400x310.jpg",
-      "preview": "",
-      "date": "2025-09-14T00:00:00+00:00"
     }
   ]
 }
