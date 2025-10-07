@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-10-07T12:05:59.795766+00:00",
+  "scraped_at": "2025-10-07T16:04:01.011823+00:00",
   "items": [
+    {
+      "title": "World Juniors: Comeback Wins for Philippines, Turkiye",
+      "href": "https://bwfbadminton.com/news-single/2025/10/07/world-juniors-comeback-wins-for-philippines-turkiye/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/20251007_1901_WorldJuniorMixedTeamChampionships2025_BPJS2504-1280x550.jpg",
+      "preview": "",
+      "date": "2025-10-07T00:00:00+00:00"
+    },
     {
       "title": "Euro Para: Triple Joy for Quartet",
       "href": "https://bwfbadminton.com/news-single/2025/10/07/euro-para-triple-joy-for-quartet/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Mazur-Sagoy-1280x550.jpeg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Mazur-Sagoy-400x310.jpeg",
       "preview": "",
       "date": "2025-10-07T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/09/cr_20250919_1207_ChinaMasters2025_BPMC8877.jpg",
       "preview": "Friday, September 19, 2025 TEXT BY PREM KUMAR | MAK CHIU WO/BADMINTONPHOTO",
       "date": "2025-09-19T00:00:00+00:00"
-    },
-    {
-      "title": "China Masters: Lanier Outlasts Axelsen",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/09/18/china-masters-lanier-outlasts-axelsen/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/09/cr_20250918_1717_ChinaMasters2025_BPMC9127.jpg",
-      "preview": "Thursday, September 18, 2025 TEXT BY PREM KUMAR | MAK CHIU WO/BADMINTONPHOTO",
-      "date": "2025-09-18T00:00:00+00:00"
     }
   ]
 }
