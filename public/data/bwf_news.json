@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-10-11T16:03:45.904048+00:00",
+  "scraped_at": "2025-10-11T20:03:36.745637+00:00",
   "items": [
+    {
+      "title": "Arctic Open: ‘It Will be Fun’",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/12/arctic-open-it-will-be-fun/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251011_1512_ArcticOpen2025_BPLJ2511.jpg",
+      "preview": "Sunday, October 12, 2025 TEXT BY BWF STAFF | LIANG JING & YANG SHAOCHEN/BADMINTONPHOTO",
+      "date": "2025-10-12T00:00:00+00:00"
+    },
     {
       "title": "World Juniors: China Ace Final Test",
       "href": "https://bwfbadminton.com/news-single/2025/10/11/world-juniors-china-ace-final-test/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/China_WJC25-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/China_WJC25-400x310.jpg",
       "preview": "",
       "date": "2025-10-11T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/09/20240503_1826_ThomasUberCupFinals2024_BPMC0057-400x310.jpg",
       "preview": "",
       "date": "2025-09-29T00:00:00+00:00"
-    },
-    {
-      "title": "Korea Open: Yamaguchi Eclipses Home Icon",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/09/28/korea-open-yamaguchi-eclipses-home-icon/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/09/b_20250928_1407_KoreaOpen2025_BPJS8715.jpg",
-      "preview": "Sunday, September 28, 2025 TEXT BY DEV SUKUMAR | JNANESH SALIAN/BADMINTONPHOTO",
-      "date": "2025-09-28T00:00:00+00:00"
     }
   ]
 }
