@@ -589,7 +589,7 @@ const Gyms: FC = () => {
 
                     {/* Gallery */}
                     <div className="bg-white rounded-2xl shadow-lg p-6">
-                      <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('gyms.gallery.title')}</h2>
+                      <h2 className="text-2xl font-bold text-gray-900 mb-6">{labels?.galleryTitle || t('gyms.gallery.title')}</h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {selectedGym.gallery?.map((photo, idx) => (
                           <div key={idx} className="aspect-square bg-gray-200 rounded-lg overflow-hidden">

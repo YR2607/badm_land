@@ -45,6 +45,9 @@ export default defineType({
         { name: 'trainersTitle', title: 'Заголовок "Тренеры" (RU)', type: 'string', initialValue: 'Наши тренеры' },
         { name: 'trainersTitle_en', title: 'Заголовок "Тренеры" (EN)', type: 'string', initialValue: 'Our Trainers' },
         { name: 'trainersTitle_ro', title: 'Заголовок "Тренеры" (RO)', type: 'string', initialValue: 'Antrenorii noștri' },
+        { name: 'galleryTitle', title: 'Заголовок "Галерея" (RU)', type: 'string', initialValue: 'Галерея' },
+        { name: 'galleryTitle_en', title: 'Заголовок "Галерея" (EN)', type: 'string', initialValue: 'Gallery' },
+        { name: 'galleryTitle_ro', title: 'Заголовок "Галерея" (RO)', type: 'string', initialValue: 'Galerie' },
         { name: 'contactTitle', title: 'Заголовок "Контакты" (RU)', type: 'string', initialValue: 'Контакты' },
         { name: 'contactTitle_en', title: 'Заголовок "Контакты" (EN)', type: 'string', initialValue: 'Contact' },
         { name: 'contactTitle_ro', title: 'Заголовок "Контакты" (RO)', type: 'string', initialValue: 'Contact' }

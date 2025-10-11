@@ -1148,6 +1148,7 @@ export type CmsGymsPageLabels = {
   signUpButton: string;
   openMapButton: string;
   trainersTitle: string;
+  galleryTitle: string;
   contactTitle: string;
 };
 
@@ -1164,6 +1165,7 @@ export async function fetchGymsPageLabels(lang: string = 'ru'): Promise<CmsGymsP
           "signUpButton": select($lang=="en" && defined(signUpButton_en)=>signUpButton_en, $lang=="ro" && defined(signUpButton_ro)=>signUpButton_ro, signUpButton),
           "openMapButton": select($lang=="en" && defined(openMapButton_en)=>openMapButton_en, $lang=="ro" && defined(openMapButton_ro)=>openMapButton_ro, openMapButton),
           "trainersTitle": select($lang=="en" && defined(trainersTitle_en)=>trainersTitle_en, $lang=="ro" && defined(trainersTitle_ro)=>trainersTitle_ro, trainersTitle),
+          "galleryTitle": select($lang=="en" && defined(galleryTitle_en)=>galleryTitle_en, $lang=="ro" && defined(galleryTitle_ro)=>galleryTitle_ro, galleryTitle),
           "contactTitle": select($lang=="en" && defined(contactTitle_en)=>contactTitle_en, $lang=="ro" && defined(contactTitle_ro)=>contactTitle_ro, contactTitle)
         }
       }`,
