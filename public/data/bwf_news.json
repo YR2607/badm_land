@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2025-10-11T12:04:57.937846+00:00",
+  "scraped_at": "2025-10-11T16:03:45.904048+00:00",
   "items": [
+    {
+      "title": "World Juniors: China Ace Final Test",
+      "href": "https://bwfbadminton.com/news-single/2025/10/11/world-juniors-china-ace-final-test/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/China_WJC25-1280x550.jpg",
+      "preview": "",
+      "date": "2025-10-11T00:00:00+00:00"
+    },
     {
       "title": "Arctic Open: Merkle, Kharb Reach Career Firsts",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/11/arctic-open-merkle-kharb-reach-career-firsts/",
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/09/b_20250928_1407_KoreaOpen2025_BPJS8715.jpg",
       "preview": "Sunday, September 28, 2025 TEXT BY DEV SUKUMAR | JNANESH SALIAN/BADMINTONPHOTO",
       "date": "2025-09-28T00:00:00+00:00"
-    },
-    {
-      "title": "Korea Open: Christie Eyes Year's First Title",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/09/27/korea-open-christie-eyes-years-first-title/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/09/20250927_1459_KoreaOpen2025_BPJS2986.jpg",
-      "preview": "Saturday, September 27, 2025 TEXT BY DEV SUKUMAR | JNANESH SALIAN/BADMINTONPHOTO",
-      "date": "2025-09-27T00:00:00+00:00"
     }
   ]
 }
