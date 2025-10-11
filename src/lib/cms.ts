@@ -44,7 +44,7 @@ export async function fetchContactInfo(): Promise<CmsContactInfo | null> {
   try {
     const data = await client.fetch(groq`*[_type == "contactInfo"][0]{ title, description, contacts[]{ type, label, value, icon } }`);
     if (data && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, data);
-    return data || null;
+    return applyCmsDevMarkers(data || null);
   } catch {
     return null;
   }
@@ -64,7 +64,7 @@ export async function fetchContactGymsCards(): Promise<CmsContactGymCard[]> {
     const data = await client.fetch(groq`*[_type == "contactGyms"][0]{ gyms[]->{ name, type, badge, address, description, hours } }`);
     const list: CmsContactGymCard[] = data?.gyms || [];
     if (list && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, list);
-    return list || [];
+    return applyCmsDevMarkers(list || []);
   } catch {
     return [];
   }
@@ -88,7 +88,7 @@ export async function fetchGymsHero(lang: string = 'ru'): Promise<CmsHero | null
       }`,
       { lang }
     );
-    const hero: CmsHero | null = data?.content || null;
+    const hero: CmsHero | null = applyCmsDevMarkers(data?.content || null);
     if (hero && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, hero);
     return hero;
   } catch (e) {
@@ -349,6 +349,7 @@ export interface CmsHomePage {
   servicesSection?: {
     title: string;
     subtitle?: string;
+    buttonText?: string;
     services: Array<{ title: string; description: string; features?: string[]; price: string; icon: string; color: string }>;
   };
   ctaSection?: {
@@ -363,6 +364,9 @@ export interface CmsHomePage {
     keywords: string;
   };
 };
+
+// TODO: вернуть dev-маркеры после завершения диагностики
+export const applyCmsDevMarkers = <T>(data: T): T => data;
 
 export const fetchHomePage = async (lang: string = 'ru'): Promise<CmsHomePage | null> => {
   const cacheKey = `homePage-${lang}`;
@@ -389,6 +393,7 @@ export const fetchHomePage = async (lang: string = 'ru'): Promise<CmsHomePage | 
         servicesSection {
           "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
           "subtitle": select($lang == "en" && defined(subtitle_en) => subtitle_en, $lang == "ro" && defined(subtitle_ro) => subtitle_ro, subtitle),
+          "buttonText": select($lang == "en" && defined(buttonText_en) => buttonText_en, $lang == "ro" && defined(buttonText_ro) => buttonText_ro, buttonText),
           services[] {
             "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
             "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description),
@@ -441,12 +446,12 @@ export const fetchHomePage = async (lang: string = 'ru'): Promise<CmsHomePage | 
       cmsCache.set(cacheKey, data);
     }
     
-    return data;
+    return applyCmsDevMarkers(data);
   } catch (error) {
     // silence console in dev
     return null;
   }
-}
+};
 
 export type CmsFounder = {
   name: string;
@@ -620,20 +625,22 @@ export const fetchAboutPage = async (lang: string = 'ru'): Promise<CmsAboutPage 
     if (data && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, data);
     }
-    
-    return data;
+
+    return applyCmsDevMarkers(data);
   } catch (error) {
     // silence console in dev
     return null;
   }
-}
+};
 
-export type CmsServicesPage = {
+export interface CmsServicesPage {
   title: string;
   hero: {
-    badge?: { icon: string; text: string };
+    badge?: { icon?: string; text?: string };
     title: string;
     subtitle: string;
+    description?: string;
+    backgroundImage?: { asset?: { _id: string; url: string }; alt?: string };
     statistics?: Array<{ number: string; description: string }>;
   };
   servicesSection?: {
@@ -642,11 +649,8 @@ export type CmsServicesPage = {
     services: Array<{
       title: string;
       description: string;
+      icon?: string;
       features?: string[];
-      price: string;
-      icon: string;
-      ageGroup?: string;
-      duration?: string;
       pricing?: {
         monthly?: string;
         perSession?: string;
@@ -658,7 +662,7 @@ export type CmsServicesPage = {
     metaDescription: string;
     keywords: string;
   };
-};
+}
 
 export const fetchServicesPage = async (lang: string = 'ru'): Promise<CmsServicesPage | null> => {
   const cacheKey = `servicesPage-${lang}`;
@@ -821,7 +825,7 @@ export const fetchGyms = async (lang: string = 'ru'): Promise<CmsGym[]> => {
       }
     }`;
     const gyms = await client.fetch(query, { lang });
-    const result = gyms || [];
+    const result = applyCmsDevMarkers(gyms || []);
     
     // Кэшируем только в production
     if (process.env.NODE_ENV !== 'development') {
@@ -982,7 +986,7 @@ export async function fetchClubEmbeds(): Promise<any[]> {
       coverUrl
     }`;
     const embeds = await client.fetch(query);
-    const result = embeds || [];
+    const result = applyCmsDevMarkers(embeds || []);
     
     // Кэшируем только в production
     if (process.env.NODE_ENV !== 'development') {
@@ -1135,6 +1139,39 @@ export async function fetchServicesHero(lang: string = 'ru'): Promise<CmsHero | 
     const hero: CmsHero | null = data?.content || null;
     if (hero && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, hero);
     return hero;
+  } catch (e) {
+    return null;
+  }
+}
+
+export type CmsGymsPageLabels = {
+  signUpButton: string;
+  openMapButton: string;
+  trainersTitle: string;
+  contactTitle: string;
+};
+
+export async function fetchGymsPageLabels(lang: string = 'ru'): Promise<CmsGymsPageLabels | null> {
+  const cacheKey = `gymsPageLabels-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsGymsPageLabels>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "gymsPage"][0]{
+        labels{
+          "signUpButton": select($lang=="en" && defined(signUpButton_en)=>signUpButton_en, $lang=="ro" && defined(signUpButton_ro)=>signUpButton_ro, signUpButton),
+          "openMapButton": select($lang=="en" && defined(openMapButton_en)=>openMapButton_en, $lang=="ro" && defined(openMapButton_ro)=>openMapButton_ro, openMapButton),
+          "trainersTitle": select($lang=="en" && defined(trainersTitle_en)=>trainersTitle_en, $lang=="ro" && defined(trainersTitle_ro)=>trainersTitle_ro, trainersTitle),
+          "contactTitle": select($lang=="en" && defined(contactTitle_en)=>contactTitle_en, $lang=="ro" && defined(contactTitle_ro)=>contactTitle_ro, contactTitle)
+        }
+      }`,
+      { lang }
+    );
+    const labels: CmsGymsPageLabels | null = data?.labels || null;
+    if (labels && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, labels);
+    return labels;
   } catch (e) {
     return null;
   }

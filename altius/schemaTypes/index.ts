@@ -19,11 +19,6 @@ import gym from './gym'
 import trainer from './trainer'
 import founder from './founder'
 // Singletons
-import homeHero from './singletons/homeHero'
-import homeServices from './singletons/homeServices'
-import homeAchievements from './singletons/homeAchievements'
-import homeCta from './singletons/homeCta'
-import homeSeo from './singletons/homeSeo'
 import homeAbout from './singletons/homeAbout'
 import servicesHero from './singletons/servicesHero'
 import servicesList from './singletons/servicesList'
@@ -70,11 +65,6 @@ export const schemaTypes = [
   founder,
 
   // Singletons
-  homeHero,
-  homeServices,
-  homeAchievements,
-  homeCta,
-  homeSeo,
   homeAbout,
   servicesHero,
   servicesList,

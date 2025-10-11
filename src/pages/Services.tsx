@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
 import { fetchServicesPage, CmsServicesPage, fetchServicesHero, type CmsHero } from '../lib/cms';
+import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 
 const Services: FC = () => {
   const { t, i18n } = useTranslation();
@@ -16,18 +17,18 @@ const Services: FC = () => {
     const loadCmsData = async () => {
       try {
         const [data, hero] = await Promise.all([
-          fetchServicesPage(),
+          fetchServicesPage(i18n.language as string),
           fetchServicesHero(i18n.language as string),
         ]);
-        if (data) setCmsData(data);
-        if (hero) setHeroData(hero);
+        if (data) setCmsData(addCmsDevMarkers(data));
+        if (hero) setHeroData(addCmsDevMarkers(hero));
       } catch (error) {
         setError(t('common.error'));
       }
     };
 
     loadCmsData();
-  }, []);
+  }, [i18n.language, t]);
 
   // Функция для получения цены из CMS или fallback
   const getServicePricing = (serviceId: string, type: 'monthly' | 'perSession') => {

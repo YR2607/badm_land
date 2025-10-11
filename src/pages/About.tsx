@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight } from 'lucide-react';
 import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchTrainers, fetchAboutTabs } from '../lib/cms';
+import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
 
@@ -26,31 +27,31 @@ const About: FC = () => {
           fetchAboutTabs(i18n.language as string)
         ]);
         if (data) {
-          // Fallback: если teamSection пустая — подгружаем из отдельных документов Founder/Trainers
+          let normalized: CmsAboutPage = {
+            ...data,
+            tabsSection: tabs || data.tabsSection
+          } as CmsAboutPage;
+
           if (!data.teamSection || (!data.teamSection.founder && (!data.teamSection.coaches || data.teamSection.coaches.length === 0))) {
             const [founder, coaches] = await Promise.all([
               fetchFounder(i18n.language as string),
               fetchTrainers(i18n.language as string)
             ]);
-            const merged: CmsAboutPage = {
-              ...data,
+
+            normalized = {
+              ...normalized,
               teamSection: {
                 title: data.teamSection?.title || '',
                 subtitle: data.teamSection?.subtitle || '',
                 founder: founder || undefined,
                 coaches: (coaches && coaches.length > 0) ? coaches : undefined,
               },
-              tabsSection: tabs || data.tabsSection
-            } as any;
-            setCmsData(merged);
-          } else {
-            setCmsData({
-              ...data,
-              tabsSection: tabs || data.tabsSection
-            } as any);
+            } as CmsAboutPage;
           }
+
+          setCmsData(addCmsDevMarkers(normalized));
         }
-        if (hero) setHeroData(hero);
+        if (hero) setHeroData(addCmsDevMarkers(hero));
       } catch (error) {
         setError(t('common.error'));
       }

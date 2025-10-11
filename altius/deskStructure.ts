@@ -105,81 +105,13 @@ const deskStructure = (S: any) =>
       S.listItem()
         .title('🏠 Главная страница')
         .child(
-          S.list()
-            .title('Главная страница')
-            .items([
-              S.listItem()
-                .title('🎯 Hero секция')
-                .child(
-                  S.document()
-                    .schemaType('homeHero')
-                    .documentId('homeHero')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('ℹ️ О клубе (секция)')
-                .child(
-                  S.document()
-                    .schemaType('homeAbout')
-                    .documentId('homeAbout')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('🏸 Услуги (секция)')
-                .child(
-                  S.document()
-                    .schemaType('homeServices')
-                    .documentId('homeServices')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('🏆 Достижения')
-                .child(
-                  S.document()
-                    .schemaType('homeAchievements')
-                    .documentId('homeAchievements')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('📞 CTA секция')
-                .child(
-                  S.document()
-                    .schemaType('homeCta')
-                    .documentId('homeCta')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('🔍 SEO настройки')
-                .child(
-                  S.document()
-                    .schemaType('homeSeo')
-                    .documentId('homeSeo')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
+          S.document()
+            .schemaType('homePage')
+            .documentId('homePage')
+            .views([
+              S.view.form()
+                .title('Редактировать')
+                .icon(() => '✏️')
             ])
         ),
       S.listItem()

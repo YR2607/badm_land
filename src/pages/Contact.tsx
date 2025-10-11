@@ -2,6 +2,7 @@ import { type FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { fetchPageBySlug, isCmsEnabled, CmsPage, fetchContactHero, type CmsHero, fetchContactInfo, type CmsContactInfo, fetchContactGymsCards, type CmsContactGymCard } from '../lib/cms';
+import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import JsonLd from '../components/JsonLd';
@@ -22,10 +23,10 @@ const Contact: FC = () => {
         fetchContactInfo(),
         fetchContactGymsCards()
       ]);
-      setPage(data);
-      if (hero) setHeroData(hero);
-      if (contactInfo) setContactCms(contactInfo);
-      if (gymsCards?.length) setContactGyms(gymsCards);
+      if (data) setPage(addCmsDevMarkers(data));
+      if (hero) setHeroData(addCmsDevMarkers(hero));
+      if (contactInfo) setContactCms(addCmsDevMarkers(contactInfo));
+      if (gymsCards?.length) setContactGyms(addCmsDevMarkers(gymsCards));
     })();
   }, []);
 

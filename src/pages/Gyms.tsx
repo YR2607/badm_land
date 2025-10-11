@@ -2,7 +2,8 @@ import { useState, useEffect, type FC } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Clock, ArrowLeft, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { fetchGyms, type CmsGym, fetchGymsHero, type CmsHero } from '../lib/cms';
+import { fetchGyms, type CmsGym, fetchGymsHero, type CmsHero, fetchGymsPageLabels, type CmsGymsPageLabels } from '../lib/cms';
+import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import { useTranslation } from 'react-i18next';
 import { GymCardSkeleton } from '../components/Skeletons';
 
@@ -14,18 +15,21 @@ const Gyms: FC = () => {
   const [selectedGym, setSelectedGym] = useState<CmsGym | null>(null);
   const [filter, setFilter] = useState<'all' | 'children' | 'adults'>('all');
   const [heroData, setHeroData] = useState<CmsHero | null>(null);
+  const [labels, setLabels] = useState<CmsGymsPageLabels | null>(null);
 
   // Загружаем данные из CMS
   useEffect(() => {
     const loadGyms = async () => {
       try {
         setLoading(true);
-        const [gymsData, hero] = await Promise.all([
+        const [gymsData, hero, pageLabels] = await Promise.all([
           fetchGyms(),
-          fetchGymsHero(i18n.language as string)
+          fetchGymsHero(i18n.language as string),
+          fetchGymsPageLabels(i18n.language as string)
         ]);
-        setCmsGyms(gymsData);
-        if (hero) setHeroData(hero);
+        setCmsGyms(addCmsDevMarkers(gymsData || []));
+        if (hero) setHeroData(addCmsDevMarkers(hero));
+        if (pageLabels) setLabels(addCmsDevMarkers(pageLabels));
         setError(null);
       } catch (err) {
         setError(t('common.error'));
@@ -35,7 +39,7 @@ const Gyms: FC = () => {
     };
 
     loadGyms();
-  }, []);
+  }, [i18n.language]);
 
   // Используем только данные из CMS
   const gyms = cmsGyms;
@@ -606,7 +610,7 @@ const Gyms: FC = () => {
                     <div className="bg-white rounded-2xl shadow-lg p-6">
                       <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <Phone className="w-5 h-5 text-blue-500" />
-                        {t('gyms.contact.title')}
+                        {labels?.contactTitle || t('gyms.contact.title')}
                       </h2>
                       
                       <div className="space-y-3">
@@ -645,7 +649,7 @@ const Gyms: FC = () => {
                         <button className={`w-full py-3 px-4 bg-gradient-to-r ${selectedGym.badgeColor} text-white rounded-lg font-medium hover:shadow-md transition-all duration-200`}>
                           <div className="flex items-center justify-center gap-2">
                             <Phone className="w-4 h-4" />
-                            {t('gyms.contact.signUp')}
+                            {labels?.signUpButton || t('gyms.contact.signUp')}
                           </div>
                         </button>
                         
@@ -656,7 +660,7 @@ const Gyms: FC = () => {
                           className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                         >
                           <MapPin className="w-5 h-5" />
-                          {t('gyms.contact.openMap')}
+                          {labels?.openMapButton || t('gyms.contact.openMap')}
                         </a>
                       </div>
                     </div>
@@ -667,7 +671,7 @@ const Gyms: FC = () => {
                         <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                         </svg>
-                        {t('gyms.trainers.title')}
+                        {labels?.trainersTitle || t('gyms.trainers.title')}
                       </h2>
                       
                       <div className="space-y-4">

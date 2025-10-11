@@ -108,29 +108,33 @@ const Hero = ({ cmsData }: HeroProps) => {
               <span className="text-2xl md:text-3xl lg:text-4xl font-light text-primary-yellow italic font-display">{cmsData.subtitle}</span>
             )}
           </motion.h1>
-          {cmsData && (
-            <>
-              {cmsData?.description && (
-                <motion.p className="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto leading-relaxed" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.6 }}>
-                  {cmsData.description}
-                </motion.p>
-              )}
-              <motion.div className="flex flex-col sm:flex-row gap-6 justify-center mb-12" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.6 }}>
-                <button 
-                  className="px-10 py-5 bg-gradient-to-r from-primary-yellow to-primary-orange text-white font-medium rounded-2xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 tracking-wide focus:outline-none focus:ring-4 focus:ring-primary-yellow/50"
-                  aria-label={t('hero.joinButton')}
+          {cmsData?.description && (
+            <motion.p
+              className="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+            >
+              {cmsData.description}
+            </motion.p>
+          )}
+          {cmsData?.statistics && cmsData.statistics.length > 0 && (
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mt-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+            >
+              {cmsData.statistics.map((stat, index) => (
+                <div
+                  key={`${stat.number}-${index}`}
+                  className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-8 py-6 flex flex-col items-center text-center text-white"
                 >
-                  {t('hero.joinButton')}
-                  <ArrowRight className="ml-3 w-5 h-5 inline" aria-hidden="true" />
-                </button>
-                <button 
-                  className="px-10 py-5 bg-white/10 backdrop-blur-md text-white font-medium rounded-2xl border border-white/30 hover:bg-white/20 transition-all duration-500 shadow-xl tracking-wide focus:outline-none focus:ring-4 focus:ring-white/50"
-                  aria-label={t('hero.learnMoreButton')}
-                >
-                  {t('hero.learnMoreButton')}
-                </button>
-              </motion.div>
-            </>
+                  <span className="text-4xl font-bold font-display text-primary-yellow mb-2">{stat.number}</span>
+                  <span className="text-sm uppercase tracking-[0.3em] text-white/70">{stat.description}</span>
+                </div>
+              ))}
+            </motion.div>
           )}
         </motion.div>
       </div>

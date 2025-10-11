@@ -38,6 +38,11 @@ export default defineType({
           name: 'badge',
           title: 'Badge',
           type: 'object',
+          fieldsets: [
+            { name: 'ru', title: 'Русский' },
+            { name: 'en', title: 'English' },
+            { name: 'ro', title: 'Română' },
+          ],
           fields: [
             {
               name: 'icon',
@@ -105,7 +110,8 @@ export default defineType({
           name: 'description',
           title: 'Description (RU)',
           type: 'text',
-          description: 'Main description text below the title'
+          description: 'Main description text below the title',
+          fieldset: 'ru'
         },
         {
           name: 'description_en',
@@ -126,6 +132,11 @@ export default defineType({
           of: [
             {
               type: 'object',
+              fieldsets: [
+                { name: 'ru', title: 'Русский' },
+                { name: 'en', title: 'English' },
+                { name: 'ro', title: 'Română' },
+              ],
               fields: [
                 {
                   name: 'number',
@@ -177,6 +188,9 @@ export default defineType({
         { name: 'subtitle', title: 'Подзаголовок (RU)', type: 'text', fieldset: 'ru' },
         { name: 'subtitle_en', title: 'Подзаголовок (EN)', type: 'text', fieldset: 'en' },
         { name: 'subtitle_ro', title: 'Подзаголовок (RO)', type: 'text', fieldset: 'ro' },
+        { name: 'buttonText', title: 'Текст кнопки (RU)', type: 'string', fieldset: 'ru' },
+        { name: 'buttonText_en', title: 'Текст кнопки (EN)', type: 'string', fieldset: 'en' },
+        { name: 'buttonText_ro', title: 'Текст кнопки (RO)', type: 'string', fieldset: 'ro' },
         {
           name: 'services',
           title: 'Услуги',
@@ -310,7 +324,6 @@ export default defineType({
           name: 'callToAction',
           title: 'Призыв к действию',
           type: 'object',
-          group: 'cta',
           fields: [
             { name: 'text', title: 'Текст (RU)', type: 'string' },
             { name: 'text_en', title: 'Текст (EN)', type: 'string' },

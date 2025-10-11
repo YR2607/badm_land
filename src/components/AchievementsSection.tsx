@@ -59,6 +59,14 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
     }
   }
 
+  const sanitizeColorClass = (color?: string) => {
+    if (!color) return '';
+    return color
+      .split(/\s+/)
+      .filter((cls) => cls && !cls.startsWith('via-') && !cls.includes('white'))
+      .join(' ') || '';
+  };
+
   const defaultAchievements = [
     {
       icon: <Crown className="w-8 h-8" />,
@@ -94,12 +102,13 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
   const achievements = (cmsData?.achievements && cmsData.achievements.length > 0
     ? cmsData.achievements.map((cmsItem, index) => {
         const fallback = defaultAchievements[index % defaultAchievements.length];
+        const sanitizedColor = sanitizeColorClass(cmsItem.color);
         return {
           icon: getAchievementIcon(cmsItem.icon) || fallback.icon,
           title: cmsItem.title || fallback.title,
           count: cmsItem.count || fallback.count,
           description: cmsItem.description || fallback.description,
-          color: cmsItem.color || fallback.color
+          color: sanitizedColor || fallback.color
         };
       })
     : defaultAchievements

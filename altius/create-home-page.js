@@ -47,6 +47,9 @@ async function createHomePage() {
         subtitle: 'Профессиональные тренировки для всех уровней подготовки',
         subtitle_en: 'Professional training for all levels',
         subtitle_ro: 'Antrenament profesional pentru toate nivelurile',
+        buttonText: 'Узнать больше',
+        buttonText_en: 'Learn more',
+        buttonText_ro: 'Află mai multe',
         services: [
           {
             title: 'Групповые тренировки',

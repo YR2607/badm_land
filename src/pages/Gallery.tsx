@@ -1,5 +1,6 @@
 import { type FC, useEffect, useRef, useState } from 'react';
 import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '../lib/cms';
+import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import { Image as ImageIcon, Video as VideoIcon, ChevronDown, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -40,9 +41,11 @@ const Gallery: FC = () => {
         fetchGallerySections(),
         fetchTournamentCategories(),
       ]);
-      setSectionImages({ hall: sec.hall || [], coaches: sec.coaches || [], trainings: sec.trainings || [] });
+      const markedSections = addCmsDevMarkers(sec || {});
+      const markedCats = addCmsDevMarkers(cats || []);
+      setSectionImages({ hall: markedSections.hall || [], coaches: markedSections.coaches || [], trainings: markedSections.trainings || [] });
       const gradients = ['from-blue-500 to-blue-600','from-yellow-500 to-orange-500','from-purple-500 to-indigo-500','from-green-500 to-teal-500','from-orange-500 to-red-500'];
-      setCategories((cats || []).map((c, idx) => ({ ...c, gradient: gradients[idx % gradients.length] })));
+      setCategories((markedCats || []).map((c, idx) => ({ ...c, gradient: gradients[idx % gradients.length] })));
       setLoading(false);
     };
     load();

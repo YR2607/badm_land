@@ -14,6 +14,7 @@ interface ServicesSectionProps {
       icon: string;
       color: string;
     }>;
+    buttonText?: string;
   };
 }
 
@@ -41,6 +42,8 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
     price: s.price,
     color: s.color || 'from-blue-500 to-indigo-600'
   }));
+
+  const buttonLabel = cmsData?.buttonText || t('home.services.more', 'Узнать больше');
 
   // Debug logging removed for production
 
@@ -102,7 +105,7 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {(services.length > 0 ? services.slice(0, 3) : []).map((service: any, index: number) => (
+          {services.map((service: any, index: number) => (
             <motion.div
               key={index}
               className="relative group"
@@ -135,7 +138,7 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
                 <div className="mt-auto">
                   <div className="text-2xl font-bold text-primary-blue mb-4">{service.price}</div>
                   <button className="w-full btn-secondary group-hover:bg-primary-blue group-hover:text-white transition-all duration-300">
-                    {t('home.services.more', 'Узнать больше')}
+                    {buttonLabel}
                   </button>
                 </div>
               </div>

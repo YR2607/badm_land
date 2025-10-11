@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { MapPin, Phone, Mail, ArrowLeft, Clock, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { fetchGymBySlug, type CmsGym } from '../lib/cms'
+import { addCmsDevMarkers } from '../utils/cmsDevMarker'
 import Breadcrumbs from '../components/Breadcrumbs'
 import SEO from '../components/SEO'
 import JsonLd from '../components/JsonLd'
@@ -21,7 +22,7 @@ const GymDetail: FC = () => {
         setLoading(true)
         if (!slug) { setError(t('common.error')); setLoading(false); return }
         const g = await fetchGymBySlug(slug)
-        setGym(g)
+        setGym(g ? addCmsDevMarkers(g) : null)
         setError(null)
       } catch (e) {
         setError(t('common.error'))
@@ -30,7 +31,7 @@ const GymDetail: FC = () => {
       }
     }
     load()
-  }, [slug])
+  }, [slug, t])
 
   if (loading) {
     return (
