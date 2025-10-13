@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-10-13T16:03:51.102407+00:00",
+  "scraped_at": "2025-10-13T20:03:43.908015+00:00",
   "items": [
+    {
+      "title": "Denmark Open: Li Gets Intanon",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/14/denmark-open-li-gets-intanon/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20220825_1119_WorldChampionships2022_BPES5914-FI.jpg",
+      "preview": "Tuesday, October 14, 2025 TEXT BY BWF STAFF | BADMINTONPHOTO",
+      "date": "2025-10-14T00:00:00+00:00"
+    },
     {
       "title": "World Juniors: Intensity, the Name of the Game",
       "href": "https://bwfbadminton.com/news-single/2025/10/13/world-juniors-intensity-the-name-of-the-game/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Thidasa_WJC25-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Thidasa_WJC25-400x310.jpg",
       "preview": "",
       "date": "2025-10-13T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Alzbeta-Perunska-400x310.jpg",
       "preview": "",
       "date": "2025-10-03T00:00:00+00:00"
-    },
-    {
-      "title": "Quiet Storm Rising",
-      "href": "https://bwfworldtourfinals.bwfbadminton.com/news-single/2025/10/02/quiet-storm-rising/",
-      "img": "https://bwfworldtourfinals.bwfbadminton.com/wp-content/uploads/2025/10/cr_20250912_1926_HongKongOpen2025_BPGE7757.jpg",
-      "preview": "Thursday, October 2, 2025",
-      "date": "2025-10-02T00:00:00+00:00"
     }
   ]
 }
