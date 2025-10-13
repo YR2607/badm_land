@@ -118,24 +118,7 @@ const Hero = ({ cmsData }: HeroProps) => {
               {cmsData.description}
             </motion.p>
           )}
-          {cmsData?.statistics && cmsData.statistics.length > 0 && (
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mt-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
-              {cmsData.statistics.map((stat, index) => (
-                <div
-                  key={`${stat.number}-${index}`}
-                  className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-8 py-6 flex flex-col items-center text-center text-white"
-                >
-                  <span className="text-4xl font-bold font-display text-primary-yellow mb-2">{stat.number}</span>
-                  <span className="text-sm uppercase tracking-[0.3em] text-white/70">{stat.description}</span>
-                </div>
-              ))}
-            </motion.div>
-          )}
+          {/* Statistics cards removed per latest design request */}
         </motion.div>
       </div>
       <motion.div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-primary-orange" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.6 }}>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Trophy, Medal, Star, Award, Crown, Target, Heart, Zap } from 'lucide-react';
@@ -54,7 +54,6 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
       case 'Trophy': return <Trophy className="w-8 h-8" />;
       case 'Award': return <Award className="w-8 h-8" />;
       case 'Medal': return <Medal className="w-8 h-8" />;
-      case 'Star': return <Star className="w-8 h-8" />;
       default: return null;
     }
   }
@@ -63,8 +62,44 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
     if (!color) return '';
     return color
       .split(/\s+/)
-      .filter((cls) => cls && !cls.startsWith('via-') && !cls.includes('white'))
+      .filter((cls) =>
+        cls &&
+        !cls.startsWith('via-') &&
+        !cls.includes('white') &&
+        !cls.startsWith('bg-gradient')
+      )
       .join(' ') || '';
+  };
+
+  const resolveIconBackground = (color?: string): {
+    className?: string;
+    style?: CSSProperties;
+  } => {
+    if (!color) {
+      return { className: 'bg-emerald-500' };
+    }
+
+    if (color.startsWith('#')) {
+      return { style: { backgroundColor: color } };
+    }
+
+    const tokens = color.split(/\s+/).filter(Boolean);
+    const bgToken = tokens.find((token) => token.startsWith('bg-'));
+    if (bgToken) {
+      return { className: bgToken };
+    }
+
+    const fromToken = tokens.find((token) => token.startsWith('from-'));
+    if (fromToken) {
+      return { className: fromToken.replace('from-', 'bg-') };
+    }
+
+    const toToken = tokens.find((token) => token.startsWith('to-'));
+    if (toToken) {
+      return { className: toToken.replace('to-', 'bg-') };
+    }
+
+    return { className: color };
   };
 
   const defaultAchievements = [
@@ -73,28 +108,28 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
       title: t('home.achievements.items.champions.title'),
       count: '15',
       description: t('home.achievements.items.champions.description'),
-      color: 'from-yellow-500 to-amber-600'
+      color: 'bg-yellow-500'
     },
     {
       icon: <Target className="w-8 h-8" />,
       title: t('home.achievements.items.medals.title'),
       count: '47',
       description: t('home.achievements.items.medals.description'),
-      color: 'from-emerald-500 to-teal-600'
+      color: 'bg-emerald-500'
     },
     {
       icon: <Heart className="w-8 h-8" />,
       title: t('home.achievements.items.athletes.title'),
       count: '500+',
       description: t('home.achievements.items.athletes.description'),
-      color: 'from-rose-500 to-pink-600'
+      color: 'bg-rose-500'
     },
     {
       icon: <Zap className="w-8 h-8" />,
       title: t('home.achievements.items.years.title'),
       count: '15',
       description: t('home.achievements.items.years.description'),
-      color: 'from-violet-500 to-purple-600'
+      color: 'bg-violet-500'
     }
   ];
 
@@ -183,47 +218,57 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 via-yellow-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300">
-              <Medal className="w-8 h-8 text-white drop-shadow-sm" />
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-              {cmsData?.title || t('home.achievements.title')}
-            </h2>
-          </div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {cmsData?.subtitle || t('home.achievements.subtitle')}
-          </p>
-        </motion.div>
-
-        {/* Achievement Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {achievements.map((achievement: any, index: number) => (
+        {/* Section Header & stats temporarily hidden per request */}
+        {false && (
+          <>
             <motion.div
-              key={index}
-              className="bg-white rounded-3xl p-8 text-center group transition-all duration-300"
+              className="text-center mb-16"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.6 }}
             >
-              <div className={`w-16 h-16 bg-gradient-to-r ${achievement.color} rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
-                {achievement.icon}
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 via-yellow-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300">
+                  <Medal className="w-8 h-8 text-white drop-shadow-sm" />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+                  {cmsData?.title || t('home.achievements.title')}
+                </h2>
               </div>
-              <div className="text-3xl font-bold text-primary-black mb-2">{achievement.count}</div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{achievement.title}</h3>
-              <p className="text-gray-600 text-sm">{achievement.description}</p>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                {cmsData?.subtitle || t('home.achievements.subtitle')}
+              </p>
             </motion.div>
-          ))}
-        </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+              {achievements.map((achievement: any, index: number) => (
+                <motion.div
+                  key={index}
+                  className="bg-white rounded-3xl p-8 text-center group transition-all duration-300"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  {(() => {
+                    const bg = resolveIconBackground(achievement.color);
+                    const wrapperClass = `w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4 ${bg.className || ''}`.trim();
+                    const wrapperStyle = bg.style ?? (!bg.className ? { backgroundColor: '#34d399' } : undefined);
+                    return (
+                      <div className={wrapperClass} style={wrapperStyle}>
+                        {achievement.icon}
+                      </div>
+                    );
+                  })()}
+                  <div className="text-3xl font-bold text-primary-black mb-2">{achievement.count}</div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{achievement.title}</h3>
+                  <p className="text-gray-600 text-sm">{achievement.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </>
+        )}
 
         {/* Timeline */}
         <motion.div

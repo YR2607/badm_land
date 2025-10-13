@@ -66,8 +66,8 @@ const Home: FC = () => {
       <Hero cmsData={cmsData?.hero} />
       <AchievementsSection cmsData={cmsData?.achievementsSection} />
       <ServicesSection cmsData={cmsData?.servicesSection} />
-      <BusinessNewsSection />
       <CmsEmbedsSection />
+      <BusinessNewsSection />
     </div>
   );
 };
