@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-10-14T16:04:03.660419+00:00",
+  "scraped_at": "2025-10-14T20:03:51.840747+00:00",
   "items": [
+    {
+      "title": "Denmark Open: Future is Now",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/15/denmark-open-future-is-now/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251014_1230_DenmarkOpen2025_BPYL0144-1.jpg",
+      "preview": "Wednesday, October 15, 2025 TEXT BY DIANNE PIERRE | BADMINTONPHOTO",
+      "date": "2025-10-15T00:00:00+00:00"
+    },
     {
       "title": "World Juniors: All-in For Badminton",
       "href": "https://bwfbadminton.com/news-single/2025/10/14/world-juniors-all-in-for-badminton/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Riyan-Malhan_WJC25-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Riyan-Malhan_WJC25-400x310.jpg",
       "preview": "",
       "date": "2025-10-14T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Aruggoda-Liyanage_WJC25-400x310.jpg",
       "preview": "",
       "date": "2025-10-06T00:00:00+00:00"
-    },
-    {
-      "title": "World Juniors: Innovation Takes Centre Stage",
-      "href": "https://bwfbadminton.com/news-single/2025/10/05/world-juniors-innovation-takes-centre-stage/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Tanvi-Sharma_WJC_Yen-400x310.jpg",
-      "preview": "",
-      "date": "2025-10-05T00:00:00+00:00"
     }
   ]
 }
