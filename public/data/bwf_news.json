@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2025-10-15T12:05:21.552052+00:00",
+  "scraped_at": "2025-10-15T16:03:58.269094+00:00",
   "items": [
+    {
+      "title": "World Juniors: Defending Champ Xu Crashes Out",
+      "href": "https://bwfbadminton.com/news-single/2025/10/15/world-juniors-defending-champ-xu-crashes-out/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Yuzuno-Watanabe2_WJC25-1280x550.jpg",
+      "preview": "",
+      "date": "2025-10-15T00:00:00+00:00"
+    },
     {
       "title": "Denmark Open: Future is Now",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/15/denmark-open-future-is-now/",
@@ -93,17 +100,17 @@
       "date": "2025-10-10T00:00:00+00:00"
     },
     {
-      "title": "World Juniors: Home Team Makes History",
-      "href": "https://bwfbadminton.com/news-single/2025/10/09/world-juniors-home-team-makes-history/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Unnati-Hooda_WJC25-400x310.jpg",
-      "preview": "",
-      "date": "2025-10-09T00:00:00+00:00"
-    },
-    {
       "title": "Where To Watch: CLASH OF CLANS Arctic Open 2025 powered by YONEX",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/09/where-to-watch-clash-of-clans-arctic-open-2025-powered-by-yonex/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2018/12/0.-HSBC-BWF-World-Tour-Inside-Page.jpg",
       "preview": "Thursday, October 9, 2025 TEXT BY BWF STAFF",
+      "date": "2025-10-09T00:00:00+00:00"
+    },
+    {
+      "title": "World Juniors: Home Team Makes History",
+      "href": "https://bwfbadminton.com/news-single/2025/10/09/world-juniors-home-team-makes-history/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Unnati-Hooda_WJC25-400x310.jpg",
+      "preview": "",
       "date": "2025-10-09T00:00:00+00:00"
     },
     {
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Mazur-Sagoy-400x310.jpeg",
       "preview": "",
       "date": "2025-10-07T00:00:00+00:00"
-    },
-    {
-      "title": "World Juniors: Razor-Thin Victory for Sri Lanka Over UAE",
-      "href": "https://bwfbadminton.com/news-single/2025/10/06/world-juniors-razor-thin-victory-for-sri-lanka-over-uae/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Aruggoda-Liyanage_WJC25-400x310.jpg",
-      "preview": "",
-      "date": "2025-10-06T00:00:00+00:00"
     }
   ]
 }
