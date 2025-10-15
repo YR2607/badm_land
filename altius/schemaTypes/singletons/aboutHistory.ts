@@ -24,6 +24,11 @@ export default defineType({
       of: [{
         type: 'object',
         name: 'timelineItem',
+        fieldsets: [
+          { name: 'ru', title: 'Русский' },
+          { name: 'en', title: 'English' },
+          { name: 'ro', title: 'Română' },
+        ],
         fields: [
           { name: 'year', title: 'Год', type: 'string' },
           { name: 'title', title: 'Заголовок (RU)', type: 'string', fieldset: 'ru' },

@@ -23,6 +23,11 @@ export default defineType({
       of: [{
         type: 'object',
         name: 'roadmapItem',
+        fieldsets: [
+          { name: 'ru', title: 'Русский' },
+          { name: 'en', title: 'English' },
+          { name: 'ro', title: 'Română' },
+        ],
         fields: [
           { name: 'tag', title: 'Тег', type: 'string' },
           { name: 'title', title: 'Заголовок (RU)', type: 'string', fieldset: 'ru' },
