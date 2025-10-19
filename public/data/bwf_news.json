@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2025-10-19T12:04:51.188449+00:00",
+  "scraped_at": "2025-10-19T16:03:39.242219+00:00",
   "items": [
+    {
+      "title": "World Juniors: China Dominate Final Day",
+      "href": "https://bwfbadminton.com/news-single/2025/10/19/world-juniors-china-dominate-final-day/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Chen-Jun-Ting-Liu-Jun-Rong_WJC25-1280x550.jpg",
+      "preview": "",
+      "date": "2025-10-19T00:00:00+00:00"
+    },
     {
       "title": "Denmark Open: Hoki/Kobayashi Rediscover Their Fire",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/19/denmark-open-christie-breaks-through-fort/",
@@ -107,17 +114,17 @@
       "date": "2025-10-14T00:00:00+00:00"
     },
     {
-      "title": "World Juniors: Intensity, the Name of the Game",
-      "href": "https://bwfbadminton.com/news-single/2025/10/13/world-juniors-intensity-the-name-of-the-game/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Thidasa_WJC25-400x310.jpg",
-      "preview": "",
-      "date": "2025-10-13T00:00:00+00:00"
-    },
-    {
       "title": "Arctic Open: Unshakeable Unity Powers Lane/Vendy",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/13/arctic-open-unshakeable-unity-powers-lane-vendy/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/cr_20251012_1645_ArcticOpen2025_BPYS6886.jpg",
       "preview": "Monday, October 13, 2025 TEXT BY BWF STAFF | YANG SHAOCHEN/BADMINTONPHOTO",
+      "date": "2025-10-13T00:00:00+00:00"
+    },
+    {
+      "title": "World Juniors: Intensity, the Name of the Game",
+      "href": "https://bwfbadminton.com/news-single/2025/10/13/world-juniors-intensity-the-name-of-the-game/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Thidasa_WJC25-400x310.jpg",
+      "preview": "",
       "date": "2025-10-13T00:00:00+00:00"
     },
     {
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251011_1512_ArcticOpen2025_BPLJ2511.jpg",
       "preview": "Sunday, October 12, 2025 TEXT BY BWF STAFF | LIANG JING & YANG SHAOCHEN/BADMINTONPHOTO",
       "date": "2025-10-12T00:00:00+00:00"
-    },
-    {
-      "title": "Arctic Open: Merkle, Kharb Reach Career Firsts",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/11/arctic-open-merkle-kharb-reach-career-firsts/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/cr_20251010_1547_ArcticOpen2025_BPLJ2125.jpg",
-      "preview": "Saturday, October 11, 2025 TEXT BY BWF STAFF | YANG SHAOCHEN/BADMINTONPHOTO",
-      "date": "2025-10-11T00:00:00+00:00"
     }
   ]
 }
