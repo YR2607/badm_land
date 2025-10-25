@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-10-24T20:03:58.632769+00:00",
+  "scraped_at": "2025-10-25T00:10:42.722612+00:00",
   "items": [
+    {
+      "title": "French Open: Popov Makes History",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/25/french-open-popov-makes-history/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251024_1753_FrenchOpen2025_BPLN0007.jpg",
+      "preview": "Saturday, October 25, 2025 TEXT BY BWF STAFF | LUCAS NOYON/RAPHAEL SACHETAT/BADMINTONPHOTO",
+      "date": "2025-10-25T00:00:00+00:00"
+    },
     {
       "title": "Humans of Shuttle Time: Gabriel Martin",
       "href": "https://bwfbadminton.com/news-single/2025/10/24/humans-of-shuttle-time-gabriel-martin/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Gabe-UTSNZ-2023-1136x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Gabe-UTSNZ-2023-400x310.jpg",
       "preview": "",
       "date": "2025-10-24T00:00:00+00:00"
     },
@@ -23,17 +30,17 @@
       "date": "2025-10-23T00:00:00+00:00"
     },
     {
-      "title": "Oceania Para: Vanuatu, Papua New Guinea Rejoice",
-      "href": "https://bwfbadminton.com/news-single/2025/10/22/oceania-para-vanuatu-papua-new-guinea-rejoice/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/cr_20231003_1815_WesternAustraliaParaBadmintonInternational_BPPF0541-400x310.jpg",
-      "preview": "",
-      "date": "2025-10-22T00:00:00+00:00"
-    },
-    {
       "title": "French Open: Popov Breaks Milestone",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/22/french-open-popov-breaks-milestone/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251021_1220_FrenchOpen2025_BPRS1655.jpg",
       "preview": "Wednesday, October 22, 2025 TEXT BY DIANNE PIERRE | LUCAS NOYON/RAPHAEL SACHETAT/BADMINTONPHOTO",
+      "date": "2025-10-22T00:00:00+00:00"
+    },
+    {
+      "title": "Oceania Para: Vanuatu, Papua New Guinea Rejoice",
+      "href": "https://bwfbadminton.com/news-single/2025/10/22/oceania-para-vanuatu-papua-new-guinea-rejoice/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/cr_20231003_1815_WesternAustraliaParaBadmintonInternational_BPPF0541-400x310.jpg",
+      "preview": "",
       "date": "2025-10-22T00:00:00+00:00"
     },
     {
@@ -132,13 +139,6 @@
       "href": "https://bwfbadminton.com/news-single/2025/10/15/world-junior-defending-champ-xu-crashes-out/",
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Yuzuno-Watanabe2_WJC25-400x310.jpg",
       "preview": "",
-      "date": "2025-10-15T00:00:00+00:00"
-    },
-    {
-      "title": "Denmark Open: Future is Now",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/15/denmark-open-future-is-now/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251014_1230_DenmarkOpen2025_BPYL0144-1.jpg",
-      "preview": "Wednesday, October 15, 2025 TEXT BY DIANNE PIERRE | YVES LACROIX & LEANNE LEE/BADMINTONPHOTO",
       "date": "2025-10-15T00:00:00+00:00"
     }
   ]
