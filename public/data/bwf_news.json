@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-10-30T08:05:10.371345+00:00",
+  "scraped_at": "2025-10-30T12:05:41.718590+00:00",
   "items": [
+    {
+      "title": "Six Weeks Until Inaugural BWF AirBadminton World Cup 2025",
+      "href": "https://bwfbadminton.com/news-single/2025/10/30/six-weeks-until-inaugural-bwf-airbadminton-world-cup-2025/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/SHARJAH_AB-WC_Digital-Media-GFX_RGB_Website_1180x500px.jpg",
+      "preview": "",
+      "date": "2025-10-30T00:00:00+00:00"
+    },
     {
       "title": "World Juniors Review: Dawn of New Possibilities",
       "href": "https://bwfbadminton.com/news-single/2025/10/30/world-juniors-review-dawn-of-new-possibilities/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/China-Win_WJC25-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/China-Win_WJC25-400x310.jpg",
       "preview": "",
       "date": "2025-10-30T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251019_1420_DenmarkOpen2025_BPYL7329.jpg",
       "preview": "Monday, October 20, 2025 TEXT BY DIANNE PIERRE | YVES LACROIX/LEANNE LEE/BADMINTONPHOTO",
       "date": "2025-10-20T00:00:00+00:00"
-    },
-    {
-      "title": "World Juniors: China Dominate Final Day",
-      "href": "https://bwfbadminton.com/news-single/2025/10/19/world-juniors-china-dominate-final-day/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Chen-Jun-Ting-Liu-Jun-Rong_WJC25-400x310.jpg",
-      "preview": "",
-      "date": "2025-10-19T00:00:00+00:00"
     }
   ]
 }
