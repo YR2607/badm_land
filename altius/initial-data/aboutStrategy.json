@@ -1,0 +1,96 @@
+{
+  "_type": "aboutStrategy",
+  "mission_title": "Введение и миссия клуба",
+  "mission_title_en": "Introduction and Club Mission",
+  "mission_title_ro": "Introducere și misiunea clubului",
+  "mission_text1": "ALTIUS — это современный бадминтонный клуб, созданный для развития спорта на всех уровнях: от первых шагов детей до международных побед профессионалов. Наша миссия — сделать бадминтон массовым, доступным и престижным видом спорта в Молдове, формируя сильное сообщество спортсменов, тренеров и болельщиков.",
+  "mission_text1_en": "ALTIUS is a modern badminton club created to develop the sport at all levels: from children's first steps to international victories of professionals. Our mission is to make badminton a mass, accessible and prestigious sport in Moldova, forming a strong community of athletes, coaches and fans.",
+  "mission_text1_ro": "ALTIUS este un club modern de badminton creat pentru dezvoltarea sportului la toate nivelurile: de la primii pași ai copiilor până la victoriile internaționale ale profesioniștilor. Misiunea noastră este de a face badmintonul un sport de masă, accesibil și prestigios în Moldova, formând o comunitate puternică de sportivi, antrenori și fani.",
+  "mission_text2": "Мы верим, что через спорт можно воспитывать характер, дисциплину и стремление к высоким результатам. Altius стремится стать ведущим центром развития бадминтона в стране и одним из узнаваемых клубов Восточной Европы.",
+  "mission_text2_en": "We believe that through sport we can cultivate character, discipline and the pursuit of high results. Altius strives to become the leading badminton development center in the country and one of the recognizable clubs in Eastern Europe.",
+  "mission_text2_ro": "Credem că prin sport putem cultiva caracterul, disciplina și căutarea rezultatelor înalte. Altius se străduiește să devină principalul centru de dezvoltare a badmintonului din țară și unul dintre cluburile recunoscute din Europa de Est.",
+  
+  "currentState_title": "Текущее состояние и потенциал",
+  "currentState_title_en": "Current State and Potential",
+  "currentState_title_ro": "Starea actuală și potențialul",
+  "currentState_intro": "Сегодня Altius уже имеет прочный фундамент:",
+  "currentState_intro_en": "Today Altius already has a solid foundation:",
+  "currentState_intro_ro": "Astăzi Altius are deja o fundație solidă:",
+  "currentState_points": [
+    "современный тренировочный зал в Кишинёве",
+    "опытных тренеров и мотивированных спортсменов",
+    "участие в национальных и международных соревнованиях",
+    "растущее сообщество любителей и детей, начинающих заниматься бадминтоном"
+  ],
+  "currentState_points_en": [
+    "modern training hall in Chisinau",
+    "experienced coaches and motivated athletes",
+    "participation in national and international competitions",
+    "growing community of enthusiasts and children starting to play badminton"
+  ],
+  "currentState_points_ro": [
+    "sală modernă de antrenament în Chișinău",
+    "antrenori experimentați și sportivi motivați",
+    "participare la competiții naționale și internaționale",
+    "comunitate în creștere de entuziaști și copii care încep să joace badminton"
+  ],
+  "currentState_conclusion": "Однако потенциал клуба значительно больше. Бадминтон в Молдове находится на этапе роста, и Altius способен стать лидером этого движения, определяя стандарты и формируя целую экосистему развития спорта.",
+  "currentState_conclusion_en": "However, the club's potential is much greater. Badminton in Moldova is at a growth stage, and Altius is capable of becoming the leader of this movement, setting standards and forming an entire ecosystem for sports development.",
+  "currentState_conclusion_ro": "Cu toate acestea, potențialul clubului este mult mai mare. Badmintonul în Moldova se află într-o etapă de creștere, iar Altius este capabil să devină liderul acestei mișcări, stabilind standarde și formând un întreg ecosistem pentru dezvoltarea sportului.",
+  
+  "goals_title": "Стратегические цели на 2025 – 2030 гг.",
+  "goals_title_en": "Strategic Goals for 2025 – 2030",
+  "goals_title_ro": "Obiective strategice pentru 2025 – 2030",
+  "goals_items": [
+    "Создать ведущий центр подготовки спортсменов в стране и вывести их на международный уровень",
+    "Сделать бадминтон массовым видом спорта среди детей, подростков и взрослых",
+    "Расширить сеть филиалов клуба и присутствие в ключевых городах страны",
+    "Создать сильный бренд ALTIUS — узнаваемый в Молдове и за её пределами",
+    "Построить устойчивую экосистему партнёров, спонсоров и образовательных программ"
+  ],
+  "goals_items_en": [
+    "Create a leading athlete training center in the country and bring them to the international level",
+    "Make badminton a mass sport among children, teenagers and adults",
+    "Expand the club's branch network and presence in key cities of the country",
+    "Create a strong ALTIUS brand — recognizable in Moldova and beyond",
+    "Build a sustainable ecosystem of partners, sponsors and educational programs"
+  ],
+  "goals_items_ro": [
+    "Crearea unui centru de pregătire a sportivilor de top în țară și aducerea lor la nivel internațional",
+    "Transformarea badmintonului într-un sport de masă printre copii, adolescenți și adulți",
+    "Extinderea rețelei de filiale a clubului și prezența în orașele cheie ale țării",
+    "Crearea unui brand puternic ALTIUS — recunoscut în Moldova și dincolo de granițele sale",
+    "Construirea unui ecosistem durabil de parteneri, sponsori și programe educaționale"
+  ],
+  
+  "results_title": "Ожидаемые результаты к 2030 году",
+  "results_title_en": "Expected Results by 2030",
+  "results_title_ro": "Rezultate așteptate până în 2030",
+  "results_points": [
+    "Altius — крупнейший бадминтонный клуб Молдовы с филиалами в 5+ городах",
+    "Более 500 активных спортсменов всех возрастов",
+    "Минимум 5 спортсменов в составе национальной сборной",
+    "Проведение ежегодных международных турниров под брендом Altius",
+    "Узнаваемость бренда на уровне топ-3 спортивных клубов страны",
+    "Устойчивая финансовая модель с диверсифицированными источниками дохода"
+  ],
+  "results_points_en": [
+    "Altius — the largest badminton club in Moldova with branches in 5+ cities",
+    "More than 500 active athletes of all ages",
+    "At least 5 athletes in the national team",
+    "Conducting annual international tournaments under the Altius brand",
+    "Brand recognition at the level of top-3 sports clubs in the country",
+    "Sustainable financial model with diversified revenue sources"
+  ],
+  "results_points_ro": [
+    "Altius — cel mai mare club de badminton din Moldova cu filiale în 5+ orașe",
+    "Mai mult de 500 de sportivi activi de toate vârstele",
+    "Cel puțin 5 sportivi în echipa națională",
+    "Desfășurarea de turnee internaționale anuale sub brandul Altius",
+    "Recunoașterea brandului la nivelul top-3 cluburi sportive din țară",
+    "Model financiar durabil cu surse de venit diversificate"
+  ],
+  "results_closing": "Вместе мы создаём будущее бадминтона в Молдове!",
+  "results_closing_en": "Together we create the future of badminton in Moldova!",
+  "results_closing_ro": "Împreună creăm viitorul badmintonului în Moldova!"
+}

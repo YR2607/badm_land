@@ -31,6 +31,7 @@ import aboutStats from './singletons/aboutStats'
 import aboutTabs from './singletons/aboutTabs'
 import aboutHistory from './singletons/aboutHistory'
 import aboutRoadmap from './singletons/aboutRoadmap'
+import aboutStrategy from './singletons/aboutStrategy'
 import contactHero from './singletons/contactHero'
 import contactInfo from './singletons/contactInfo'
 import contactGyms from './singletons/contactGyms'
@@ -77,6 +78,7 @@ export const schemaTypes = [
   aboutTabs,
   aboutHistory,
   aboutRoadmap,
+  aboutStrategy,
   contactHero,
   contactInfo,
   contactGyms,

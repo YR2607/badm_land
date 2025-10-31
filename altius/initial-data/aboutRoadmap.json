@@ -1,0 +1,173 @@
+{
+  "_type": "aboutRoadmap",
+  "title": "План развития",
+  "title_en": "Development Plan",
+  "title_ro": "Plan de dezvoltare",
+  "subtitle": "Наша дорожная карта на ближайшие 5 лет",
+  "subtitle_en": "Our roadmap for the next 5 years",
+  "subtitle_ro": "Foaia noastră de parcurs pentru următorii 5 ani",
+  "roadmapItems": [
+    {
+      "_key": "2025",
+      "year": "2025",
+      "tag": "2025",
+      "title": "Старт масштабирования и систематизация",
+      "title_en": "Start of scaling and systematization",
+      "title_ro": "Începutul scalării și sistematizării",
+      "description": "Фундамент для будущего роста клуба",
+      "description_en": "Foundation for future club growth",
+      "description_ro": "Fundația pentru creșterea viitoare a clubului",
+      "points": [
+        "Провести внутренний аудит клуба: сильные стороны, потребности, инфраструктура",
+        "Разработать и внедрить единую тренировочную методику для всех возрастов",
+        "Создать Altius Academy — образовательную программу для детей и тренеров",
+        "Запустить 2–3 региональные программы популяризации бадминтона (мастер-классы, дни открытых дверей)",
+        "Начать ежегодную Super Liga Altius с системой рейтингов и финальными наградами"
+      ],
+      "points_en": [
+        "Conduct internal club audit: strengths, needs, infrastructure",
+        "Develop and implement unified training methodology for all ages",
+        "Create Altius Academy — educational program for children and coaches",
+        "Launch 2-3 regional badminton promotion programs (masterclasses, open days)",
+        "Start annual Super Liga Altius with rating system and final awards"
+      ],
+      "points_ro": [
+        "Efectuarea auditului intern al clubului: puncte forte, nevoi, infrastructură",
+        "Dezvoltarea și implementarea metodologiei unificate de antrenament pentru toate vârstele",
+        "Crearea Altius Academy — program educațional pentru copii și antrenori",
+        "Lansarea a 2-3 programe regionale de promovare a badmintonului (masterclass-uri, zile deschise)",
+        "Începerea Super Liga Altius anuală cu sistem de rating și premii finale"
+      ],
+      "status": "progress"
+    },
+    {
+      "_key": "2026",
+      "year": "2026",
+      "tag": "2026",
+      "title": "Рост и региональное расширение",
+      "title_en": "Growth and regional expansion",
+      "title_ro": "Creștere și extindere regională",
+      "description": "Выход за пределы столицы",
+      "description_en": "Expansion beyond the capital",
+      "description_ro": "Extinderea dincolo de capitală",
+      "points": [
+        "Открыть филиалы или партнёрские школы в 2 новых городах",
+        "Организовать первый международный юношеский турнир под брендом ALTIUS",
+        "Запустить онлайн-платформу с обучающими материалами и тренировками",
+        "Создать команду по продвижению и маркетингу (контент, соцсети, сайт, PR)",
+        "Начать сотрудничество с 3–5 школами и спортивными центрами по всей стране"
+      ],
+      "points_en": [
+        "Open branches or partner schools in 2 new cities",
+        "Organize the first international youth tournament under the ALTIUS brand",
+        "Launch online platform with educational materials and training",
+        "Create promotion and marketing team (content, social media, website, PR)",
+        "Start cooperation with 3-5 schools and sports centers across the country"
+      ],
+      "points_ro": [
+        "Deschiderea de filiale sau școli partenere în 2 orașe noi",
+        "Organizarea primului turneu internațional de juniori sub brandul ALTIUS",
+        "Lansarea platformei online cu materiale educaționale și antrenamente",
+        "Crearea echipei de promovare și marketing (conținut, rețele sociale, site web, PR)",
+        "Începerea cooperării cu 3-5 școli și centre sportive din întreaga țară"
+      ],
+      "status": "planned"
+    },
+    {
+      "_key": "2027",
+      "year": "2027",
+      "tag": "2027",
+      "title": "Национальное лидерство",
+      "title_en": "National leadership",
+      "title_ro": "Leadership național",
+      "description": "Становление главным центром бадминтона в стране",
+      "description_en": "Becoming the main badminton center in the country",
+      "description_ro": "Devenirea principalului centru de badminton din țară",
+      "points": [
+        "Altius становится основным центром подготовки национальной сборной",
+        "Проведение серии национальных турниров под брендом клуба",
+        "Создание скаутской системы: регулярный отбор талантливых детей по всей стране",
+        "Запуск программы «Badminton в каждую школу» — внедрение секций в учебные заведения",
+        "Формирование первой профессиональной команды клуба для участия в международных лигах"
+      ],
+      "points_en": [
+        "Altius becomes the main training center for the national team",
+        "Conducting a series of national tournaments under the club brand",
+        "Creating a scouting system: regular selection of talented children across the country",
+        "Launching the 'Badminton in every school' program — introducing sections in educational institutions",
+        "Forming the first professional club team to participate in international leagues"
+      ],
+      "points_ro": [
+        "Altius devine principalul centru de pregătire pentru echipa națională",
+        "Desfășurarea unei serii de turnee naționale sub brandul clubului",
+        "Crearea sistemului de scouting: selecția regulată a copiilor talentați din întreaga țară",
+        "Lansarea programului 'Badminton în fiecare școală' — introducerea secțiilor în instituțiile de învățământ",
+        "Formarea primei echipe profesionale a clubului pentru participarea în ligile internaționale"
+      ],
+      "status": "planned"
+    },
+    {
+      "_key": "2028",
+      "year": "2028",
+      "tag": "2028",
+      "title": "Международное признание",
+      "title_en": "International recognition",
+      "title_ro": "Recunoaștere internațională",
+      "description": "Выход на европейскую арену",
+      "description_en": "Entering the European arena",
+      "description_ro": "Intrarea pe arena europeană",
+      "points": [
+        "Регулярное участие спортсменов клуба в международных турнирах и юношеских чемпионатах Европы",
+        "Организация собственного международного турнира в Кишинёве",
+        "Создание тренировочной базы с инфраструктурой для сборов и лагерей",
+        "Развитие программы стажировок и обмена опытом с европейскими клубами и федерациями"
+      ],
+      "points_en": [
+        "Regular participation of club athletes in international tournaments and European youth championships",
+        "Organizing own international tournament in Chisinau",
+        "Creating a training base with infrastructure for camps and training sessions",
+        "Developing internship and experience exchange programs with European clubs and federations"
+      ],
+      "points_ro": [
+        "Participarea regulată a sportivilor clubului la turnee internaționale și campionate europene de juniori",
+        "Organizarea propriului turneu internațional la Chișinău",
+        "Crearea bazei de antrenament cu infrastructură pentru cantonamente și tabere",
+        "Dezvoltarea programului de stagii și schimb de experiență cu cluburi și federații europene"
+      ],
+      "status": "planned"
+    },
+    {
+      "_key": "2029",
+      "year": "2029 – 2030",
+      "tag": "2029-2030",
+      "title": "Этап устойчивости и влияния",
+      "title_en": "Stage of sustainability and influence",
+      "title_ro": "Etapa de sustenabilitate și influență",
+      "description": "Altius как национальный бренд и академия",
+      "description_en": "Altius as a national brand and academy",
+      "description_ro": "Altius ca brand național și academie",
+      "points": [
+        "Altius — главный центр бадминтона Молдовы с филиалами в 5+ городах",
+        "Выпуск первых спортсменов-чемпионов Европы/мира",
+        "Формирование собственного тренерского центра и сертификационной программы",
+        "Выход на уровень сотрудничества с международными федерациями и брендами",
+        "Altius становится не просто клубом, а полноценной академией и брендом национального масштаба"
+      ],
+      "points_en": [
+        "Altius — the main badminton center of Moldova with branches in 5+ cities",
+        "Graduation of first European/world champion athletes",
+        "Formation of own coaching center and certification program",
+        "Reaching the level of cooperation with international federations and brands",
+        "Altius becomes not just a club, but a full-fledged academy and national brand"
+      ],
+      "points_ro": [
+        "Altius — principalul centru de badminton din Moldova cu filiale în 5+ orașe",
+        "Absolvirea primilor sportivi campioni europeni/mondiali",
+        "Formarea propriului centru de antrenori și program de certificare",
+        "Atingerea nivelului de cooperare cu federații și branduri internaționale",
+        "Altius devine nu doar un club, ci o academie completă și un brand de amploare națională"
+      ],
+      "status": "planned"
+    }
+  ]
+}

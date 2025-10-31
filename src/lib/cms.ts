@@ -1178,3 +1178,111 @@ export async function fetchGymsPageLabels(lang: string = 'ru'): Promise<CmsGymsP
     return null;
   }
 }
+
+// About Strategy
+export type CmsAboutStrategy = {
+  mission: {
+    title: string;
+    text1: string;
+    text2: string;
+  };
+  currentState: {
+    title: string;
+    intro: string;
+    points: string[];
+    conclusion: string;
+  };
+  goals: {
+    title: string;
+    items: string[];
+  };
+  results: {
+    title: string;
+    points: string[];
+    closing: string;
+  };
+};
+
+export async function fetchAboutStrategy(lang: string = 'ru'): Promise<CmsAboutStrategy | null> {
+  const cacheKey = `aboutStrategy-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsAboutStrategy>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const suffix = lang === 'ru' ? '' : `_${lang}`;
+    const data = await client.fetch(
+      groq`*[_type == "aboutStrategy"][0]{
+        "mission": {
+          "title": mission_title${suffix},
+          "text1": mission_text1${suffix},
+          "text2": mission_text2${suffix}
+        },
+        "currentState": {
+          "title": currentState_title${suffix},
+          "intro": currentState_intro${suffix},
+          "points": currentState_points${suffix},
+          "conclusion": currentState_conclusion${suffix}
+        },
+        "goals": {
+          "title": goals_title${suffix},
+          "items": goals_items${suffix}
+        },
+        "results": {
+          "title": results_title${suffix},
+          "points": results_points${suffix},
+          "closing": results_closing${suffix}
+        }
+      }`
+    );
+    if (data && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, data);
+    return data;
+  } catch (e) {
+    return null;
+  }
+}
+
+// About Roadmap
+export type CmsRoadmapItem = {
+  year: string;
+  tag: string;
+  title: string;
+  description: string;
+  points: string[];
+  status: 'done' | 'progress' | 'planned';
+};
+
+export type CmsAboutRoadmap = {
+  title: string;
+  subtitle: string;
+  items: CmsRoadmapItem[];
+};
+
+export async function fetchAboutRoadmap(lang: string = 'ru'): Promise<CmsAboutRoadmap | null> {
+  const cacheKey = `aboutRoadmap-${lang}`;
+  if (process.env.NODE_ENV !== 'development') {
+    const cached = cmsCache.get<CmsAboutRoadmap>(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const suffix = lang === 'ru' ? '' : `_${lang}`;
+    const data = await client.fetch(
+      groq`*[_type == "aboutRoadmap"][0]{
+        "title": title${suffix},
+        "subtitle": subtitle${suffix},
+        "items": roadmapItems[]{
+          year,
+          tag,
+          "title": title${suffix},
+          "description": description${suffix},
+          "points": points${suffix},
+          status
+        }
+      }`
+    );
+    if (data && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, data);
+    return data;
+  } catch (e) {
+    return null;
+  }
+}

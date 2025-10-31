@@ -29,6 +29,7 @@ export default defineType({
           { name: 'ro', title: 'Română' },
         ],
         fields: [
+          { name: 'year', title: 'Год', type: 'string' },
           { name: 'tag', title: 'Тег', type: 'string' },
           { name: 'title', title: 'Заголовок (RU)', type: 'string', fieldset: 'ru' },
           { name: 'title_en', title: 'Заголовок (EN)', type: 'string', fieldset: 'en' },
@@ -36,6 +37,27 @@ export default defineType({
           { name: 'description', title: 'Описание (RU)', type: 'text', fieldset: 'ru' },
           { name: 'description_en', title: 'Описание (EN)', type: 'text', fieldset: 'en' },
           { name: 'description_ro', title: 'Описание (RO)', type: 'text', fieldset: 'ro' },
+          { 
+            name: 'points', 
+            title: 'Детальные пункты (RU)', 
+            type: 'array', 
+            of: [{ type: 'text' }],
+            fieldset: 'ru'
+          },
+          { 
+            name: 'points_en', 
+            title: 'Детальные пункты (EN)', 
+            type: 'array', 
+            of: [{ type: 'text' }],
+            fieldset: 'en'
+          },
+          { 
+            name: 'points_ro', 
+            title: 'Детальные пункты (RO)', 
+            type: 'array', 
+            of: [{ type: 'text' }],
+            fieldset: 'ro'
+          },
           { name: 'status', title: 'Статус', type: 'string', options: { list: [
             { title: 'Выполнено', value: 'done' },
             { title: 'В процессе', value: 'progress' },

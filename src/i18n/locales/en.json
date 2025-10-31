@@ -183,6 +183,118 @@
         }
       }
     },
+    "strategy": {
+      "title": "ALTIUS Badminton Club Development Strategy 2025 – 2030",
+      "mission": {
+        "title": "Introduction and Club Mission",
+        "text1": "ALTIUS is a modern badminton club created to develop the sport at all levels: from children's first steps to international victories of professionals. Our mission is to make badminton a mass, accessible and prestigious sport in Moldova, forming a strong community of athletes, coaches and fans.",
+        "text2": "We believe that through sport we can cultivate character, discipline and the pursuit of high results. Altius strives to become the leading badminton development center in the country and one of the recognized clubs in Eastern Europe."
+      },
+      "currentState": {
+        "title": "Current State and Potential",
+        "intro": "Today Altius already has a solid foundation:",
+        "points": [
+          "modern training hall in Chisinau",
+          "experienced coaches and motivated athletes",
+          "participation in national and international competitions",
+          "growing community of enthusiasts and children starting badminton"
+        ],
+        "conclusion": "However, the club's potential is much greater. Badminton in Moldova is at a growth stage, and Altius can become the leader of this movement, setting standards and forming an entire ecosystem of sports development."
+      },
+      "goals": {
+        "title": "Strategic Goals for 2025 – 2030",
+        "items": [
+          "Create a leading athlete training center in the country and bring them to the international level",
+          "Make badminton a mass sport among children, teenagers and adults",
+          "Expand the network of club branches and presence in key cities of the country",
+          "Create a strong ALTIUS brand — recognized in Moldova and beyond",
+          "Build a sustainable ecosystem of partners, sponsors and educational programs"
+        ]
+      },
+      "roadmap": {
+        "title": "Development Roadmap by Year",
+        "2025": {
+          "title": "Scaling Start and Systematization",
+          "points": [
+            "Conduct internal club audit: strengths, needs, infrastructure",
+            "Develop and implement unified training methodology for all ages",
+            "Create Altius Academy — educational program for children and coaches",
+            "Launch 2–3 regional badminton popularization programs (masterclasses, open days)",
+            "Start annual Super Liga Altius with rating system and final awards"
+          ]
+        },
+        "2026": {
+          "title": "Growth and Regional Expansion",
+          "points": [
+            "Open branches or partner schools in 2 new cities",
+            "Organize the first international youth tournament under ALTIUS brand",
+            "Launch online platform with training materials and workouts",
+            "Create promotion and marketing team (content, social media, website, PR)",
+            "Start cooperation with 3–5 schools and sports centers across the country"
+          ]
+        },
+        "2027": {
+          "title": "National Leadership",
+          "points": [
+            "Altius becomes the main training center for the national team",
+            "Conducting series of national tournaments under club brand",
+            "Creating scouting system: regular selection of talented children across the country",
+            "Launch 'Badminton in Every School' program — implementing sections in educational institutions",
+            "Formation of the first professional club team for international leagues"
+          ]
+        },
+        "2028": {
+          "title": "International Recognition",
+          "points": [
+            "Regular participation of club athletes in international tournaments and European youth championships",
+            "Organization of own international tournament in Chisinau",
+            "Creation of training base with infrastructure for camps",
+            "Development of internship and experience exchange program with European clubs and federations"
+          ]
+        },
+        "2029": {
+          "title": "Sustainability and Influence Stage",
+          "points": [
+            "Altius — main badminton center of Moldova with branches in 5+ cities",
+            "Graduation of first European/World champion athletes",
+            "Formation of own coaching center and certification program",
+            "Reaching cooperation level with international federations and brands",
+            "Altius becomes not just a club, but a full-fledged academy and national-scale brand"
+          ]
+        }
+      },
+      "marketing": {
+        "title": "Marketing and Brand",
+        "points": [
+          "Create unique style and positioning of ALTIUS as a symbol of growth and strength",
+          "Maintain active social media presence, publishing athlete achievements, success stories and useful tips",
+          "Launch club merchandise line (uniforms, accessories, equipment)",
+          "Create inspiring content: videos, interviews, mini-documentaries about athletes",
+          "Organize club celebrations and events for parents, partners and athletes"
+        ]
+      },
+      "partnerships": {
+        "title": "Partnerships and Sustainability",
+        "points": [
+          "Establish strategic partnerships with badminton federation, schools and universities",
+          "Attract corporate sponsors from sports and education sectors",
+          "Implement membership and subscription model for stable income",
+          "Seek grants and international sports support programs"
+        ]
+      },
+      "results": {
+        "title": "Expected Results by 2030",
+        "points": [
+          "More than 2000 active athletes in the club system",
+          "Presence in 5+ cities and creation of own training base",
+          "Club athletes participate and win at European and World championships",
+          "Coach training program and own academy",
+          "Sustainable community of parents, coaches, partners and alumni",
+          "Altius becomes the #1 brand in Moldova badminton and a well-known club in Eastern Europe"
+        ]
+      },
+      "closing": "Altius 2030 is not just a club. It's a movement that grows champions, creates community and shapes the future of badminton in the country."
+    },
     "history": {
       "title": "Our History",
       "subtitle": "The path from idea to leading badminton club",
