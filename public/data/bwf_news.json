@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2025-11-04T04:04:29.153384+00:00",
+  "scraped_at": "2025-11-04T08:05:24.077194+00:00",
   "items": [
+    {
+      "title": "Indonesia Para: Naveen Sivakumar Stuns Lucas Mazur",
+      "href": "https://bwfbadminton.com/news-single/2025/11/04/indonesia-para-naveen-sivakumar-stuns-lucas-mazur/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/20251102_1059_IndonesiaParaBadmintonInternational2025_BPAT4287-1-1280x550.jpg",
+      "preview": "",
+      "date": "2025-11-04T00:00:00+00:00"
+    },
     {
       "title": "Korea Masters: Okuhara Seeks Four in a Row",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/11/03/korea-masters-okuhara-seeks-four-in-a-row/",
@@ -121,13 +128,6 @@
       "date": "2025-10-25T00:00:00+00:00"
     },
     {
-      "title": "Humans of Shuttle Time: Gabriel Martin",
-      "href": "https://bwfbadminton.com/news-single/2025/10/24/humans-of-shuttle-time-gabriel-martin/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Gabe-UTSNZ-2023-400x310.jpg",
-      "preview": "",
-      "date": "2025-10-24T00:00:00+00:00"
-    },
-    {
       "title": "French Open: Christiansen/Boje Stun Top Seeds",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/24/french-open-christiansen-boje-stun-top-seeds/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/cr_20251023_1816_FrenchOpen2025_BPLN5696.jpg",
@@ -135,11 +135,11 @@
       "date": "2025-10-24T00:00:00+00:00"
     },
     {
-      "title": "French Open: Flying Scots Soar",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/23/french-open-flying-scots-soar/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251022_1112_FrenchOpen2025_BPRS1905.jpg",
-      "preview": "Thursday, October 23, 2025 TEXT BY BWF STAFF | LUCAS NOYON/RAPHAEL SACHETAT/BADMINTONPHOTO",
-      "date": "2025-10-23T00:00:00+00:00"
+      "title": "Humans of Shuttle Time: Gabriel Martin",
+      "href": "https://bwfbadminton.com/news-single/2025/10/24/humans-of-shuttle-time-gabriel-martin/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/10/Gabe-UTSNZ-2023-400x310.jpg",
+      "preview": "",
+      "date": "2025-10-24T00:00:00+00:00"
     }
   ]
 }
