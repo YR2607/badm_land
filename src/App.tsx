@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import { lazy, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import './i18n';
 import Home from './pages/Home';
 import Blog from './pages/Blog';
@@ -23,6 +24,13 @@ const PageLoader = () => (
 );
 
 function App() {
+  const { ready } = useTranslation();
+
+  // Wait for i18n to be ready before rendering
+  if (!ready) {
+    return <PageLoader />;
+  }
+
   return (
     <Layout>
       <ScrollToTop />

@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { ChevronDownIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 
 const languages = [
+  { code: 'ro', name: 'Română', flag: '🇷🇴' },
   { code: 'ru', name: 'Русский', flag: '🇷🇺' },
   { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'ro', name: 'Română', flag: '🇷🇴' },
 ];
 
 const LanguageSwitcher: FC = () => {
