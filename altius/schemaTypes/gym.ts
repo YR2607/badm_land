@@ -45,7 +45,8 @@ export default defineType({
         list: [
           { title: 'Синий', value: 'from-blue-500 to-indigo-600' },
           { title: 'Зеленый', value: 'from-green-500 to-emerald-600' },
-          { title: 'Оранжевый', value: 'from-orange-500 to-red-600' },
+          { title: 'Оранжево-красный', value: 'from-orange-500 to-red-500' },
+          { title: 'Желто-янтарный', value: 'from-yellow-500 to-amber-500' },
           { title: 'Фиолетовый', value: 'from-purple-500 to-pink-600' }
         ]
       }

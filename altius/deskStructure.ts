@@ -268,6 +268,42 @@ const deskStructure = (S: any) =>
                 ),
             ])
         ),
+      S.listItem()
+        .title('☎️ Контакты')
+        .child(
+          S.list()
+            .title('Контакты')
+            .items([
+              S.listItem()
+                .title('🎯 Hero секция')
+                .child(
+                  S.document()
+                    .schemaType('contactHero')
+                    .documentId('contactHero')
+                ),
+              S.listItem()
+                .title('ℹ️ Информация')
+                .child(
+                  S.document()
+                    .schemaType('contactInfo')
+                    .documentId('contactInfo')
+                ),
+              S.listItem()
+                .title('🏟️ Залы')
+                .child(
+                  S.document()
+                    .schemaType('contactGyms')
+                    .documentId('contactGyms')
+                ),
+              S.listItem()
+                .title('🔍 SEO настройки')
+                .child(
+                  S.document()
+                    .schemaType('contactSeo')
+                    .documentId('contactSeo')
+                ),
+            ])
+        ),
       S.divider(),
       
       // Медиа контент

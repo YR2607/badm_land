@@ -480,6 +480,23 @@
       "trial": "Trial session"
     },
     "loading": "Loading gyms...",
+    "trainers": {
+      "title": "Gym Trainers"
+    },
+    "features": {
+      "title": "Gym Features"
+    },
+    "gallery": {
+      "title": "Gym Gallery"
+    },
+    "contact": {
+      "title": "Contact Information",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "signUp": "Sign up for training",
+      "openMap": "Open map"
+    },
     "fallback": {
       "byArrangement": "By arrangement",
       "flexibleSchedule": "Flexible schedule tailored to your needs",
@@ -585,6 +602,13 @@
   }
   ,
   "home": {
+    "services": {
+      "title": "Our Services",
+      "subtitle": "Professional training for all skill levels",
+      "more": "Learn more",
+      "pricePlaceholder": "—",
+      "empty": "Services section is not yet filled in CMS"
+    },
     "achievements": {
       "title": "Our Achievements",
       "subtitle": "Over the years we have achieved impressive results and nurtured many talented athletes",

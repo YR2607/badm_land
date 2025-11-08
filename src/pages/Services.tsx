@@ -1,27 +1,35 @@
 import { FC, useState, useEffect } from 'react';
-import { CheckCircle, Clock, Sparkles, Zap, Target, ChevronDown, Phone, Users, Star, Award, User, Calendar, Trophy, ArrowRight } from 'lucide-react';
+import { Sparkles, ChevronDown, Phone, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
-import { fetchServicesPage, CmsServicesPage, fetchServicesHero, type CmsHero } from '../lib/cms';
+import { fetchServicesPage, CmsServicesPage, fetchServicesHero, type CmsHero, fetchHomePage, type CmsHomePage } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
+import ServicesSection from '../components/ServicesSection';
 
 const Services: FC = () => {
   const { t, i18n } = useTranslation();
   const [cmsData, setCmsData] = useState<CmsServicesPage | null>(null);
   const [heroData, setHeroData] = useState<CmsHero | null>(null);
+  const [homeServicesSection, setHomeServicesSection] = useState<CmsHomePage['servicesSection'] | null>(null);
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     const loadCmsData = async () => {
       try {
-        const [data, hero] = await Promise.all([
+        const [data, hero, home] = await Promise.all([
           fetchServicesPage(i18n.language as string),
           fetchServicesHero(i18n.language as string),
+          fetchHomePage(i18n.language as string),
         ]);
         if (data) setCmsData(addCmsDevMarkers(data));
         if (hero) setHeroData(addCmsDevMarkers(hero));
+        if (home?.servicesSection) {
+          setHomeServicesSection(addCmsDevMarkers(home.servicesSection));
+        } else {
+          setHomeServicesSection(null);
+        }
       } catch (error) {
         setError(t('common.error'));
       }
@@ -29,80 +37,6 @@ const Services: FC = () => {
 
     loadCmsData();
   }, [i18n.language, t]);
-
-  // Функция для получения цены из CMS или fallback
-  const getServicePricing = (serviceId: string, type: 'monthly' | 'perSession') => {
-    const cmsService = cmsData?.servicesSection?.services?.find(s => 
-      s.title.toLowerCase().includes(serviceId === 'group' ? 'группов' : 
-                                    serviceId === 'individual' ? 'индивидуал' : 'соревнован')
-    );
-    
-    if (cmsService?.pricing) {
-      return type === 'monthly' ? cmsService.pricing.monthly : cmsService.pricing.perSession;
-    }
-    
-    // Fallback цены
-    const fallbackPrices = {
-      group: { monthly: '200', perSession: '60', original: '280' },
-      individual: { monthly: '1400', perSession: '400', original: '1800' },
-      competition: { monthly: '500', perSession: null, original: '650' }
-    };
-    
-    return fallbackPrices[serviceId as keyof typeof fallbackPrices]?.[type] || '0';
-  };
-
-  const getOriginalPrice = (serviceId: string) => {
-    const fallbackPrices = {
-      group: '280',
-      individual: '1800', 
-      competition: '650'
-    };
-    return fallbackPrices[serviceId as keyof typeof fallbackPrices] || '0';
-  };
-
-  const gradientList = [
-    { gradient: 'from-blue-500 via-indigo-500 to-purple-500', bgGradient: 'from-blue-50 to-indigo-50' },
-    { gradient: 'from-green-500 via-emerald-500 to-teal-500', bgGradient: 'from-green-50 to-emerald-50' },
-    { gradient: 'from-yellow-500 via-amber-500 to-orange-500', bgGradient: 'from-yellow-50 to-amber-50' },
-  ];
-
-  const getIcon = (name?: string) => {
-    switch ((name || '').toLowerCase()) {
-      case 'users': return <Users className="w-8 h-8" />;
-      case 'user': return <User className="w-8 h-8" />;
-      case 'award': return <Award className="w-8 h-8" />;
-      case 'trophy': return <Trophy className="w-8 h-8" />;
-      case 'star': return <Star className="w-8 h-8" />;
-      case 'zap': return <Zap className="w-8 h-8" />;
-      case 'target': return <Target className="w-8 h-8" />;
-      case 'clock': return <Clock className="w-8 h-8" />;
-      case 'phone': return <Phone className="w-8 h-8" />;
-      case 'calendar': return <Calendar className="w-8 h-8" />;
-      case 'sparkles': return <Sparkles className="w-8 h-8" />;
-      default: return <Users className="w-8 h-8" />;
-    }
-  };
-
-  const services = (cmsData?.servicesSection?.services || []).map((s, idx) => {
-      const g = gradientList[idx % gradientList.length];
-      return {
-        id: `cms-${idx}`,
-        icon: getIcon(s.icon),
-        title: s.title,
-        subtitle: '',
-        description: s.description,
-        features: (s.features || []).map(ft => ({ icon: <CheckCircle className="w-4 h-4" />, text: ft })),
-        gradient: g.gradient,
-        bgGradient: g.bgGradient,
-        popular: idx === 1,
-        badge: '',
-        priceMonthly: s.pricing?.monthly || '—',
-        pricePerSession: s.pricing?.perSession || '—',
-        originalPrice: undefined,
-      };
-    });
-
-  const [billing, setBilling] = useState<'monthly' | 'per_session'>('monthly');
 
   const faqs: Array<{ q: string; a: string }> = [
     { q: t('services.faq.questions.howToSignUp.q'), a: t('services.faq.questions.howToSignUp.a') },
@@ -412,226 +346,10 @@ const Services: FC = () => {
         </div>
       </section>
 
-      {/* MODERN PRICING SECTION */}
-      <section className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">
-              {t('services.pricing.title')}
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t('services.pricing.subtitle')}
-            </p>
-          </div>
+      {homeServicesSection && (
+        <ServicesSection cmsData={homeServicesSection} />
+      )}
 
-          {/* Sticky Billing Toggle */}
-          <div className="flex items-center justify-center mb-12 sticky top-20 z-40">
-            <div className="inline-flex items-center rounded-2xl bg-white/90 backdrop-blur-md border border-gray-200/50 p-1.5 shadow-xl">
-              <button 
-                className={`px-6 py-3 text-sm font-medium rounded-xl transition-all duration-300 ${
-                  billing === 'monthly' 
-                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg' 
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`} 
-                onClick={() => setBilling('monthly')}
-              >
-                {t('services.pricing.monthly')}
-              </button>
-              <button 
-                className={`px-6 py-3 text-sm font-medium rounded-xl transition-all duration-300 ${
-                  billing === 'per_session' 
-                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg' 
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`} 
-                onClick={() => setBilling('per_session')}
-              >
-                {t('services.pricing.perSession')}
-              </button>
-            </div>
-          </div>
-
-          {/* Enhanced Service Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {services.length === 0 && (
-              <div className="col-span-full text-center text-gray-400">Список услуг не заполнен в CMS</div>
-            )}
-            {services.map((service, index) => (
-              <motion.div
-                key={service.id}
-                className={`group relative ${service.popular ? 'lg:-mt-4' : ''}`}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                whileHover={{ 
-                  y: -8,
-                  transition: { duration: 0.3, ease: "easeOut" }
-                }}
-              >
-                {/* Enhanced Card */}
-                <div className={`relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-gray-200/50 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 ${
-                  service.popular ? 'ring-2 ring-blue-500/20 shadow-blue-500/10' : ''
-                }`}>
-                  
-                  {/* Background Gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.bgGradient} opacity-0 group-hover:opacity-50 rounded-3xl transition-opacity duration-500`} />
-                  
-                  {/* Badge */}
-                  {service.badge && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <div className={`px-4 py-2 rounded-full text-white text-sm font-semibold shadow-lg bg-gradient-to-r ${service.gradient}`}>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4" />
-                          {service.badge}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Header */}
-                  <div className="relative z-10 mb-6">
-                    <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${service.gradient} text-white shadow-lg mb-4`}>
-                      {service.icon}
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{service.title}</h3>
-                    <p className="text-sm font-medium text-gray-500 mb-3">{service.subtitle}</p>
-                    <p className="text-gray-600 leading-relaxed">{service.description}</p>
-                  </div>
-
-                  {/* Features */}
-                  <div className="relative z-10 mb-8 space-y-3">
-                    {service.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-center gap-3">
-                        <div className={`p-1.5 rounded-lg bg-gradient-to-r ${service.gradient} text-white`}>
-                          {feature.icon}
-                        </div>
-                        <span className="text-gray-700 font-medium">{feature.text}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Pricing */}
-                  <div className="relative z-10 mb-6">
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-4xl font-bold text-gray-900">
-                        {billing === 'monthly' ? service.priceMonthly : (service.pricePerSession || '—')}
-                      </span>
-                      {(billing === 'monthly' ? service.priceMonthly : service.pricePerSession) !== '—' && (
-                        <>
-                          <span className="text-lg text-gray-600">{t('services.pricing.currency')}</span>
-                          <span className="text-sm text-gray-500">
-                            {billing === 'monthly' ? t('services.pricing.perMonth') : t('services.pricing.perSessionShort')}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    {service.originalPrice && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-400 line-through">{service.originalPrice} {t('services.pricing.currency')}</span>
-                        <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                          {t('services.pricing.discount')} {Math.round((1 - parseInt(billing === 'monthly' ? service.priceMonthly : service.pricePerSession || '0') / parseInt(service.originalPrice)) * 100)}%
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* CTA Button */}
-                  <button className={`relative z-10 w-full py-4 px-6 rounded-2xl font-semibold text-white bg-gradient-to-r ${service.gradient} hover:shadow-lg transition-all duration-300`}>
-                    <div className="flex items-center justify-center gap-2">
-                      <span>{t('services.pricing.signUp')}</span>
-                      <ArrowRight className="w-5 h-5" />
-                    </div>
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* MODERN COMPARISON TABLE */}
-      <motion.section 
-        className="py-20 bg-gradient-to-br from-gray-50 to-white"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h3 className="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">{t('services.comparison.title')}</h3>
-            <p className="text-lg text-gray-600">{t('services.comparison.subtitle')}</p>
-          </motion.div>
-          
-          <div className="overflow-x-auto">
-            <div className="min-w-[720px] rounded-3xl bg-white/80 backdrop-blur-sm border border-gray-200/50 shadow-2xl overflow-hidden">
-              {/* Header */}
-              <div className="grid grid-cols-4 gap-0 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-                <div className="px-6 py-4 text-sm font-medium">{t('services.comparison.parameter')}</div>
-                {services.map((s) => (
-                  <div key={s.id} className="px-6 py-4 text-sm font-semibold flex items-center gap-2">
-                    <span className={`inline-block w-3 h-3 rounded-full bg-gradient-to-r ${s.gradient} shadow-sm`} />
-                    {s.title}
-                  </div>
-                ))}
-              </div>
-
-              {/* Rows */}
-              <div className="divide-y divide-gray-100">
-                {[
-                  { k: t('services.comparison.groupSize'), v: [t('services.comparison.values.upTo8'), t('services.comparison.values.oneOnOne'), t('services.comparison.values.twoToFour')] },
-                  { k: t('services.comparison.individualPlan'), v: [t('services.comparison.values.optional'), t('services.comparison.values.yes'), t('services.comparison.values.yes')] },
-                  { k: t('services.comparison.videoAnalysis'), v: [t('services.comparison.values.optional'), t('services.comparison.values.yes'), t('services.comparison.values.yes')] },
-                  { k: t('services.comparison.competitivePractice'), v: [t('services.comparison.values.clubGames'), t('services.comparison.values.onRequest'), t('services.comparison.values.regularly')] },
-                  { k: t('services.comparison.scheduleFlexibility'), v: [t('services.comparison.values.fixed'), t('services.comparison.values.full'), t('services.comparison.values.high')] },
-                ].map((row, i, array) => (
-                  <div key={i} className={`grid grid-cols-4 hover:bg-blue-50/50 transition-colors duration-200 ${i === array.length - 1 ? 'rounded-b-3xl overflow-hidden' : ''}`}>
-                    <div className="px-6 py-4 text-sm font-medium text-gray-900 bg-gray-50/50">{row.k}</div>
-                    {row.v.map((val, j) => (
-                      <div key={j} className="px-6 py-4 text-sm">
-                        {val === t('services.comparison.values.yes') ? (
-                          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-medium border border-emerald-200">
-                            <CheckCircle className="w-3 h-3" />
-                            {t('services.comparison.values.yes')}
-                          </span>
-                        ) : val === t('services.comparison.values.optional') ? (
-                          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-100 text-amber-800 text-xs font-medium border border-amber-200">
-                            <Clock className="w-3 h-3" />
-                            {t('services.comparison.values.optional')}
-                          </span>
-                        ) : val === t('services.comparison.values.full') ? (
-                          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-xs font-medium border border-green-200">
-                            <Sparkles className="w-3 h-3" />
-                            {t('services.comparison.values.full')}
-                          </span>
-                        ) : val === t('services.comparison.values.high') ? (
-                          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium border border-blue-200">
-                            <Zap className="w-3 h-3" />
-                            {t('services.comparison.values.high')}
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium border border-gray-200">
-                            <Target className="w-3 h-3" />
-                            {val}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* GYMS CTA SECTION */}
       <motion.section 
         className="py-20 bg-gradient-to-br from-blue-50 via-white to-indigo-50"
         initial={{ opacity: 0 }}

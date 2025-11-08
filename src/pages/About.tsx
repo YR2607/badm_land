@@ -953,27 +953,27 @@ const About: FC = () => {
                     <img 
                       src={coach.photo} 
                       alt={coach.name}
-                      className="w-32 h-32 mx-auto rounded-2xl object-cover mb-4"
+                      className="w-48 h-48 mx-auto rounded-full object-cover mb-4 ring-4 ring-primary-blue/10"
                     />
                   ) : (
-                    <div className="w-32 h-32 mx-auto rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mb-4">
-                      <Users className="w-16 h-16 text-white" />
+                    <div className="w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mb-4 ring-4 ring-primary-blue/10">
+                      <Users className="w-20 h-20 text-white" />
                     </div>
                   )}
                   
                   {/* Content */}
                   <div className="text-center">
-                    <h4 className="text-xl font-bold text-gray-900 mb-1">{coach.name}</h4>
-                    <p className="text-primary-blue font-medium mb-3">{coach.role}</p>
+                    <h4 className="text-2xl font-bold text-gray-900 mb-2">{coach.name}</h4>
+                    <p className="text-primary-blue font-semibold mb-4 text-base">{coach.role}</p>
                     
-                    <div className="flex flex-wrap justify-center gap-1 mb-4">
+                    <div className="flex flex-wrap justify-center gap-2 mb-4">
                       {coach.experience && (
-                        <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
+                        <span className="bg-primary-blue/10 text-primary-blue px-3 py-1.5 rounded-full text-sm font-medium">
                           {coach.experience}
                         </span>
                       )}
                       {coach.specialization && (
-                        <span className="bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full text-xs">
+                        <span className="bg-primary-blue/10 text-primary-blue px-3 py-1.5 rounded-full text-sm font-medium">
                           {coach.specialization}
                         </span>
                       )}
@@ -982,7 +982,7 @@ const About: FC = () => {
                     {coach.achievements && coach.achievements.length > 0 && (
                       <div className="space-y-2 mb-4">
                         {coach.achievements.map((achievement: string, idx: number) => (
-                          <span key={idx} className="block text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                          <span key={idx} className="block text-sm text-gray-700 bg-blue-50 px-3 py-2 rounded-lg font-medium">
                             {achievement}
                           </span>
                         ))}
@@ -990,9 +990,11 @@ const About: FC = () => {
                     )}
                     
                     {coach.description && (
-                      <p className="text-sm text-gray-600 leading-relaxed">
-                        {coach.description}
-                      </p>
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 mt-4 border border-blue-100">
+                        <div className="text-sm text-gray-800 leading-relaxed space-y-2 whitespace-pre-line">
+                          {coach.description}
+                        </div>
+                      </div>
                     )}
                   </div>
                 </motion.div>

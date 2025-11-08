@@ -1,5 +1,6 @@
 import { createClient } from '@sanity/client';
 import { cmsCache } from './cache';
+import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 
 const groq = String.raw;
 
@@ -51,19 +52,45 @@ export async function fetchContactInfo(): Promise<CmsContactInfo | null> {
 }
 
 export type CmsContactGymCard = {
-  name: string; type?: string; badge?: string; address?: string; description?: string; hours?: string;
+  id: string;
+  name: string;
+  badge?: string;
+  badgeColor?: string;
+  address?: string;
+  description?: string;
+  phone?: string;
+  email?: string;
+  mapUrl?: string;
+  features?: string[];
+  schedule?: CmsGym['schedule'];
+  hasChildren?: boolean;
+  hasAdults?: boolean;
 };
 
-export async function fetchContactGymsCards(): Promise<CmsContactGymCard[]> {
-  const cacheKey = 'contactGymsCards';
+export async function fetchContactGymsCards(lang: string = 'ru'): Promise<CmsContactGymCard[]> {
+  const cacheKey = `contactGymsCards-${lang}`;
   if (process.env.NODE_ENV !== 'development') {
     const cached = cmsCache.get<CmsContactGymCard[]>(cacheKey);
     if (cached) return cached;
   }
   try {
-    const data = await client.fetch(groq`*[_type == "contactGyms"][0]{ gyms[]->{ name, type, badge, address, description, hours } }`);
-    const list: CmsContactGymCard[] = data?.gyms || [];
-    if (list && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, list);
+    const gyms = await fetchGyms(lang);
+    const list: CmsContactGymCard[] = (gyms || []).map((g) => ({
+      id: g.id,
+      name: g.name,
+      badge: g.badge,
+      badgeColor: g.badgeColor,
+      address: g.address,
+      description: g.description,
+      phone: g.phone,
+      email: g.email,
+      mapUrl: g.mapUrl,
+      features: g.features,
+      schedule: g.schedule,
+      hasChildren: g.hasChildren,
+      hasAdults: g.hasAdults,
+    }));
+    if (list.length && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, list);
     return applyCmsDevMarkers(list || []);
   } catch {
     return [];
@@ -72,7 +99,9 @@ export async function fetchContactGymsCards(): Promise<CmsContactGymCard[]> {
 
 export async function fetchGymsHero(lang: string = 'ru'): Promise<CmsHero | null> {
   const cacheKey = `gymsHero-${lang}`;
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV === 'development') {
+    cmsCache.delete(cacheKey);
+  } else {
     const cached = cmsCache.get<CmsHero>(cacheKey);
     if (cached) return cached;
   }
@@ -365,8 +394,12 @@ export interface CmsHomePage {
   };
 };
 
-// TODO: вернуть dev-маркеры после завершения диагностики
-export const applyCmsDevMarkers = <T>(data: T): T => data;
+export const applyCmsDevMarkers = <T>(data: T): T => {
+  if (process.env.NODE_ENV === 'development') {
+    return addCmsDevMarkers(data);
+  }
+  return data;
+};
 
 export const fetchHomePage = async (lang: string = 'ru'): Promise<CmsHomePage | null> => {
   const cacheKey = `homePage-${lang}`;
@@ -765,8 +798,10 @@ export type CmsGym = {
 export const fetchGyms = async (lang: string = 'ru'): Promise<CmsGym[]> => {
   const cacheKey = `gyms-${lang}`;
   
-  // В development режиме пропускаем кэш для получения свежих данных
-  if (process.env.NODE_ENV !== 'development') {
+  // В development режиме принудительно очищаем кэш для получения свежих данных
+  if (process.env.NODE_ENV === 'development') {
+    cmsCache.delete(cacheKey);
+  } else {
     const cached = cmsCache.get<CmsGym[]>(cacheKey);
     if (cached) {
       return cached;
@@ -1154,7 +1189,9 @@ export type CmsGymsPageLabels = {
 
 export async function fetchGymsPageLabels(lang: string = 'ru'): Promise<CmsGymsPageLabels | null> {
   const cacheKey = `gymsPageLabels-${lang}`;
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV === 'development') {
+    cmsCache.delete(cacheKey);
+  } else {
     const cached = cmsCache.get<CmsGymsPageLabels>(cacheKey);
     if (cached) return cached;
   }

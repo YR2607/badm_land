@@ -22,12 +22,27 @@ const Gyms: FC = () => {
     const loadGyms = async () => {
       try {
         setLoading(true);
+        // Очищаем состояние перед загрузкой новых данных
+        setCmsGyms([]);
+        setHeroData(null);
+        setLabels(null);
+        
         const [gymsData, hero, pageLabels] = await Promise.all([
-          fetchGyms(),
+          fetchGyms(i18n.language as string),
           fetchGymsHero(i18n.language as string),
           fetchGymsPageLabels(i18n.language as string)
         ]);
-        setCmsGyms(addCmsDevMarkers(gymsData || []));
+        const rawGyms = gymsData || [];
+        const markedGyms = addCmsDevMarkers(rawGyms) as CmsGym[];
+        const cleanedGyms = markedGyms.map((gym, idx) => {
+          const source = rawGyms[idx] || gym;
+          return {
+            ...gym,
+            id: source.id,
+            slug: source.slug,
+          };
+        });
+        setCmsGyms(cleanedGyms);
         if (hero) setHeroData(addCmsDevMarkers(hero));
         if (pageLabels) setLabels(addCmsDevMarkers(pageLabels));
         setError(null);
@@ -39,7 +54,7 @@ const Gyms: FC = () => {
     };
 
     loadGyms();
-  }, [i18n.language]);
+  }, [i18n.language, t]);
 
   // Используем только данные из CMS
   const gyms = cmsGyms;

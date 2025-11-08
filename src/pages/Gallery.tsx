@@ -9,7 +9,6 @@ import SEO from '../components/SEO';
 const getSections = (t: any) => [
   { id: 'hall', title: t('gallery.sections.hall'), gradient: 'from-blue-500 to-blue-600' },
   { id: 'coaches', title: t('gallery.sections.coaches'), gradient: 'from-yellow-500 to-orange-500' },
-  { id: 'trainings', title: t('gallery.sections.trainings'), gradient: 'from-green-500 to-teal-500' },
   { id: 'tournaments', title: t('gallery.sections.tournaments'), gradient: 'from-purple-500 to-indigo-500' },
 ];
 
@@ -27,7 +26,7 @@ const Gallery: FC = () => {
   const [filters, setFilters] = useState<{ q: string; year: number | 'all'; tags: string[] }>({ q: '', year: 'all', tags: [] });
   const [visibleByCat, setVisibleByCat] = useState<Record<string, number>>({});
 
-  const [sectionImages, setSectionImages] = useState<Record<string, string[]>>({ hall: [], coaches: [], trainings: [] });
+  const [sectionImages, setSectionImages] = useState<Record<string, string[]>>({ hall: [], coaches: [] });
   const overlayScrollRef = useRef<HTMLDivElement | null>(null);
   const lightboxScrollRestoreRef = useRef<{ el: HTMLElement | Window; top: number } | null>(null);
   const overlayWindowScrollRef = useRef<number>(0);
@@ -36,14 +35,14 @@ const Gallery: FC = () => {
 
   useEffect(() => {
     const load = async () => {
-      if (!isCmsEnabled) { setSectionImages({ hall: [], coaches: [], trainings: [] }); setCategories([]); setLoading(false); return; }
+      if (!isCmsEnabled) { setSectionImages({ hall: [], coaches: [] }); setCategories([]); setLoading(false); return; }
       const [sec, cats] = await Promise.all([
         fetchGallerySections(),
         fetchTournamentCategories(),
       ]);
       const markedSections = addCmsDevMarkers(sec || {});
       const markedCats = addCmsDevMarkers(cats || []);
-      setSectionImages({ hall: markedSections.hall || [], coaches: markedSections.coaches || [], trainings: markedSections.trainings || [] });
+      setSectionImages({ hall: markedSections.hall || [], coaches: markedSections.coaches || [] });
       const gradients = ['from-blue-500 to-blue-600','from-yellow-500 to-orange-500','from-purple-500 to-indigo-500','from-green-500 to-teal-500','from-orange-500 to-red-500'];
       setCategories((markedCats || []).map((c, idx) => ({ ...c, gradient: gradients[idx % gradients.length] })));
       setLoading(false);

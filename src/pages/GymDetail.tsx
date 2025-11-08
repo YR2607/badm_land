@@ -123,7 +123,7 @@ const GymDetail: FC = () => {
             {/* Features */}
             {gym.features && gym.features.length > 0 && (
               <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('services.comparison.title')}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('gyms.features.title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {gym.features.map((f, i) => (
                     <div key={i} className="flex items-center gap-3 text-gray-700">
@@ -167,50 +167,10 @@ const GymDetail: FC = () => {
               </div>
             )}
 
-            {/* Pricing */}
-            {(gym.pricing?.children || gym.pricing?.adults) && (
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                  </svg>
-                  {t('gyms.pricing.title')}
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {gym.pricing?.children && (
-                    <div className="border border-green-200 rounded-xl p-4">
-                      <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
-                        <span>👨‍👩‍👧‍👦</span>
-                        {t('gyms.pricing.childrenGroups')}
-                      </h3>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between"><span>{t('gyms.pricing.monthly')}:</span><span className="font-semibold">{gym.pricing.children.monthly}</span></div>
-                        <div className="flex justify-between"><span>{t('gyms.pricing.single')}:</span><span className="font-semibold">{gym.pricing.children.single}</span></div>
-                        <div className="flex justify-between text-green-600"><span>{t('gyms.pricing.trial')}:</span><span className="font-semibold">{gym.pricing.children.trial}</span></div>
-                      </div>
-                    </div>
-                  )}
-                  {gym.pricing?.adults && (
-                    <div className="border border-blue-200 rounded-xl p-4">
-                      <h3 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                        <span>🏸</span>
-                        {t('gyms.pricing.adultGroups')}
-                      </h3>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between"><span>{t('gyms.pricing.monthly')}:</span><span className="font-semibold">{gym.pricing.adults.monthly}</span></div>
-                        <div className="flex justify-between"><span>{t('gyms.pricing.single')}:</span><span className="font-semibold">{gym.pricing.adults.single}</span></div>
-                        <div className="flex justify-between text-blue-600"><span>{t('gyms.pricing.trial')}:</span><span className="font-semibold">{gym.pricing.adults.trial}</span></div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
             {/* Gallery */}
             {gym.gallery && gym.gallery.length > 0 && (
               <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('gallery.title')}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('gyms.gallery.title')}</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {gym.gallery.map((src, idx) => (
                     <div key={idx} className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden">
@@ -225,7 +185,7 @@ const GymDetail: FC = () => {
           {/* Right: Contact & Map */}
           <div className="space-y-6">
             <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('contact.title')}</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('gyms.contact.title')}</h2>
               <ul className="space-y-3">
                 {gym.address && (
                   <li className="flex items-start gap-3">
@@ -255,7 +215,7 @@ const GymDetail: FC = () => {
                   className="mt-4 inline-flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-colors font-medium"
                 >
                   <MapPin className="w-4 h-4" />
-                  {t('gyms.openMap', 'Open on Map')}
+                  {t('gyms.contact.openMap')}
                 </a>
               )}
             </div>
@@ -263,7 +223,7 @@ const GymDetail: FC = () => {
             {/* Trainers */}
             {gym.trainers && gym.trainers.length > 0 && (
               <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('gyms.tags.adults')}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('gyms.trainers.title')}</h2>
                 <div className="space-y-4">
                   {gym.trainers.map((tr, i) => (
                     <div key={i} className="flex items-start gap-3">

@@ -21,14 +21,14 @@ const Contact: FC = () => {
         fetchPageBySlug('contact'),
         fetchContactHero(i18n.language as string),
         fetchContactInfo(),
-        fetchContactGymsCards()
+        fetchContactGymsCards(i18n.language as string)
       ]);
       if (data) setPage(addCmsDevMarkers(data));
       if (hero) setHeroData(addCmsDevMarkers(hero));
       if (contactInfo) setContactCms(addCmsDevMarkers(contactInfo));
       if (gymsCards?.length) setContactGyms(addCmsDevMarkers(gymsCards));
     })();
-  }, []);
+  }, [i18n.language]);
 
 
   const contactInfo = (contactCms?.contacts || []).map((c) => ({
@@ -322,14 +322,14 @@ const Contact: FC = () => {
       {/* Contact Info Cards */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" role="list" aria-label={t('contact.info.title', 'Полезная информация')}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label={t('contact.info.title', 'Полезная информация')}>
             {contactInfo.length === 0 && (
               <div className="col-span-full text-center text-gray-400">{t('contact.emptySection')}</div>
             )}
             {contactInfo.map((info, index) => (
               <motion.div
                 key={index}
-                className="card text-center group hover:scale-105 transition-transform duration-300"
+                className="card h-full text-center group hover:scale-105 transition-transform duration-300"
                 role="listitem"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -355,62 +355,87 @@ const Contact: FC = () => {
               <div className="col-span-full text-center text-gray-400">Список залов на странице контактов не заполнен в CMS</div>
             )}
             {contactGyms && contactGyms.length > 0 && contactGyms.map((g, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: idx * 0.1 }}
-                  className="group"
-                >
-                  <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group-hover:border-blue-200 h-full">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                          <MapPin className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-gray-900">{g.name}</h3>
-                          {g.type && <p className="text-sm text-blue-600 font-medium">{g.type}</p>}
-                        </div>
-                      </div>
-                      {g.badge && (
-                        <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                          {g.badge}
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="space-y-4 mb-6">
-                      {(g.address || g.description) && (
-                        <div className="flex items-start gap-3">
-                          <MapPin className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <motion.div
+                key={g.id || idx}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+              >
+                <div className="h-full bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden flex flex-col">
+                  <div className="relative">
+                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
+                    <div className="p-8">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                            <MapPin className="w-6 h-6 text-white" />
+                          </div>
                           <div>
-                            {g.address && <p className="font-semibold text-gray-900">{g.address}</p>}
-                            {g.description && <p className="text-sm text-gray-600">{g.description}</p>}
+                            <h3 className="text-xl font-bold text-gray-900">{g.name}</h3>
+                            {(g.hasChildren || g.hasAdults) && (
+                              <p className="text-sm text-blue-600 font-medium">
+                                {[
+                                  g.hasChildren ? t('gyms.tags.children', 'Детские группы') : null,
+                                  g.hasAdults ? t('gyms.tags.adults', 'Взрослые группы') : null,
+                                ].filter(Boolean).join(' • ')}
+                              </p>
+                            )}
                           </div>
                         </div>
-                      )}
-                      {g.hours && (
-                        <div className="flex items-center gap-3">
-                          <Clock className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                          <span className="text-gray-600 text-sm">{g.hours}</span>
-                        </div>
-                      )}
-                    </div>
+                        {g.badge && (
+                          <span className={`text-white px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${
+                            g.badge.includes('Премиум') ? 'from-yellow-500 to-amber-500' : 
+                            g.badgeColor || 'from-blue-500 to-indigo-600'
+                          }`}>
+                            {g.badge}
+                          </span>
+                        )}
+                      </div>
 
-                    <button 
-                      onClick={() => window.open(`https://maps.google.com/?q=${encodeURIComponent(g.address || g.name)}`, '_blank', 'noopener')}
-                      className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-medium group-hover:scale-105"
-                      aria-label={`${t('contact.openMap')} — ${g.name}${g.address ? ', ' + g.address : ''}`}
-                    >
-                      <MapPin className="w-4 h-4 mr-2" aria-hidden="true" />
-                      {t('contact.openMap')}
-                      <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
-                    </button>
+                      <div className="space-y-5 mb-8">
+                        {(g.address || g.description) && (
+                          <div className="flex items-start gap-3">
+                            <MapPin className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                              {g.address && <p className="font-semibold text-gray-900">{g.address}</p>}
+                              {g.description && <p className="text-sm text-gray-600">{g.description}</p>}
+                            </div>
+                          </div>
+                        )}
+
+                        {(g.phone || g.email) && (
+                          <div className="space-y-2 text-sm text-gray-600">
+                            {g.phone && (
+                              <div className="flex items-center gap-2">
+                                <Phone className="w-4 h-4 text-blue-600" />
+                                <a href={`tel:${g.phone}`} className="hover:text-blue-600 transition-colors">{g.phone}</a>
+                              </div>
+                            )}
+                            {g.email && (
+                              <div className="flex items-center gap-2">
+                                <Mail className="w-4 h-4 text-blue-600" />
+                                <a href={`mailto:${g.email}`} className="hover:text-blue-600 transition-colors">{g.email}</a>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      <button 
+                        onClick={() => window.open(g.mapUrl || `https://maps.google.com/?q=${encodeURIComponent(g.address || g.name)}`, '_blank', 'noopener')}
+                        className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-medium"
+                        aria-label={`${t('contact.openMap')} — ${g.name}${g.address ? ', ' + g.address : ''}`}
+                      >
+                        <MapPin className="w-4 h-4 mr-2" aria-hidden="true" />
+                        {t('contact.openMap')}
+                        <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
+                      </button>
+                    </div>
                   </div>
-                </motion.div>
-              ))}
+                </div>
+              </motion.div>
+            ))}
             </div>
         </div>
       </section>

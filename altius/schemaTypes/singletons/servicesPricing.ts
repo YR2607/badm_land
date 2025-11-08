@@ -23,6 +23,11 @@ export default defineType({
       of: [{
         type: 'object',
         name: 'pricingPlan',
+        fieldsets: [
+          { name: 'ru', title: 'Русский' },
+          { name: 'en', title: 'English' },
+          { name: 'ro', title: 'Română' },
+        ],
         fields: [
           { name: 'name', title: 'Название плана (RU)', type: 'string', fieldset: 'ru' },
           { name: 'name_en', title: 'Название плана (EN)', type: 'string', fieldset: 'en' },

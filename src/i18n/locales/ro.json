@@ -503,6 +503,23 @@
       "trial": "Ședință de probă"
     },
     "loading": "Se încarcă sălile...",
+    "trainers": {
+      "title": "Antrenorii sălii"
+    },
+    "features": {
+      "title": "Caracteristicile sălii"
+    },
+    "gallery": {
+      "title": "Galeria sălii"
+    },
+    "contact": {
+      "title": "Informații de contact",
+      "address": "Adresă",
+      "phone": "Telefon",
+      "email": "Email",
+      "signUp": "Înscrie-te la antrenament",
+      "openMap": "Deschide harta"
+    },
     "fallback": {
       "byArrangement": "După înțelegere",
       "flexibleSchedule": "Program flexibil adaptat nevoilor dvs.",
@@ -606,6 +623,13 @@
   }
   ,
   "home": {
+    "services": {
+      "title": "Serviciile noastre",
+      "subtitle": "Antrenamente profesionale pentru toate nivelurile de pregătire",
+      "more": "Află mai multe",
+      "pricePlaceholder": "—",
+      "empty": "Secțiunea servicii nu este încă completată în CMS"
+    },
     "achievements": {
       "title": "Realizările noastre",
       "subtitle": "De-a lungul anilor am obținut rezultate impresionante și am format mulți sportivi talentați",

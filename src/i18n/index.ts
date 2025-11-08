@@ -24,7 +24,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'ru',
+    fallbackLng: 'ro', // Default fallback to Romanian
     debug: false, // Disabled debug to reduce console noise
     
     detection: {

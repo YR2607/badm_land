@@ -6,13 +6,13 @@ interface ServicesSectionProps {
   cmsData?: {
     title: string;
     subtitle?: string;
-    services: Array<{
+    services?: Array<{
       title: string;
       description: string;
       features?: string[];
-      price: string;
-      icon: string;
-      color: string;
+      price?: string;
+      icon?: string;
+      color?: string;
     }>;
     buttonText?: string;
   };
@@ -39,7 +39,7 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
     title: s.title,
     description: s.description,
     features: s.features || [],
-    price: s.price,
+    price: s.price || t('home.services.pricePlaceholder', '—'),
     color: s.color || 'from-blue-500 to-indigo-600'
   }));
 
@@ -105,6 +105,11 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.length === 0 && (
+            <div className="col-span-full text-center text-gray-400">
+              {t('home.services.empty', 'Секция услуг пока не заполнена в CMS')}
+            </div>
+          )}
           {services.map((service: any, index: number) => (
             <motion.div
               key={index}
