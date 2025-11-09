@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-11-09T00:12:19.350881+00:00",
+  "scraped_at": "2025-11-09T04:04:19.369093+00:00",
   "items": [
+    {
+      "title": "Korea Masters: Okimoto Surges into Final",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/11/09/korea-masters-okimoto-surges-into-final/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/11/Yudai-Okimoto_KM25.jpg",
+      "preview": "Sunday, November 9, 2025 TEXT BY BWF STAFF | SHI LIHUI/BADMINTONPHOTO",
+      "date": "2025-11-09T00:00:00+00:00"
+    },
     {
       "title": "Humans of Shuttle Time: Lorenzo Torres",
       "href": "https://bwfbadminton.com/news-single/2025/11/07/humans-of-shuttle-time-lorenzo-torres/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/HOST_Lorenzo-Torres_VEN.jpeg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/HOST_Lorenzo-Torres_VEN-400x310.jpeg",
       "preview": "",
       "date": "2025-11-07T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251025_1838_FrenchOpen2025_BPRS0553.jpg",
       "preview": "Sunday, October 26, 2025 TEXT BY DIANNE PIERRE | RAPHAEL SACHETAT/BADMINTONPHOTO",
       "date": "2025-10-26T00:00:00+00:00"
-    },
-    {
-      "title": "French Open: Popov Makes History",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/10/25/french-open-popov-makes-history/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/10/20251024_1753_FrenchOpen2025_BPLN0007.jpg",
-      "preview": "Saturday, October 25, 2025 TEXT BY BWF STAFF | LUCAS NOYON & RAPHAEL SACHETAT/BADMINTONPHOTO",
-      "date": "2025-10-25T00:00:00+00:00"
     }
   ]
 }
