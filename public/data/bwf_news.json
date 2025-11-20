@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2025-11-20T08:05:11.529635+00:00",
+  "scraped_at": "2025-11-20T12:05:30.799700+00:00",
   "items": [
+    {
+      "title": "Battlelines Drawn for Inaugural AirBadminton World Cup",
+      "href": "https://bwfbadminton.com/news-single/2025/11/20/battlelines-drawn-for-inaug-airbadminton-world-cup/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/SHARJAH_AB-WC_Logo-KV_RGB_Horizontal-Logo-400x310.jpg",
+      "preview": "",
+      "date": "2025-11-20T00:00:00+00:00"
+    },
     {
       "title": "Warm Response to Groundbreaking Initiative",
       "href": "https://bwfbadminton.com/news-single/2025/11/19/warm-response-to-groundbreaking-initiative/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/Aditi_WJC25-1280x550.jpeg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/Aditi_WJC25-400x310.jpeg",
       "preview": "",
       "date": "2025-11-19T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/HOST_Lorenzo-Torres_VEN-400x310.jpeg",
       "preview": "",
       "date": "2025-11-07T00:00:00+00:00"
-    },
-    {
-      "title": "World Juniors Review: Camp Paves Way for Performance",
-      "href": "https://bwfbadminton.com/news-single/2025/11/05/world-juniors-review-camp-paves-the-way-for-performance/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/Ranithma-Liyanage-Keneth-Arugodda-400x310.jpg",
-      "preview": "",
-      "date": "2025-11-05T00:00:00+00:00"
     }
   ]
 }
