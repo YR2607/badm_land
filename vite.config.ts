@@ -26,5 +26,20 @@ export default defineConfig({
     // Rewrite Studio static paths in dev to match vercel.json
     middlewareMode: false,
     hmr: true,
-  }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Разделяем vendor библиотеки
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'i18n-vendor': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+          'animation-vendor': ['framer-motion'],
+          'sanity-vendor': ['@sanity/client', 'groq'],
+        },
+      },
+    },
+    // Увеличиваем лимит для предупреждений (временно)
+    chunkSizeWarningLimit: 600,
+  },
 })

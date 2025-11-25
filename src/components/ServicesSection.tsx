@@ -138,14 +138,6 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
                     </li>
                   ))}
                 </ul>
-
-                {/* Price */}
-                <div className="mt-auto">
-                  <div className="text-2xl font-bold text-primary-blue mb-4">{service.price}</div>
-                  <button className="w-full btn-secondary group-hover:bg-primary-blue group-hover:text-white transition-all duration-300">
-                    {buttonLabel}
-                  </button>
-                </div>
               </div>
             </motion.div>
           ))}

@@ -544,63 +544,6 @@ const Gyms: FC = () => {
                       </div>
                     </div>
 
-                    {/* Pricing */}
-                    <div className="bg-white rounded-2xl shadow-lg p-6">
-                      <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                        <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                        </svg>
-                        {t('gyms.pricing.title')}
-                      </h2>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {selectedGym.pricing?.children && (
-                          <div className="border border-green-200 rounded-xl p-4">
-                            <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
-                              <span>👨‍👩‍👧‍👦</span>
-                              {t('gyms.pricing.childrenGroups')}
-                            </h3>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex justify-between">
-                                <span>{t('gyms.pricing.monthly')}:</span>
-                                <span className="font-semibold">{selectedGym.pricing?.children?.monthly}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span>{t('gyms.pricing.single')}:</span>
-                                <span className="font-semibold">{selectedGym.pricing?.children?.single}</span>
-                              </div>
-                              <div className="flex justify-between text-green-600">
-                                <span>{t('gyms.pricing.trial')}:</span>
-                                <span className="font-semibold">{selectedGym.pricing?.children?.trial}</span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        
-                        {selectedGym.pricing?.adults && (
-                          <div className="border border-blue-200 rounded-xl p-4">
-                            <h3 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                              <span>🏸</span>
-                              {t('gyms.pricing.adultGroups')}
-                            </h3>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex justify-between">
-                                <span>{t('gyms.pricing.monthly')}:</span>
-                                <span className="font-semibold">{selectedGym.pricing?.adults?.monthly}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span>{t('gyms.pricing.single')}:</span>
-                                <span className="font-semibold">{selectedGym.pricing?.adults?.single}</span>
-                              </div>
-                              <div className="flex justify-between text-blue-600">
-                                <span>{t('gyms.pricing.trial')}:</span>
-                                <span className="font-semibold">{selectedGym.pricing?.adults?.trial}</span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
 
                     {/* Gallery */}
                     <div className="bg-white rounded-2xl shadow-lg p-6">
@@ -661,13 +604,6 @@ const Gyms: FC = () => {
                       </div>
                       
                       <div className="mt-6 space-y-3">
-                        <button className={`w-full py-3 px-4 bg-gradient-to-r ${selectedGym.badgeColor} text-white rounded-lg font-medium hover:shadow-md transition-all duration-200`}>
-                          <div className="flex items-center justify-center gap-2">
-                            <Phone className="w-4 h-4" />
-                            {labels?.signUpButton || t('gyms.contact.signUp')}
-                          </div>
-                        </button>
-                        
                         <a 
                           href={selectedGym.mapUrl} 
                           target="_blank" 

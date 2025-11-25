@@ -1,0 +1,27 @@
+{
+  "name": "Altius Badminton Club",
+  "short_name": "Altius",
+  "description": "Профессиональный бадминтонный клуб в Кишиневе",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/altLGOO.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/altLGOO.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "fitness", "badminton"],
+  "lang": "ru",
+  "dir": "ltr"
+}

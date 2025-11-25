@@ -536,8 +536,7 @@
     "heroSubtitle": "Vezi sălile noastre și atmosfera de antrenament",
     "heroDescription": "Fotografii de la antrenamente, turnee și viața de zi cu zi a clubului",
     "sections": {
-      "hall": "Săli de Antrenament",
-      "coaches": "Antrenorii Noștri",
+      "hall": "Săli",
       "trainings": "Sesiuni de Antrenament",
       "tournaments": "Turnee"
     },

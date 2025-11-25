@@ -1,13 +1,4 @@
 var r = {};
-/**
- * @license React
- * react.production.min.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 var y = Symbol.for("react.element"), T = Symbol.for("react.portal"), D = Symbol.for("react.fragment"), V = Symbol.for("react.strict_mode"), L = Symbol.for("react.profiler"), F = Symbol.for("react.provider"), U = Symbol.for("react.context"), A = Symbol.for("react.forward_ref"), N = Symbol.for("react.suspense"), M = Symbol.for("react.memo"), q = Symbol.for("react.lazy"), C = Symbol.iterator;
 function z(e) {
   return e === null || typeof e != "object" ? null : (e = C && e[C] || e["@@iterator"], typeof e == "function" ? e : null);

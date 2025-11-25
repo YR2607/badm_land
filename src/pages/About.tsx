@@ -603,8 +603,8 @@ const About: FC = () => {
             </p>
           </motion.div>
 
-          {/* History Section */}
-          <motion.div 
+          {/* History Section - TEMPORARILY COMMENTED */}
+          {/* <motion.div 
             className="mb-20" 
             initial={{ opacity: 0, y: 30 }} 
             whileInView={{ opacity: 1, y: 0 }} 
@@ -613,7 +613,6 @@ const About: FC = () => {
           >
             <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.history.development')}</h3>
             
-            {/* Timeline with years as dividers */}
             {effectiveTimeline.length === 0 ? (
               <div className="text-center text-gray-400 text-sm">{t('about.history.emptySection')}</div>
             ) : (() => {
@@ -630,7 +629,6 @@ const About: FC = () => {
                 <div className="space-y-12">
                   {ordered.map(([year, list]) => (
                     <div key={year}>
-                      {/* Year divider */}
                       <div className="relative mb-8">
                         <div className="h-px bg-gradient-to-r from-transparent via-primary-blue/30 to-transparent" />
                         <div className="absolute left-1/2 -translate-x-1/2 -top-4 px-6 py-2 rounded-full bg-primary-blue text-white text-lg font-bold shadow-lg">
@@ -638,7 +636,6 @@ const About: FC = () => {
                         </div>
                       </div>
                       
-                      {/* Events grid */}
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {list.map((item, idx) => (
                           <motion.div
@@ -666,7 +663,6 @@ const About: FC = () => {
                     </div>
                   ))}
 
-                  {/* Show more button */}
                   {timeline.length > VISIBLE_HISTORY_COUNT && (
                     <div className="text-center pt-8">
                       <motion.button
@@ -682,7 +678,7 @@ const About: FC = () => {
                 </div>
               );
             })()}
-          </motion.div>
+          </motion.div> */}
 
           {/* Roadmap Section with Horizontal Scroll */}
           <motion.div 
@@ -909,8 +905,8 @@ const About: FC = () => {
                     </div>
                     
                     {cmsData?.teamSection?.founder?.description && (
-                      <div className="space-y-4 text-gray-600 leading-relaxed">
-                        <div className="prose prose-gray max-w-none">
+                      <div className="space-y-4 text-gray-900 leading-relaxed">
+                        <div className="prose max-w-none prose-p:text-gray-900">
                           {cmsData.teamSection.founder.description.map((block: any, index: number) => (
                             <p key={index}>{block.children?.[0]?.text || ''}</p>
                           ))}
