@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2025-11-26T04:07:21.177304+00:00",
+  "scraped_at": "2025-11-26T08:05:06.459847+00:00",
   "items": [
+    {
+      "title": "The Week in Quotes",
+      "href": "https://bwfbadminton.com/news-single/2025/11/26/the-week-in-quotes-120/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/cr_20240803_1254_OlympicGames2024_BPMR4930-1280x550.jpg",
+      "preview": "",
+      "date": "2025-11-26T00:00:00+00:00"
+    },
     {
       "title": "Qualifiers to Hangzhou Confirmed",
       "href": "https://bwfworldtourfinals.bwfbadminton.com/news-single/2025/11/25/qualifiers-to-hangzhou-confirmed/",
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/cr_20251029_1333_IndonesiaParaBadmintonInternational2025_BPAT5551-400x310.jpg",
       "preview": "",
       "date": "2025-11-11T00:00:00+00:00"
-    },
-    {
-      "title": "A Virtuoso's Goodbye",
-      "href": "https://bwfbadminton.com/news-single/2025/11/10/tai-tzu-ying-a-virtuosos-goodbye/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/20240119_1240_IndiaOpen2024_BPJS1432-400x310.jpg",
-      "preview": "",
-      "date": "2025-11-10T00:00:00+00:00"
     }
   ]
 }
