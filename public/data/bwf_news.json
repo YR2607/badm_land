@@ -1,5 +1,5 @@
 {
-  "scraped_at": "2025-11-28T08:05:36.332027+00:00",
+  "scraped_at": "2025-11-28T12:05:27.116287+00:00",
   "items": [
     {
       "title": "Humans of Shuttle Time: Gouzou Matthieu",
@@ -44,25 +44,32 @@
       "date": "2025-11-24T00:00:00+00:00"
     },
     {
-      "title": "Australian Open: Title No.10 for An Se Young",
+      "title": "Australian Open: Title No.10 for An",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/11/23/australian-open-title-no-10-for-an-se-young/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/11/An-Se-Young2_F_AO25.jpg",
-      "preview": "Sunday, November 23, 2025 TEXT BY BWF STAFF | PAUL FOXALL/BADMINTONPHOTO",
+      "preview": "Sunday, November 23, 2025 TEXT BY DEV SUKUMAR | PAUL FOXALL/BADMINTONPHOTO",
       "date": "2025-11-23T00:00:00+00:00"
     },
     {
       "title": "Australian Open: Great Day for Indonesia",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/11/22/australian-open-great-day-for-indonesia/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/11/Alfian-Fikri-AO25.jpg",
-      "preview": "Saturday, November 22, 2025 TEXT BY BWF STAFF | PAUL FOXALL/BADMINTONPHOTO",
+      "preview": "Saturday, November 22, 2025 TEXT BY DEV SUKUMAR | PAUL FOXALL/BADMINTONPHOTO",
       "date": "2025-11-22T00:00:00+00:00"
     },
     {
       "title": "Australian Open: Milestone for Corbett/Gai",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/11/21/australian-open-milestone-for-corbett-gai/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/11/Francesca-Corbett-Jennie-Gai_AO25.jpg",
-      "preview": "Friday, November 21, 2025 TEXT BY BWF STAFF | BADMINTONPHOTO",
+      "preview": "Friday, November 21, 2025 TEXT BY DEV SUKUMAR | PAUL FOXALL/BADMINTONPHOTO",
       "date": "2025-11-21T00:00:00+00:00"
+    },
+    {
+      "title": "Australian Open: Naraoka Falls to Shetty",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/11/20/australian-open-naraoka-falls-to-shetty/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2025/11/Ayush-Shetty2_AO25.jpg",
+      "preview": "Thursday, November 20, 2025 TEXT BY BWF STAFF | BADMINTONPHOTO",
+      "date": "2025-11-20T00:00:00+00:00"
     },
     {
       "title": "Battlelines Drawn for Inaugural AirBadminton World Cup",
@@ -72,17 +79,17 @@
       "date": "2025-11-20T00:00:00+00:00"
     },
     {
-      "title": "Where To Watch: SATHIO GROUP Australia Open 2025",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/11/19/where-to-watch-sathio-group-australia-open-2025/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2024/11/0.-HSBC-BWF-World-Tour-Inside-Page.jpg",
-      "preview": "Wednesday, November 19, 2025 TEXT BY BWF STAFF",
-      "date": "2025-11-19T00:00:00+00:00"
-    },
-    {
       "title": "Warm Response to Groundbreaking Initiative",
       "href": "https://bwfbadminton.com/news-single/2025/11/19/warm-response-to-groundbreaking-initiative/",
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/Aditi_WJC25-400x310.jpeg",
       "preview": "",
+      "date": "2025-11-19T00:00:00+00:00"
+    },
+    {
+      "title": "Where To Watch: SATHIO GROUP Australia Open 2025",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2025/11/19/where-to-watch-sathio-group-australia-open-2025/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2024/11/0.-HSBC-BWF-World-Tour-Inside-Page.jpg",
+      "preview": "Wednesday, November 19, 2025 TEXT BY BWF STAFF",
       "date": "2025-11-19T00:00:00+00:00"
     },
     {
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/Old-Folks-Group2-400x310.jpg",
       "preview": "",
       "date": "2025-11-14T00:00:00+00:00"
-    },
-    {
-      "title": "The Week in Quotes",
-      "href": "https://bwfbadminton.com/news-single/2025/11/13/the-week-in-quotes-118/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/11/cr_20240112_1044_MalaysiaOpen2024_BPYL2446-400x310.jpg",
-      "preview": "",
-      "date": "2025-11-13T00:00:00+00:00"
     }
   ]
 }
