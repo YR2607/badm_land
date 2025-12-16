@@ -1,11 +1,18 @@
 {
-  "scraped_at": "2025-12-16T04:13:57.689410+00:00",
+  "scraped_at": "2025-12-16T08:04:51.001485+00:00",
   "items": [
     {
       "title": "Host UAE Stuns China to Win Team Relay Gold",
       "href": "https://bwfbadminton.com/news-single/2025/12/16/host-uae-stuns-china-to-win-team-relay-gold/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/12/20251214_1602_AirBadmintonWorldCup2025_BPJV9729-Team-UAE-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2025/12/20251214_1602_AirBadmintonWorldCup2025_BPJV9729-Team-UAE-400x310.jpg",
       "preview": "",
+      "date": "2025-12-16T00:00:00+00:00"
+    },
+    {
+      "title": "‘Anders is On Another Level Than I Was’",
+      "href": "https://bwfworldtourfinals.bwfbadminton.com/news-single/2025/12/16/anders-is-on-another-level-than-i-was/",
+      "img": "https://bwfworldtourfinals.bwfbadminton.com/wp-content/uploads/2025/12/20250514_2149_ThailandOpen2025_BPYL3679.jpg",
+      "preview": "Tuesday, December 16, 2025 TEXT BY DEV SUKUMAR | BADMINTONPHOTO",
       "date": "2025-12-16T00:00:00+00:00"
     },
     {
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2025/12/Chan-Peng-Soon-AB1-400x310.jpg",
       "preview": "",
       "date": "2025-12-04T00:00:00+00:00"
-    },
-    {
-      "title": "Shuttle World 52 Out Now",
-      "href": "https://bwfbadminton.com/news-single/2025/12/03/shuttle-world-52-out-now/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2025/12/BWF_Shuttleworld_Web-banner_v52-1-400x310.jpg",
-      "preview": "",
-      "date": "2025-12-03T00:00:00+00:00"
     }
   ]
 }
