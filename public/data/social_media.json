@@ -1,0 +1,115 @@
+{
+  "channels": {
+    "youtube": {
+      "name": "YouTube",
+      "handle": "@Badminton_4Life",
+      "url": "https://www.youtube.com/@Badminton_4Life",
+      "color": "#FF0000"
+    },
+    "tiktok": {
+      "name": "TikTok",
+      "handle": "@badmintonmoldova",
+      "url": "https://www.tiktok.com/@badmintonmoldova",
+      "color": "#000000"
+    },
+    "facebook": {
+      "name": "Facebook",
+      "handle": "Altius Badminton Club",
+      "url": "https://www.facebook.com/profile.php?id=61562124174747",
+      "pageId": "61562124174747",
+      "color": "#1877F2"
+    }
+  },
+  "videos": {
+    "tiktok": [
+      {
+        "id": "tiktok-1",
+        "title": "Тренировка юных бадминтонистов",
+        "thumbnail": "",
+        "videoId": "",
+        "url": "https://www.tiktok.com/@badmintonmoldova",
+        "publishedAt": "2024-12-20",
+        "views": ""
+      },
+      {
+        "id": "tiktok-2",
+        "title": "Техника ударов",
+        "thumbnail": "",
+        "videoId": "",
+        "url": "https://www.tiktok.com/@badmintonmoldova",
+        "publishedAt": "2024-12-18",
+        "views": ""
+      },
+      {
+        "id": "tiktok-3",
+        "title": "Соревнования клуба",
+        "thumbnail": "",
+        "videoId": "",
+        "url": "https://www.tiktok.com/@badmintonmoldova",
+        "publishedAt": "2024-12-15",
+        "views": ""
+      }
+    ],
+    "youtube": [
+      {
+        "id": "youtube-1",
+        "title": "Бадминтон для начинающих",
+        "thumbnail": "",
+        "videoId": "",
+        "url": "https://www.youtube.com/@Badminton_4Life",
+        "publishedAt": "2024-12-19",
+        "views": "",
+        "duration": ""
+      },
+      {
+        "id": "youtube-2",
+        "title": "Турнир Altius 2024",
+        "thumbnail": "",
+        "videoId": "",
+        "url": "https://www.youtube.com/@Badminton_4Life",
+        "publishedAt": "2024-12-16",
+        "views": "",
+        "duration": ""
+      },
+      {
+        "id": "youtube-3",
+        "title": "Мастер-класс от тренера",
+        "thumbnail": "",
+        "videoId": "",
+        "url": "https://www.youtube.com/@Badminton_4Life",
+        "publishedAt": "2024-12-10",
+        "views": "",
+        "duration": ""
+      }
+    ],
+    "facebook": [
+      {
+        "id": "facebook-1",
+        "title": "Новости клуба Altius",
+        "thumbnail": "",
+        "postId": "",
+        "url": "https://www.facebook.com/profile.php?id=61562124174747",
+        "publishedAt": "2024-12-21",
+        "type": "page"
+      },
+      {
+        "id": "facebook-2",
+        "title": "Расписание тренировок",
+        "thumbnail": "",
+        "postId": "",
+        "url": "https://www.facebook.com/profile.php?id=61562124174747",
+        "publishedAt": "2024-12-17",
+        "type": "page"
+      },
+      {
+        "id": "facebook-3",
+        "title": "Анонсы мероприятий",
+        "thumbnail": "",
+        "postId": "",
+        "url": "https://www.facebook.com/profile.php?id=61562124174747",
+        "publishedAt": "2024-12-14",
+        "type": "page"
+      }
+    ]
+  }
+}

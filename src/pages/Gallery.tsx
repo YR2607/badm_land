@@ -187,7 +187,7 @@ const Gallery: FC = () => {
           { label: t('navigation.gallery') }
         ]}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
           <h1 className="section-title">{t('gallery.title')}</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">{t('gallery.subtitle')}</p>
@@ -329,7 +329,7 @@ const Gallery: FC = () => {
                         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeOverlay} />
                         {/* Panel */}
                         <div className="relative z-10 h-full md:h-[90vh] md:my-6 md:px-4">
-                          <div className="bg-white h-full max-w-7xl mx-auto flex flex-col md:rounded-2xl md:border md:shadow-xl overflow-hidden">
+                          <div className="bg-white h-full max-w-[1600px] mx-auto flex flex-col md:rounded-2xl md:border md:shadow-xl overflow-hidden">
                             {/* Header */}
                             <div className="flex items-center gap-3 p-4 border-b sticky top-0 bg-white z-10">
                               <button className="px-3 py-1 rounded-lg border text-sm" onClick={closeOverlay}>{t('gallery.close')}</button>

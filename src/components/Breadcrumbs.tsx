@@ -66,7 +66,7 @@ const Breadcrumbs = ({ items, className = '' }: BreadcrumbsProps) => {
       aria-label={t('breadcrumbs.navigation', 'Навигационная цепочка')} 
       className={`bg-white border-b border-gray-100 ${className}`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <ol className="flex items-center space-x-2 text-sm flex-wrap">
           {breadcrumbItems.map((item, index) => {
             const isLast = index === breadcrumbItems.length - 1;

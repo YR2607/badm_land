@@ -261,7 +261,7 @@ const Contact: FC = () => {
         </div>
         
         <div className="relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
               {heroData?.badge?.text && (
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
@@ -321,7 +321,7 @@ const Contact: FC = () => {
 
       {/* Contact Info Cards */}
       <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label={t('contact.info.title', 'Полезная информация')}>
             {contactInfo.length === 0 && (
               <div className="col-span-full text-center text-gray-400">{t('contact.emptySection')}</div>
@@ -349,7 +349,7 @@ const Contact: FC = () => {
 
       {/* Gym Locations from CMS */}
       <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {(!contactGyms || contactGyms.length === 0) && (
               <div className="col-span-full text-center text-gray-400">Список залов на странице контактов не заполнен в CMS</div>

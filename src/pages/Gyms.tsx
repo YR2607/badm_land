@@ -75,7 +75,7 @@ const Gyms: FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
               <GymCardSkeleton key={i} />
@@ -281,7 +281,7 @@ const Gyms: FC = () => {
         </div>
         
         <div className="relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
               {heroData?.badge?.text && (
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
@@ -341,7 +341,7 @@ const Gyms: FC = () => {
 
       {/* Main Content */}
       <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1600px] mx-auto">
           {/* Filter Buttons - Modern Design */}
           <div className="flex flex-wrap justify-center gap-3 mb-16">
             <button

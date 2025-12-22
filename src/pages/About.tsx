@@ -370,7 +370,7 @@ const About: FC = () => {
         </div>
         
         <div className="relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
               {heroData && (
                 <>
@@ -434,7 +434,7 @@ const About: FC = () => {
       <section className="py-24 bg-gradient-to-b from-white via-gray-50/50 to-white relative overflow-hidden">
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-gradient-to-br from-primary-blue/5 via-primary-orange/5 to-transparent blur-3xl rounded-full" />
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Mission Title and Text */}
           <motion.div 
             className="mb-24"
@@ -546,7 +546,7 @@ const About: FC = () => {
       <section className="py-20 bg-white relative overflow-hidden">
         <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -586,7 +586,7 @@ const About: FC = () => {
         <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-24 w-[36rem] h-[36rem] rounded-full bg-primary-blue/5 blur-3xl" />
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <motion.div 
             className="text-center mb-16" 
@@ -836,7 +836,7 @@ const About: FC = () => {
         <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-24 w-[36rem] h-[36rem] rounded-full bg-primary-blue/5 blur-3xl" />
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="text-center mb-16" 
             initial={{ opacity: 0, y: 20 }} 
@@ -1005,7 +1005,7 @@ const About: FC = () => {
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary-orange/5 blur-3xl rounded-full" />
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
             className="bg-gradient-to-br from-primary-orange/10 to-primary-blue/10 rounded-3xl p-8 md:p-12"
             initial={{ opacity: 0, y: 30 }}

@@ -81,7 +81,7 @@ const Hero = ({ cmsData }: HeroProps) => {
           />
         </div>
       </div>
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 text-center text-white">
+      <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 text-center text-white">
         {/* increased top padding so video is visible under transparent header */}
         <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
           {cmsData?.badge?.text && (

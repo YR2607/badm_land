@@ -706,5 +706,14 @@
       "badge": "🏸 Club",
       "readOnFb": "Read on Facebook"
     }
+  },
+  "socialHub": {
+    "badge": "We're on social media",
+    "title": "Live: Altius on Social Media",
+    "subtitle": "Follow our training sessions, tournaments and club news",
+    "followUs": "Follow us on",
+    "subscribe": "Subscribe",
+    "noContent": "Content coming soon",
+    "openOn": "Open on"
   }
 }

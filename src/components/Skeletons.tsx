@@ -159,7 +159,7 @@ export const GalleryImageSkeleton = () => (
 // Skeleton для Hero секции
 export const HeroSkeleton = () => (
   <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
-    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <div className="animate-pulse space-y-8">
         {/* Badge */}
         <div className="h-12 bg-gray-700 rounded-full w-64 mx-auto" />

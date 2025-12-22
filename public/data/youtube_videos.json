@@ -1,0 +1,45 @@
+{
+  "channel": {
+    "id": "UCRRMg8N2PY-phguQHoYbJ_w",
+    "title": "Badminton4Life",
+    "handle": "@Badminton_4Life"
+  },
+  "videos": [
+    {
+      "id": "U0-J3gh4HNU",
+      "title": "Campionatul National R.Moldova 2025 Final MS V.Leadavschi vs A.Ursatii 1:2",
+      "thumbnail": "https://i.ytimg.com/vi/U0-J3gh4HNU/maxresdefault.jpg",
+      "publishedAt": "2025-12-19T16:02:12Z"
+    },
+    {
+      "id": "XppTijExidQ",
+      "title": "Campionatul National R.Moldova 2025 SFXD V.Leadavschi/I.Onica vs Y.Rakovchen/D.Cuneva 0:2",
+      "thumbnail": "https://i.ytimg.com/vi/XppTijExidQ/maxresdefault.jpg",
+      "publishedAt": "2025-12-18T16:22:36Z"
+    },
+    {
+      "id": "_CrmYUn04kw",
+      "title": "Campionatul National R.Moldova 2025 SFMD M.Carpenco/A.Morari vs Y.Rakovchen/D.Dmitriev 0:2",
+      "thumbnail": "https://i.ytimg.com/vi/_CrmYUn04kw/maxresdefault.jpg",
+      "publishedAt": "2025-12-17T21:51:14Z"
+    },
+    {
+      "id": "q_OwzJpqYFI",
+      "title": "Campionatul National R.Moldova 2025 QF MS A.Morari vs A.Ursatii 0:2",
+      "thumbnail": "https://i.ytimg.com/vi/q_OwzJpqYFI/maxresdefault.jpg",
+      "publishedAt": "2025-12-16T15:17:58Z"
+    },
+    {
+      "id": "PBpiFuS9e1k",
+      "title": "Christmas Badminton Party 2025 feat. Elena Neagu",
+      "thumbnail": "https://i.ytimg.com/vi/PBpiFuS9e1k/maxresdefault.jpg",
+      "publishedAt": "2025-12-16T09:53:27Z"
+    },
+    {
+      "id": "iBa5pCeOf6g",
+      "title": "Campionatul National R.Moldova 2025 QF XD M.Carpenco/E.Rosca vs V.Leadavschi/I.Onica 0:2",
+      "thumbnail": "https://i.ytimg.com/vi/iBa5pCeOf6g/maxresdefault.jpg",
+      "publishedAt": "2025-12-12T21:53:52Z"
+    }
+  ]
+}

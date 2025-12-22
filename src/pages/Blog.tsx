@@ -424,7 +424,7 @@ const Blog: FC = () => {
         </div>
         
         <div className="relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                 <span className="text-lg">📰</span>
@@ -477,7 +477,7 @@ const Blog: FC = () => {
       </section>
 
       <section ref={filtersRef as any} className="py-8 bg-white scroll-mt-28 md:scroll-mt-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
             <motion.div className="relative flex-grow max-w-md" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -496,7 +496,7 @@ const Blog: FC = () => {
       </section>
 
       <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Anchors for deep links */}
           <div ref={listTopRef} className="sr-only" id="all-news" />
           <div className="sr-only" id="world-news" />
@@ -565,7 +565,7 @@ const Blog: FC = () => {
       {/* Pagination Controls */}
       {filteredNews.length > pageSize && (
         <section className="pb-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between gap-4">
               <button
                 className={`px-4 py-2 rounded-lg border text-sm font-medium ${page > 1 ? 'bg-white hover:bg-gray-50 border-gray-300 text-gray-900' : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'}`}

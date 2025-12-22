@@ -738,5 +738,14 @@
       "badge": "🏸 Club",
       "readOnFb": "Citește pe Facebook"
     }
+  },
+  "socialHub": {
+    "badge": "Suntem pe rețelele sociale",
+    "title": "Live: Altius pe rețelele sociale",
+    "subtitle": "Urmăriți antrenamentele, turneele și știrile clubului nostru",
+    "followUs": "Urmărește-ne pe",
+    "subscribe": "Abonează-te",
+    "noContent": "Conținutul va apărea în curând",
+    "openOn": "Deschide pe"
   }
 }
