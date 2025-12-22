@@ -416,19 +416,18 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
             </div>
           )}
           
-          {/* Facebook Page Plugin - full width */}
-          <div className="w-full p-4">
+          {/* Facebook Page Plugin - responsive */}
+          <div className="w-full p-4 flex justify-center">
             <div
-              className="fb-page"
+              className="fb-page w-full max-w-full"
               data-href={SOCIAL_CONFIG.facebook.url}
               data-tabs="timeline"
-              data-width="500"
-              data-height="700"
-              data-small-header="false"
+              data-width=""
+              data-height="600"
+              data-small-header="true"
               data-adapt-container-width="true"
               data-hide-cover="false"
-              data-show-facepile="true"
-              style={{ width: '100%' }}
+              data-show-facepile="false"
             >
               <blockquote cite={SOCIAL_CONFIG.facebook.url} className="fb-xfbml-parse-ignore">
                 <a href={SOCIAL_CONFIG.facebook.url}>{SOCIAL_CONFIG.facebook.handle}</a>
@@ -517,13 +516,13 @@ const SocialMediaHubLive: FC = () => {
               transition={{ delay: 0.3 }}
               className="flex flex-col lg:flex-row gap-6 mb-10"
             >
-              {/* Facebook - fixed width */}
-              <div className="w-full lg:w-[540px] flex-shrink-0">
+              {/* Facebook - responsive width */}
+              <div className="w-full lg:w-[540px] lg:flex-shrink-0">
                 <FacebookEmbed isActive={true} />
               </div>
               
               {/* TikTok - takes remaining space */}
-              <div className="flex-1">
+              <div className="w-full lg:flex-1">
                 <TikTokEmbed isActive={true} />
               </div>
             </motion.div>
