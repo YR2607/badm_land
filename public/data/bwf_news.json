@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2026-01-02T12:05:17.840930+00:00",
+  "scraped_at": "2026-01-02T16:05:02.550561+00:00",
   "items": [
+    {
+      "title": "2026 Preview: Fascinating Battles Await",
+      "href": "https://bwfbadminton.com/news-single/2026/01/02/2026-preview-fascinating-battles-await/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2024/01/20240112_1600_MalaysiaOpen2024_BPTE9015-1280x550.jpg",
+      "preview": "",
+      "date": "2026-01-02T00:00:00+00:00"
+    },
     {
       "title": "2025 in Review: Korean Trio Reset the Standard",
       "href": "https://bwfbadminton.com/news-single/2025/12/30/2025-in-review-korean-trio-reset-the-standard/",
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtourfinals.bwfbadminton.com/wp-content/uploads/2025/12/Christo-Popov_WTF25_d1.jpg",
       "preview": "Thursday, December 18, 2025 TEXT BY DEV SUKUMAR | BADMINTONPHOTO",
       "date": "2025-12-18T00:00:00+00:00"
-    },
-    {
-      "title": "Breakthrough Win for Malaysians",
-      "href": "https://bwfworldtourfinals.bwfbadminton.com/news-single/2025/12/17/breakthrough-win-for-malaysians/",
-      "img": "https://bwfworldtourfinals.bwfbadminton.com/wp-content/uploads/2025/12/WTF25_Pearly-Tina.jpg",
-      "preview": "Wednesday, December 17, 2025 TEXT BY BWF STAFF | TAN EN EN & LIANG JING/BADMINTONPHOTO",
-      "date": "2025-12-17T00:00:00+00:00"
     }
   ]
 }
