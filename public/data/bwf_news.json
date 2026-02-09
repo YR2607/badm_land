@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-02-08T20:04:05.294193+00:00",
+  "scraped_at": "2026-02-09T00:16:27.546802+00:00",
   "items": [
+    {
+      "title": "Para World Champs: Flags Raised, Ambitions Ignited",
+      "href": "https://bwfbadminton.com/news-single/2026/02/09/para-world-champs-flags-raised-ambitions-ignited/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/02/cr_20260208_1807_WorldParaBadmintonChampionships2026_BPJV9920-1280x550.jpg",
+      "preview": "",
+      "date": "2026-02-09T00:00:00+00:00"
+    },
     {
       "title": "Badminton Asia Team: Maiden Title for Korea, Japan",
       "href": "https://bwfbadminton.com/news-single/2026/02/08/badminton-asia-team-maiden-titles-for-korea-japan/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/02/An-Se-Young_TF-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/02/An-Se-Young_TF-400x310.jpg",
       "preview": "",
       "date": "2026-02-08T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2026/01/Shuttle-Time-Libya-400x310.jpg",
       "preview": "",
       "date": "2026-01-23T00:00:00+00:00"
-    },
-    {
-      "title": "The Week in Quotes",
-      "href": "https://bwfbadminton.com/news-single/2026/01/22/the-week-in-quotes-121/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/01/cr_20260113_1406_IndiaOpen2026_BPJS6750-400x310.jpg",
-      "preview": "",
-      "date": "2026-01-22T00:00:00+00:00"
     }
   ]
 }
