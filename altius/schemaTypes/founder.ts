@@ -1,10 +1,18 @@
-import {defineType, defineField} from 'sanity'
+import { defineType, defineField } from 'sanity'
 
 export default defineType({
   name: 'founder',
   title: 'Основатель',
   type: 'document',
   fields: [
+    defineField({
+      name: 'sortOrder',
+      title: 'Порядок отображения',
+      type: 'number',
+      description: 'Чем меньше число, тем выше в списке (1 = первый)',
+      initialValue: 10,
+      validation: r => r.required().min(1)
+    }),
     defineField({
       name: 'name',
       title: 'Имя',
@@ -71,5 +79,20 @@ export default defineType({
         ]
       }]
     })
-  ]
+  ],
+  preview: {
+    select: {
+      title: 'name',
+      subtitle: 'role',
+      order: 'sortOrder',
+      media: 'photo'
+    },
+    prepare(selection: any) {
+      return {
+        title: `${selection.order || '?'}. ${selection.title}`,
+        subtitle: selection.subtitle,
+        media: selection.media
+      }
+    }
+  }
 })

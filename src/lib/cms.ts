@@ -1025,7 +1025,7 @@ export async function fetchFounder(lang: string = 'ru'): Promise<CmsFounder | nu
 export async function fetchAllFounders(lang: string = 'ru'): Promise<CmsFounder[]> {
   try {
     const data = await client.fetch(
-      groq`*[_type == "founder"] | order(_createdAt asc) {
+      groq`*[_type == "founder"] | order(sortOrder asc, _createdAt asc) {
         "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
         "role": select($lang=="en" && defined(role_en)=>role_en, $lang=="ro" && defined(role_ro)=>role_ro, role),
         experience,
