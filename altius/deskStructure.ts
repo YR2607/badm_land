@@ -305,7 +305,7 @@ const deskStructure = (S: any) =>
             ])
         ),
       S.divider(),
-      
+
       // Медиа контент
       S.listItem()
         .title('📰 Новости и блог')
@@ -322,9 +322,9 @@ const deskStructure = (S: any) =>
             ])
         ),
       galleryGroup(S),
-      
+
       S.divider(),
-      
+
       // Справочники
       S.listItem()
         .title('👥 Команда')
@@ -336,13 +336,16 @@ const deskStructure = (S: any) =>
                 .title('👨‍🏫 Тренеры')
                 .child(S.documentTypeList('trainer').title('Тренеры')),
               S.listItem()
-                .title('👑 Основатель')
+                .title('👑 Основатель (старое)')
                 .child(S.documentTypeList('founder').title('Основатель')),
+              S.listItem()
+                .title('👥 Все участники (новое)')
+                .child(S.documentTypeList('member').title('Участники команды')),
             ])
         ),
-      
+
       S.divider(),
-      
+
       // Настройки
       S.listItem().title('Старые страницы').child(S.documentTypeList('page').title('Страницы')),
       byTypeList(S, 'author', 'Авторы'),

@@ -1,4 +1,4 @@
-import {defineType, defineField} from 'sanity'
+import { defineType, defineField } from 'sanity'
 
 export default defineType({
   name: 'aboutPage',
@@ -84,6 +84,15 @@ export default defineType({
           title: 'Основатель',
           type: 'reference',
           to: [{ type: 'founder' }]
+        },
+        {
+          name: 'leaders',
+          title: 'Руководство (Президент, Управляющий и т.д.)',
+          type: 'array',
+          of: [{
+            type: 'reference',
+            to: [{ type: 'founder' }, { type: 'member' }]
+          }]
         },
         {
           name: 'coaches',
@@ -304,9 +313,9 @@ export default defineType({
               { name: 'description', title: 'Описание (RU)', type: 'text', fieldset: 'ru' },
               { name: 'description_en', title: 'Описание (EN)', type: 'text', fieldset: 'en' },
               { name: 'description_ro', title: 'Описание (RO)', type: 'text', fieldset: 'ro' },
-              { 
-                name: 'status', 
-                title: 'Статус', 
+              {
+                name: 'status',
+                title: 'Статус',
                 type: 'string',
                 options: {
                   list: [

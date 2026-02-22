@@ -4,13 +4,18 @@ import { deskTool } from 'sanity/desk';
 // Use the central schema types defined for the whole app
 // This exposes post, category, author, gallery, clubEmbed, eventEmbed, etc. in Studio
 import { schemaTypes } from '../altius/schemaTypes';
+import { deskStructure } from '../altius/deskStructure';
 
 export default defineConfig({
   name: 'default',
   title: 'Altius CMS',
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || '',
   dataset: process.env.SANITY_STUDIO_DATASET || 'production',
-  plugins: [deskTool()],
+  plugins: [
+    deskTool({
+      structure: deskStructure,
+    }),
+  ],
   schema: {
     types: schemaTypes,
   },

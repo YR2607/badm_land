@@ -18,6 +18,7 @@ import contactPage from './contactPage'
 import gym from './gym'
 import trainer from './trainer'
 import founder from './founder'
+import member from './member'
 // Singletons
 import homeAbout from './singletons/homeAbout'
 import servicesHero from './singletons/servicesHero'
@@ -64,6 +65,7 @@ export const schemaTypes = [
   gym,
   trainer,
   founder,
+  member,
 
   // Singletons
   homeAbout,

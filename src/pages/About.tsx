@@ -37,7 +37,7 @@ const About: FC = () => {
             tabsSection: tabs || data.tabsSection
           } as CmsAboutPage;
 
-          if (!data.teamSection || (!data.teamSection.founder && (!data.teamSection.coaches || data.teamSection.coaches.length === 0))) {
+          if (!data.teamSection || (!data.teamSection.founder && (!data.teamSection.leaders || data.teamSection.leaders.length === 0) && (!data.teamSection.coaches || data.teamSection.coaches.length === 0))) {
             const [founder, coaches] = await Promise.all([
               fetchFounder(i18n.language as string),
               fetchTrainers(i18n.language as string)
@@ -49,6 +49,7 @@ const About: FC = () => {
                 title: data.teamSection?.title || '',
                 subtitle: data.teamSection?.subtitle || '',
                 founder: founder || undefined,
+                leaders: data.teamSection?.leaders || undefined,
                 coaches: (coaches && coaches.length > 0) ? coaches : undefined,
               },
             } as CmsAboutPage;
@@ -112,7 +113,7 @@ const About: FC = () => {
     { number: '15+', label: t('about.stats.tournaments'), icon: <Award className="w-6 h-6" />, color: 'from-primary-blue to-blue-700', description: t('about.stats.tournamentsDesc') }
   ];
 
-  
+
 
   const values = [
     { icon: <Target className="w-8 h-8" />, title: t('about.values.professionalism'), description: t('about.values.professionalismDesc') },
@@ -168,8 +169,8 @@ const About: FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="px-4 py-2 bg-primary-blue text-white rounded hover:bg-blue-600"
           >
             {t('common.retry')}
@@ -202,173 +203,173 @@ const About: FC = () => {
               <defs>
                 {/* Gradient for court surface */}
                 <radialGradient id="courtGradient" cx="50%" cy="50%" r="70%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.15)"/>
-                  <stop offset="50%" stopColor="rgba(255,255,255,0.08)"/>
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.03)"/>
+                  <stop offset="0%" stopColor="rgba(255,255,255,0.15)" />
+                  <stop offset="50%" stopColor="rgba(255,255,255,0.08)" />
+                  <stop offset="100%" stopColor="rgba(255,255,255,0.03)" />
                 </radialGradient>
-                
+
                 {/* Glow effect for lines */}
                 <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                  <feMerge> 
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
-                
+
                 {/* Shadow filter */}
                 <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.3"/>
+                  <feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.3" />
                 </filter>
               </defs>
-              
+
               {/* Court Surface with gradient */}
-              <rect width="1200" height="600" fill="url(#courtGradient)"/>
-              
+              <rect width="1200" height="600" fill="url(#courtGradient)" />
+
               {/* Court Lines with glow effect */}
               <g stroke="rgba(255,255,255,0.6)" strokeWidth="3" fill="none" filter="url(#glow)">
                 {/* Outer boundaries */}
-                <rect x="200" y="100" width="800" height="400" strokeWidth="4"/>
-                
+                <rect x="200" y="100" width="800" height="400" strokeWidth="4" />
+
                 {/* Center line */}
-                <line x1="600" y1="100" x2="600" y2="500" strokeWidth="3"/>
-                
+                <line x1="600" y1="100" x2="600" y2="500" strokeWidth="3" />
+
                 {/* Service lines */}
-                <line x1="200" y1="240" x2="1000" y2="240"/>
-                <line x1="200" y1="360" x2="1000" y2="360"/>
-                
+                <line x1="200" y1="240" x2="1000" y2="240" />
+                <line x1="200" y1="360" x2="1000" y2="360" />
+
                 {/* Short service lines */}
-                <line x1="320" y1="100" x2="320" y2="500"/>
-                <line x1="880" y1="100" x2="880" y2="500"/>
-                
+                <line x1="320" y1="100" x2="320" y2="500" />
+                <line x1="880" y1="100" x2="880" y2="500" />
+
                 {/* Center service lines */}
-                <line x1="600" y1="240" x2="600" y2="360"/>
+                <line x1="600" y1="240" x2="600" y2="360" />
               </g>
-              
+
               {/* Enhanced Net with 3D effect */}
               <g filter="url(#shadow)">
-                <line x1="600" y1="100" x2="600" y2="500" stroke="rgba(255,255,255,0.7)" strokeWidth="6"/>
-                <rect x="596" y="280" width="8" height="40" fill="rgba(255,255,255,0.8)" rx="2"/>
-                
+                <line x1="600" y1="100" x2="600" y2="500" stroke="rgba(255,255,255,0.7)" strokeWidth="6" />
+                <rect x="596" y="280" width="8" height="40" fill="rgba(255,255,255,0.8)" rx="2" />
+
                 {/* Net mesh pattern */}
                 <g stroke="rgba(255,255,255,0.3)" strokeWidth="1">
-                  <line x1="590" y1="120" x2="610" y2="120"/>
-                  <line x1="590" y1="140" x2="610" y2="140"/>
-                  <line x1="590" y1="160" x2="610" y2="160"/>
-                  <line x1="590" y1="180" x2="610" y2="180"/>
-                  <line x1="590" y1="200" x2="610" y2="200"/>
-                  <line x1="590" y1="220" x2="610" y2="220"/>
-                  <line x1="590" y1="240" x2="610" y2="240"/>
-                  <line x1="590" y1="260" x2="610" y2="260"/>
+                  <line x1="590" y1="120" x2="610" y2="120" />
+                  <line x1="590" y1="140" x2="610" y2="140" />
+                  <line x1="590" y1="160" x2="610" y2="160" />
+                  <line x1="590" y1="180" x2="610" y2="180" />
+                  <line x1="590" y1="200" x2="610" y2="200" />
+                  <line x1="590" y1="220" x2="610" y2="220" />
+                  <line x1="590" y1="240" x2="610" y2="240" />
+                  <line x1="590" y1="260" x2="610" y2="260" />
                 </g>
               </g>
-              
+
               {/* Spotlight effects */}
               <g opacity="0.1">
-                <ellipse cx="400" cy="200" rx="150" ry="80" fill="rgba(255,255,255,0.3)"/>
-                <ellipse cx="800" cy="400" rx="150" ry="80" fill="rgba(255,255,255,0.3)"/>
+                <ellipse cx="400" cy="200" rx="150" ry="80" fill="rgba(255,255,255,0.3)" />
+                <ellipse cx="800" cy="400" rx="150" ry="80" fill="rgba(255,255,255,0.3)" />
               </g>
             </svg>
           </div>
-          
+
           {/* Enhanced Equipment Graphics with 3D Effects */}
           <div className="absolute top-8 left-4 md:top-16 md:left-16 w-16 h-16 md:w-24 md:h-24 opacity-30 transform rotate-12 will-change-transform hover:scale-110 transition-transform duration-300">
             <svg viewBox="0 0 100 100" className="w-full h-full">
               {/* Badminton Racket */}
               <defs>
                 <linearGradient id="racketGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.8)"/>
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.4)"/>
+                  <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
+                  <stop offset="100%" stopColor="rgba(255,255,255,0.4)" />
                 </linearGradient>
                 <filter id="racketShadow">
-                  <feDropShadow dx="2" dy="2" stdDeviation="2" floodOpacity="0.3"/>
+                  <feDropShadow dx="2" dy="2" stdDeviation="2" floodOpacity="0.3" />
                 </filter>
               </defs>
-              
+
               {/* Racket Handle */}
-              <rect x="45" y="70" width="10" height="25" fill="url(#racketGradient)" rx="5" filter="url(#racketShadow)"/>
-              
+              <rect x="45" y="70" width="10" height="25" fill="url(#racketGradient)" rx="5" filter="url(#racketShadow)" />
+
               {/* Racket Head */}
-              <ellipse cx="50" cy="35" rx="20" ry="30" fill="none" stroke="url(#racketGradient)" strokeWidth="3" filter="url(#racketShadow)"/>
-              
+              <ellipse cx="50" cy="35" rx="20" ry="30" fill="none" stroke="url(#racketGradient)" strokeWidth="3" filter="url(#racketShadow)" />
+
               {/* Strings */}
               <g stroke="rgba(255,255,255,0.4)" strokeWidth="1">
-                <line x1="35" y1="20" x2="35" y2="50"/>
-                <line x1="42" y1="15" x2="42" y2="55"/>
-                <line x1="50" y1="10" x2="50" y2="60"/>
-                <line x1="58" y1="15" x2="58" y2="55"/>
-                <line x1="65" y1="20" x2="65" y2="50"/>
-                
-                <line x1="32" y1="25" x2="68" y2="25"/>
-                <line x1="30" y1="35" x2="70" y2="35"/>
-                <line x1="32" y1="45" x2="68" y2="45"/>
+                <line x1="35" y1="20" x2="35" y2="50" />
+                <line x1="42" y1="15" x2="42" y2="55" />
+                <line x1="50" y1="10" x2="50" y2="60" />
+                <line x1="58" y1="15" x2="58" y2="55" />
+                <line x1="65" y1="20" x2="65" y2="50" />
+
+                <line x1="32" y1="25" x2="68" y2="25" />
+                <line x1="30" y1="35" x2="70" y2="35" />
+                <line x1="32" y1="45" x2="68" y2="45" />
               </g>
             </svg>
           </div>
-          
+
           {/* Animated Shuttlecock */}
           <div className="absolute top-20 right-8 md:top-24 md:right-20 w-12 h-12 md:w-16 md:h-16 opacity-40 animate-bounce">
             <svg viewBox="0 0 60 60" className="w-full h-full">
               <defs>
                 <radialGradient id="shuttlecockGradient" cx="50%" cy="30%" r="60%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.9)"/>
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.3)"/>
+                  <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
+                  <stop offset="100%" stopColor="rgba(255,255,255,0.3)" />
                 </radialGradient>
               </defs>
-              
+
               {/* Shuttlecock Cork */}
-              <circle cx="30" cy="45" r="6" fill="url(#shuttlecockGradient)"/>
-              
+              <circle cx="30" cy="45" r="6" fill="url(#shuttlecockGradient)" />
+
               {/* Feathers */}
               <g fill="rgba(255,255,255,0.6)">
-                <path d="M30 39 L25 15 L30 20 L35 15 Z"/>
-                <path d="M24 40 L15 18 L22 22 L28 20 Z"/>
-                <path d="M36 40 L45 18 L38 22 L32 20 Z"/>
-                <path d="M22 42 L12 25 L20 28 L26 26 Z"/>
-                <path d="M38 42 L48 25 L40 28 L34 26 Z"/>
+                <path d="M30 39 L25 15 L30 20 L35 15 Z" />
+                <path d="M24 40 L15 18 L22 22 L28 20 Z" />
+                <path d="M36 40 L45 18 L38 22 L32 20 Z" />
+                <path d="M22 42 L12 25 L20 28 L26 26 Z" />
+                <path d="M38 42 L48 25 L40 28 L34 26 Z" />
               </g>
             </svg>
           </div>
-          
+
           {/* Trophy with Badminton Theme */}
           <div className="absolute bottom-16 left-8 md:bottom-20 md:left-16 w-14 h-14 md:w-20 md:h-20 opacity-25 animate-pulse">
             <svg viewBox="0 0 80 80" className="w-full h-full">
               <defs>
                 <linearGradient id="trophyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(255,215,0,0.8)"/>
-                  <stop offset="100%" stopColor="rgba(255,165,0,0.6)"/>
+                  <stop offset="0%" stopColor="rgba(255,215,0,0.8)" />
+                  <stop offset="100%" stopColor="rgba(255,165,0,0.6)" />
                 </linearGradient>
               </defs>
-              
+
               {/* Trophy Cup */}
-              <path d="M20 25 Q20 20 25 20 L55 20 Q60 20 60 25 L60 40 Q60 50 50 50 L30 50 Q20 50 20 40 Z" fill="url(#trophyGradient)"/>
-              
+              <path d="M20 25 Q20 20 25 20 L55 20 Q60 20 60 25 L60 40 Q60 50 50 50 L30 50 Q20 50 20 40 Z" fill="url(#trophyGradient)" />
+
               {/* Trophy Handles */}
-              <path d="M15 30 Q10 30 10 35 Q10 40 15 40" fill="none" stroke="url(#trophyGradient)" strokeWidth="3"/>
-              <path d="M65 30 Q70 30 70 35 Q70 40 65 40" fill="none" stroke="url(#trophyGradient)" strokeWidth="3"/>
-              
+              <path d="M15 30 Q10 30 10 35 Q10 40 15 40" fill="none" stroke="url(#trophyGradient)" strokeWidth="3" />
+              <path d="M65 30 Q70 30 70 35 Q70 40 65 40" fill="none" stroke="url(#trophyGradient)" strokeWidth="3" />
+
               {/* Trophy Base */}
-              <rect x="25" y="50" width="30" height="8" fill="url(#trophyGradient)" rx="2"/>
-              <rect x="30" y="58" width="20" height="12" fill="url(#trophyGradient)" rx="2"/>
-              
+              <rect x="25" y="50" width="30" height="8" fill="url(#trophyGradient)" rx="2" />
+              <rect x="30" y="58" width="20" height="12" fill="url(#trophyGradient)" rx="2" />
+
               {/* Mini Racket on Trophy */}
-              <ellipse cx="40" cy="35" rx="8" ry="10" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
-              <line x1="40" y1="45" x2="40" y2="50" stroke="rgba(255,255,255,0.8)" strokeWidth="2"/>
+              <ellipse cx="40" cy="35" rx="8" ry="10" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" />
+              <line x1="40" y1="45" x2="40" y2="50" stroke="rgba(255,255,255,0.8)" strokeWidth="2" />
             </svg>
           </div>
-          
+
           {/* Floating Particles */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-yellow-300/30 rounded-full animate-ping" style={{animationDelay: '0s'}}></div>
-            <div className="absolute top-1/2 right-1/4 w-1 h-1 bg-white/40 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
-            <div className="absolute bottom-1/3 left-1/4 w-1.5 h-1.5 bg-blue-300/30 rounded-full animate-ping" style={{animationDelay: '2s'}}></div>
-            <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-yellow-200/40 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
+            <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-yellow-300/30 rounded-full animate-ping" style={{ animationDelay: '0s' }}></div>
+            <div className="absolute top-1/2 right-1/4 w-1 h-1 bg-white/40 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute bottom-1/3 left-1/4 w-1.5 h-1.5 bg-blue-300/30 rounded-full animate-ping" style={{ animationDelay: '2s' }}></div>
+            <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-yellow-200/40 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
           </div>
-          
+
           {/* Subtle Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-primary-blue/20 via-transparent to-transparent"></div>
         </div>
-        
+
         <div className="relative z-10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
@@ -392,10 +393,10 @@ const About: FC = () => {
                   )}
                 </>
               )}
-              
+
               {/* Statistics */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-                <motion.div 
+                <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -404,8 +405,8 @@ const About: FC = () => {
                   <div className="text-4xl font-bold text-yellow-300 mb-2">120+</div>
                   <div className="text-blue-100">{t('about.stats.participants')}</div>
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -414,8 +415,8 @@ const About: FC = () => {
                   <div className="text-4xl font-bold text-yellow-300 mb-2">1+</div>
                   <div className="text-blue-100">{t('about.stats.experience')}</div>
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -433,10 +434,10 @@ const About: FC = () => {
       {/* Mission Section */}
       <section className="py-24 bg-gradient-to-b from-white via-gray-50/50 to-white relative overflow-hidden">
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-gradient-to-br from-primary-blue/5 via-primary-orange/5 to-transparent blur-3xl rounded-full" />
-        
+
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Mission Title and Text */}
-          <motion.div 
+          <motion.div
             className="mb-24"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -444,7 +445,7 @@ const About: FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="text-center mb-16">
-              <motion.div 
+              <motion.div
                 className="inline-block mb-4"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -460,9 +461,9 @@ const About: FC = () => {
                 {strategyData?.mission?.title || t('about.strategy.mission.title')}
               </h2>
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
-              <motion.div 
+              <motion.div
                 className="relative"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -474,7 +475,7 @@ const About: FC = () => {
                   {strategyData?.mission?.text1 || t('about.strategy.mission.text1')}
                 </p>
               </motion.div>
-              <motion.div 
+              <motion.div
                 className="relative"
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -490,7 +491,7 @@ const About: FC = () => {
           </motion.div>
 
           {/* Current State */}
-          <motion.div 
+          <motion.div
             className="max-w-6xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -505,11 +506,11 @@ const About: FC = () => {
                 {strategyData?.currentState?.intro || t('about.strategy.currentState.intro')}
               </p>
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-x-16 gap-y-8 mb-16">
               {(strategyData?.currentState?.points || (t('about.strategy.currentState.points', { returnObjects: true }) as string[])).map((point: string, i: number) => (
-                <motion.div 
-                  key={i} 
+                <motion.div
+                  key={i}
                   className="flex items-start gap-4 group"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -524,8 +525,8 @@ const About: FC = () => {
                 </motion.div>
               ))}
             </div>
-            
-            <motion.div 
+
+            <motion.div
               className="relative max-w-4xl mx-auto"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -545,9 +546,9 @@ const About: FC = () => {
       {/* Strategic Goals */}
       <section className="py-20 bg-white relative overflow-hidden">
         <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
-        
+
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -585,14 +586,14 @@ const About: FC = () => {
         {/* Background decorative elements */}
         <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-24 w-[36rem] h-[36rem] rounded-full bg-primary-blue/5 blur-3xl" />
-        
+
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <motion.div 
-            className="text-center mb-16" 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }} 
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">
@@ -681,10 +682,10 @@ const About: FC = () => {
           </motion.div> */}
 
           {/* Roadmap Section with Horizontal Scroll */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }} 
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
             <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{roadmapData?.title || t('about.roadmap.title')}</h3>
@@ -704,102 +705,101 @@ const About: FC = () => {
                   <ArrowRight className="w-4 h-4 animate-pulse" />
                 </div>
               )}
-              
+
               {/* Scrollable container with full-width blur effects */}
               <div className="relative">
                 {/* Left blur fade - показывается только при прокрутке */}
                 {isRoadmapScrolled && (
                   <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[rgb(244,245,249)] via-white/60 to-transparent z-10 pointer-events-none transition-opacity duration-300" />
                 )}
-                
+
                 {/* Right blur fade */}
                 <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/90 via-white/60 to-transparent z-10 pointer-events-none" />
-                
+
                 {/* Scrollable content */}
                 {effectiveRoadmap.length > 0 && (
-                <div 
-                  className="roadmap-scroll-container overflow-x-auto pb-4 scrollbar-hide scroll-smooth cursor-grab select-none" 
-                  style={{ scrollBehavior: 'smooth' }}
-                  onScroll={(e) => {
-                    const scrollLeft = e.currentTarget.scrollLeft;
-                    setIsRoadmapScrolled(scrollLeft > 10);
-                  }}
-                  onMouseDown={handleMouseDown}
-                  onMouseLeave={handleMouseLeave}
-                  onMouseUp={handleMouseUp}
-                  onMouseMove={handleMouseMove}
-                >
-                  <div className="flex gap-6 min-w-max pl-8 pr-24">
-                    {effectiveRoadmap.map((r, i) => (
-                      <motion.div 
-                        key={i} 
-                        initial={{ opacity: 0, x: 50 }} 
-                        whileInView={{ opacity: 1, x: 0 }} 
-                        viewport={{ once: true }} 
-                        transition={{ duration: 0.5, delay: i * 0.1 }} 
-                        className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-blue/20 min-w-[320px] max-w-[350px]"
-                        style={{ scrollSnapAlign: 'start' }}
-                      >
-                        <div>
-                          <div className="mb-4 flex items-center justify-between">
-                            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-primary-blue/10 text-primary-blue border border-primary-blue/20">
-                              {r.tag}
-                            </span>
-                            <span className={`px-3 py-1 text-xs font-semibold rounded-full flex items-center gap-1 ${
-                              r.status === 'done' 
-                                ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' 
-                                : r.status === 'progress' 
-                                ? 'bg-amber-100 text-amber-700 border border-amber-200' 
-                                : 'bg-gray-100 text-gray-600 border border-gray-200'
-                            }`}>
-                              {r.status === 'done' ? (
-                                <>
-                                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                                  {t('about.roadmap.done')}
-                                </>
-                              ) : r.status === 'progress' ? (
-                                <>
-                                  <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                                  {t('about.roadmap.inProgress')}
-                                </>
-                              ) : (
-                                <>
-                                  <div className="w-2 h-2 rounded-full bg-gray-400" />
-                                  {t('about.roadmap.planned')}
-                                </>
-                              )}
-                            </span>
+                  <div
+                    className="roadmap-scroll-container overflow-x-auto pb-4 scrollbar-hide scroll-smooth cursor-grab select-none"
+                    style={{ scrollBehavior: 'smooth' }}
+                    onScroll={(e) => {
+                      const scrollLeft = e.currentTarget.scrollLeft;
+                      setIsRoadmapScrolled(scrollLeft > 10);
+                    }}
+                    onMouseDown={handleMouseDown}
+                    onMouseLeave={handleMouseLeave}
+                    onMouseUp={handleMouseUp}
+                    onMouseMove={handleMouseMove}
+                  >
+                    <div className="flex gap-6 min-w-max pl-8 pr-24">
+                      {effectiveRoadmap.map((r, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: 50 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: i * 0.1 }}
+                          className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-blue/20 min-w-[320px] max-w-[350px]"
+                          style={{ scrollSnapAlign: 'start' }}
+                        >
+                          <div>
+                            <div className="mb-4 flex items-center justify-between">
+                              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-primary-blue/10 text-primary-blue border border-primary-blue/20">
+                                {r.tag}
+                              </span>
+                              <span className={`px-3 py-1 text-xs font-semibold rounded-full flex items-center gap-1 ${r.status === 'done'
+                                ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                                : r.status === 'progress'
+                                  ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                                  : 'bg-gray-100 text-gray-600 border border-gray-200'
+                                }`}>
+                                {r.status === 'done' ? (
+                                  <>
+                                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                                    {t('about.roadmap.done')}
+                                  </>
+                                ) : r.status === 'progress' ? (
+                                  <>
+                                    <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                                    {t('about.roadmap.inProgress')}
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="w-2 h-2 rounded-full bg-gray-400" />
+                                    {t('about.roadmap.planned')}
+                                  </>
+                                )}
+                              </span>
+                            </div>
+                            <h4 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-primary-blue transition-colors">
+                              {r.title}
+                            </h4>
+                            {r.points && r.points.length > 0 ? (
+                              <ul className="space-y-2">
+                                {r.points.map((point: string, idx: number) => (
+                                  <li key={idx} className="flex items-start gap-2 text-gray-600 text-sm leading-relaxed">
+                                    <span className="text-primary-blue mt-1">•</span>
+                                    <span>{point}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p className="text-gray-600 leading-relaxed text-sm">
+                                {r.desc}
+                              </p>
+                            )}
                           </div>
-                          <h4 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-primary-blue transition-colors">
-                            {r.title}
-                          </h4>
-                          {r.points && r.points.length > 0 ? (
-                            <ul className="space-y-2">
-                              {r.points.map((point: string, idx: number) => (
-                                <li key={idx} className="flex items-start gap-2 text-gray-600 text-sm leading-relaxed">
-                                  <span className="text-primary-blue mt-1">•</span>
-                                  <span>{point}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          ) : (
-                            <p className="text-gray-600 leading-relaxed text-sm">
-                              {r.desc}
-                            </p>
-                          )}
-                        </div>
-                      </motion.div>
-                    ))}
+                        </motion.div>
+                      ))}
+                    </div>
                   </div>
-                </div>
                 )}
               </div>
-              
+
               {/* Enhanced scroll indicators */}
               {effectiveRoadmap.length > 0 && (
                 <div className="flex justify-center mt-8 gap-3">
                   {effectiveRoadmap.map((_, i) => (
-                    <div 
+                    <div
                       key={i}
                       className="w-3 h-3 rounded-full bg-primary-blue/20 hover:bg-primary-blue/40 transition-colors cursor-pointer"
                       title={`План ${i + 1}: ${effectiveRoadmap[i].title}`}
@@ -808,7 +808,7 @@ const About: FC = () => {
                   ))}
                 </div>
               )}
-              
+
               {/* Additional scroll hint for mobile */}
               <div className="md:hidden flex justify-center mt-4">
                 <div className="flex items-center gap-2 text-xs text-gray-400">
@@ -835,13 +835,13 @@ const About: FC = () => {
         {/* Background decorative elements */}
         <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-24 w-[36rem] h-[36rem] rounded-full bg-primary-blue/5 blur-3xl" />
-        
+
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center mb-16" 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }} 
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">
@@ -852,150 +852,167 @@ const About: FC = () => {
             </p>
           </motion.div>
 
-          {/* Founder Section */}
-          {cmsData?.teamSection?.founder && (
-            <motion.div 
-              className="mb-20" 
-              initial={{ opacity: 0, y: 30 }} 
-              whileInView={{ opacity: 1, y: 0 }} 
-              viewport={{ once: true }} 
+          {/* Leaders Section (Founder, President, Manager, etc.) */}
+          {(cmsData?.teamSection?.founder || (cmsData?.teamSection?.leaders && cmsData.teamSection.leaders.length > 0)) && (
+            <motion.div
+              className="mb-20"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
               <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.founder')}</h3>
-              
-              <div className="bg-white rounded-2xl p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-                  {/* Photo Section */}
-                  <div className="lg:col-span-1 text-center">
-                    {cmsData?.teamSection?.founder?.photo ? (
-                      <img 
-                        src={cmsData.teamSection.founder.photo} 
-                        alt={cmsData.teamSection.founder.name}
-                        className="w-64 h-64 mx-auto rounded-2xl object-cover mb-4"
-                      />
-                    ) : (
-                      <div className="w-64 h-64 mx-auto rounded-2xl bg-gradient-to-br from-primary-blue to-indigo-600 flex items-center justify-center mb-4">
-                        <Users className="w-32 h-32 text-white" />
-                      </div>
-                    )}
-                    <span className="inline-block bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm font-medium">
-                      {cmsData?.teamSection?.founder?.achievements?.[0]}
-                    </span>
-                  </div>
-                  
-                  {/* Content Section */}
-                  <div className="lg:col-span-2 text-center lg:text-left">
-                    {cmsData?.teamSection?.founder?.name && (
-                      <h4 className="text-3xl font-bold text-gray-900 mb-2">
-                        {cmsData.teamSection.founder.name}
-                      </h4>
-                    )}
-                    {cmsData?.teamSection?.founder?.role && (
-                      <p className="text-lg text-primary-blue font-medium mb-6">
-                        {cmsData.teamSection.founder.role}
-                      </p>
-                    )}
-                    
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
-                      {cmsData?.teamSection?.founder?.stats && cmsData.teamSection.founder.stats.map((stat, index) => (
-                        <span key={index} className="bg-primary-blue/10 text-primary-blue px-3 py-1 rounded-full text-sm">
-                          {stat.value}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    {cmsData?.teamSection?.founder?.description && (
-                      <div className="space-y-4 text-gray-900 leading-relaxed">
-                        <div className="prose max-w-none prose-p:text-gray-900">
-                          {cmsData.teamSection.founder.description.map((block: any, index: number) => (
-                            <p key={index}>{block.children?.[0]?.text || ''}</p>
+
+              <div className="grid grid-cols-1 gap-12">
+                {[...(cmsData?.teamSection?.founder ? [cmsData.teamSection.founder] : []), ...(cmsData?.teamSection?.leaders || [])].map((leader: any, idx: number) => (
+                  <div key={idx} className="bg-gradient-to-br from-white to-gray-50/50 rounded-3xl p-8 border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-500">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+                      {/* Photo Section */}
+                      <div className="lg:col-span-1 text-center relative group">
+                        <div className="relative inline-block">
+                          <div className="absolute inset-0 bg-primary-blue/20 rounded-2xl blur-2xl group-hover:bg-primary-blue/30 transition-all duration-500 opacity-0 group-hover:opacity-100" />
+                          {leader.photo ? (
+                            <img
+                              src={leader.photo}
+                              alt={leader.name}
+                              className="w-full max-w-[320px] aspect-square mx-auto rounded-2xl object-cover mb-4 relative z-10 shadow-lg ring-1 ring-black/5"
+                            />
+                          ) : (
+                            <div className="w-64 h-64 mx-auto rounded-2xl bg-gradient-to-br from-primary-blue via-indigo-600 to-indigo-800 flex items-center justify-center mb-4 relative z-10 shadow-lg">
+                              <Users className="w-32 h-32 text-white/50" />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-wrap justify-center gap-2 mt-4">
+                          {leader.achievements?.slice(0, 3).map((ach: string, i: number) => (
+                            <span key={i} className="inline-block bg-primary-blue/5 text-primary-blue px-3 py-1 rounded-full text-xs font-semibold border border-primary-blue/10 backdrop-blur-sm">
+                              {ach}
+                            </span>
                           ))}
                         </div>
-                        {cmsData?.teamSection?.founder?.quote && (
-                          <blockquote className="italic text-gray-700 border-l-3 border-primary-blue pl-4">
-                            "{cmsData.teamSection.founder.quote}"
-                          </blockquote>
-                        )}
                       </div>
-                    )}
+
+                      {/* Content Section */}
+                      <div className="lg:col-span-2 text-center lg:text-left">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-primary-yellow/10 to-primary-orange/10 border border-primary-orange/20 mb-4">
+                          <Trophy className="w-4 h-4 text-primary-orange" />
+                          <span className="text-xs font-bold text-primary-orange uppercase tracking-wider">{leader.role}</span>
+                        </div>
+
+                        <h4 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-2 font-display">
+                          {leader.name}
+                        </h4>
+
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8">
+                          {leader.stats?.map((stat: any, index: number) => (
+                            <div key={index} className="flex flex-col">
+                              <span className="text-2xl font-bold text-primary-blue">{stat.value}</span>
+                              <span className="text-xs text-gray-500 uppercase font-medium">{stat.label}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="space-y-6 text-gray-700 leading-relaxed text-lg">
+                          <div className="prose max-w-none prose-p:text-gray-700">
+                            {Array.isArray(leader.description) ? leader.description.map((block: any, index: number) => (
+                              <p key={index} className="mb-4 last:mb-0">
+                                {block.children?.map((child: any) => child.text).join('') || ''}
+                              </p>
+                            )) : (
+                              <p>{leader.description || ''}</p>
+                            )}
+                          </div>
+
+                          {leader.quote && (
+                            <div className="relative py-4">
+                              <div className="absolute left-0 top-0 w-8 h-1 bg-primary-blue/20 rounded-full" />
+                              <blockquote className="italic text-gray-900 text-xl font-medium leading-relaxed pl-4 border-l-4 border-primary-blue/30">
+                                "{leader.quote}"
+                              </blockquote>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             </motion.div>
           )}
 
           {/* Coaches Section */}
           {cmsData?.teamSection?.coaches && (
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }} 
-            transition={{ duration: 0.8 }}
-          >
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.coaches')}</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(cmsData?.teamSection?.coaches || []).map((coach: any, index: number) => (
-                <motion.div
-                  key={index}
-                  className="bg-white rounded-2xl p-6 group hover:bg-gray-50 transition-all duration-300"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  {/* Photo */}
-                  {coach.photo ? (
-                    <img 
-                      src={coach.photo} 
-                      alt={coach.name}
-                      className="w-48 h-48 mx-auto rounded-full object-cover mb-4 ring-4 ring-primary-blue/10"
-                    />
-                  ) : (
-                    <div className="w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mb-4 ring-4 ring-primary-blue/10">
-                      <Users className="w-20 h-20 text-white" />
-                    </div>
-                  )}
-                  
-                  {/* Content */}
-                  <div className="text-center">
-                    <h4 className="text-2xl font-bold text-gray-900 mb-2">{coach.name}</h4>
-                    <p className="text-primary-blue font-semibold mb-4 text-base">{coach.role}</p>
-                    
-                    <div className="flex flex-wrap justify-center gap-2 mb-4">
-                      {coach.experience && (
-                        <span className="bg-primary-blue/10 text-primary-blue px-3 py-1.5 rounded-full text-sm font-medium">
-                          {coach.experience}
-                        </span>
-                      )}
-                      {coach.specialization && (
-                        <span className="bg-primary-blue/10 text-primary-blue px-3 py-1.5 rounded-full text-sm font-medium">
-                          {coach.specialization}
-                        </span>
-                      )}
-                    </div>
-                    
-                    {coach.achievements && coach.achievements.length > 0 && (
-                      <div className="space-y-2 mb-4">
-                        {coach.achievements.map((achievement: string, idx: number) => (
-                          <span key={idx} className="block text-sm text-gray-700 bg-blue-50 px-3 py-2 rounded-lg font-medium">
-                            {achievement}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.coaches')}</h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {(cmsData?.teamSection?.coaches || []).map((coach: any, index: number) => (
+                  <motion.div
+                    key={index}
+                    className="bg-white rounded-2xl p-6 group hover:bg-gray-50 transition-all duration-300"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                  >
+                    {/* Photo */}
+                    {coach.photo ? (
+                      <img
+                        src={coach.photo}
+                        alt={coach.name}
+                        className="w-48 h-48 mx-auto rounded-full object-cover mb-4 ring-4 ring-primary-blue/10"
+                      />
+                    ) : (
+                      <div className="w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mb-4 ring-4 ring-primary-blue/10">
+                        <Users className="w-20 h-20 text-white" />
+                      </div>
+                    )}
+
+                    {/* Content */}
+                    <div className="text-center">
+                      <h4 className="text-2xl font-bold text-gray-900 mb-2">{coach.name}</h4>
+                      <p className="text-primary-blue font-semibold mb-4 text-base">{coach.role}</p>
+
+                      <div className="flex flex-wrap justify-center gap-2 mb-4">
+                        {coach.experience && (
+                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                            {coach.experience}
                           </span>
-                        ))}
+                        )}
+                        {coach.specialization && (
+                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                            {coach.specialization}
+                          </span>
+                        )}
                       </div>
-                    )}
-                    
-                    {coach.description && (
-                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 mt-4 border border-blue-100">
-                        <div className="text-sm text-gray-800 leading-relaxed space-y-2 whitespace-pre-line">
-                          {coach.description}
+
+                      {coach.achievements && coach.achievements.length > 0 && (
+                        <div className="space-y-2 mb-4">
+                          {coach.achievements.map((achievement: string, idx: number) => (
+                            <span key={idx} className="block text-sm text-gray-700 bg-blue-50 px-3 py-2 rounded-lg font-medium">
+                              {achievement}
+                            </span>
+                          ))}
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                      )}
+
+                      {coach.description && (
+                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 mt-4 border border-blue-100">
+                          <div className="text-sm text-gray-800 leading-relaxed space-y-2 whitespace-pre-line">
+                            {coach.description}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
           )}
         </div>
@@ -1004,9 +1021,9 @@ const About: FC = () => {
       {/* Expected Results Section */}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary-orange/5 blur-3xl rounded-full" />
-        
+
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div 
+          <motion.div
             className="bg-gradient-to-br from-primary-orange/10 to-primary-blue/10 rounded-3xl p-8 md:p-12"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

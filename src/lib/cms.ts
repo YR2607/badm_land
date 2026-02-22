@@ -33,7 +33,7 @@ export async function fetchGallerySections(): Promise<Record<string, string[]>> 
 export type CmsContactInfo = {
   title?: string;
   description?: string;
-  contacts: Array<{ type: 'phone'|'email'|'address'|'social'; label: string; value: string; icon?: string }>;
+  contacts: Array<{ type: 'phone' | 'email' | 'address' | 'social'; label: string; value: string; icon?: string }>;
 };
 
 export async function fetchContactInfo(): Promise<CmsContactInfo | null> {
@@ -198,7 +198,7 @@ export type CmsPost = {
 
 export async function fetchPosts(): Promise<CmsPost[]> {
   const cacheKey = 'posts';
-  
+
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
     const cached = cmsCache.get<CmsPost[]>(cacheKey);
@@ -222,14 +222,14 @@ export async function fetchPosts(): Promise<CmsPost[]> {
         featured
       }
     `);
-    
+
     const result = posts || [];
-    
+
     // Кэшируем только в production с коротким TTL для динамического контента
     if (process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, result, 2 * 60 * 1000); // 2 minutes
     }
-    
+
     return result;
   } catch (error) {
     // silence console in dev to keep clean
@@ -239,7 +239,7 @@ export async function fetchPosts(): Promise<CmsPost[]> {
 
 export async function fetchPostBySlug(slug: string): Promise<CmsPost | null> {
   const cacheKey = `post-${slug}`;
-  
+
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
     const cached = cmsCache.get<CmsPost>(cacheKey);
@@ -280,12 +280,12 @@ export async function fetchPostBySlug(slug: string): Promise<CmsPost | null> {
         }
       }
     `, { slug });
-    
+
     // Кэшируем только в production
     if (post && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, post);
     }
-    
+
     return post;
   } catch (error) {
     // silence console in dev
@@ -304,7 +304,7 @@ export type CmsPage = {
 
 export async function fetchPageBySlug(slug: string): Promise<CmsPage | null> {
   const cacheKey = `page-${slug}`;
-  
+
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
     const cached = cmsCache.get<CmsPage>(cacheKey);
@@ -314,7 +314,7 @@ export async function fetchPageBySlug(slug: string): Promise<CmsPage | null> {
   }
 
   if (!client) return null;
-  
+
   try {
     const query = groq`*[_type == "page" && slug.current == $slug][0]{
       "slug": slug.current,
@@ -325,12 +325,12 @@ export async function fetchPageBySlug(slug: string): Promise<CmsPage | null> {
       sections[]{ heading, body }
     }`;
     const page = await client.fetch(query, { slug });
-    
+
     // Кэшируем только в production
     if (page && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, page);
     }
-    
+
     return page || null;
   } catch (error) {
     // silence console in dev
@@ -403,7 +403,7 @@ export const applyCmsDevMarkers = <T>(data: T): T => {
 
 export const fetchHomePage = async (lang: string = 'ru'): Promise<CmsHomePage | null> => {
   const cacheKey = `homePage-${lang}`;
-  
+
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
     const cached = cmsCache.get<CmsHomePage>(cacheKey);
@@ -473,12 +473,12 @@ export const fetchHomePage = async (lang: string = 'ru'): Promise<CmsHomePage | 
         }
       }
     `, { lang });
-    
+
     // Кэшируем только в production
     if (data && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, data);
     }
-    
+
     return applyCmsDevMarkers(data);
   } catch (error) {
     // silence console in dev
@@ -507,6 +507,17 @@ export type CmsTrainer = {
   photo?: string;
 };
 
+export type CmsMember = {
+  name: string;
+  role: string;
+  experience?: string;
+  achievements?: string[];
+  description?: any[];
+  quote?: string;
+  stats?: Array<{ label: string; value: string }>;
+  photo?: string;
+};
+
 export type CmsAboutPage = {
   title: string;
   hero: {
@@ -519,6 +530,7 @@ export type CmsAboutPage = {
     title: string;
     subtitle: string;
     founder?: CmsFounder;
+    leaders?: CmsMember[];
     coaches?: CmsTrainer[];
   };
   statsSection?: {
@@ -565,7 +577,7 @@ export type CmsAboutPage = {
 
 export const fetchAboutPage = async (lang: string = 'ru'): Promise<CmsAboutPage | null> => {
   const cacheKey = `aboutPage-${lang}`;
-  
+
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
     const cached = cmsCache.get<CmsAboutPage>(cacheKey);
@@ -594,6 +606,19 @@ export const fetchAboutPage = async (lang: string = 'ru'): Promise<CmsAboutPage 
           title,
           subtitle,
           founder-> {
+            "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
+            "role": select($lang=="en" && defined(role_en)=>role_en, $lang=="ro" && defined(role_ro)=>role_ro, role),
+            experience,
+            "achievements": select($lang=="en" && defined(achievements_en)=>achievements_en, $lang=="ro" && defined(achievements_ro)=>achievements_ro, achievements),
+            "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
+            "quote": select($lang=="en" && defined(quote_en)=>quote_en, $lang=="ro" && defined(quote_ro)=>quote_ro, quote),
+            stats[] {
+              "label": select($lang=="en" && defined(label_en)=>label_en, $lang=="ro" && defined(label_ro)=>label_ro, label),
+              value
+            },
+            "photo": photo.asset->url
+          },
+          leaders[]-> {
             "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
             "role": select($lang=="en" && defined(role_en)=>role_en, $lang=="ro" && defined(role_ro)=>role_ro, role),
             experience,
@@ -653,7 +678,7 @@ export const fetchAboutPage = async (lang: string = 'ru'): Promise<CmsAboutPage 
         }
       }
     `, { lang });
-    
+
     // Кэшируем только в production
     if (data && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, data);
@@ -699,7 +724,7 @@ export interface CmsServicesPage {
 
 export const fetchServicesPage = async (lang: string = 'ru'): Promise<CmsServicesPage | null> => {
   const cacheKey = `servicesPage-${lang}`;
-  
+
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
     const cached = cmsCache.get<CmsServicesPage>(cacheKey);
@@ -733,12 +758,12 @@ export const fetchServicesPage = async (lang: string = 'ru'): Promise<CmsService
         }
       }
     `, { lang });
-    
+
     // Кэшируем только в production
     if (data && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, data);
     }
-    
+
     return data;
   } catch (error) {
     // silence console in dev
@@ -797,7 +822,7 @@ export type CmsGym = {
 
 export const fetchGyms = async (lang: string = 'ru'): Promise<CmsGym[]> => {
   const cacheKey = `gyms-${lang}`;
-  
+
   // В development режиме принудительно очищаем кэш для получения свежих данных
   if (process.env.NODE_ENV === 'development') {
     cmsCache.delete(cacheKey);
@@ -809,7 +834,7 @@ export const fetchGyms = async (lang: string = 'ru'): Promise<CmsGym[]> => {
   }
 
   if (!client) return [];
-  
+
   try {
     const query = groq`*[_type == "gym"] | order(_createdAt asc) {
       "id": _id,
@@ -861,12 +886,12 @@ export const fetchGyms = async (lang: string = 'ru'): Promise<CmsGym[]> => {
     }`;
     const gyms = await client.fetch(query, { lang });
     const result = applyCmsDevMarkers(gyms || []);
-    
+
     // Кэшируем только в production
     if (process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, result);
     }
-    
+
     return result;
   } catch (error) {
     // silence console in dev
@@ -876,7 +901,7 @@ export const fetchGyms = async (lang: string = 'ru'): Promise<CmsGym[]> => {
 
 export const fetchGymBySlug = async (slug: string, lang: string = 'ru'): Promise<CmsGym | null> => {
   const cacheKey = `gym-${slug}-${lang}`;
-  
+
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
     const cached = cmsCache.get<CmsGym>(cacheKey);
@@ -886,7 +911,7 @@ export const fetchGymBySlug = async (slug: string, lang: string = 'ru'): Promise
   }
 
   if (!client) return null;
-  
+
   try {
     const query = groq`*[_type == "gym" && slug.current == $slug][0] {
       "id": _id,
@@ -937,12 +962,12 @@ export const fetchGymBySlug = async (slug: string, lang: string = 'ru'): Promise
       }
     }`;
     const gym = await client.fetch(query, { slug, lang });
-    
+
     // Кэшируем только в production
     if (gym && process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, gym);
     }
-    
+
     return gym;
   } catch (error) {
     // silence console in dev
@@ -999,7 +1024,7 @@ export async function fetchFounder(lang: string = 'ru'): Promise<CmsFounder | nu
 
 export async function fetchClubEmbeds(): Promise<any[]> {
   const cacheKey = 'clubEmbeds';
-  
+
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
     const cached = cmsCache.get<any[]>(cacheKey);
@@ -1009,7 +1034,7 @@ export async function fetchClubEmbeds(): Promise<any[]> {
   }
 
   if (!client) return [];
-  
+
   try {
     const query = groq`*[_type == "clubEmbed"] | order(publishedAt desc) {
       title, 
@@ -1022,12 +1047,12 @@ export async function fetchClubEmbeds(): Promise<any[]> {
     }`;
     const embeds = await client.fetch(query);
     const result = applyCmsDevMarkers(embeds || []);
-    
+
     // Кэшируем только в production
     if (process.env.NODE_ENV !== 'development') {
       cmsCache.set(cacheKey, result);
     }
-    
+
     return result;
   } catch (error) {
     // silence console in dev
