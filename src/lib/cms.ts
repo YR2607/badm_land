@@ -1022,6 +1022,30 @@ export async function fetchFounder(lang: string = 'ru'): Promise<CmsFounder | nu
   }
 }
 
+export async function fetchAllFounders(lang: string = 'ru'): Promise<CmsFounder[]> {
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "founder"] | order(_createdAt asc) {
+        "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
+        "role": select($lang=="en" && defined(role_en)=>role_en, $lang=="ro" && defined(role_ro)=>role_ro, role),
+        experience,
+        "achievements": select($lang=="en" && defined(achievements_en)=>achievements_en, $lang=="ro" && defined(achievements_ro)=>achievements_ro, achievements),
+        "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
+        "quote": select($lang=="en" && defined(quote_en)=>quote_en, $lang=="ro" && defined(quote_ro)=>quote_ro, quote),
+        stats[]{
+          "label": select($lang=="en" && defined(label_en)=>label_en, $lang=="ro" && defined(label_ro)=>label_ro, label),
+          value
+        },
+        "photo": photo.asset->url
+      }`,
+      { lang }
+    );
+    return data || [];
+  } catch {
+    return [];
+  }
+}
+
 export async function fetchClubEmbeds(): Promise<any[]> {
   const cacheKey = 'clubEmbeds';
 

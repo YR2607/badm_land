@@ -2,7 +2,7 @@ import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight } from 'lucide-react';
-import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchTrainers, fetchAboutTabs, fetchAboutStrategy, type CmsAboutStrategy, fetchAboutRoadmap, type CmsAboutRoadmap } from '../lib/cms';
+import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchAllFounders, fetchTrainers, fetchAboutTabs, fetchAboutStrategy, type CmsAboutStrategy, fetchAboutRoadmap, type CmsAboutRoadmap } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -24,12 +24,14 @@ const About: FC = () => {
   useEffect(() => {
     const loadCmsData = async () => {
       try {
-        const [data, hero, tabs, strategy, roadmap] = await Promise.all([
+        const [data, hero, tabs, strategy, roadmap, allFounders, allCoaches] = await Promise.all([
           fetchAboutPage(i18n.language as string),
           fetchAboutHero(i18n.language as string),
           fetchAboutTabs(i18n.language as string),
           fetchAboutStrategy(i18n.language as string),
-          fetchAboutRoadmap(i18n.language as string)
+          fetchAboutRoadmap(i18n.language as string),
+          fetchAllFounders(i18n.language as string),
+          fetchTrainers(i18n.language as string)
         ]);
         if (data) {
           let normalized: CmsAboutPage = {
@@ -37,23 +39,23 @@ const About: FC = () => {
             tabsSection: tabs || data.tabsSection
           } as CmsAboutPage;
 
-          if (!data.teamSection || (!data.teamSection.founder && (!data.teamSection.leaders || data.teamSection.leaders.length === 0) && (!data.teamSection.coaches || data.teamSection.coaches.length === 0))) {
-            const [founder, coaches] = await Promise.all([
-              fetchFounder(i18n.language as string),
-              fetchTrainers(i18n.language as string)
-            ]);
+          // Always use allFounders as leaders source, merge with any leaders from aboutPage
+          const cmsLeaders = data.teamSection?.leaders || [];
+          const mergedLeaders = [...allFounders, ...cmsLeaders];
+          const coaches = (data.teamSection?.coaches && data.teamSection.coaches.length > 0)
+            ? data.teamSection.coaches
+            : (allCoaches && allCoaches.length > 0) ? allCoaches : undefined;
 
-            normalized = {
-              ...normalized,
-              teamSection: {
-                title: data.teamSection?.title || '',
-                subtitle: data.teamSection?.subtitle || '',
-                founder: founder || undefined,
-                leaders: data.teamSection?.leaders || undefined,
-                coaches: (coaches && coaches.length > 0) ? coaches : undefined,
-              },
-            } as CmsAboutPage;
-          }
+          normalized = {
+            ...normalized,
+            teamSection: {
+              title: data.teamSection?.title || '',
+              subtitle: data.teamSection?.subtitle || '',
+              founder: undefined,
+              leaders: mergedLeaders.length > 0 ? mergedLeaders : undefined,
+              coaches: coaches,
+            },
+          } as CmsAboutPage;
 
           setCmsData(addCmsDevMarkers(normalized));
         }
@@ -852,8 +854,7 @@ const About: FC = () => {
             </p>
           </motion.div>
 
-          {/* Leaders Section (Founder, President, Manager, etc.) */}
-          {(cmsData?.teamSection?.founder || (cmsData?.teamSection?.leaders && cmsData.teamSection.leaders.length > 0)) && (
+          {(cmsData?.teamSection?.leaders && cmsData.teamSection.leaders.length > 0) && (
             <motion.div
               className="mb-20"
               initial={{ opacity: 0, y: 30 }}
@@ -864,7 +865,7 @@ const About: FC = () => {
               <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.founder')}</h3>
 
               <div className="grid grid-cols-1 gap-12">
-                {[...(cmsData?.teamSection?.founder ? [cmsData.teamSection.founder] : []), ...(cmsData?.teamSection?.leaders || [])].map((leader: any, idx: number) => (
+                {cmsData.teamSection.leaders.map((leader: any, idx: number) => (
                   <div key={idx} className="bg-gradient-to-br from-white to-gray-50/50 rounded-3xl p-8 border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-500">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
                       {/* Photo Section */}
