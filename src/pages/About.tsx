@@ -196,7 +196,7 @@ const About: FC = () => {
         ]}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 bg-gradient-to-br from-primary-blue via-primary-blue/95 to-indigo-700">
+      <section className="relative overflow-hidden py-24 bg-zenith-black">
         {/* Enhanced Badminton Court Background */}
         <div className="absolute inset-0">
           {/* Dynamic Court with Lighting Effects */}
@@ -397,15 +397,15 @@ const About: FC = () => {
               )}
 
               {/* Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10">
                 <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                  <div className="text-4xl font-bold text-yellow-300 mb-2">120+</div>
-                  <div className="text-blue-100">{t('about.stats.participants')}</div>
+                  <div className="text-5xl md:text-6xl font-extrabold font-display text-zenith-crimson mb-2 tracking-tighter">120+</div>
+                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.participants')}</div>
                 </motion.div>
 
                 <motion.div
@@ -414,8 +414,8 @@ const About: FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                  <div className="text-4xl font-bold text-yellow-300 mb-2">1+</div>
-                  <div className="text-blue-100">{t('about.stats.experience')}</div>
+                  <div className="text-5xl md:text-6xl font-extrabold font-display text-zenith-crimson mb-2 tracking-tighter">1+</div>
+                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.experience')}</div>
                 </motion.div>
 
                 <motion.div
@@ -424,8 +424,8 @@ const About: FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
-                  <div className="text-4xl font-bold text-yellow-300 mb-2">15+</div>
-                  <div className="text-blue-100">{t('about.stats.tournaments')}</div>
+                  <div className="text-5xl md:text-6xl font-extrabold font-display text-zenith-crimson mb-2 tracking-tighter">15+</div>
+                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.tournaments')}</div>
                 </motion.div>
               </div>
             </div>
@@ -434,8 +434,8 @@ const About: FC = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-24 bg-gradient-to-b from-white via-gray-50/50 to-white relative overflow-hidden">
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-gradient-to-br from-primary-blue/5 via-primary-orange/5 to-transparent blur-3xl rounded-full" />
+      <section className="py-24 bg-zenith-white relative overflow-hidden">
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-zenith-crimson/5 blur-3xl rounded-full" />
 
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Mission Title and Text */}
@@ -454,38 +454,38 @@ const About: FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-blue/10 text-primary-blue">
+                <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-bold">
                   <Trophy className="w-4 h-4" />
-                  <span className="text-sm font-semibold">Наша миссия</span>
+                  <span>Наша миссия</span>
                 </div>
               </motion.div>
-              <h2 className="text-4xl md:text-6xl font-bold font-display text-gray-900 mb-6">
+              <h2 className="text-5xl md:text-7xl font-black font-display text-zenith-black uppercase tracking-tighter mb-6">
                 {strategyData?.mission?.title || t('about.strategy.mission.title')}
               </h2>
             </div>
 
             <div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
               <motion.div
-                className="relative"
+                className="relative bg-white p-8 rounded-3xl shadow-lg border border-gray-100"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-primary-blue to-primary-orange rounded-full" />
-                <p className="text-xl text-gray-700 leading-relaxed pl-8">
+                <div className="absolute -left-1 top-10 w-2 h-1/2 bg-zenith-crimson rounded-full" />
+                <p className="text-xl text-gray-700 leading-relaxed font-medium">
                   {strategyData?.mission?.text1 || t('about.strategy.mission.text1')}
                 </p>
               </motion.div>
               <motion.div
-                className="relative"
+                className="relative bg-white p-8 rounded-3xl shadow-lg border border-gray-100"
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-primary-orange to-primary-blue rounded-full" />
-                <p className="text-xl text-gray-700 leading-relaxed pl-8">
+                <div className="absolute -left-1 top-10 w-2 h-1/2 bg-zenith-black rounded-full" />
+                <p className="text-xl text-gray-700 leading-relaxed font-medium">
                   {strategyData?.mission?.text2 || t('about.strategy.mission.text2')}
                 </p>
               </motion.div>
@@ -501,10 +501,10 @@ const About: FC = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <div className="text-center mb-12">
-              <h3 className="text-3xl md:text-5xl font-bold font-display text-gray-900 mb-6">
+              <h3 className="text-4xl md:text-5xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter">
                 {strategyData?.currentState?.title || t('about.strategy.currentState.title')}
               </h3>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-medium">
                 {strategyData?.currentState?.intro || t('about.strategy.currentState.intro')}
               </p>
             </div>
@@ -519,25 +519,22 @@ const About: FC = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
                 >
-                  <div className="relative mt-1.5">
-                    <div className="w-3 h-3 bg-gradient-to-br from-primary-blue to-primary-orange rounded-full group-hover:scale-125 transition-transform duration-300" />
-                    <div className="absolute inset-0 w-3 h-3 bg-gradient-to-br from-primary-blue to-primary-orange rounded-full animate-ping opacity-20" />
+                  <div className="relative mt-1.5 shrink-0 flex items-center justify-center">
+                    <div className="w-3 h-3 bg-zenith-crimson rounded-none rotate-45 group-hover:scale-125 transition-transform duration-300" />
                   </div>
-                  <span className="text-lg text-gray-700 leading-relaxed">{point}</span>
+                  <span className="text-lg text-gray-800 font-medium leading-relaxed">{point}</span>
                 </motion.div>
               ))}
             </div>
 
             <motion.div
-              className="relative max-w-4xl mx-auto"
+              className="relative max-w-4xl mx-auto bg-zenith-black p-8 rounded-3xl"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-0.5 bg-gradient-to-r from-primary-blue to-transparent" />
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-0.5 bg-gradient-to-l from-primary-orange to-transparent" />
-              <p className="text-xl text-gray-600 leading-relaxed text-center px-16 italic">
+              <p className="text-xl text-white leading-relaxed text-center px-4 font-bold uppercase tracking-wide">
                 {strategyData?.currentState?.conclusion || t('about.strategy.currentState.conclusion')}
               </p>
             </motion.div>
@@ -546,35 +543,33 @@ const About: FC = () => {
       </section>
 
       {/* Strategic Goals */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
-
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-zenith-white relative overflow-hidden">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-5xl font-bold font-display text-gray-900 mb-12 text-center">
+            <h2 className="text-4xl md:text-6xl font-black font-display text-zenith-black mb-16 text-center uppercase tracking-tighter">
               {strategyData?.goals?.title || t('about.strategy.goals.title')}
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(strategyData?.goals?.items || (t('about.strategy.goals.items', { returnObjects: true }) as string[])).map((goal: string, i: number) => (
                 <motion.div
                   key={i}
-                  className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-blue/30"
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-200"
+                  initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
-                  whileHover={{ y: -4 }}
+                  whileHover={{ y: -8 }}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-primary-blue to-primary-orange rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0">
-                      {i + 1}
+                  <div className="flex flex-col gap-6">
+                    <div className="text-6xl font-black font-display text-zenith-crimson opacity-20 leading-none">
+                      {String(i + 1).padStart(2, '0')}
                     </div>
-                    <p className="text-gray-700 leading-relaxed">{goal}</p>
+                    <p className="text-gray-900 leading-relaxed font-bold text-lg">{goal}</p>
                   </div>
                 </motion.div>
               ))}
@@ -740,52 +735,50 @@ const About: FC = () => {
                           whileInView={{ opacity: 1, x: 0 }}
                           viewport={{ once: true }}
                           transition={{ duration: 0.5, delay: i * 0.1 }}
-                          className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-blue/20 min-w-[320px] max-w-[350px]"
+                          className="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-200 min-w-[320px] max-w-[350px] flex flex-col"
                           style={{ scrollSnapAlign: 'start' }}
                         >
-                          <div>
-                            <div className="mb-4 flex items-center justify-between">
-                              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-primary-blue/10 text-primary-blue border border-primary-blue/20">
+                          <div className="flex-1">
+                            <div className="mb-6 flex items-center justify-between">
+                              <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest rounded-full bg-zenith-black text-white">
                                 {r.tag}
                               </span>
-                              <span className={`px-3 py-1 text-xs font-semibold rounded-full flex items-center gap-1 ${r.status === 'done'
-                                ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                              <span className={`px-4 py-1 text-xs font-bold uppercase tracking-widest rounded-full flex items-center gap-2 border ${r.status === 'done'
+                                ? 'bg-zenith-white text-gray-900 border-gray-200'
                                 : r.status === 'progress'
-                                  ? 'bg-amber-100 text-amber-700 border border-amber-200'
-                                  : 'bg-gray-100 text-gray-600 border border-gray-200'
+                                  ? 'bg-zenith-crimson/10 text-zenith-crimson border-zenith-crimson/20'
+                                  : 'bg-zenith-white text-gray-400 border-gray-100'
                                 }`}>
                                 {r.status === 'done' ? (
                                   <>
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
                                     {t('about.roadmap.done')}
                                   </>
                                 ) : r.status === 'progress' ? (
                                   <>
-                                    <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                                    <div className="w-1.5 h-1.5 rounded-full bg-zenith-crimson animate-pulse" />
                                     {t('about.roadmap.inProgress')}
                                   </>
                                 ) : (
                                   <>
-                                    <div className="w-2 h-2 rounded-full bg-gray-400" />
                                     {t('about.roadmap.planned')}
                                   </>
                                 )}
                               </span>
                             </div>
-                            <h4 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-primary-blue transition-colors">
+                            <h4 className="text-xl font-black font-display text-zenith-black mb-4 group-hover:text-zenith-crimson transition-colors uppercase tracking-tight">
                               {r.title}
                             </h4>
                             {r.points && r.points.length > 0 ? (
-                              <ul className="space-y-2">
+                              <ul className="space-y-3">
                                 {r.points.map((point: string, idx: number) => (
-                                  <li key={idx} className="flex items-start gap-2 text-gray-600 text-sm leading-relaxed">
-                                    <span className="text-primary-blue mt-1">•</span>
+                                  <li key={idx} className="flex items-start gap-3 text-gray-700 font-medium">
+                                    <span className="text-zenith-crimson mt-1 text-lg leading-none">•</span>
                                     <span>{point}</span>
                                   </li>
                                 ))}
                               </ul>
                             ) : (
-                              <p className="text-gray-600 leading-relaxed text-sm">
+                              <p className="text-gray-600 leading-relaxed font-medium">
                                 {r.desc}
                               </p>
                             )}
@@ -833,12 +826,9 @@ const About: FC = () => {
       </section>
 
       {/* Our Team Section */}
-      <section className="py-20 bg-white relative overflow-hidden">
+      <section className="py-20 bg-zenith-white relative overflow-hidden">
         {/* Background decorative elements */}
-        <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -left-24 w-[36rem] h-[36rem] rounded-full bg-primary-blue/5 blur-3xl" />
-
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
@@ -846,10 +836,10 @@ const About: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold font-display text-gray-900 mb-4">
+            <h2 className="text-5xl md:text-7xl font-black font-display text-zenith-black mb-4 uppercase tracking-tighter">
               {t('about.team.title')}
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
               {t('about.team.subtitle')}
             </p>
           </motion.div>
@@ -862,32 +852,34 @@ const About: FC = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.founder')}</h3>
+              <h3 className="text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter">{t('about.team.founder')}</h3>
 
               <div className="grid grid-cols-1 gap-12">
                 {cmsData.teamSection.leaders.map((leader: any, idx: number) => (
-                  <div key={idx} className="bg-gradient-to-br from-white to-gray-50/50 rounded-3xl p-8 border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+                  <div key={idx} className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-gray-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.1)] transition-all duration-500 overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-zenith-crimson/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
                       {/* Photo Section */}
-                      <div className="lg:col-span-1 text-center relative group">
-                        <div className="relative inline-block">
-                          <div className="absolute inset-0 bg-primary-blue/20 rounded-2xl blur-2xl group-hover:bg-primary-blue/30 transition-all duration-500 opacity-0 group-hover:opacity-100" />
+                      <div className="lg:col-span-5 text-center relative group">
+                        <div className="relative inline-block w-full">
+                          <div className="absolute inset-0 bg-zenith-black rounded-3xl blur-2xl group-hover:bg-zenith-crimson transition-all duration-500 opacity-20 group-hover:opacity-30" />
                           {leader.photo ? (
                             <img
                               src={leader.photo}
                               alt={leader.name}
-                              className="w-full max-w-[320px] aspect-square mx-auto rounded-2xl object-cover mb-4 relative z-10 shadow-lg ring-1 ring-black/5"
+                              className="w-full max-w-[400px] aspect-[4/5] mx-auto rounded-3xl object-cover mb-6 relative z-10 shadow-lg ring-1 ring-black/5"
                             />
                           ) : (
-                            <div className="w-64 h-64 mx-auto rounded-2xl bg-gradient-to-br from-primary-blue via-indigo-600 to-indigo-800 flex items-center justify-center mb-4 relative z-10 shadow-lg">
-                              <Users className="w-32 h-32 text-white/50" />
+                            <div className="w-full max-w-[400px] aspect-[4/5] mx-auto rounded-3xl bg-zenith-black flex items-center justify-center mb-6 relative z-10 shadow-lg">
+                              <Users className="w-32 h-32 text-white/20" />
                             </div>
                           )}
                         </div>
 
                         <div className="flex flex-wrap justify-center gap-2 mt-4">
                           {leader.achievements?.slice(0, 3).map((ach: string, i: number) => (
-                            <span key={i} className="inline-block bg-primary-blue/5 text-primary-blue px-3 py-1 rounded-full text-xs font-semibold border border-primary-blue/10 backdrop-blur-sm">
+                            <span key={i} className="inline-block bg-zenith-crimson text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-md">
                               {ach}
                             </span>
                           ))}
@@ -895,27 +887,27 @@ const About: FC = () => {
                       </div>
 
                       {/* Content Section */}
-                      <div className="lg:col-span-2 text-center lg:text-left">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-primary-yellow/10 to-primary-orange/10 border border-primary-orange/20 mb-4">
-                          <Trophy className="w-4 h-4 text-primary-orange" />
-                          <span className="text-xs font-bold text-primary-orange uppercase tracking-wider">{leader.role}</span>
+                      <div className="lg:col-span-7 text-center lg:text-left">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 mb-6">
+                          <Trophy className="w-4 h-4 text-zenith-crimson" />
+                          <span className="text-xs font-bold text-zenith-crimson uppercase tracking-widest">{leader.role}</span>
                         </div>
 
-                        <h4 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-2 font-display">
+                        <h4 className="text-5xl lg:text-7xl font-black text-zenith-black mb-6 font-display uppercase tracking-tighter leading-[0.9]">
                           {leader.name}
                         </h4>
 
-                        <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8">
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-8 mb-10 pb-10 border-b border-gray-100">
                           {leader.stats?.map((stat: any, index: number) => (
-                            <div key={index} className="flex flex-col">
-                              <span className="text-2xl font-bold text-primary-blue">{stat.value}</span>
-                              <span className="text-xs text-gray-500 uppercase font-medium">{stat.label}</span>
+                            <div key={index} className="flex flex-col items-center lg:items-start group">
+                              <span className="text-4xl font-black text-zenith-black group-hover:text-zenith-crimson transition-colors">{stat.value}</span>
+                              <span className="text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">{stat.label}</span>
                             </div>
                           ))}
                         </div>
 
                         <div className="space-y-6 text-gray-700 leading-relaxed text-lg">
-                          <div className="prose max-w-none prose-p:text-gray-700">
+                          <div className="prose max-w-none prose-p:text-gray-700 font-medium">
                             {Array.isArray(leader.description) ? leader.description.map((block: any, index: number) => (
                               <p key={index} className="mb-4 last:mb-0">
                                 {block.children?.map((child: any) => child.text).join('') || ''}
@@ -926,9 +918,9 @@ const About: FC = () => {
                           </div>
 
                           {leader.quote && (
-                            <div className="relative py-4">
-                              <div className="absolute left-0 top-0 w-8 h-1 bg-primary-blue/20 rounded-full" />
-                              <blockquote className="italic text-gray-900 text-xl font-medium leading-relaxed pl-4 border-l-4 border-primary-blue/30">
+                            <div className="relative pt-6">
+                              <div className="absolute left-0 top-0 w-12 h-1 bg-zenith-crimson" />
+                              <blockquote className="italic text-zenith-black text-2xl font-bold leading-relaxed">
                                 "{leader.quote}"
                               </blockquote>
                             </div>
@@ -950,62 +942,65 @@ const About: FC = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.team.coaches')}</h3>
+              <h3 className="text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter">{t('about.team.coaches')}</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {(cmsData?.teamSection?.coaches || []).map((coach: any, index: number) => (
                   <motion.div
                     key={index}
-                    className="bg-white rounded-2xl p-6 group hover:bg-gray-50 transition-all duration-300"
+                    className="bg-white rounded-[2rem] p-8 group hover:shadow-[0_20px_40px_-10px_rgba(220,38,38,0.1)] transition-all duration-300 border border-gray-100 relative overflow-hidden"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-crimson/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-zenith-crimson/10 transition-colors" />
+
                     {/* Photo */}
                     {coach.photo ? (
                       <img
                         src={coach.photo}
                         alt={coach.name}
-                        className="w-48 h-48 mx-auto rounded-full object-cover mb-4 ring-4 ring-primary-blue/10"
+                        className="w-48 h-48 mx-auto rounded-[2rem] object-cover mb-8 relative z-10 shadow-lg ring-1 ring-black/5 group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
-                      <div className="w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mb-4 ring-4 ring-primary-blue/10">
-                        <Users className="w-20 h-20 text-white" />
+                      <div className="w-48 h-48 mx-auto rounded-[2rem] bg-zenith-black flex items-center justify-center mb-8 relative z-10 shadow-lg group-hover:scale-105 transition-transform duration-500">
+                        <Users className="w-20 h-20 text-white/20" />
                       </div>
                     )}
 
                     {/* Content */}
-                    <div className="text-center">
-                      <h4 className="text-2xl font-bold text-gray-900 mb-2">{coach.name}</h4>
-                      <p className="text-primary-blue font-semibold mb-4 text-base">{coach.role}</p>
+                    <div className="text-center relative z-10">
+                      <h4 className="text-2xl font-black font-display text-zenith-black mb-2 uppercase tracking-tight">{coach.name}</h4>
+                      <p className="text-zenith-crimson font-bold mb-6 text-sm uppercase tracking-widest">{coach.role}</p>
 
-                      <div className="flex flex-wrap justify-center gap-2 mb-4">
+                      <div className="flex flex-wrap justify-center gap-2 mb-6">
                         {coach.experience && (
-                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                          <span className="bg-zenith-black text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
                             {coach.experience}
                           </span>
                         )}
                         {coach.specialization && (
-                          <span className="bg-primary-blue/10 text-primary-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                          <span className="bg-white border border-gray-200 text-gray-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
                             {coach.specialization}
                           </span>
                         )}
                       </div>
 
                       {coach.achievements && coach.achievements.length > 0 && (
-                        <div className="space-y-2 mb-4">
+                        <div className="space-y-2 mb-6 text-left">
                           {coach.achievements.map((achievement: string, idx: number) => (
-                            <span key={idx} className="block text-sm text-gray-700 bg-blue-50 px-3 py-2 rounded-lg font-medium">
-                              {achievement}
+                            <span key={idx} className="flex items-start gap-2 text-sm text-gray-700 font-medium leading-relaxed">
+                              <span className="text-zenith-crimson mt-0.5">•</span>
+                              <span>{achievement}</span>
                             </span>
                           ))}
                         </div>
                       )}
 
                       {coach.description && (
-                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 mt-4 border border-blue-100">
-                          <div className="text-sm text-gray-800 leading-relaxed space-y-2 whitespace-pre-line">
+                        <div className="bg-gray-50 rounded-2xl p-5 mt-4 border border-gray-100 text-left">
+                          <div className="text-sm text-gray-700 leading-relaxed font-medium whitespace-pre-line">
                             {coach.description}
                           </div>
                         </div>
@@ -1020,32 +1015,36 @@ const About: FC = () => {
       </section>
 
       {/* Expected Results Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary-orange/5 blur-3xl rounded-full" />
+      <section className="py-24 bg-zenith-white relative overflow-hidden">
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-zenith-crimson/5 blur-3xl rounded-full" />
 
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            className="bg-gradient-to-br from-primary-orange/10 to-primary-blue/10 rounded-3xl p-8 md:p-12"
+            className="bg-zenith-black rounded-[3rem] p-10 md:p-16 relative overflow-hidden shadow-2xl"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-5xl font-bold font-display text-gray-900 mb-8 text-center">
-              {strategyData?.results?.title || t('about.strategy.results.title')}
-            </h2>
-            <div className="grid md:grid-cols-2 gap-4 mb-8">
-              {(strategyData?.results?.points || (t('about.strategy.results.points', { returnObjects: true }) as string[])).map((point: string, i: number) => (
-                <div key={i} className="flex items-start gap-3 bg-white/50 rounded-xl p-4">
-                  <Trophy className="w-5 h-5 text-primary-orange flex-shrink-0 mt-1" />
-                  <span className="text-gray-700 font-medium">{point}</span>
-                </div>
-              ))}
-            </div>
-            <div className="text-center">
-              <p className="text-xl font-semibold text-gray-900 italic">
-                {strategyData?.results?.closing || t('about.strategy.closing')}
-              </p>
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-zenith-crimson/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+
+            <div className="relative z-10">
+              <h2 className="text-4xl md:text-6xl font-black font-display text-white mb-12 text-center uppercase tracking-tighter">
+                {strategyData?.results?.title || t('about.strategy.results.title')}
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6 mb-12">
+                {(strategyData?.results?.points || (t('about.strategy.results.points', { returnObjects: true }) as string[])).map((point: string, i: number) => (
+                  <div key={i} className="flex items-start gap-4 bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-zenith-crimson/30 transition-colors">
+                    <Trophy className="w-6 h-6 text-zenith-crimson flex-shrink-0 mt-0.5" />
+                    <span className="text-white font-medium text-lg leading-relaxed">{point}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="text-center relative pt-8 mt-12 border-t border-white/10">
+                <p className="text-2xl md:text-3xl font-bold font-display text-zenith-crimson uppercase tracking-wide">
+                  {strategyData?.results?.closing || t('about.strategy.closing')}
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
