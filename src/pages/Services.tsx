@@ -63,19 +63,21 @@ const Services: FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-zenith-white">
       <SEO
         title="Услуги - Тренировки по бадминтону | Altius"
         description="Групповые и индивидуальные тренировки по бадминтону в Кишиневе. Программы для детей и взрослых, подготовка к соревнованиям. Цены от 200 MDL/месяц."
         keywords="тренировки бадминтон, групповые занятия, индивидуальные тренировки, цены бадминтон, Кишинев"
         image="https://altius.md/og-services.jpg"
       />
-      <Breadcrumbs
-        items={[
-          { label: t('navigation.home'), path: '/' },
-          { label: t('navigation.services') }
-        ]}
-      />
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 relative z-20">
+        <Breadcrumbs
+          items={[
+            { label: t('navigation.home'), path: '/' },
+            { label: t('navigation.services') }
+          ]}
+        />
+      </div>
       {/* HERO SECTION */}
       <section className="relative overflow-hidden py-24 bg-zenith-black">
         {/* Enhanced Badminton Court Background */}
@@ -295,13 +297,13 @@ const Services: FC = () => {
               )}
 
               {heroData?.title && (
-                <h1 className="text-6xl md:text-[6rem] lg:text-[8rem] font-black font-display text-white mb-8 uppercase tracking-tighter leading-[0.85] drop-shadow-2xl">
+                <h1 className="text-6xl md:text-[6.5rem] lg:text-[10rem] font-black font-display text-white mb-8 uppercase tracking-tighter leading-[0.8] drop-shadow-[0_10px_30px_rgba(220,38,38,0.3)]">
                   {heroData.title}
                 </h1>
               )}
 
               {heroData?.subtitle && (
-                <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-300 font-medium leading-relaxed mb-16">
+                <p className="text-xl md:text-3xl max-w-4xl mx-auto text-gray-400 font-medium leading-tight mb-16 uppercase tracking-tight">
                   {heroData.subtitle}
                 </p>
               )}
@@ -385,7 +387,7 @@ const Services: FC = () => {
 
       {/* FAQ SECTION */}
       <motion.section
-        className="py-24 bg-zenith-white relative overflow-hidden"
+        className="py-32 bg-zenith-white relative overflow-hidden"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
@@ -393,41 +395,42 @@ const Services: FC = () => {
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            className="text-center mb-16"
+            className="text-center mb-24"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="text-5xl md:text-7xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter">{t('services.faq.title')}</h2>
-            <p className="text-xl text-gray-600 font-medium">{t('services.faq.subtitle')}</p>
+            <h2 className="text-6xl md:text-8xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter leading-none">{t('services.faq.title')}</h2>
+            <div className="w-24 h-2 bg-zenith-crimson mx-auto mb-8 rounded-full" />
+            <p className="text-xl text-gray-500 font-bold uppercase tracking-widest">{t('services.faq.subtitle')}</p>
           </motion.div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {faqs.map((f, idx) => (
               <motion.div
                 key={idx}
-                className={`border rounded-2xl overflow-hidden transition-all duration-300 ${openFaq === idx ? 'bg-white shadow-xl border-zenith-crimson/20' : 'bg-white/50 border-gray-100 hover:border-gray-300'}`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                className={`rounded-[2rem] overflow-hidden transition-all duration-500 border-2 ${openFaq === idx ? 'bg-white shadow-2xl border-zenith-crimson/20 -translate-y-1' : 'bg-white border-gray-100 hover:border-zenith-crimson/20'}`}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full px-8 py-6 text-left flex justify-between items-center transition-colors"
+                  className="w-full px-10 py-8 text-left flex justify-between items-center transition-colors"
                 >
-                  <span className={`font-bold text-lg transition-colors ${openFaq === idx ? 'text-zenith-crimson' : 'text-zenith-black'}`}>{f.q}</span>
-                  <div className={`flex-shrink-0 ml-4 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${openFaq === idx ? 'bg-zenith-crimson/10 text-zenith-crimson' : 'bg-gray-100 text-gray-400'}`}>
-                    <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${openFaq === idx ? 'rotate-180' : ''}`} />
+                  <span className={`font-black text-xl uppercase tracking-tight transition-colors ${openFaq === idx ? 'text-zenith-crimson' : 'text-zenith-black'}`}>{f.q}</span>
+                  <div className={`flex-shrink-0 ml-4 w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${openFaq === idx ? 'bg-zenith-crimson text-white rotate-180 shadow-lg shadow-zenith-crimson/20' : 'bg-gray-50 text-zenith-black'}`}>
+                    <ChevronDown className={`w-6 h-6`} />
                   </div>
                 </button>
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${openFaq === idx ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${openFaq === idx ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
                 >
-                  <div className="px-8 pb-6 pt-2">
-                    <div className="h-px w-full bg-gray-100 mb-6" />
-                    <p className="text-gray-600 leading-relaxed font-medium">{f.a}</p>
+                  <div className="px-10 pb-10 pt-2">
+                    <div className="h-px w-20 bg-zenith-crimson/20 mb-8" />
+                    <p className="text-lg text-gray-600 leading-relaxed font-medium">{f.a}</p>
                   </div>
                 </div>
               </motion.div>
