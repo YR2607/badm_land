@@ -1,6 +1,7 @@
 import { FC, useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
+import { ArrowRight } from 'lucide-react'
 
 type Platform = 'tiktok' | 'youtube' | 'facebook'
 
@@ -29,19 +30,19 @@ const SOCIAL_CONFIG = {
 // Platform icons
 const TikTokIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
+    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
   </svg>
 )
 
 const YouTubeIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+    <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
   </svg>
 )
 
 const FacebookIcon: FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
   </svg>
 )
 
@@ -54,10 +55,8 @@ const TikTokEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
     if (!isActive) return
 
     const loadTikTokEmbed = () => {
-      // Check if script already exists
       const existingScript = document.querySelector('script[src="https://www.tiktok.com/embed.js"]')
       if (existingScript) {
-        // Re-render embeds
         if ((window as any).tiktokEmbed?.lib?.render) {
           (window as any).tiktokEmbed.lib.render()
         }
@@ -82,46 +81,38 @@ const TikTokEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
 
   return (
     <div className="h-full">
-      {/* TikTok Card with real embed */}
-      <div className="h-full flex flex-col">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-black rounded-t-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500 p-0.5">
-              <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
-                <TikTokIcon className="w-8 h-8 text-white" />
-              </div>
+      <div className="h-full flex flex-col group">
+        <div className="bg-zenith-black rounded-t-[2.5rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-colors duration-500 group-hover:bg-black">
+          <div className="flex items-center gap-6">
+            <div className="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+              <TikTokIcon className="w-10 h-10 text-white" />
             </div>
             <div className="text-center md:text-left">
-              <h3 className="text-xl font-bold text-white">Badminton Moldova</h3>
-              <p className="text-gray-400 text-sm">{SOCIAL_CONFIG.tiktok.handle}</p>
+              <h3 className="text-2xl font-black text-white uppercase tracking-tight">Badminton Moldova</h3>
+              <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">{SOCIAL_CONFIG.tiktok.handle}</p>
             </div>
           </div>
-          
+
           <a
             href={SOCIAL_CONFIG.tiktok.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white rounded-full font-bold hover:scale-105 transition-all shadow-lg"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-white text-zenith-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-zenith-crimson hover:text-white transition-all shadow-xl hover:shadow-zenith-crimson/20"
           >
             <TikTokIcon className="w-5 h-5" />
-            Смотреть на TikTok
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-            </svg>
+            TikTok
+            <ArrowRight size={16} />
           </a>
         </div>
 
-        {/* TikTok Embed */}
-        <div ref={containerRef} className="bg-white rounded-b-3xl shadow-2xl p-6 flex-1 flex flex-col justify-center">
+        <div ref={containerRef} className="bg-white rounded-b-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] p-8 flex-1 flex flex-col justify-center border-x border-b border-gray-100">
           {loading && (
             <div className="flex flex-col items-center justify-center gap-4 py-12">
-              <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-gray-500">Загрузка TikTok...</p>
+              <div className="w-12 h-12 border-4 border-zenith-black/5 border-t-zenith-crimson rounded-full animate-spin" />
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Loading Feed</p>
             </div>
           )}
-          
-          {/* TikTok Creator Profile Embed - full width */}
+
           <blockquote
             className="tiktok-embed w-full"
             cite={SOCIAL_CONFIG.tiktok.url}
@@ -149,31 +140,26 @@ interface YouTubeVideo {
   publishedAt: string
 }
 
-// YouTube Embed Component - shows real videos from API
 const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null)
+  const { t, i18n } = useTranslation()
 
   useEffect(() => {
     if (!isActive) return
 
     const fetchVideos = async () => {
       try {
-        // Try API first (production)
         let response = await fetch('/api/youtube-videos')
-        
-        // Fallback to static JSON (development)
         if (!response.ok) {
           response = await fetch('/data/youtube_videos.json')
         }
-        
         if (response.ok) {
           const data = await response.json()
           setVideos(data.videos || [])
         }
       } catch (error) {
-        // Final fallback - try static JSON
         try {
           const fallbackResponse = await fetch('/data/youtube_videos.json')
           if (fallbackResponse.ok) {
@@ -195,27 +181,26 @@ const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr)
-    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })
+    return date.toLocaleDateString(i18n.language === 'ru' ? 'ru-RU' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' })
   }
 
   return (
-    <div className="flex flex-col items-center gap-8">
-      {/* Video Modal */}
+    <div className="flex flex-col items-center gap-8 group">
       {selectedVideo && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-zenith-black/95 backdrop-blur-xl p-4"
           onClick={() => setSelectedVideo(null)}
         >
-          <div 
-            className="relative w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl"
+          <div
+            className="relative w-full max-w-6xl aspect-video bg-black rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(220,38,38,0.3)] border border-white/10"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setSelectedVideo(null)}
-              className="absolute -top-12 right-0 text-white hover:text-red-400 transition-colors"
+              className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-zenith-crimson transition-colors z-10"
             >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
             <iframe
@@ -230,103 +215,78 @@ const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
         </div>
       )}
 
-      {/* YouTube Channel Card */}
       <div className="w-full">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-red-600 via-red-700 to-red-800 rounded-t-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-white p-1.5 shadow-xl">
-              <div className="w-full h-full rounded-full bg-red-600 flex items-center justify-center">
-                <YouTubeIcon className="w-8 h-8 text-white" />
-              </div>
+        <div className="bg-zenith-black rounded-t-[3rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8 group-hover:bg-black transition-colors duration-500">
+          <div className="flex items-center gap-6">
+            <div className="w-20 h-20 rounded-[2rem] bg-white text-zenith-black flex items-center justify-center shadow-xl group-hover:rotate-6 transition-transform">
+              <YouTubeIcon className="w-10 h-10" />
             </div>
             <div className="text-center md:text-left">
-              <h3 className="text-xl font-bold text-white">Badminton 4 Life</h3>
-              <p className="text-red-200 text-sm">{SOCIAL_CONFIG.youtube.handle}</p>
+              <h3 className="text-3xl font-black text-white uppercase tracking-tight">Badminton 4 Life</h3>
+              <p className="text-gray-500 text-sm font-black uppercase tracking-widest">{SOCIAL_CONFIG.youtube.handle}</p>
             </div>
           </div>
-          
+
           <a
             href={SOCIAL_CONFIG.youtube.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-red-600 rounded-full font-bold hover:scale-105 transition-all shadow-lg"
+            className="inline-flex items-center gap-3 px-10 py-5 bg-zenith-crimson text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:scale-105 transition-all shadow-[0_20px_40px_rgba(220,38,38,0.3)]"
           >
             <YouTubeIcon className="w-5 h-5" />
-            Подписаться
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-            </svg>
+            SUBSCRIBE
           </a>
         </div>
 
-        {/* Videos Grid */}
-        <div className="bg-white rounded-b-3xl shadow-2xl p-8">
+        <div className="bg-white rounded-b-[3rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] p-10 border-x border-b border-gray-100">
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
+            <div className="flex items-center justify-center py-24">
+              <div className="w-16 h-16 border-4 border-gray-100 border-t-zenith-crimson rounded-full animate-spin" />
             </div>
           ) : videos.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {videos.map((video) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                {videos.slice(0, 3).map((video) => (
                   <button
                     key={video.id}
                     onClick={() => setSelectedVideo(video)}
-                    className="group relative aspect-video rounded-xl overflow-hidden bg-gray-100 hover:scale-[1.02] transition-all shadow-md hover:shadow-xl text-left"
+                    className="group/video relative aspect-video rounded-[2rem] overflow-hidden bg-gray-100 hover:scale-[1.05] transition-all duration-500 shadow-xl hover:shadow-2xl text-left"
                   >
                     <img
                       src={video.thumbnail}
                       alt={video.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover/video:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-lg">
-                        <svg className="w-7 h-7 text-white ml-1" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M8 5v14l11-7z"/>
+                    <div className="absolute inset-0 bg-gradient-to-t from-zenith-black/90 via-zenith-black/20 to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/video:opacity-100 transition-opacity">
+                      <div className="w-20 h-20 rounded-full bg-zenith-crimson text-white flex items-center justify-center shadow-2xl scale-0 group-hover/video:scale-100 transition-transform duration-500">
+                        <svg className="w-10 h-10 ml-1" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
                         </svg>
                       </div>
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <div className="text-white text-sm font-medium line-clamp-2">{video.title}</div>
-                      <div className="text-white/60 text-xs mt-1">{formatDate(video.publishedAt)}</div>
+                    <div className="absolute bottom-0 left-0 right-0 p-8">
+                      <div className="text-white text-lg font-black uppercase tracking-tight line-clamp-2 leading-[1.1] mb-2">{video.title}</div>
+                      <div className="text-white/40 text-[10px] font-black uppercase tracking-widest">{formatDate(video.publishedAt)}</div>
                     </div>
                   </button>
                 ))}
               </div>
-              
-              {/* View all videos button */}
-              <div className="mt-8 text-center">
+
+              <div className="mt-12 text-center">
                 <a
                   href={SOCIAL_CONFIG.youtube.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-red-600 text-white rounded-full font-bold text-lg hover:bg-red-700 transition-all hover:scale-105 shadow-lg"
+                  className="inline-flex items-center gap-4 px-12 py-6 bg-zenith-black text-white rounded-2xl font-black uppercase tracking-[0.3em] text-xs hover:bg-zenith-crimson transition-all hover:scale-105 shadow-2xl"
                 >
-                  <YouTubeIcon className="w-6 h-6" />
-                  Смотреть все видео на канале
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-                  </svg>
+                  {t('home.worldNews.viewAll')}
+                  <ArrowRight size={18} />
                 </a>
               </div>
             </>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">Не удалось загрузить видео</p>
-              <a
-                href={SOCIAL_CONFIG.youtube.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-medium"
-              >
-                Смотреть на YouTube
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-                </svg>
-              </a>
-            </div>
+            <div className="text-center py-20 uppercase tracking-widest font-black text-gray-300">No Content Found</div>
           )}
         </div>
       </div>
@@ -334,7 +294,6 @@ const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
   )
 }
 
-// Facebook Embed Component - wide beautiful card with embed
 const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [sdkLoaded, setSdkLoaded] = useState(false)
@@ -342,7 +301,6 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
   useEffect(() => {
     if (!isActive) return
 
-    // Load Facebook SDK
     const loadFacebookSDK = () => {
       if ((window as any).FB) {
         (window as any).FB.XFBML.parse(containerRef.current)
@@ -350,9 +308,7 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
         return
       }
 
-      if (document.getElementById('facebook-jssdk')) {
-        return
-      }
+      if (document.getElementById('facebook-jssdk')) return
 
       const script = document.createElement('script')
       script.id = 'facebook-jssdk'
@@ -377,53 +333,45 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
 
   return (
     <div className="h-full">
-      {/* Facebook Page Card */}
-      <div className="h-full flex flex-col">
-        {/* Header with page info */}
-        <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 rounded-t-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-white p-1.5 shadow-xl">
-              <div className="w-full h-full rounded-full bg-blue-600 flex items-center justify-center">
-                <FacebookIcon className="w-8 h-8 text-white" />
-              </div>
+      <div className="h-full flex flex-col group">
+        <div className="bg-zenith-black rounded-t-[2.5rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-colors duration-500 group-hover:bg-black">
+          <div className="flex items-center gap-6">
+            <div className="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+              <FacebookIcon className="w-10 h-10 text-white" />
             </div>
             <div className="text-center md:text-left">
-              <h3 className="text-xl font-bold text-white">Altius Badminton Club</h3>
-              <p className="text-blue-200 text-sm">Новости, турниры и жизнь клуба</p>
+              <h3 className="text-2xl font-black text-white uppercase tracking-tight">Altius Badminton Club</h3>
+              <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">News & Community</p>
             </div>
           </div>
-          
+
           <a
             href={SOCIAL_CONFIG.facebook.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-blue-600 rounded-full font-bold hover:scale-105 transition-all shadow-lg"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-white text-zenith-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-zenith-crimson hover:text-white transition-all shadow-xl hover:shadow-zenith-crimson/20"
           >
             <FacebookIcon className="w-5 h-5" />
-            Подписаться
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-            </svg>
+            Facebook
+            <ArrowRight size={16} />
           </a>
         </div>
-        
-        {/* Facebook embed */}
-        <div ref={containerRef} className="bg-white rounded-b-3xl shadow-2xl overflow-hidden flex-1 flex flex-col justify-center">
+
+        <div ref={containerRef} className="bg-white rounded-b-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] overflow-hidden flex-1 flex flex-col justify-center border-x border-b border-gray-100">
           {!sdkLoaded && (
             <div className="flex flex-col items-center justify-center gap-4 p-12">
-              <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-              <p className="text-gray-500">Загрузка постов...</p>
+              <div className="w-12 h-12 border-4 border-zenith-black/5 border-t-zenith-crimson rounded-full animate-spin" />
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Loading Posts</p>
             </div>
           )}
-          
-          {/* Facebook Page Plugin - responsive */}
+
           <div className="w-full p-4 flex justify-center">
             <div
               className="fb-page w-full max-w-full"
               data-href={SOCIAL_CONFIG.facebook.url}
               data-tabs="timeline"
               data-width=""
-              data-height="600"
+              data-height="650"
               data-small-header="true"
               data-adapt-container-width="true"
               data-hide-cover="false"
@@ -440,13 +388,11 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
   )
 }
 
-// Main SocialMediaHub Component - TikTok + Facebook side by side, YouTube below
 const SocialMediaHubLive: FC = () => {
   const { t } = useTranslation()
   const sectionRef = useRef<HTMLElement>(null)
   const [isVisible, setIsVisible] = useState(false)
 
-  // Intersection observer for lazy loading
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -466,81 +412,64 @@ const SocialMediaHubLive: FC = () => {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
+    <section ref={sectionRef} className="py-24 md:py-32 bg-zenith-white overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-blue/10 rounded-full mb-4"
-          >
+        <motion.div
+          className="mb-24 relative text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+        >
+          <div className="inline-flex items-center gap-3 px-6 py-2 bg-zenith-black text-white rounded-full mb-8 font-black uppercase tracking-[0.3em] text-[10px] border border-white/10">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zenith-crimson opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-zenith-crimson"></span>
             </span>
-            <span className="text-sm font-semibold text-primary-blue">
-              {t('socialHub.badge', 'Мы в соцсетях')}
-            </span>
-          </motion.div>
+            <span>{t('socialHub.badge', 'Мы в соцсетях')}</span>
+          </div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-          >
+          <h2 className="text-4xl md:text-6xl lg:text-[8rem] font-black font-display text-zenith-black mb-8 uppercase tracking-tighter leading-[0.9]">
             {t('socialHub.title', 'Live: Altius в соцсетях')}
-          </motion.h2>
+          </h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-gray-600 text-lg max-w-2xl mx-auto"
-          >
+          <div className="w-32 h-2 bg-zenith-crimson mx-auto mb-8 rounded-full" />
+
+          <p className="text-gray-400 text-xl md:text-2xl max-w-3xl mx-auto font-bold uppercase tracking-tight">
             {t('socialHub.subtitle', 'Следите за нашими тренировками, турнирами и новостями клуба')}
-          </motion.p>
-        </div>
+          </p>
+        </motion.div>
 
         {isVisible && (
-          <>
-            {/* Facebook + TikTok side by side */}
+          <div className="space-y-16">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="flex flex-col lg:flex-row gap-6 mb-10"
+              transition={{ duration: 0.8 }}
+              className="flex flex-col lg:flex-row gap-10"
             >
-              {/* Facebook - responsive width */}
-              <div className="w-full lg:w-[540px] lg:flex-shrink-0">
+              <div className="w-full lg:w-[500px] xl:w-[600px] lg:flex-shrink-0">
                 <FacebookEmbed isActive={true} />
               </div>
-              
-              {/* TikTok - takes remaining space */}
               <div className="w-full lg:flex-1">
                 <TikTokEmbed isActive={true} />
               </div>
             </motion.div>
 
-            {/* YouTube below - full width */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
               <YouTubeEmbed isActive={true} />
             </motion.div>
-          </>
+          </div>
         )}
       </div>
     </section>
   )
 }
 
-export default SocialMediaHubLive
+export default SocialMediaHubLive;
