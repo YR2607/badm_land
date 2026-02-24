@@ -1,7 +1,8 @@
 import { type FC, useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
-import { Image as ImageIcon, Video as VideoIcon, ChevronDown, X } from 'lucide-react';
+import { Image as ImageIcon, Video as VideoIcon, ChevronDown, X, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
@@ -18,10 +19,10 @@ const Gallery: FC = () => {
   const sections = getSections(t);
   const [overlayCatId, setOverlayCatId] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string>('hall');
-  const [lightbox, setLightbox] = useState<{ items: { type: 'image'|'video'; src: string; alt?: string }[]; index: number } | null>(null);
+  const [lightbox, setLightbox] = useState<{ items: { type: 'image' | 'video'; src: string; alt?: string }[]; index: number } | null>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const [tabByCat, setTabByCat] = useState<Record<string, 'photo'|'video'>>({});
+  const [tabByCat, setTabByCat] = useState<Record<string, 'photo' | 'video'>>({});
   const [filters, setFilters] = useState<{ q: string; year: number | 'all'; tags: string[] }>({ q: '', year: 'all', tags: [] });
   const [visibleByCat, setVisibleByCat] = useState<Record<string, number>>({});
 
@@ -42,7 +43,7 @@ const Gallery: FC = () => {
       const markedSections = addCmsDevMarkers(sec || {});
       const markedCats = addCmsDevMarkers(cats || []);
       setSectionImages({ hall: markedSections.hall || [] });
-      const gradients = ['from-blue-500 to-blue-600','from-yellow-500 to-orange-500','from-purple-500 to-indigo-500','from-green-500 to-teal-500','from-orange-500 to-red-500'];
+      const gradients = ['from-blue-500 to-blue-600', 'from-yellow-500 to-orange-500', 'from-purple-500 to-indigo-500', 'from-green-500 to-teal-500', 'from-orange-500 to-red-500'];
       setCategories((markedCats || []).map((c, idx) => ({ ...c, gradient: gradients[idx % gradients.length] })));
       setLoading(false);
     };
@@ -50,7 +51,7 @@ const Gallery: FC = () => {
   }, []);
 
   useEffect(() => {
-    const init: Record<string, 'photo'|'video'> = {};
+    const init: Record<string, 'photo' | 'video'> = {};
     categories.forEach(c => { init[c.id] = 'photo'; });
     setTabByCat(init);
   }, [categories]);
@@ -64,7 +65,7 @@ const Gallery: FC = () => {
     return () => observerRef.current?.disconnect();
   }, []);
 
-  const openLightbox = (items: { type: 'image'|'video'; src: string; alt?: string }[], index: number) => {
+  const openLightbox = (items: { type: 'image' | 'video'; src: string; alt?: string }[], index: number) => {
     // Capture current scroll container and position before opening
     if (overlayCatId && overlayScrollRef.current) {
       lightboxScrollRestoreRef.current = { el: overlayScrollRef.current, top: overlayScrollRef.current.scrollTop };
@@ -83,7 +84,7 @@ const Gallery: FC = () => {
       } else {
         try {
           (saved.el as HTMLElement).scrollTop = saved.top;
-        } catch {}
+        } catch { }
       }
     }
   };
@@ -137,15 +138,15 @@ const Gallery: FC = () => {
     return () => window.removeEventListener('keydown', onKey);
   }, [lightbox]);
 
-  const pillClasses = (id: string) => `px-4 py-2 rounded-full text-sm font-medium transition-all border ${activeSection === id ? 'bg-primary-blue text-white border-primary-blue shadow-sm' : 'bg-white text-gray-700 border-gray-200 hover:border-primary-blue/40 hover:bg-primary-blue/5'}`;
-  const Empty = ({ text }: { text: string }) => (<div className="text-center text-gray-500 py-8">{text}</div>);
+  const pillClasses = (id: string) => `px-8 py-3 rounded-2xl text-[10px] uppercase font-black tracking-[0.2em] transition-all border-2 ${activeSection === id ? 'bg-zenith-black text-white border-zenith-black shadow-xl shadow-zenith-black/20' : 'bg-white text-gray-400 border-gray-100 hover:border-zenith-crimson hover:text-zenith-crimson'}`;
+  const Empty = ({ text }: { text: string }) => (<div className="text-center font-bold uppercase tracking-widest text-gray-400 py-20">{text}</div>);
 
   const SkeletonCard = () => (
-    <div className="relative rounded-2xl overflow-hidden bg-white border border-gray-200 animate-pulse">
-      <div className="h-28 bg-gray-100" />
-      <div className="p-4">
-        <div className="h-4 w-2/3 bg-gray-200 rounded mb-2" />
-        <div className="h-3 w-1/2 bg-gray-100 rounded" />
+    <div className="relative rounded-[2rem] overflow-hidden bg-white border border-gray-100 animate-pulse">
+      <div className="h-48 bg-gray-50" />
+      <div className="p-6">
+        <div className="h-5 w-2/3 bg-gray-100 rounded-lg mb-3" />
+        <div className="h-4 w-1/2 bg-gray-50 rounded-lg" />
       </div>
     </div>
   )
@@ -175,72 +176,84 @@ const Gallery: FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <SEO 
+    <div className="min-h-screen bg-zenith-white">
+      <SEO
         title={`Altius — ${t('navigation.gallery')}`}
         description={t('gallery.subtitle')}
         image="https://altius.md/og-gallery.jpg"
       />
-      <Breadcrumbs
-        items={[
-          { label: t('navigation.home'), path: '/' },
-          { label: t('navigation.gallery') }
-        ]}
-      />
+
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <Breadcrumbs
+          items={[
+            { label: t('navigation.home'), path: '/' },
+            { label: t('navigation.gallery') }
+          ]}
+        />
+      </div>
+
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center mb-16">
-          <h1 className="section-title">{t('gallery.title')}</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">{t('gallery.subtitle')}</p>
+        <div className="text-center mb-24">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-6xl md:text-9xl font-black font-display uppercase tracking-tight leading-[0.8] mb-8 text-zenith-black">
+              {t('gallery.title')}
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-500 font-medium max-w-3xl mx-auto uppercase tracking-wide">
+              {t('gallery.subtitle')}
+            </p>
+          </motion.div>
         </div>
 
-        <div className="sticky top-16 z-20 -mt-6 mb-12 bg-white/80 backdrop-blur px-2 py-3 rounded-full">
-          <div className="flex flex-wrap gap-2 justify-center">
+        <div className="sticky top-10 z-30 mb-20">
+          <div className="inline-flex flex-wrap gap-3 justify-center bg-white/50 backdrop-blur-2xl p-3 rounded-[2.5rem] border border-white/20 shadow-2xl mx-auto block w-fit">
             {sections.map((s) => (<a key={s.id} href={`#${s.id}`} className={pillClasses(s.id)}>{s.title}</a>))}
           </div>
         </div>
 
         {sections.map((s) => (
-          <section key={s.id} id={s.id} className="mb-20" ref={(el) => (sectionRefs.current[s.id] = el)}>
-            <div className="text-center mb-8">
-              <div className={`inline-flex items-center justify-center w-20 h-20 rounded-3xl text-white bg-gradient-to-r ${s.gradient} mb-4`}>📸</div>
-              <h2 className="text-3xl font-bold text-gray-900">{s.title}</h2>
+          <section key={s.id} id={s.id} className="mb-32" ref={(el) => (sectionRefs.current[s.id] = el)}>
+            <div className="flex items-center gap-6 mb-12">
+              <div className={`w-20 h-20 rounded-[2rem] text-white bg-zenith-black flex items-center justify-center text-3xl shadow-xl`}>
+                {s.id === 'hall' ? '🏢' : '🏆'}
+              </div>
+              <h2 className="text-4xl md:text-6xl font-black font-display text-zenith-black uppercase tracking-tight">{s.title}</h2>
             </div>
 
             {s.id !== 'tournaments' && (
               loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="rounded-2xl overflow-hidden bg-white border border-gray-200 animate-pulse">
-                      <div className="h-40 bg-gray-100" />
-                      <div className="p-4">
-                        <div className="h-4 w-2/3 bg-gray-200 rounded mb-2" />
-                        <div className="h-3 w-1/2 bg-gray-100 rounded" />
-                      </div>
+                    <div key={i} className="rounded-[2.5rem] overflow-hidden bg-white border border-gray-100 animate-pulse">
+                      <div className="h-64 bg-gray-50" />
                     </div>
                   ))}
                 </div>
               ) : (sectionImages[s.id] || []).length === 0 ? (
                 <Empty text={isCmsEnabled ? t('gallery.noMaterials') : t('gallery.cmsNotConfigured')} />
               ) : (
-                <div className="columns-1 sm:columns-2 md:columns-3 gap-5 space-y-5">
+                <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-8 space-y-8">
                   {(sectionImages[s.id] || []).map((src, i) => (
-                    <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid border border-gray-100 hover:border-primary-blue/20 transition-colors">
-                      <img 
-                        src={src} 
+                    <motion.figure
+                      key={i}
+                      className="relative group rounded-[2rem] overflow-hidden break-inside-avoid border-2 border-transparent hover:border-zenith-crimson transition-all cursor-pointer shadow-lg"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -5 }}
+                    >
+                      <img
+                        src={src}
                         alt={`${s.title} — ${t('gallery.title')}`}
-                        loading="lazy" 
-                        className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-[1.02]" 
+                        loading="lazy"
+                        className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-110"
                         onClick={() => openLightbox([{ type: 'image', src, alt: s.title }], 0)}
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          const fallback = document.createElement('div');
-                          fallback.className = 'w-full h-64 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center';
-                          fallback.innerHTML = '<svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>';
-                          e.currentTarget.parentElement?.appendChild(fallback);
-                        }}
                       />
-                      <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </figure>
+                      <div className="absolute inset-0 bg-gradient-to-t from-zenith-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </motion.figure>
                   ))}
                 </div>
               )
@@ -248,67 +261,104 @@ const Gallery: FC = () => {
 
             {s.id === 'tournaments' && (
               loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
                   {Array.from({ length: 6 }).map((_, i) => (<SkeletonCard key={i} />))}
                 </div>
               ) : categories.length === 0 ? (
                 <Empty text={isCmsEnabled ? t('gallery.noMaterials') : t('gallery.cmsNotConfigured')} />
               ) : (
                 <>
-                  <div className="sticky top-16 z-10 mb-6 bg-white/80 backdrop-blur rounded-xl p-3 flex flex-wrap items-center gap-3">
-                    <input value={filters.q} onChange={e => setFilters(f => ({ ...f, q: e.target.value }))} placeholder={t('gallery.searchTournament')} className="px-3 py-2 border rounded-lg text-sm" />
-                    <select value={String(filters.year)} onChange={e => setFilters(f => ({ ...f, year: e.target.value === 'all' ? 'all' : Number(e.target.value) }))} className="px-3 py-2 border rounded-lg text-sm">
+                  <div className="sticky top-24 z-30 mb-12 bg-white/70 backdrop-blur-2xl rounded-[2rem] p-4 flex flex-wrap items-center gap-4 border border-white/20 shadow-xl">
+                    <div className="relative flex-1 min-w-[200px]">
+                      <input
+                        value={filters.q}
+                        onChange={e => setFilters(f => ({ ...f, q: e.target.value }))}
+                        placeholder={t('gallery.searchTournament')}
+                        className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-zenith-crimson transition-all"
+                      />
+                    </div>
+                    <select
+                      value={String(filters.year)}
+                      onChange={e => setFilters(f => ({ ...f, year: e.target.value === 'all' ? 'all' : Number(e.target.value) }))}
+                      className="px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold uppercase tracking-widest focus:ring-2 focus:ring-zenith-crimson transition-all outline-none"
+                    >
                       <option value="all">{t('gallery.allYears')}</option>
                       {years.map(y => (<option key={y} value={y}>{y}</option>))}
                     </select>
                     <div className="flex flex-wrap gap-2">
                       {allTags.map(tag => (
-                        <button key={tag} className={`px-3 py-1 rounded-full text-xs border ${filters.tags.includes(tag) ? 'bg-primary-blue text-white border-primary-blue' : 'bg-white text-gray-700'}`} onClick={() => setFilters(f => ({ ...f, tags: f.tags.includes(tag) ? f.tags.filter(t => t !== tag) : [...f.tags, tag] }))}>{tag}</button>
+                        <button
+                          key={tag}
+                          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border-2 transition-all ${filters.tags.includes(tag) ? 'bg-zenith-crimson text-white border-zenith-crimson shadow-lg shadow-zenith-crimson/20' : 'bg-white text-gray-400 border-gray-100 hover:border-zenith-crimson/40'}`}
+                          onClick={() => setFilters(f => ({ ...f, tags: f.tags.includes(tag) ? f.tags.filter(t => t !== tag) : [...f.tags, tag] }))}
+                        >
+                          {tag}
+                        </button>
                       ))}
                     </div>
                     {(filters.q || filters.year !== 'all' || filters.tags.length) ? (
-                      <button className="ml-auto text-sm text-gray-600 inline-flex items-center" onClick={() => setFilters({ q: '', year: 'all', tags: [] })}><X className="w-4 h-4 mr-1" />{t('gallery.reset')}</button>
+                      <button
+                        className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-zenith-crimson hover:text-zenith-black transition-colors"
+                        onClick={() => setFilters({ q: '', year: 'all', tags: [] })}
+                      >
+                        {t('gallery.reset')}
+                      </button>
                     ) : null}
                   </div>
 
                   {Object.entries(groupedByYear).sort((a, b) => (b[0] > a[0] ? 1 : -1)).map(([year, cats]) => (
-                    <div key={year} className="mb-10">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">{year}</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div key={year} className="mb-20">
+                      <div className="flex items-center gap-4 mb-8">
+                        <div className="h-px bg-gray-200 flex-1" />
+                        <h3 className="text-sm font-black text-zenith-crimson uppercase tracking-[0.3em] bg-zenith-white px-6">{year}</h3>
+                        <div className="h-px bg-gray-200 flex-1" />
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
                         {cats.map((cat: any) => {
                           const preview = (cat.photos || []).slice(0, 3);
                           return (
-                            <button key={cat.id} className={`group relative rounded-2xl text-left overflow-hidden bg-white border border-gray-200 transition-all hover:border-primary-blue/40 hover:shadow-md hover:-translate-y-[2px] duration-200`} onClick={() => openOverlay(cat.id)}>
-                              <div className={`absolute -top-3 left-6 w-20 h-6 rounded-t-md bg-gradient-to-r ${cat.gradient}`} />
+                            <motion.button
+                              key={cat.id}
+                              className="group relative rounded-[2.5rem] text-left overflow-hidden bg-white border-2 border-transparent hover:border-zenith-crimson/20 transition-all shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.15)] duration-500"
+                              onClick={() => openOverlay(cat.id)}
+                              whileHover={{ y: -8 }}
+                            >
                               <div className="p-4 pt-6">
-                                <div className="h-28 rounded-xl overflow-hidden bg-gray-50 relative">
+                                <div className="h-56 rounded-[2rem] overflow-hidden bg-gray-50 relative">
                                   {cat.cover ? (
-                                    <img src={cat.cover} alt={`${cat.name}${cat.year ? ' • ' + cat.year : ''}`} className="w-full h-full object-cover" />
+                                    <img src={cat.cover} alt={cat.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                                   ) : preview.length > 0 ? (
                                     <div className="grid grid-cols-3 gap-1 h-full">
-                                      {preview.map((src: string, i: number) => (<img key={i} src={src} alt={`${cat.name}${cat.year ? ' • ' + cat.year : ''} — ${t('gallery.photo')}`} className="w-full h-full object-cover" />))}
+                                      {preview.map((src: string, i: number) => (<img key={i} src={src} alt={cat.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />))}
                                     </div>
                                   ) : (
-                                    <div className={`w-full h-full bg-gradient-to-r ${cat.gradient}`} />
+                                    <div className={`w-full h-full bg-zenith-black`} />
                                   )}
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                  <div className="absolute bottom-2 left-2 inline-flex items-center gap-2 text-xs text-white/90">
-                                    <span className="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur inline-flex items-center gap-1"><ImageIcon className="w-3 h-3" />{cat.photos?.length || 0}</span>
-                                    <span className="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur inline-flex items-center gap-1"><VideoIcon className="w-3 h-3" />{cat.videos?.length || 0}</span>
-                                  </div>
-                                </div>
-                                <div className="mt-4 flex items-center justify-between">
-                                  <div>
-                                    <div className="text-base font-semibold text-gray-900">{cat.name}</div>
-                                    <div className="text-xs text-gray-500 flex items-center gap-3 mt-1">
-                                      {cat.year && <span>{cat.year}</span>}
-                                      {cat.tags && cat.tags.slice(0, 2).map((t: string) => (<span key={t} className="px-2 py-0.5 rounded-full bg-gray-100">{t}</span>))}
+                                  <div className="absolute inset-0 bg-gradient-to-t from-zenith-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+
+                                  <div className="absolute top-6 left-6">
+                                    <div className="px-4 py-1.5 rounded-full bg-zenith-crimson text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-xl">
+                                      {cat.year}
                                     </div>
                                   </div>
-                                  <ChevronDown className={`w-5 h-5 text-primary-blue transition-transform group-hover:translate-y-0.5`} />
+
+                                  <div className="absolute bottom-6 left-6 flex items-center gap-3">
+                                    <span className="px-3 py-1.5 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-[10px] font-black uppercase tracking-widest text-white inline-flex items-center gap-2"><ImageIcon className="w-3 h-3" />{cat.photos?.length || 0}</span>
+                                    {cat.videos?.length > 0 && (
+                                      <span className="px-3 py-1.5 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-[10px] font-black uppercase tracking-widest text-white inline-flex items-center gap-2"><VideoIcon className="w-3 h-3" />{cat.videos?.length || 0}</span>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="p-8">
+                                  <h3 className="text-2xl font-black font-display text-zenith-black group-hover:text-zenith-crimson transition-colors uppercase tracking-tight mb-3 leading-tight">{cat.name}</h3>
+                                  <div className="flex flex-wrap gap-2">
+                                    {cat.tags && cat.tags.slice(0, 3).map((t: string) => (
+                                      <span key={t} className="px-3 py-1 bg-gray-50 text-gray-400 text-[9px] font-black uppercase tracking-widest rounded-lg">{t}</span>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
-                            </button>
+                            </motion.button>
                           );
                         })}
                       </div>
@@ -324,19 +374,41 @@ const Gallery: FC = () => {
                     const canMore = visible < cat.photos.length;
                     const activeTab = (tabByCat[cat.id] ?? 'photo');
                     return (
-                      <div className="fixed inset-0 z-50">
-                        {/* Backdrop */}
-                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeOverlay} />
-                        {/* Panel */}
-                        <div className="relative z-10 h-full md:h-[90vh] md:my-6 md:px-4">
-                          <div className="bg-white h-full max-w-[1600px] mx-auto flex flex-col md:rounded-2xl md:border md:shadow-xl overflow-hidden">
+                      <AnimatePresence>
+                        <motion.div
+                          className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-12"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          <div className="absolute inset-0 bg-zenith-black/80 backdrop-blur-xl" onClick={closeOverlay} />
+                          <motion.div
+                            className="relative z-10 w-full h-full max-w-[1600px] bg-zenith-white rounded-[3rem] shadow-2xl border-2 border-white overflow-hidden flex flex-col"
+                            initial={{ scale: 0.9, y: 50 }}
+                            animate={{ scale: 1, y: 0 }}
+                          >
                             {/* Header */}
-                            <div className="flex items-center gap-3 p-4 border-b sticky top-0 bg-white z-10">
-                              <button className="px-3 py-1 rounded-lg border text-sm" onClick={closeOverlay}>{t('gallery.close')}</button>
-                              <div className="font-semibold text-gray-900">{cat.name}{cat.year ? ` • ${cat.year}` : ''}</div>
-                              <div className="ml-auto flex items-center gap-2">
-                                {(['photo','video'] as const).map((tabType) => (
-                                  <button key={tabType} className={`px-4 py-2 rounded-full text-sm font-medium ${ activeTab === tabType ? 'bg-primary-blue text-white' : 'bg-white text-gray-700 border hover:bg-primary-blue/10'}`} onClick={() => setTabByCat((prev) => ({ ...prev, [cat.id]: tabType }))}>
+                            <div className="flex items-center justify-between p-8 border-b border-gray-100 bg-white">
+                              <div className="flex items-center gap-6">
+                                <button
+                                  className="w-12 h-12 rounded-2xl border-2 border-gray-100 flex items-center justify-center text-zenith-black hover:bg-zenith-crimson hover:border-zenith-crimson hover:text-white transition-all group"
+                                  onClick={closeOverlay}
+                                >
+                                  <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                                </button>
+                                <div>
+                                  <h2 className="text-2xl font-black font-display text-zenith-black uppercase tracking-tight">{cat.name}</h2>
+                                  <p className="text-[10px] font-black text-zenith-crimson uppercase tracking-widest">{cat.year ? `${cat.year}` : ''}</p>
+                                </div>
+                              </div>
+
+                              <div className="flex bg-gray-50 p-2 rounded-2xl gap-2">
+                                {(['photo', 'video'] as const).map((tabType) => (
+                                  <button
+                                    key={tabType}
+                                    className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tabType ? 'bg-zenith-black text-white shadow-xl' : 'text-gray-400 hover:text-zenith-black'}`}
+                                    onClick={() => setTabByCat((prev) => ({ ...prev, [cat.id]: tabType }))}
+                                  >
                                     {tabType === 'photo' ? t('gallery.photo') : t('gallery.video')}
                                   </button>
                                 ))}
@@ -344,23 +416,40 @@ const Gallery: FC = () => {
                             </div>
 
                             {/* Content */}
-                            <div className="flex-1 overflow-auto px-4 py-6" ref={overlayScrollRef}>
+                            <div className="flex-1 overflow-auto p-10 md:p-16 custom-scrollbar" ref={overlayScrollRef}>
                               {activeTab === 'photo' ? (
                                 photos.length === 0 ? (
                                   <Empty text={t('gallery.photosComingSoon')} />
                                 ) : (
                                   <>
-                                    <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
-                                    {photos.map((src: string, i: number) => (
-                                      <figure key={i} className="relative group rounded-2xl overflow-hidden break-inside-avoid border border-gray-100 hover:border-primary-blue/20 transition-colors">
-                                        <img src={src} alt={cat.name} loading="lazy" className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-[1.02]" onClick={() => openLightbox(cat.photos.map((p: string) => ({ type: 'image' as const, src: p, alt: cat.name })), i)} />
-                                        <figcaption className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                      </figure>
-                                    ))}
-                                  </div>
+                                    <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8">
+                                      {photos.map((src: string, i: number) => (
+                                        <motion.figure
+                                          key={i}
+                                          className="relative group rounded-[2rem] overflow-hidden break-inside-avoid border-2 border-transparent hover:border-zenith-crimson transition-all cursor-pointer shadow-lg"
+                                          initial={{ opacity: 0, scale: 0.9 }}
+                                          animate={{ opacity: 1, scale: 1 }}
+                                          transition={{ delay: i * 0.05 }}
+                                        >
+                                          <img
+                                            src={src}
+                                            alt={cat.name}
+                                            loading="lazy"
+                                            className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-110"
+                                            onClick={() => openLightbox(cat.photos.map((p: string) => ({ type: 'image' as const, src: p, alt: cat.name })), i)}
+                                          />
+                                          <div className="absolute inset-0 bg-gradient-to-t from-zenith-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        </motion.figure>
+                                      ))}
+                                    </div>
                                     {canMore && (
-                                      <div className="mt-6 text-center">
-                                        <button className="px-5 py-2 rounded-lg border text-sm" onClick={() => loadMore(cat.id)}>{t('gallery.showMore')}</button>
+                                      <div className="mt-16 text-center">
+                                        <button
+                                          className="px-12 py-5 bg-zenith-black text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-zenith-crimson transition-all shadow-xl"
+                                          onClick={() => loadMore(cat.id)}
+                                        >
+                                          {t('gallery.showMore')}
+                                        </button>
                                       </div>
                                     )}
                                   </>
@@ -369,9 +458,9 @@ const Gallery: FC = () => {
                                 cat.videos.length === 0 ? (
                                   <Empty text={t('gallery.videosComingSoon')} />
                                 ) : (
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {cat.videos.map((src: string, i: number) => (
-                                      <div key={i} className="rounded-2xl overflow-hidden">
+                                      <div key={i} className="rounded-[2.5rem] overflow-hidden shadow-2xl bg-black border-4 border-white">
                                         <video src={src} className="w-full" controls />
                                       </div>
                                     ))}
@@ -379,9 +468,9 @@ const Gallery: FC = () => {
                                 )
                               )}
                             </div>
-                          </div>
-                        </div>
-                      </div>
+                          </motion.div>
+                        </motion.div>
+                      </AnimatePresence>
                     );
                   })()}
                 </>
@@ -392,40 +481,52 @@ const Gallery: FC = () => {
       </div>
 
       {lightbox && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center" 
-          role="dialog" 
-          aria-modal="true" 
-          aria-label={t('gallery.imageViewer', 'Просмотр изображения')}
+        <div
+          className="fixed inset-0 z-[100] bg-zenith-black/95 backdrop-blur-md flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
           onClick={closeLightbox}
         >
-          <button 
-            className="absolute top-6 right-6 text-white text-xl hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-white rounded-full w-10 h-10 flex items-center justify-center" 
-            onClick={closeLightbox} 
-            aria-label={t('gallery.close')}
+          <button
+            className="absolute top-8 right-8 w-14 h-14 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[110]"
+            onClick={closeLightbox}
           >
-            ✕
+            <X className="w-6 h-6" />
           </button>
-          <button 
-            className="absolute left-4 md:left-8 text-white text-3xl hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-white rounded-full w-12 h-12 flex items-center justify-center" 
-            onClick={(e) => { e.stopPropagation(); prevItem(); }} 
-            aria-label={t('gallery.previous')}
+
+          <button
+            className="absolute left-4 md:left-12 w-16 h-16 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[110]"
+            onClick={(e) => { e.stopPropagation(); prevItem(); }}
           >
-            ‹
+            <ArrowLeft className="w-8 h-8" />
           </button>
-          <button 
-            className="absolute right-4 md:right-8 text-white text-3xl hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-white rounded-full w-12 h-12 flex items-center justify-center" 
-            onClick={(e) => { e.stopPropagation(); nextItem(); }} 
-            aria-label={t('gallery.next')}
+
+          <button
+            className="absolute right-4 md:right-12 w-16 h-16 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[110]"
+            onClick={(e) => { e.stopPropagation(); nextItem(); }}
           >
-            ›
+            <ArrowRight className="w-8 h-8" />
           </button>
-          <div className="max-w-5xl w-full px-4" onClick={(e) => e.stopPropagation()}>
-            {lightbox.items[lightbox.index].type === 'image' ? (
-              <img src={lightbox.items[lightbox.index].src} alt={lightbox.items[lightbox.index].alt || ''} className="w-full h-auto object-contain rounded-2xl" />
-            ) : (
-              <video src={lightbox.items[lightbox.index].src} className="w-full" controls autoPlay />
-            )}
+
+          <div className="max-w-7xl w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              key={lightbox.index}
+              className="relative w-full h-full flex items-center justify-center"
+            >
+              {lightbox.items[lightbox.index].type === 'image' ? (
+                <img
+                  src={lightbox.items[lightbox.index].src}
+                  alt={lightbox.items[lightbox.index].alt || ''}
+                  className="max-w-full max-h-full object-contain rounded-[2rem] shadow-2xl border-4 border-white/10"
+                />
+              ) : (
+                <div className="w-full max-w-4xl rounded-[2.5rem] overflow-hidden border-4 border-white/10 shadow-2xl">
+                  <video src={lightbox.items[lightbox.index].src} className="w-full" controls autoPlay />
+                </div>
+              )}
+            </motion.div>
           </div>
         </div>
       )}
