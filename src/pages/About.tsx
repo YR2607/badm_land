@@ -6,6 +6,7 @@ import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounde
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
+import InnerHero from '../components/InnerHero';
 
 const About: FC = () => {
   const { t, i18n } = useTranslation();
@@ -189,255 +190,26 @@ const About: FC = () => {
         description={t('about.hero.subtitle')}
         image="https://altius.md/og-about.jpg"
       />
-      <Breadcrumbs
-        items={[
-          { label: t('navigation.home'), path: '/' },
-          { label: t('navigation.about') }
-        ]}
-      />
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-24 bg-zenith-black">
-        {/* Enhanced Badminton Court Background */}
-        <div className="absolute inset-0">
-          {/* Dynamic Court with Lighting Effects */}
-          <div className="absolute inset-0 opacity-20">
-            <svg viewBox="0 0 1200 600" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
-              <defs>
-                {/* Gradient for court surface */}
-                <radialGradient id="courtGradient" cx="50%" cy="50%" r="70%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.15)" />
-                  <stop offset="50%" stopColor="rgba(255,255,255,0.08)" />
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.03)" />
-                </radialGradient>
-
-                {/* Glow effect for lines */}
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-
-                {/* Shadow filter */}
-                <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.3" />
-                </filter>
-              </defs>
-
-              {/* Court Surface with gradient */}
-              <rect width="1200" height="600" fill="url(#courtGradient)" />
-
-              {/* Court Lines with glow effect */}
-              <g stroke="rgba(255,255,255,0.6)" strokeWidth="3" fill="none" filter="url(#glow)">
-                {/* Outer boundaries */}
-                <rect x="200" y="100" width="800" height="400" strokeWidth="4" />
-
-                {/* Center line */}
-                <line x1="600" y1="100" x2="600" y2="500" strokeWidth="3" />
-
-                {/* Service lines */}
-                <line x1="200" y1="240" x2="1000" y2="240" />
-                <line x1="200" y1="360" x2="1000" y2="360" />
-
-                {/* Short service lines */}
-                <line x1="320" y1="100" x2="320" y2="500" />
-                <line x1="880" y1="100" x2="880" y2="500" />
-
-                {/* Center service lines */}
-                <line x1="600" y1="240" x2="600" y2="360" />
-              </g>
-
-              {/* Enhanced Net with 3D effect */}
-              <g filter="url(#shadow)">
-                <line x1="600" y1="100" x2="600" y2="500" stroke="rgba(255,255,255,0.7)" strokeWidth="6" />
-                <rect x="596" y="280" width="8" height="40" fill="rgba(255,255,255,0.8)" rx="2" />
-
-                {/* Net mesh pattern */}
-                <g stroke="rgba(255,255,255,0.3)" strokeWidth="1">
-                  <line x1="590" y1="120" x2="610" y2="120" />
-                  <line x1="590" y1="140" x2="610" y2="140" />
-                  <line x1="590" y1="160" x2="610" y2="160" />
-                  <line x1="590" y1="180" x2="610" y2="180" />
-                  <line x1="590" y1="200" x2="610" y2="200" />
-                  <line x1="590" y1="220" x2="610" y2="220" />
-                  <line x1="590" y1="240" x2="610" y2="240" />
-                  <line x1="590" y1="260" x2="610" y2="260" />
-                </g>
-              </g>
-
-              {/* Spotlight effects */}
-              <g opacity="0.1">
-                <ellipse cx="400" cy="200" rx="150" ry="80" fill="rgba(255,255,255,0.3)" />
-                <ellipse cx="800" cy="400" rx="150" ry="80" fill="rgba(255,255,255,0.3)" />
-              </g>
-            </svg>
-          </div>
-
-          {/* Enhanced Equipment Graphics with 3D Effects */}
-          <div className="absolute top-8 left-4 md:top-16 md:left-16 w-16 h-16 md:w-24 md:h-24 opacity-30 transform rotate-12 will-change-transform hover:scale-110 transition-transform duration-300">
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-              {/* Badminton Racket */}
-              <defs>
-                <linearGradient id="racketGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.4)" />
-                </linearGradient>
-                <filter id="racketShadow">
-                  <feDropShadow dx="2" dy="2" stdDeviation="2" floodOpacity="0.3" />
-                </filter>
-              </defs>
-
-              {/* Racket Handle */}
-              <rect x="45" y="70" width="10" height="25" fill="url(#racketGradient)" rx="5" filter="url(#racketShadow)" />
-
-              {/* Racket Head */}
-              <ellipse cx="50" cy="35" rx="20" ry="30" fill="none" stroke="url(#racketGradient)" strokeWidth="3" filter="url(#racketShadow)" />
-
-              {/* Strings */}
-              <g stroke="rgba(255,255,255,0.4)" strokeWidth="1">
-                <line x1="35" y1="20" x2="35" y2="50" />
-                <line x1="42" y1="15" x2="42" y2="55" />
-                <line x1="50" y1="10" x2="50" y2="60" />
-                <line x1="58" y1="15" x2="58" y2="55" />
-                <line x1="65" y1="20" x2="65" y2="50" />
-
-                <line x1="32" y1="25" x2="68" y2="25" />
-                <line x1="30" y1="35" x2="70" y2="35" />
-                <line x1="32" y1="45" x2="68" y2="45" />
-              </g>
-            </svg>
-          </div>
-
-          {/* Animated Shuttlecock */}
-          <div className="absolute top-20 right-8 md:top-24 md:right-20 w-12 h-12 md:w-16 md:h-16 opacity-40 animate-bounce">
-            <svg viewBox="0 0 60 60" className="w-full h-full">
-              <defs>
-                <radialGradient id="shuttlecockGradient" cx="50%" cy="30%" r="60%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.3)" />
-                </radialGradient>
-              </defs>
-
-              {/* Shuttlecock Cork */}
-              <circle cx="30" cy="45" r="6" fill="url(#shuttlecockGradient)" />
-
-              {/* Feathers */}
-              <g fill="rgba(255,255,255,0.6)">
-                <path d="M30 39 L25 15 L30 20 L35 15 Z" />
-                <path d="M24 40 L15 18 L22 22 L28 20 Z" />
-                <path d="M36 40 L45 18 L38 22 L32 20 Z" />
-                <path d="M22 42 L12 25 L20 28 L26 26 Z" />
-                <path d="M38 42 L48 25 L40 28 L34 26 Z" />
-              </g>
-            </svg>
-          </div>
-
-          {/* Trophy with Badminton Theme */}
-          <div className="absolute bottom-16 left-8 md:bottom-20 md:left-16 w-14 h-14 md:w-20 md:h-20 opacity-25 animate-pulse">
-            <svg viewBox="0 0 80 80" className="w-full h-full">
-              <defs>
-                <linearGradient id="trophyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(255,215,0,0.8)" />
-                  <stop offset="100%" stopColor="rgba(255,165,0,0.6)" />
-                </linearGradient>
-              </defs>
-
-              {/* Trophy Cup */}
-              <path d="M20 25 Q20 20 25 20 L55 20 Q60 20 60 25 L60 40 Q60 50 50 50 L30 50 Q20 50 20 40 Z" fill="url(#trophyGradient)" />
-
-              {/* Trophy Handles */}
-              <path d="M15 30 Q10 30 10 35 Q10 40 15 40" fill="none" stroke="url(#trophyGradient)" strokeWidth="3" />
-              <path d="M65 30 Q70 30 70 35 Q70 40 65 40" fill="none" stroke="url(#trophyGradient)" strokeWidth="3" />
-
-              {/* Trophy Base */}
-              <rect x="25" y="50" width="30" height="8" fill="url(#trophyGradient)" rx="2" />
-              <rect x="30" y="58" width="20" height="12" fill="url(#trophyGradient)" rx="2" />
-
-              {/* Mini Racket on Trophy */}
-              <ellipse cx="40" cy="35" rx="8" ry="10" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" />
-              <line x1="40" y1="45" x2="40" y2="50" stroke="rgba(255,255,255,0.8)" strokeWidth="2" />
-            </svg>
-          </div>
-
-          {/* Floating Particles */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-yellow-300/30 rounded-full animate-ping" style={{ animationDelay: '0s' }}></div>
-            <div className="absolute top-1/2 right-1/4 w-1 h-1 bg-white/40 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute bottom-1/3 left-1/4 w-1.5 h-1.5 bg-blue-300/30 rounded-full animate-ping" style={{ animationDelay: '2s' }}></div>
-            <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-yellow-200/40 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
-          </div>
-
-          {/* Subtle Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-primary-blue/20 via-transparent to-transparent"></div>
-        </div>
-
-        <div className="relative z-10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center text-white">
-              {heroData && (
-                <>
-                  {heroData?.badge?.text && (
-                    <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-bold mb-8">
-                      <Sparkles className="w-4 h-4" />
-                      <span>{heroData.badge.text}</span>
-                    </div>
-                  )}
-                  {heroData?.title && (
-                    <h1 className="text-6xl md:text-[6.5rem] lg:text-[10rem] font-black font-display text-white mb-8 uppercase tracking-tighter leading-[0.8] drop-shadow-[0_10px_30px_rgba(220,38,38,0.3)]">
-                      {heroData.title}
-                    </h1>
-                  )}
-                  {heroData?.subtitle && (
-                    <p className="text-xl md:text-3xl max-w-4xl mx-auto text-gray-400 font-medium leading-tight mb-16 uppercase tracking-tight">
-                      {heroData.subtitle}
-                    </p>
-                  )}
-                </>
-              )}
-
-              {/* Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 bg-white/5 backdrop-blur-md rounded-[3rem] p-10 border border-white/10 max-w-5xl mx-auto">
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">120+</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.participants')}</div>
-                </motion.div>
-
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">15+</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.tournaments')}</div>
-                </motion.div>
-
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                >
-                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">1+</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.experience')}</div>
-                </motion.div>
+      <InnerHero
+        title={t('navigation.about')}
+        subtitle={t('about.hero.subtitle')}
+      >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10">
+          {stats.map((stat, i) => (
+            <div key={i} className="text-center group">
+              <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
+                {stat.number}
+              </div>
+              <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
+                {stat.label}
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      </section>
+      </InnerHero>
 
       {/* Mission Section */}
-      <section className="py-24 bg-zenith-white relative overflow-hidden">
+      < section className="py-24 bg-zenith-white relative overflow-hidden" >
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-zenith-crimson/5 blur-3xl rounded-full" />
 
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -547,10 +319,10 @@ const About: FC = () => {
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </section >
 
       {/* Strategic Goals */}
-      <section className="py-32 bg-white relative overflow-hidden">
+      < section className="py-32 bg-white relative overflow-hidden" >
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -590,12 +362,12 @@ const About: FC = () => {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section >
 
       {/* Unified History + Roadmap Section */}
-      <section className="py-20 bg-white relative overflow-hidden">
+      < section className="py-20 bg-white relative overflow-hidden" >
         {/* Background decorative elements */}
-        <div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
+        < div className="pointer-events-none absolute -top-24 -right-24 w-[42rem] h-[42rem] rounded-full bg-primary-orange/5 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-24 w-[36rem] h-[36rem] rounded-full bg-primary-blue/5 blur-3xl" />
 
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -837,12 +609,12 @@ const About: FC = () => {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section >
 
       {/* Our Team Section */}
-      <section className="py-20 bg-zenith-white relative overflow-hidden">
+      < section className="py-20 bg-zenith-white relative overflow-hidden" >
         {/* Background decorative elements */}
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        < div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10" >
           <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
@@ -858,178 +630,182 @@ const About: FC = () => {
             </p>
           </motion.div>
 
-          {(cmsData?.teamSection?.leaders && cmsData.teamSection.leaders.length > 0) && (
-            <motion.div
-              className="mb-20"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <h3 className="text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter">{t('about.team.founder')}</h3>
+          {
+            (cmsData?.teamSection?.leaders && cmsData.teamSection.leaders.length > 0) && (
+              <motion.div
+                className="mb-20"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+              >
+                <h3 className="text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter">{t('about.team.founder')}</h3>
 
-              <div className="grid grid-cols-1 gap-12">
-                {cmsData.teamSection.leaders.map((leader: any, idx: number) => (
-                  <div key={idx} className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-gray-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.1)] transition-all duration-500 overflow-hidden relative">
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-zenith-crimson/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+                <div className="grid grid-cols-1 gap-12">
+                  {cmsData.teamSection.leaders.map((leader: any, idx: number) => (
+                    <div key={idx} className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-gray-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.1)] transition-all duration-500 overflow-hidden relative">
+                      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-zenith-crimson/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-                      {/* Photo Section */}
-                      <div className="lg:col-span-5 text-center relative group">
-                        <div className="relative inline-block w-full">
-                          <div className="absolute inset-0 bg-zenith-black rounded-3xl blur-2xl group-hover:bg-zenith-crimson transition-all duration-500 opacity-20 group-hover:opacity-30" />
-                          {leader.photo ? (
-                            <img
-                              src={leader.photo}
-                              alt={leader.name}
-                              className="w-full max-w-[400px] aspect-[4/5] mx-auto rounded-3xl object-cover mb-6 relative z-10 shadow-lg ring-1 ring-black/5"
-                            />
-                          ) : (
-                            <div className="w-full max-w-[400px] aspect-[4/5] mx-auto rounded-3xl bg-zenith-black flex items-center justify-center mb-6 relative z-10 shadow-lg">
-                              <Users className="w-32 h-32 text-white/20" />
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex flex-wrap justify-center gap-2 mt-4">
-                          {leader.achievements?.slice(0, 3).map((ach: string, i: number) => (
-                            <span key={i} className="inline-block bg-zenith-crimson text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-md">
-                              {ach}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Content Section */}
-                      <div className="lg:col-span-7 text-center lg:text-left">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 mb-6">
-                          <Trophy className="w-4 h-4 text-zenith-crimson" />
-                          <span className="text-xs font-bold text-zenith-crimson uppercase tracking-widest">{leader.role}</span>
-                        </div>
-
-                        <h4 className="text-5xl lg:text-7xl font-black text-zenith-black mb-6 font-display uppercase tracking-tighter leading-[0.9]">
-                          {leader.name}
-                        </h4>
-
-                        <div className="flex flex-wrap justify-center lg:justify-start gap-8 mb-10 pb-10 border-b border-gray-100">
-                          {leader.stats?.map((stat: any, index: number) => (
-                            <div key={index} className="flex flex-col items-center lg:items-start group">
-                              <span className="text-4xl font-black text-zenith-black group-hover:text-zenith-crimson transition-colors">{stat.value}</span>
-                              <span className="text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">{stat.label}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="space-y-6 text-gray-700 leading-relaxed text-lg">
-                          <div className="prose max-w-none prose-p:text-gray-700 font-medium">
-                            {Array.isArray(leader.description) ? leader.description.map((block: any, index: number) => (
-                              <p key={index} className="mb-4 last:mb-0">
-                                {block.children?.map((child: any) => child.text).join('') || ''}
-                              </p>
-                            )) : (
-                              <p>{leader.description || ''}</p>
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+                        {/* Photo Section */}
+                        <div className="lg:col-span-5 text-center relative group">
+                          <div className="relative inline-block w-full">
+                            <div className="absolute inset-0 bg-zenith-black rounded-3xl blur-2xl group-hover:bg-zenith-crimson transition-all duration-500 opacity-20 group-hover:opacity-30" />
+                            {leader.photo ? (
+                              <img
+                                src={leader.photo}
+                                alt={leader.name}
+                                className="w-full max-w-[400px] aspect-[4/5] mx-auto rounded-3xl object-cover mb-6 relative z-10 shadow-lg ring-1 ring-black/5"
+                              />
+                            ) : (
+                              <div className="w-full max-w-[400px] aspect-[4/5] mx-auto rounded-3xl bg-zenith-black flex items-center justify-center mb-6 relative z-10 shadow-lg">
+                                <Users className="w-32 h-32 text-white/20" />
+                              </div>
                             )}
                           </div>
 
-                          {leader.quote && (
-                            <div className="relative pt-6">
-                              <div className="absolute left-0 top-0 w-12 h-1 bg-zenith-crimson" />
-                              <blockquote className="italic text-zenith-black text-2xl font-bold leading-relaxed">
-                                "{leader.quote}"
-                              </blockquote>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* Coaches Section */}
-          {cmsData?.teamSection?.coaches && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <h3 className="text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter">{t('about.team.coaches')}</h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {(cmsData?.teamSection?.coaches || []).map((coach: any, index: number) => (
-                  <motion.div
-                    key={index}
-                    className="bg-white rounded-[2rem] p-8 group hover:shadow-[0_20px_40px_-10px_rgba(220,38,38,0.1)] transition-all duration-300 border border-gray-100 relative overflow-hidden"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                  >
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-crimson/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-zenith-crimson/10 transition-colors" />
-
-                    {/* Photo */}
-                    {coach.photo ? (
-                      <img
-                        src={coach.photo}
-                        alt={coach.name}
-                        className="w-48 h-48 mx-auto rounded-[2rem] object-cover mb-8 relative z-10 shadow-lg ring-1 ring-black/5 group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-48 h-48 mx-auto rounded-[2rem] bg-zenith-black flex items-center justify-center mb-8 relative z-10 shadow-lg group-hover:scale-105 transition-transform duration-500">
-                        <Users className="w-20 h-20 text-white/20" />
-                      </div>
-                    )}
-
-                    {/* Content */}
-                    <div className="text-center relative z-10">
-                      <h4 className="text-2xl font-black font-display text-zenith-black mb-2 uppercase tracking-tight">{coach.name}</h4>
-                      <p className="text-zenith-crimson font-bold mb-6 text-sm uppercase tracking-widest">{coach.role}</p>
-
-                      <div className="flex flex-wrap justify-center gap-2 mb-6">
-                        {coach.experience && (
-                          <span className="bg-zenith-black text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
-                            {coach.experience}
-                          </span>
-                        )}
-                        {coach.specialization && (
-                          <span className="bg-white border border-gray-200 text-gray-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
-                            {coach.specialization}
-                          </span>
-                        )}
-                      </div>
-
-                      {coach.achievements && coach.achievements.length > 0 && (
-                        <div className="space-y-2 mb-6 text-left">
-                          {coach.achievements.map((achievement: string, idx: number) => (
-                            <span key={idx} className="flex items-start gap-2 text-sm text-gray-700 font-medium leading-relaxed">
-                              <span className="text-zenith-crimson mt-0.5">•</span>
-                              <span>{achievement}</span>
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {coach.description && (
-                        <div className="bg-gray-50 rounded-2xl p-5 mt-4 border border-gray-100 text-left">
-                          <div className="text-sm text-gray-700 leading-relaxed font-medium whitespace-pre-line">
-                            {coach.description}
+                          <div className="flex flex-wrap justify-center gap-2 mt-4">
+                            {leader.achievements?.slice(0, 3).map((ach: string, i: number) => (
+                              <span key={i} className="inline-block bg-zenith-crimson text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-md">
+                                {ach}
+                              </span>
+                            ))}
                           </div>
                         </div>
-                      )}
+
+                        {/* Content Section */}
+                        <div className="lg:col-span-7 text-center lg:text-left">
+                          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 mb-6">
+                            <Trophy className="w-4 h-4 text-zenith-crimson" />
+                            <span className="text-xs font-bold text-zenith-crimson uppercase tracking-widest">{leader.role}</span>
+                          </div>
+
+                          <h4 className="text-5xl lg:text-7xl font-black text-zenith-black mb-6 font-display uppercase tracking-tighter leading-[0.9]">
+                            {leader.name}
+                          </h4>
+
+                          <div className="flex flex-wrap justify-center lg:justify-start gap-8 mb-10 pb-10 border-b border-gray-100">
+                            {leader.stats?.map((stat: any, index: number) => (
+                              <div key={index} className="flex flex-col items-center lg:items-start group">
+                                <span className="text-4xl font-black text-zenith-black group-hover:text-zenith-crimson transition-colors">{stat.value}</span>
+                                <span className="text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">{stat.label}</span>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="space-y-6 text-gray-700 leading-relaxed text-lg">
+                            <div className="prose max-w-none prose-p:text-gray-700 font-medium">
+                              {Array.isArray(leader.description) ? leader.description.map((block: any, index: number) => (
+                                <p key={index} className="mb-4 last:mb-0">
+                                  {block.children?.map((child: any) => child.text).join('') || ''}
+                                </p>
+                              )) : (
+                                <p>{leader.description || ''}</p>
+                              )}
+                            </div>
+
+                            {leader.quote && (
+                              <div className="relative pt-6">
+                                <div className="absolute left-0 top-0 w-12 h-1 bg-zenith-crimson" />
+                                <blockquote className="italic text-zenith-black text-2xl font-bold leading-relaxed">
+                                  "{leader.quote}"
+                                </blockquote>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </div>
-      </section>
+                  ))}
+                </div>
+              </motion.div>
+            )
+          }
+
+          {/* Coaches Section */}
+          {
+            cmsData?.teamSection?.coaches && (
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+              >
+                <h3 className="text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter">{t('about.team.coaches')}</h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {(cmsData?.teamSection?.coaches || []).map((coach: any, index: number) => (
+                    <motion.div
+                      key={index}
+                      className="bg-white rounded-[2rem] p-8 group hover:shadow-[0_20px_40px_-10px_rgba(220,38,38,0.1)] transition-all duration-300 border border-gray-100 relative overflow-hidden"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                    >
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-crimson/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-zenith-crimson/10 transition-colors" />
+
+                      {/* Photo */}
+                      {coach.photo ? (
+                        <img
+                          src={coach.photo}
+                          alt={coach.name}
+                          className="w-48 h-48 mx-auto rounded-[2rem] object-cover mb-8 relative z-10 shadow-lg ring-1 ring-black/5 group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-48 h-48 mx-auto rounded-[2rem] bg-zenith-black flex items-center justify-center mb-8 relative z-10 shadow-lg group-hover:scale-105 transition-transform duration-500">
+                          <Users className="w-20 h-20 text-white/20" />
+                        </div>
+                      )}
+
+                      {/* Content */}
+                      <div className="text-center relative z-10">
+                        <h4 className="text-2xl font-black font-display text-zenith-black mb-2 uppercase tracking-tight">{coach.name}</h4>
+                        <p className="text-zenith-crimson font-bold mb-6 text-sm uppercase tracking-widest">{coach.role}</p>
+
+                        <div className="flex flex-wrap justify-center gap-2 mb-6">
+                          {coach.experience && (
+                            <span className="bg-zenith-black text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
+                              {coach.experience}
+                            </span>
+                          )}
+                          {coach.specialization && (
+                            <span className="bg-white border border-gray-200 text-gray-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
+                              {coach.specialization}
+                            </span>
+                          )}
+                        </div>
+
+                        {coach.achievements && coach.achievements.length > 0 && (
+                          <div className="space-y-2 mb-6 text-left">
+                            {coach.achievements.map((achievement: string, idx: number) => (
+                              <span key={idx} className="flex items-start gap-2 text-sm text-gray-700 font-medium leading-relaxed">
+                                <span className="text-zenith-crimson mt-0.5">•</span>
+                                <span>{achievement}</span>
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {coach.description && (
+                          <div className="bg-gray-50 rounded-2xl p-5 mt-4 border border-gray-100 text-left">
+                            <div className="text-sm text-gray-700 leading-relaxed font-medium whitespace-pre-line">
+                              {coach.description}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )
+          }
+        </div >
+      </section >
 
       {/* Expected Results Section */}
-      <section className="py-32 bg-zenith-white relative overflow-hidden">
+      < section className="py-32 bg-zenith-white relative overflow-hidden" >
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-zenith-crimson/5 blur-3xl rounded-full" />
 
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -1079,8 +855,8 @@ const About: FC = () => {
             </div>
           </motion.div>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 };
 

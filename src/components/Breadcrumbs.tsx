@@ -10,16 +10,17 @@ interface BreadcrumbItem {
 interface BreadcrumbsProps {
   items?: BreadcrumbItem[];
   className?: string;
+  isDark?: boolean;
 }
 
-const Breadcrumbs = ({ items, className = '' }: BreadcrumbsProps) => {
+const Breadcrumbs = ({ items, className = '', isDark = false }: BreadcrumbsProps) => {
   const location = useLocation();
   const { t } = useTranslation();
 
   // Автоматическая генерация breadcrumbs из URL если items не переданы
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
     const pathnames = location.pathname.split('/').filter(x => x);
-    
+
     const breadcrumbs: BreadcrumbItem[] = [
       { label: t('navigation.home'), path: '/' }
     ];
@@ -37,7 +38,7 @@ const Breadcrumbs = ({ items, className = '' }: BreadcrumbsProps) => {
     let currentPath = '';
     pathnames.forEach((pathname, index) => {
       currentPath += `/${pathname}`;
-      
+
       // Последний элемент без ссылки
       if (index === pathnames.length - 1) {
         breadcrumbs.push({
@@ -62,11 +63,11 @@ const Breadcrumbs = ({ items, className = '' }: BreadcrumbsProps) => {
   }
 
   return (
-    <nav 
-      aria-label={t('breadcrumbs.navigation', 'Навигационная цепочка')} 
-      className={`bg-white border-b border-gray-100 ${className}`}
+    <nav
+      aria-label={t('breadcrumbs.navigation', 'Навигационная цепочка')}
+      className={`${isDark ? 'bg-transparent' : 'bg-white border-b border-gray-100'} ${className}`}
     >
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className={`${isDark ? '' : 'max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4'}`}>
         <ol className="flex items-center space-x-2 text-sm flex-wrap">
           {breadcrumbItems.map((item, index) => {
             const isLast = index === breadcrumbItems.length - 1;
@@ -75,24 +76,24 @@ const Breadcrumbs = ({ items, className = '' }: BreadcrumbsProps) => {
             return (
               <li key={index} className="flex items-center">
                 {index > 0 && (
-                  <ChevronRight 
-                    className="w-4 h-4 text-gray-400 mx-2" 
-                    aria-hidden="true" 
+                  <ChevronRight
+                    className={`w-4 h-4 mx-2 ${isDark ? 'text-white/30' : 'text-gray-400'}`}
+                    aria-hidden="true"
                   />
                 )}
-                
+
                 {item.path && !isLast ? (
                   <Link
                     to={item.path}
-                    className="flex items-center gap-1.5 text-gray-600 hover:text-primary-blue transition-colors font-medium"
+                    className={`flex items-center gap-1.5 transition-colors font-medium ${isDark ? 'text-white/60 hover:text-zenith-crimson' : 'text-gray-600 hover:text-primary-blue'}`}
                     aria-label={isFirst ? t('breadcrumbs.home', 'Вернуться на главную') : undefined}
                   >
                     {isFirst && <Home className="w-4 h-4" aria-hidden="true" />}
                     <span>{item.label}</span>
                   </Link>
                 ) : (
-                  <span 
-                    className="flex items-center gap-1.5 text-gray-900 font-semibold"
+                  <span
+                    className={`flex items-center gap-1.5 font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}
                     aria-current="page"
                   >
                     {isFirst && <Home className="w-4 h-4" aria-hidden="true" />}

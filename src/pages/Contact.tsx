@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import JsonLd from '../components/JsonLd';
 import Breadcrumbs from '../components/Breadcrumbs';
+import InnerHero from '../components/InnerHero';
 
 const Contact: FC = () => {
   const { t, i18n } = useTranslation();
@@ -63,122 +64,37 @@ const Contact: FC = () => {
           }
         }}
       />
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 relative z-20 text-white">
-        <Breadcrumbs
-          items={[
-            { label: t('navigation.home'), path: '/' },
-            { label: t('navigation.contacts') }
-          ]}
-        />
-      </div>
-      <section className="relative overflow-hidden py-24 bg-zenith-black">
-        {/* Enhanced Badminton Court Background */}
-        <div className="absolute inset-0">
-          {/* Dynamic Court with Lighting Effects */}
-          <div className="absolute inset-0 opacity-10">
-            <svg viewBox="0 0 1200 600" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
-              <defs>
-                <radialGradient id="courtGradient" cx="50%" cy="50%" r="70%">
-                  <stop offset="0%" stopColor="rgba(220,38,38,0.15)" />
-                  <stop offset="50%" stopColor="rgba(220,38,38,0.05)" />
-                  <stop offset="100%" stopColor="rgba(220,38,38,0.01)" />
-                </radialGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <rect width="1200" height="600" fill="url(#courtGradient)" />
-              <g stroke="rgba(255,255,255,0.4)" strokeWidth="3" fill="none" filter="url(#glow)">
-                <rect x="200" y="100" width="800" height="400" strokeWidth="4" />
-                <line x1="600" y1="100" x2="600" y2="500" strokeWidth="3" />
-                <line x1="200" y1="240" x2="1000" y2="240" />
-                <line x1="200" y1="360" x2="1000" y2="360" />
-              </g>
-            </svg>
+      <InnerHero
+        title={heroData?.title || t('navigation.contacts')}
+        subtitle={heroData?.subtitle || t('contact.heroDescription')}
+      >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10">
+          <div className="text-center group">
+            <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
+              24/7
+            </div>
+            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
+              {t('contact.hero.stats.support')}
+            </div>
           </div>
-
-          {/* Communication & Contact Elements */}
-          <div className="absolute top-12 left-8 md:top-16 md:left-16 w-16 h-16 md:w-20 md:h-20 opacity-20">
-            <svg viewBox="0 0 80 80" className="w-full h-full">
-              <rect x="25" y="15" width="30" height="50" fill="rgba(255,255,255,0.8)" rx="8" />
-              <rect x="28" y="20" width="24" height="35" fill="rgba(255,255,255,0.2)" rx="3" />
-            </svg>
+          <div className="text-center group">
+            <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
+              3
+            </div>
+            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
+              {t('contact.hero.stats.locations')}
+            </div>
           </div>
-
-          {/* Email/Letter Icon */}
-          <div className="absolute bottom-24 left-12 md:bottom-28 md:left-20 w-14 h-14 md:w-18 md:h-18 opacity-15 transform -rotate-12">
-            <svg viewBox="0 0 70 70" className="w-full h-full">
-              <rect x="10" y="20" width="50" height="35" fill="rgba(255,255,255,0.8)" rx="3" />
-              <path d="M10 20 L35 40 L60 20" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" />
-            </svg>
-          </div>
-        </div>
-
-        <div className="relative z-10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center text-white">
-              {heroData?.badge?.text && (
-                <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-bold mb-8">
-                  <Mail className="w-4 h-4" />
-                  <span>{heroData.badge.text}</span>
-                </div>
-              )}
-
-              {heroData?.title && (
-                <h1 className="text-6xl md:text-[6.5rem] lg:text-[10rem] font-black font-display text-white mb-8 uppercase tracking-tighter leading-[0.8] drop-shadow-[0_10px_30px_rgba(220,38,38,0.3)]">
-                  {heroData.title}
-                </h1>
-              )}
-
-              {heroData?.subtitle && (
-                <p className="text-xl md:text-3xl max-w-4xl mx-auto text-gray-400 font-medium leading-tight mb-16 uppercase tracking-tight">
-                  {heroData.subtitle}
-                </p>
-              )}
-
-              {/* Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 bg-white/5 backdrop-blur-md rounded-[3rem] p-10 border border-white/10 max-w-5xl mx-auto">
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">24/7</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('contact.hero.stats.support')}</div>
-                </motion.div>
-
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">3</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('contact.hero.stats.locations')}</div>
-                </motion.div>
-
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                >
-                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">100%</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('contact.hero.stats.response')}</div>
-                </motion.div>
-              </div>
+          <div className="text-center group col-span-2">
+            <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
+              100%
+            </div>
+            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
+              {t('contact.hero.stats.response')}
             </div>
           </div>
         </div>
-      </section>
+      </InnerHero>
 
       {/* Contact Info Cards */}
       <section className="py-24 bg-zenith-white">

@@ -6,6 +6,9 @@ import { fetchGyms, type CmsGym, fetchGymsHero, type CmsHero, fetchGymsPageLabel
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import { useTranslation } from 'react-i18next';
 import { GymCardSkeleton } from '../components/Skeletons';
+import InnerHero from '../components/InnerHero';
+import SEO from '../components/SEO';
+import { Sparkles } from 'lucide-react';
 
 const Gyms: FC = () => {
   const { t, i18n } = useTranslation();
@@ -104,271 +107,47 @@ const Gyms: FC = () => {
 
   return (
     <div className="min-h-screen bg-zenith-white">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-24 bg-zenith-black">
-        {/* Enhanced Badminton Court Background */}
-        <div className="absolute inset-0">
-          {/* Dynamic Court with Lighting Effects */}
-          <div className="absolute inset-0 opacity-10">
-            <svg viewBox="0 0 1200 600" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
-              <defs>
-                {/* Gradient for court surface */}
-                <radialGradient id="courtGradient" cx="50%" cy="50%" r="70%">
-                  <stop offset="0%" stopColor="rgba(220,38,38,0.15)" />
-                  <stop offset="50%" stopColor="rgba(220,38,38,0.05)" />
-                  <stop offset="100%" stopColor="rgba(220,38,38,0.01)" />
-                </radialGradient>
-
-                {/* Glow effect for lines */}
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-
-                {/* Shadow filter */}
-                <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.5" />
-                </filter>
-              </defs>
-
-              {/* Court Surface with gradient */}
-              <rect width="1200" height="600" fill="url(#courtGradient)" />
-
-              {/* Court Lines with glow effect */}
-              <g stroke="rgba(255,255,255,0.4)" strokeWidth="3" fill="none" filter="url(#glow)">
-                {/* Outer boundaries */}
-                <rect x="200" y="100" width="800" height="400" strokeWidth="4" />
-
-                {/* Center line */}
-                <line x1="600" y1="100" x2="600" y2="500" strokeWidth="3" />
-
-                {/* Service lines */}
-                <line x1="200" y1="240" x2="1000" y2="240" />
-                <line x1="200" y1="360" x2="1000" y2="360" />
-
-                {/* Short service lines */}
-                <line x1="320" y1="100" x2="320" y2="500" />
-                <line x1="880" y1="100" x2="880" y2="500" />
-
-                {/* Center service lines */}
-                <line x1="600" y1="240" x2="600" y2="360" />
-              </g>
-
-              {/* Enhanced Net with 3D effect */}
-              <g filter="url(#shadow)">
-                <line x1="600" y1="100" x2="600" y2="500" stroke="rgba(255,255,255,0.5)" strokeWidth="6" />
-                <rect x="596" y="280" width="8" height="40" fill="rgba(220,38,38,0.8)" rx="2" />
-
-                {/* Net mesh pattern */}
-                <g stroke="rgba(255,255,255,0.15)" strokeWidth="1">
-                  <line x1="590" y1="120" x2="610" y2="120" />
-                  <line x1="590" y1="140" x2="610" y2="140" />
-                  <line x1="590" y1="160" x2="610" y2="160" />
-                  <line x1="590" y1="180" x2="610" y2="180" />
-                  <line x1="590" y1="200" x2="610" y2="200" />
-                  <line x1="590" y1="220" x2="610" y2="220" />
-                  <line x1="590" y1="240" x2="610" y2="240" />
-                  <line x1="590" y1="260" x2="610" y2="260" />
-                </g>
-              </g>
-
-              {/* Spotlight effects */}
-              <g opacity="0.1">
-                <ellipse cx="400" cy="200" rx="150" ry="80" fill="rgba(220,38,38,0.3)" />
-                <ellipse cx="800" cy="400" rx="150" ry="80" fill="rgba(220,38,38,0.3)" />
-              </g>
-            </svg>
+      <InnerHero
+        title={heroData?.title || t('navigation.gyms')}
+        subtitle={heroData?.subtitle || t('gyms.hero.subtitle')}
+      >
+        <div className="hidden md:flex flex-col items-end gap-1">
+          <div className="text-4xl font-black font-display text-zenith-crimson uppercase tracking-tighter">
+            {cmsGyms.length}
           </div>
-
-          {/* Flying Shuttlecocks Animation */}
-          <div className="absolute top-12 left-1/4 w-8 h-8 md:w-12 md:h-12 opacity-20 animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}>
-            <svg viewBox="0 0 40 40" className="w-full h-full transform rotate-45">
-              <defs>
-                <radialGradient id="shuttleGrad1" cx="50%" cy="30%" r="60%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.3)" />
-                </radialGradient>
-              </defs>
-              <circle cx="20" cy="30" r="4" fill="url(#shuttleGrad1)" />
-              <g fill="rgba(255,255,255,0.4)">
-                <path d="M20 26 L17 8 L20 12 L23 8 Z" />
-                <path d="M16 27 L10 12 L16 15 L19 13 Z" />
-                <path d="M24 27 L30 12 L24 15 L21 13 Z" />
-              </g>
-            </svg>
-          </div>
-
-          <div className="absolute top-20 right-1/3 w-6 h-6 md:w-10 md:h-10 opacity-15 animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '2.5s' }}>
-            <svg viewBox="0 0 40 40" className="w-full h-full transform -rotate-12">
-              <circle cx="20" cy="30" r="4" fill="rgba(255,255,255,0.8)" />
-              <g fill="rgba(255,255,255,0.3)">
-                <path d="M20 26 L17 8 L20 12 L23 8 Z" />
-                <path d="M16 27 L10 12 L16 15 L19 13 Z" />
-                <path d="M24 27 L30 12 L24 15 L21 13 Z" />
-              </g>
-            </svg>
-          </div>
-
-          {/* Gym Equipment Icons */}
-          <div className="absolute bottom-20 right-8 md:bottom-24 md:right-16 w-16 h-16 md:w-20 md:h-20 opacity-15 animate-pulse">
-            <svg viewBox="0 0 80 80" className="w-full h-full">
-              <defs>
-                <linearGradient id="equipGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.7)" />
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.3)" />
-                </linearGradient>
-              </defs>
-
-              {/* Racket 1 */}
-              <g transform="translate(10,10) rotate(-15)">
-                <ellipse cx="15" cy="15" rx="12" ry="18" fill="none" stroke="url(#equipGradient)" strokeWidth="2" />
-                <rect x="12" y="33" width="6" height="15" fill="url(#equipGradient)" rx="3" />
-                <g stroke="rgba(255,255,255,0.2)" strokeWidth="0.5">
-                  <line x1="8" y1="10" x2="8" y2="20" />
-                  <line x1="15" y1="5" x2="15" y2="25" />
-                  <line x1="22" y1="10" x2="22" y2="20" />
-                  <line x1="5" y1="15" x2="25" y2="15" />
-                </g>
-              </g>
-
-              {/* Racket 2 */}
-              <g transform="translate(35,15) rotate(25)">
-                <ellipse cx="15" cy="15" rx="12" ry="18" fill="none" stroke="url(#equipGradient)" strokeWidth="2" />
-                <rect x="12" y="33" width="6" height="15" fill="url(#equipGradient)" rx="3" />
-                <g stroke="rgba(255,255,255,0.2)" strokeWidth="0.5">
-                  <line x1="8" y1="10" x2="8" y2="20" />
-                  <line x1="15" y1="5" x2="15" y2="25" />
-                  <line x1="22" y1="10" x2="22" y2="20" />
-                  <line x1="5" y1="15" x2="25" y2="15" />
-                </g>
-              </g>
-            </svg>
-          </div>
-
-          {/* Court Lines Enhancement */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-20 md:w-48 md:h-32 opacity-5">
-            <svg viewBox="0 0 100 60" className="w-full h-full">
-              <defs>
-                <filter id="courtGlow">
-                  <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <g stroke="rgba(255,255,255,0.3)" strokeWidth="1" fill="none" filter="url(#courtGlow)">
-                <rect x="10" y="10" width="80" height="40" />
-                <line x1="50" y1="10" x2="50" y2="50" />
-                <line x1="10" y1="25" x2="90" y2="25" />
-                <line x1="10" y1="35" x2="90" y2="35" />
-              </g>
-            </svg>
-          </div>
-
-          {/* Motion Trails */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/3 left-1/4 w-1 h-8 bg-gradient-to-b from-white/30 to-transparent rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-            <div className="absolute top-2/3 right-1/3 w-1 h-6 bg-gradient-to-b from-zenith-crimson/20 to-transparent rounded-full animate-pulse" style={{ animationDelay: '1.2s' }}></div>
-            <div className="absolute bottom-1/4 left-1/3 w-1 h-10 bg-gradient-to-b from-white/20 to-transparent rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="text-[10px] text-white/50 uppercase tracking-widest font-black">
+            {t('gyms.hero.stats.locations', 'Локаций')}
           </div>
         </div>
+      </InnerHero>
 
-        <div className="relative z-10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center text-white">
-              {heroData?.badge?.text && (
-                <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-bold mb-8">
-                  <span className="text-lg">🏸</span>
-                  <span>{heroData.badge.text}</span>
-                </div>
-              )}
-
-              {heroData?.title && (
-                <h1 className="text-6xl md:text-[6rem] lg:text-[8rem] font-black font-display text-white mb-8 uppercase tracking-tighter leading-[0.85] drop-shadow-2xl">
-                  {heroData.title}
-                </h1>
-              )}
-
-              {heroData?.subtitle && (
-                <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-300 font-medium leading-relaxed mb-16">
-                  {heroData.subtitle}
-                </p>
-              )}
-
-              {/* Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10 max-w-5xl mx-auto">
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <div className="text-5xl md:text-6xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">3</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('gyms.hero.stats.facilities')}</div>
-                </motion.div>
-
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <div className="text-5xl md:text-6xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">6</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('gyms.hero.stats.courts')}</div>
-                </motion.div>
-
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                >
-                  <div className="text-5xl md:text-6xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">2</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('gyms.hero.stats.locations')}</div>
-                </motion.div>
-              </div>
+      <section className="py-20 bg-zenith-white">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-20 gap-8">
+            <div className="space-y-2 text-center md:text-left">
+              <h2 className="text-4xl md:text-5xl font-black font-display text-zenith-black uppercase tracking-tight">
+                {t('gyms.list.title')}
+              </h2>
+              <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">
+                {t('gyms.list.subtitle')}
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Main Content */}
-      <section className="py-24 px-4 bg-zenith-white relative">
-        <div className="max-w-[1600px] mx-auto">
-          {/* Filter Buttons - Modern Design */}
-          <div className="flex flex-wrap justify-center gap-4 mb-20">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-all duration-300 ${filter === 'all'
-                ? 'bg-zenith-black text-white shadow-2xl scale-110'
-                : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                }`}>
-              {t('gyms.filters.all')}
-            </button>
-
-            <button
-              onClick={() => setFilter('children')}
-              className={`px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-all duration-300 flex items-center gap-2 ${filter === 'children'
-                ? 'bg-zenith-crimson text-white shadow-2xl scale-110'
-                : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                }`}>
-              <span>👨‍👩‍👧‍👦</span>
-              {t('gyms.filters.children')}
-            </button>
-
-            <button
-              onClick={() => setFilter('adults')}
-              className={`px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-all duration-300 flex items-center gap-2 ${filter === 'adults'
-                ? 'bg-zenith-black text-white shadow-2xl scale-110 border border-zenith-crimson/30'
-                : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                }`}>
-              <span>🏸</span>
-              {t('gyms.filters.adults')}
-            </button>
+            <div className="inline-flex p-2 bg-white rounded-[2rem] border border-gray-100 shadow-xl overflow-x-auto max-w-full">
+              {[
+                { id: 'all', label: t('gyms.filters.all') },
+                { id: 'children', label: t('gyms.filters.children') },
+                { id: 'adults', label: t('gyms.filters.adults') }
+              ].map((btn) => (
+                <button
+                  key={btn.id}
+                  onClick={() => setFilter(btn.id as any)}
+                  className={`whitespace-nowrap px-8 py-3 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all ${filter === btn.id ? 'bg-zenith-black text-white shadow-lg' : 'text-gray-400 hover:text-zenith-crimson'}`}
+                >
+                  {btn.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Gym Selection or Detail View */}
@@ -664,8 +443,8 @@ const Gyms: FC = () => {
             )
           )}
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 };
 

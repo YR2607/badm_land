@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -32,81 +33,87 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 ${isHome ? (scrolled ? 'glass' : 'bg-transparent') : 'glass'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${isHome ? (scrolled ? 'bg-white/80 backdrop-blur-2xl border-b border-gray-100 shadow-sm' : 'bg-transparent') : 'bg-white/80 backdrop-blur-2xl border-b border-gray-100 shadow-sm'}`}>
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center space-x-3">
-            <img 
-              src="/altLGOO.jpg" 
-              alt="Altius" 
-              className="h-9 w-9 rounded-lg object-cover" 
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-            <span className={`text-3xl font-display font-semibold tracking-tight ${isHome && !scrolled ? 'text-white' : 'text-primary-black'}`}>Altius</span>
+        <div className="flex justify-between items-center h-20">
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="relative">
+              <img
+                src="/altLGOO.jpg"
+                alt="Altius"
+                className="h-10 w-10 rounded-xl object-cover shadow-lg group-hover:scale-110 transition-transform duration-300"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              <div className="absolute inset-0 rounded-xl ring-1 ring-black/5" />
+            </div>
+            <span className={`text-3xl font-display font-black uppercase tracking-tighter transition-colors duration-300 ${isHome && !scrolled ? 'text-white' : 'text-zenith-black'}`}>Altius</span>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden xl:flex items-center space-x-10">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative text-base font-medium transition-colors duration-200 ${
-                  isActive(item.path)
-                    ? 'text-primary-blue'
-                    : isHome && !scrolled ? 'text-white hover:text-primary-yellow' : 'text-gray-700 hover:text-primary-blue'
-                }`}
+                className={`relative text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 hover:text-zenith-crimson ${isActive(item.path)
+                  ? 'text-zenith-crimson'
+                  : isHome && !scrolled ? 'text-white/80 hover:text-white' : 'text-zenith-black/60 hover:text-zenith-black'
+                  }`}
               >
                 {item.label}
                 {isActive(item.path) && (
-                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-blue to-primary-orange" />
+                  <motion.div
+                    layoutId="nav-underline"
+                    className="absolute -bottom-2 left-0 right-0 h-1 bg-zenith-crimson rounded-full"
+                  />
                 )}
               </Link>
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden xl:flex items-center space-x-6">
+            <div className={`h-8 w-[1px] transition-colors ${isHome && !scrolled ? 'bg-white/20' : 'bg-gray-200'}`} />
             <LanguageSwitcher />
           </div>
 
-          <button 
-            className="md:hidden p-2" 
+          <button
+            className={`xl:hidden p-3 rounded-2xl transition-colors ${isHome && !scrolled ? 'text-white bg-white/10' : 'text-zenith-black bg-gray-100'}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? t('navigation.closeMenu', 'Закрыть меню') : t('navigation.openMenu', 'Открыть меню')}
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-menu"
+            aria-label={isMenuOpen ? t('navigation.closeMenu') : t('navigation.openMenu')}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
-      {isMenuOpen && (
-        <nav 
-          id="mobile-menu" 
-          className="md:hidden glass"
-          role="navigation"
-          aria-label={t('navigation.mobileMenu', 'Мобильное меню')}
-        >
-          <div className="px-4 py-4 space-y-4">
-            {navItems.map((item) => (
-              <Link 
-                key={item.path} 
-                to={item.path} 
-                className={`block text-base font-medium transition-colors duration-200 ${isActive(item.path) ? 'text-primary-blue' : 'text-gray-700 hover:text-primary-blue'}`} 
-                onClick={() => setIsMenuOpen(false)}
-                aria-current={isActive(item.path) ? 'page' : undefined}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="pt-2 border-t border-gray-200">
-              <LanguageSwitcher />
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.nav
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="xl:hidden bg-white border-b border-gray-100 shadow-2xl overflow-hidden"
+          >
+            <div className="px-6 py-10 space-y-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`block text-2xl font-black uppercase tracking-tighter transition-colors ${isActive(item.path) ? 'text-zenith-crimson' : 'text-zenith-black hover:text-zenith-crimson'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div className="pt-8 border-t border-gray-100 flex justify-between items-center">
+                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Language Select</span>
+                <LanguageSwitcher />
+              </div>
             </div>
-          </div>
-        </nav>
-      )}
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

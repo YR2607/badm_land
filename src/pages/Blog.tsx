@@ -7,6 +7,7 @@ import { proxied } from '../utils/blockFacebookImages';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
+import InnerHero from '../components/InnerHero';
 import { NewsCardSkeleton } from '../components/Skeletons';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
@@ -224,115 +225,22 @@ const Blog: FC = () => {
         description={t('news.hero.subtitle')}
         image="https://altius.md/og-blog.jpg"
       />
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 relative z-20">
-        <Breadcrumbs
-          items={[
-            { label: t('navigation.home'), path: '/' },
-            { label: t('navigation.news') }
-          ]}
-        />
-      </div>
-      <section className="relative overflow-hidden py-24 bg-zenith-black">
-        {/* Enhanced Badminton Court Background */}
-        <div className="absolute inset-0">
-          {/* Dynamic Court with Lighting Effects */}
-          <div className="absolute inset-0 opacity-10">
-            <svg viewBox="0 0 1200 600" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
-              <defs>
-                <radialGradient id="courtGradient" cx="50%" cy="50%" r="70%">
-                  <stop offset="0%" stopColor="rgba(220,38,38,0.15)" />
-                  <stop offset="50%" stopColor="rgba(220,38,38,0.05)" />
-                  <stop offset="100%" stopColor="rgba(220,38,38,0.01)" />
-                </radialGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <rect width="1200" height="600" fill="url(#courtGradient)" />
-              <g stroke="rgba(255,255,255,0.4)" strokeWidth="3" fill="none" filter="url(#glow)">
-                <rect x="200" y="100" width="800" height="400" strokeWidth="4" />
-                <line x1="600" y1="100" x2="600" y2="500" strokeWidth="3" />
-                <line x1="200" y1="240" x2="1000" y2="240" />
-                <line x1="200" y1="360" x2="1000" y2="360" />
-              </g>
-            </svg>
-          </div>
 
-          {/* News & Media Elements */}
-          <div className="absolute top-16 left-8 md:top-20 md:left-16 w-14 h-14 md:w-18 md:h-18 opacity-20">
-            <svg viewBox="0 0 80 80" className="w-full h-full">
-              <rect x="15" y="20" width="50" height="40" fill="rgba(255,255,255,0.8)" rx="3" />
-              <rect x="20" y="25" width="20" height="3" fill="rgba(255,255,255,0.6)" rx="1" />
-            </svg>
+      <InnerHero
+        title={t('navigation.news')}
+        subtitle={t('news.hero.subtitle')}
+      >
+        <div className="hidden lg:grid grid-cols-2 gap-4 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10">
+          <div className="text-center">
+            <div className="text-4xl font-black font-display text-zenith-crimson">50+</div>
+            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black">{t('news.hero.stats.articles')}</div>
           </div>
-
-          {/* Tournament Trophy */}
-          <div className="absolute bottom-16 right-16 md:bottom-20 md:right-24 w-10 h-10 md:w-14 md:h-14 opacity-15">
-            <svg viewBox="0 0 50 50" className="w-full h-full">
-              <path d="M12 15 Q12 12 15 12 L35 12 Q38 12 38 15 L38 25 Q38 30 33 30 L17 30 Q12 30 12 25 Z" fill="rgba(220,38,38,0.5)" />
-            </svg>
+          <div className="text-center">
+            <div className="text-4xl font-black font-display text-zenith-crimson">20+</div>
+            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black">{t('news.hero.badge')}</div>
           </div>
         </div>
-
-        <div className="relative z-10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center text-white">
-              <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-bold mb-8">
-                <Globe className="w-4 h-4" />
-                <span>{t('news.hero.badge')}</span>
-              </div>
-
-              <h1 className="text-6xl md:text-[6.5rem] lg:text-[10rem] font-black font-display text-white mb-8 uppercase tracking-tighter leading-[0.8] drop-shadow-[0_10px_30px_rgba(220,38,38,0.3)]">
-                {t('news.hero.title')}
-              </h1>
-
-              <p className="text-xl md:text-3xl max-w-4xl mx-auto text-gray-400 font-medium leading-tight mb-16 uppercase tracking-tight">
-                {t('news.hero.subtitle')}
-              </p>
-
-              {/* Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 bg-white/5 backdrop-blur-md rounded-[3rem] p-10 border border-white/10 max-w-5xl mx-auto">
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">50+</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('news.hero.stats.articles')}</div>
-                </motion.div>
-
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">20+</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('news.hero.stats.events')}</div>
-                </motion.div>
-
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                >
-                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">5</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('news.hero.stats.categories')}</div>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      </InnerHero>
 
       <section ref={filtersRef as any} className="py-12 bg-zenith-white scroll-mt-28 md:scroll-mt-32">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -457,32 +365,34 @@ const Blog: FC = () => {
       </section>
 
       {/* Pagination Controls */}
-      {filteredNews.length > pageSize && (
-        <section className="pb-24">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between gap-8 bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
-              <button
-                className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all ${page > 1 ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
-                onClick={() => page > 1 && setPage(p => Math.max(1, p - 1))}
-                disabled={page <= 1}
-              >
-                ← {t('common.previous')}
-              </button>
-              <div className="text-[10px] font-black text-zenith-black/40 uppercase tracking-[0.2em] hidden md:block">
-                {t('common.page')} {page} {t('common.of')} {totalPages} • {t('common.showing')} {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filteredNews.length)} {t('common.of')} {filteredNews.length}
+      {
+        filteredNews.length > pageSize && (
+          <section className="pb-24">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between gap-8 bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
+                <button
+                  className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all ${page > 1 ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
+                  onClick={() => page > 1 && setPage(p => Math.max(1, p - 1))}
+                  disabled={page <= 1}
+                >
+                  ← {t('common.previous')}
+                </button>
+                <div className="text-[10px] font-black text-zenith-black/40 uppercase tracking-[0.2em] hidden md:block">
+                  {t('common.page')} {page} {t('common.of')} {totalPages} • {t('common.showing')} {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filteredNews.length)} {t('common.of')} {filteredNews.length}
+                </div>
+                <button
+                  className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all ${page < totalPages ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
+                  onClick={() => page < totalPages && setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page >= totalPages}
+                >
+                  {t('common.next')} →
+                </button>
               </div>
-              <button
-                className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all ${page < totalPages ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
-                onClick={() => page < totalPages && setPage(p => Math.min(totalPages, p + 1))}
-                disabled={page >= totalPages}
-              >
-                {t('common.next')} →
-              </button>
             </div>
-          </div>
-        </section>
-      )}
-    </div>
+          </section>
+        )
+      }
+    </div >
   );
 };
 
