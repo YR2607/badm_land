@@ -31,349 +31,126 @@ interface AchievementsSectionProps {
 
 const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
   const { t } = useTranslation();
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const pathRef = useRef<SVGPathElement | null>(null);
-  const shuttleRef = useRef<SVGGElement | null>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-
-  function getCallToActionIcon(iconName: string) {
-    switch (iconName) {
-      case 'Trophy': return <Trophy className="w-5 h-5 mr-2" />;
-      case 'Award': return <Award className="w-5 h-5 mr-2" />;
-      default: return <Star className="w-5 h-5 mr-2" />;
-    }
-  }
-
-  function getAchievementIcon(iconName?: string) {
-    switch (iconName) {
-      case 'Crown': return <Crown className="w-8 h-8" />;
-      case 'Target': return <Target className="w-8 h-8" />;
-      case 'Heart': return <Heart className="w-8 h-8" />;
-      case 'Zap': return <Zap className="w-8 h-8" />;
-      case 'Trophy': return <Trophy className="w-8 h-8" />;
-      case 'Award': return <Award className="w-8 h-8" />;
-      case 'Medal': return <Medal className="w-8 h-8" />;
-      default: return null;
-    }
-  }
-
-  const sanitizeColorClass = (color?: string) => {
-    if (!color) return '';
-    return color
-      .split(/\s+/)
-      .filter((cls) =>
-        cls &&
-        !cls.startsWith('via-') &&
-        !cls.includes('white') &&
-        !cls.startsWith('bg-gradient')
-      )
-      .join(' ') || '';
-  };
-
-  const resolveIconBackground = (color?: string): {
-    className?: string;
-    style?: CSSProperties;
-  } => {
-    if (!color) {
-      return { className: 'bg-emerald-500' };
-    }
-
-    if (color.startsWith('#')) {
-      return { style: { backgroundColor: color } };
-    }
-
-    const tokens = color.split(/\s+/).filter(Boolean);
-    const bgToken = tokens.find((token) => token.startsWith('bg-'));
-    if (bgToken) {
-      return { className: bgToken };
-    }
-
-    const fromToken = tokens.find((token) => token.startsWith('from-'));
-    if (fromToken) {
-      return { className: fromToken.replace('from-', 'bg-') };
-    }
-
-    const toToken = tokens.find((token) => token.startsWith('to-'));
-    if (toToken) {
-      return { className: toToken.replace('to-', 'bg-') };
-    }
-
-    return { className: color };
-  };
 
   const defaultAchievements = [
     {
-      icon: <Crown className="w-8 h-8" />,
+      icon: <Trophy className="w-12 h-12" />,
       title: t('home.achievements.items.champions.title'),
       count: '15',
       description: t('home.achievements.items.champions.description'),
-      color: 'bg-yellow-500'
+      className: "md:col-span-2 md:row-span-2 bg-zenith-crimson text-white"
     },
     {
-      icon: <Target className="w-8 h-8" />,
+      icon: <Medal className="w-10 h-10" />,
       title: t('home.achievements.items.medals.title'),
       count: '47',
       description: t('home.achievements.items.medals.description'),
-      color: 'bg-emerald-500'
+      className: "md:col-span-2 bg-white text-zenith-black"
     },
     {
-      icon: <Heart className="w-8 h-8" />,
+      icon: <Target className="w-10 h-10" />,
       title: t('home.achievements.items.athletes.title'),
       count: '500+',
       description: t('home.achievements.items.athletes.description'),
-      color: 'bg-rose-500'
+      className: "md:col-span-1 bg-white text-zenith-black"
     },
     {
-      icon: <Zap className="w-8 h-8" />,
+      icon: <Zap className="w-10 h-10" />,
       title: t('home.achievements.items.years.title'),
       count: '15',
       description: t('home.achievements.items.years.description'),
-      color: 'bg-violet-500'
+      className: "md:col-span-1 bg-zenith-black text-white"
     }
   ];
 
-  // Prefer CMS items when provided; fallback to translated defaults
-  const achievements = (cmsData?.achievements && cmsData.achievements.length > 0
-    ? cmsData.achievements.map((cmsItem, index) => {
-        const fallback = defaultAchievements[index % defaultAchievements.length];
-        const sanitizedColor = sanitizeColorClass(cmsItem.color);
-        return {
-          icon: getAchievementIcon(cmsItem.icon) || fallback.icon,
-          title: cmsItem.title || fallback.title,
-          count: cmsItem.count || fallback.count,
-          description: cmsItem.description || fallback.description,
-          color: sanitizedColor || fallback.color
-        };
-      })
-    : defaultAchievements
-  );
-
-  // Debug logging removed for production
-
-  const defaultMilestones = [
-    {
-      year: '2010',
-      title: t('home.achievements.timeline.defaults.2010.title'),
-      description: t('home.achievements.timeline.defaults.2010.description')
-    },
-    {
-      year: '2015',
-      title: t('home.achievements.timeline.defaults.2015.title'),
-      description: t('home.achievements.timeline.defaults.2015.description')
-    },
-    {
-      year: '2018',
-      title: t('home.achievements.timeline.defaults.2018.title'),
-      description: t('home.achievements.timeline.defaults.2018.description')
-    },
-    {
-      year: '2020',
-      title: t('home.achievements.timeline.defaults.2020.title'),
-      description: t('home.achievements.timeline.defaults.2020.description')
-    },
-    {
-      year: '2024',
-      title: t('home.achievements.timeline.defaults.2024.title'),
-      description: t('home.achievements.timeline.defaults.2024.description')
-    }
-  ];
-
-  const milestones = cmsData?.timeline?.milestones || defaultMilestones;
-  const milestoneProgressPoints = milestones.map((_, i) => (i + 1) / (milestones.length + 1));
-
-  useEffect(() => {
-    const updatePosition = () => {
-      if (!containerRef.current || !pathRef.current || !shuttleRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const viewportH = window.innerHeight || document.documentElement.clientHeight;
-      // Прогресс анимации от 0 до 1, пока секция прокручивается через вьюпорт
-      let progress = (viewportH - rect.top) / (rect.height + viewportH);
-      progress = Math.max(0, Math.min(1, progress));
-      setScrollProgress(progress);
-
-      const path = pathRef.current;
-      const total = path.getTotalLength();
-      const len = total * progress;
-      const pt = path.getPointAtLength(len);
-      const next = path.getPointAtLength(Math.min(total, len + 1));
-      const angle = Math.atan2(next.y - pt.y, next.x - pt.x) * (180 / Math.PI);
-
-      // Центруем 28x28 воланчик относительно точки
-      shuttleRef.current.setAttribute(
-        'transform',
-        `translate(${pt.x}, ${pt.y}) rotate(${angle}) translate(-14, -14)`
-      );
-    };
-
-    updatePosition();
-    window.addEventListener('scroll', updatePosition, { passive: true });
-    window.addEventListener('resize', updatePosition);
-    return () => {
-      window.removeEventListener('scroll', updatePosition as any);
-      window.removeEventListener('resize', updatePosition as any);
-    };
-  }, []);
+  const achievements = defaultAchievements;
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-32 bg-zenith-white overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header & stats temporarily hidden per request */}
-        {false && (
-          <>
-            <motion.div
-              className="text-center mb-16"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 via-yellow-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300">
-                  <Medal className="w-8 h-8 text-white drop-shadow-sm" />
-                </div>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-                  {cmsData?.title || t('home.achievements.title')}
-                </h2>
-              </div>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                {cmsData?.subtitle || t('home.achievements.subtitle')}
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-              {achievements.map((achievement: any, index: number) => (
-                <motion.div
-                  key={index}
-                  className="bg-white rounded-3xl p-8 text-center group transition-all duration-300"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  {(() => {
-                    const bg = resolveIconBackground(achievement.color);
-                    const wrapperClass = `w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4 ${bg.className || ''}`.trim();
-                    const wrapperStyle = bg.style ?? (!bg.className ? { backgroundColor: '#34d399' } : undefined);
-                    return (
-                      <div className={wrapperClass} style={wrapperStyle}>
-                        {achievement.icon}
-                      </div>
-                    );
-                  })()}
-                  <div className="text-3xl font-bold text-primary-black mb-2">{achievement.count}</div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{achievement.title}</h3>
-                  <p className="text-gray-600 text-sm">{achievement.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Timeline */}
         <motion.div
-          className="bg-white rounded-2xl p-8 relative overflow-hidden"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className="mb-24 relative"
+          initial={{ opacity: 0, x: -100 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">
-            {cmsData?.timeline?.title || t('home.achievements.timeline.title')}
-          </h3>
-          
-          <div className="relative min-h-[400px] md:min-h-[620px]" ref={containerRef}>
-            {/* Wavy timeline path - скрыт на мобильных */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 1000 620" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="tlGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#1e3a8a" />
-                  <stop offset="100%" stopColor="#f59e0b" />
-                </linearGradient>
-                <linearGradient id="shuttleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#1e3a8a" />
-                  <stop offset="100%" stopColor="#3b82f6" />
-                </linearGradient>
-              </defs>
-              {/* Извилистый путь, проходящий через всю высоту */}
-              <path ref={pathRef} id="timelinePath" d="M 50 40 C 250 80, 200 160, 420 200 S 620 320, 820 300 S 700 440, 500 480 S 300 560, 150 600" fill="none" stroke="url(#tlGrad)" strokeWidth="4" strokeLinecap="round" strokeDasharray="10 14" />
-
-              {/* Воланчик-изображение, двигается по пути при скролле - уменьшенный размер */}
-              <g ref={shuttleRef}>
-                <image href="/shuttle.png" width="28" height="28" x="0" y="0" preserveAspectRatio="xMidYMid meet" />
-              </g>
-            </svg>
-
-            <div className="space-y-6 md:space-y-8 relative">
-              {milestones.map((milestone, index) => {
-                const mp = milestoneProgressPoints[index];
-                const isActive = scrollProgress >= mp - 0.02;
-                const isLeft = index % 2 === 0;
-                return (
-                <motion.div
-                  key={index}
-                  className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-col md:flex-row`}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  style={{ marginTop: index === 0 ? '20px' : undefined }}
-                >
-                  <div className={`w-full md:w-1/2 ${isLeft ? 'md:pl-8 md:text-left' : 'md:pr-8 md:text-right'} text-center md:text-left px-4 md:px-0 relative`}>
-                    {isActive && (
-                      <>
-                        {/* Тонкая вертикальная полоса у края (не рамка) - скрыта на мобильных */}
-                        <div className={`hidden md:block absolute top-3 bottom-3 ${isLeft ? 'left-0' : 'right-0'} w-[2px] bg-gradient-to-b from-primary-yellow/60 to-primary-blue/60`}></div>
-                        {/* Деликатное свечение позади карточки */}
-                        <div className="absolute -inset-2 bg-gradient-to-r from-primary-yellow/10 to-primary-blue/10 blur-xl rounded-2xl"></div>
-                      </>
-                    )}
-                    <div className={`relative bg-white rounded-lg p-4 md:p-6 transition-transform duration-300 shadow-sm ${isActive ? 'scale-[1.02]' : ''}`}>
-                      <div className={`text-xl md:text-2xl font-bold mb-2 ${isActive ? 'text-primary-yellow' : 'text-primary-blue'}`}>{milestone.year}</div>
-                      <h4 className={`text-base md:text-lg font-semibold mb-2 ${isActive ? 'text-primary-blue' : 'text-gray-900'}`}>{milestone.title}</h4>
-                      <p className="text-sm md:text-base text-gray-600 leading-relaxed">{milestone.description}</p>
-                      {/* Аккуратная линия-подчеркивание снизу */}
-                      <div className={`absolute left-0 bottom-0 h-[2px] bg-gradient-to-r from-primary-yellow to-primary-blue transition-all duration-500 ${isActive ? 'w-full' : 'w-0'}`}></div>
-                    </div>
-                  </div>
-                  
-                  {/* Соединительная точка заменена на пустое пространство (путь проходит позади) - скрыта на мобильных */}
-                  <div className="hidden md:block w-4" />
-                  
-                  <div className="hidden md:block md:w-1/2"></div>
-                </motion.div>
-              );})}
-            </div>
-          </div>
+          <h2 className="text-8xl md:text-[12rem] font-black font-display leading-[0.8] tracking-tighter uppercase text-zenith-black opacity-10 absolute -top-10 left-0 pointer-events-none select-none">
+            Impact
+          </h2>
+          <h2 className="text-5xl md:text-8xl font-black font-display leading-tight-impact tracking-tighter uppercase text-zenith-black relative z-10">
+            {cmsData?.title || t('home.achievements.title', 'Наши достижения')}
+          </h2>
+          <div className="w-32 h-4 bg-zenith-crimson mt-8" />
         </motion.div>
 
-        {/* Call to Action */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 min-h-[600px]">
+          {achievements.map((item, index) => (
+            <motion.div
+              key={index}
+              className={`bento-card p-10 flex flex-col justify-between group cursor-default ${item.className}`}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+            >
+              <div className="flex justify-between items-start">
+                <div className="p-4 rounded-2xl bg-current/10 backdrop-blur-sm group-hover:scale-110 transition-transform duration-500">
+                  {item.icon}
+                </div>
+                <div className="text-6xl md:text-8xl font-black font-display tracking-tighter opacity-20">
+                  0{index + 1}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-7xl md:text-9xl font-black font-display tracking-tighter mb-4 leading-none">
+                  {item.count}
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-tight mb-4">
+                  {item.title}
+                </h3>
+                <p className="text-lg opacity-80 font-medium leading-relaxed max-w-md">
+                  {item.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Timeline Bento CTA */}
         <motion.div
-          className="text-center mt-16 px-4"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className="mt-6 bento-card bg-zenith-black text-white p-12 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 1 }}
         >
-          <motion.div 
-            className="inline-flex items-center px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary-blue to-primary-yellow text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer max-w-full"
-            whileHover={{ 
-              scale: 1.05,
-              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-            }}
+          <div className="max-w-2xl">
+            <h3 className="text-4xl md:text-6xl font-black font-display uppercase tracking-tight leading-none mb-8">
+              {t('home.achievements.timeline.title', 'История успеха')}
+            </h3>
+            <p className="text-xl md:text-2xl opacity-70 font-medium leading-relaxed">
+              {t('home.achievements.subtitle', 'Мы прошли длинный путь от маленькой секции до ведущего клуба страны, воспитав сотни чемпионов.')}
+            </p>
+          </div>
+          <motion.button
+            className="group relative px-12 py-6 bg-zenith-crimson text-white font-black uppercase tracking-widest text-xl overflow-hidden"
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
+            <span className="relative z-10">{t('common.more', 'Узнать больше')}</span>
             <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.6 }}
-              className="flex-shrink-0"
-            >
-              {getCallToActionIcon(cmsData?.callToAction?.icon || 'Star')}
-            </motion.div>
-            <span className="font-semibold text-sm sm:text-base md:text-lg text-center leading-tight">
-              {cmsData?.callToAction?.text || t('home.achievements.cta')}
+              className="absolute inset-0 bg-white"
+              initial={{ x: "-100%" }}
+              whileHover={{ x: 0 }}
+              transition={{ duration: 0.4, ease: "circOut" }}
+            />
+            <span className="absolute inset-0 flex items-center justify-center text-zenith-black font-black uppercase tracking-widest text-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+              {t('common.more', 'Узнать больше')}
             </span>
-          </motion.div>
+          </motion.button>
         </motion.div>
       </div>
     </section>

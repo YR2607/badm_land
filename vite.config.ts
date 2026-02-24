@@ -23,6 +23,7 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    allowedHosts: true,
     // Rewrite Studio static paths in dev to match vercel.json
     middlewareMode: false,
     hmr: true,

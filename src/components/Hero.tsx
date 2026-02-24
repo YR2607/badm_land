@@ -25,7 +25,7 @@ const Hero = ({ cmsData }: HeroProps) => {
     if (!node || !vid) return;
 
     const onMeta = () => {
-      try { vid.playbackRate = 0.5; } catch {}
+      try { vid.playbackRate = 0.5; } catch { }
     };
     vid.addEventListener('loadedmetadata', onMeta);
 
@@ -40,7 +40,7 @@ const Hero = ({ cmsData }: HeroProps) => {
         if (!vid) return;
         if (finishedRef.current) return;
         if (entry.isIntersecting && entry.intersectionRatio > 0.25) {
-          vid.play().then(() => { try { vid.playbackRate = 0.5; } catch {} }).catch(() => undefined);
+          vid.play().then(() => { try { vid.playbackRate = 0.5; } catch { } }).catch(() => undefined);
         } else {
           vid.pause();
         }
@@ -57,8 +57,8 @@ const Hero = ({ cmsData }: HeroProps) => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0">
+    <section ref={sectionRef} className="relative h-screen flex items-center justify-center overflow-hidden bg-zenith-white">
+      <div className="absolute inset-0 scanlines">
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover video-shift-mobile"
@@ -67,11 +67,10 @@ const Hero = ({ cmsData }: HeroProps) => {
           muted
           playsInline
         />
-        <div className="absolute inset-0 bg-black/45" />
-        {/* ultra-smooth bottom fade into white via CSS mask (starts higher) */}
+        <div className="absolute inset-0 bg-zenith-black/40" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70vh] md:h-[75vh]">
           <div
-            className="w-full h-full bg-white"
+            className="w-full h-full bg-zenith-white"
             style={{
               WebkitMaskImage:
                 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.01) 10%, rgba(0,0,0,0.03) 25%, rgba(0,0,0,0.08) 45%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.30) 75%, rgba(0,0,0,0.55) 90%, rgba(0,0,0,0.80) 97%, rgba(0,0,0,1) 100%)',
@@ -81,52 +80,57 @@ const Hero = ({ cmsData }: HeroProps) => {
           />
         </div>
       </div>
-      <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 text-center text-white">
-        {/* increased top padding so video is visible under transparent header */}
-        <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
+      <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 text-center">
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}>
           {cmsData?.badge?.text && (
-          <motion.div className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
-            {(() => {
-              const name = cmsData?.badge?.icon || 'Award';
-              switch (name) {
-                case 'Trophy':
-                  return <Trophy className="w-5 h-5 text-primary-yellow mr-2" />;
-                case 'Star':
-                  return <Star className="w-5 h-5 text-primary-yellow mr-2" />;
-                case 'Award':
-                default:
-                  return <Award className="w-5 h-5 text-primary-yellow mr-2" />;
-              }
-            })()}
-            <span className="text-sm font-medium text-white">{cmsData.badge.text}</span>
-          </motion.div>
+            <motion.div
+              className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-12"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+            >
+              <Award className="w-5 h-5 text-zenith-crimson mr-2" />
+              <span className="text-sm font-bold text-white tracking-widest uppercase">{cmsData.badge.text}</span>
+            </motion.div>
           )}
-          <motion.h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-display mb-8 leading-tight" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}>
-            {cmsData?.title && <span className="text-white">{cmsData.title}</span>}
-            <br />
-            {cmsData?.subtitle && (
-              <span className="text-2xl md:text-3xl lg:text-4xl font-light text-primary-yellow italic font-display">{cmsData.subtitle}</span>
-            )}
+          <motion.h1
+            className="text-7xl md:text-[8rem] lg:text-[12rem] font-extrabold font-display leading-[0.85] mb-8 tracking-tighter uppercase text-white drop-shadow-2xl"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {cmsData?.title}
           </motion.h1>
+          {cmsData?.subtitle && (
+            <motion.div
+              className="mb-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 1 }}
+            >
+              <div className="inline-block px-8 py-4 bg-zenith-crimson text-white text-2xl md:text-3xl lg:text-5xl font-extrabold font-display uppercase tracking-tight transform -skew-x-12">
+                {cmsData.subtitle}
+              </div>
+            </motion.div>
+          )}
           {cmsData?.description && (
             <motion.p
-              className="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto leading-relaxed"
+              className="text-xl md:text-2xl text-zenith-black font-medium mb-12 max-w-4xl mx-auto leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
+              transition={{ delay: 1, duration: 0.8 }}
             >
               {cmsData.description}
             </motion.p>
           )}
-          {/* Statistics cards removed per latest design request */}
+
+
         </motion.div>
       </div>
-      <motion.div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-primary-orange" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.6 }}>
-        <div className="flex flex-col items-center space-y-2">
-          <span className="text-sm">{t('hero.scrollDown', 'Прокрутите вниз')}</span>
-          <div className="w-6 h-10 border-2 border-primary-orange/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-primary-orange rounded-full mt-2 animate-bounce"></div>
-          </div>
+      <motion.div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-zenith-black" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 1 }}>
+        <div className="flex flex-col items-center space-y-4">
+          <span className="text-sm font-bold uppercase tracking-[0.4em]">{t('hero.scrollDown', 'Scroll')}</span>
+          <div className="w-[2px] h-24 bg-gradient-to-b from-zenith-black to-transparent" />
         </div>
       </motion.div>
     </section>

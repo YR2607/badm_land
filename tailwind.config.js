@@ -7,11 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
+        zenith: {
+          white: '#FAFAFA',
+          black: '#0A0A0A',
+          crimson: '#DC2626',
+        },
         primary: {
-          blue: '#1e3a8a',     // Более темный синий
-          yellow: '#f59e0b',   // Более сдержанный желтый/оранжевый
-          orange: '#dc2626',   // Более темный красный
-          black: '#111827',    // Более темный черный
+          blue: '#1e3a8a',
+          yellow: '#f59e0b',
+          orange: '#dc2626',
+          black: '#111827',
           gray: {
             50: '#f9fafb',
             100: '#f3f4f6',
@@ -28,8 +33,11 @@ export default {
       },
       fontFamily: {
         'sans': ['"Exo 2"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        'display': ['Oswald', 'Impact', 'system-ui', 'sans-serif'],
+        'display': ['Syne', 'Oswald', 'Impact', 'system-ui', 'sans-serif'],
         'body': ['"Exo 2"', 'ui-sans-serif', 'system-ui', 'sans-serif']
+      },
+      lineHeight: {
+        'tight-impact': '0.85',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

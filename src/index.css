@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,21 +11,43 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #FAFAFA;
   }
-  
+
   body {
     font-family: 'Exo 2', ui-sans-serif, system-ui, sans-serif;
     line-height: 1.7;
     letter-spacing: -0.01em;
+    color: #0A0A0A;
+    position: relative;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Oswald', system-ui, sans-serif;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/feTurbulence%3E%3C/baseFilter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
-  
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Syne', system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+
   p {
     font-family: 'Exo 2', ui-sans-serif, system-ui, sans-serif;
     letter-spacing: -0.005em;
@@ -31,34 +55,58 @@
 }
 
 @layer components {
+  .scanlines {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scanlines::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+        rgba(18, 16, 16, 0) 50%,
+        rgba(0, 0, 0, 0.05) 50%);
+    background-size: 100% 4px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .bento-card {
+    @apply bg-white/70 backdrop-blur-md rounded-3xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden;
+  }
+
   .btn-primary {
     @apply bg-primary-blue text-white px-8 py-4 rounded-2xl font-medium hover:bg-primary-blue/90 hover:shadow-xl transition-all duration-500 tracking-wide;
   }
-  
+
   .btn-secondary {
     @apply text-primary-blue px-8 py-4 rounded-2xl font-medium bg-transparent hover:bg-primary-blue/10 transition-all duration-500 tracking-wide;
   }
-  
+
   .btn-accent {
     @apply bg-gradient-to-r from-primary-yellow to-primary-orange text-white px-8 py-4 rounded-2xl font-medium hover:shadow-xl transition-all duration-500 tracking-wide;
   }
-  
+
   .card {
     @apply bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 p-8 backdrop-blur-sm;
   }
-  
+
   .hero-text {
     @apply text-5xl md:text-7xl lg:text-8xl font-light font-display text-primary-black tracking-tight;
   }
-  
+
   .section-title {
     @apply text-4xl md:text-5xl font-semibold font-display text-primary-black mb-6 tracking-tight;
   }
-  
+
   .text-accent {
     @apply text-primary-yellow font-medium;
   }
-  
+
   .elegant-card {
     @apply bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 p-10 border border-white/20;
   }
@@ -68,46 +116,58 @@
   .text-shadow {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   .glass {
     backdrop-filter: blur(10px);
     background: rgba(255, 255, 255, 0.8);
   }
-  
+
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-clamp: 2;
   }
-  
+
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-clamp: 3;
   }
 
   /* custom utilities */
-  .video-shift-mobile { object-position: calc(50% + 170px) center; }
-  @media (min-width: 768px) {
-    .video-shift-mobile { object-position: center center; }
+  .video-shift-mobile {
+    object-position: calc(50% + 170px) center;
   }
-  
+
+  @media (min-width: 768px) {
+    .video-shift-mobile {
+      object-position: center center;
+    }
+  }
+
   /* Hide scrollbar for horizontal scroll */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
   }
-  .scrollbar-hide::-webkit-scrollbar { 
-    display: none;  /* Safari and Chrome */
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+    /* Safari and Chrome */
   }
-  
+
   /* Shimmer animation for skeletons */
   @keyframes shimmer {
     0% {
       background-position: -200% 0;
     }
+
     100% {
       background-position: 200% 0;
     }

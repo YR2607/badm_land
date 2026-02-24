@@ -1,4 +1,6 @@
 import { FC, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { proxied } from '../utils/blockFacebookImages';
 import { useTranslation } from 'react-i18next';
 
@@ -54,104 +56,111 @@ const BusinessNewsSection: FC = () => {
   }, []);
 
   return (
-    <section id="business-news" className="py-20 bg-white">
+    <section id="business-news" className="py-32 bg-zenith-white">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center space-x-6 mb-8">
-            <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center text-white shadow-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                <path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20" />
-              </svg>
-            </div>
-            <div className="text-left">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{t('home.worldNews.title')}</h2>
-            </div>
-          </div>
-        </div>
+        <motion.div
+          className="mb-24 relative"
+          initial={{ opacity: 0, x: -100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h2 className="text-8xl md:text-[12rem] font-black font-display leading-[0.8] tracking-tighter uppercase text-zenith-black opacity-10 absolute -top-10 left-0 pointer-events-none select-none">
+            Global
+          </h2>
+          <h2 className="text-5xl md:text-8xl font-black font-display leading-tight-impact tracking-tighter uppercase text-zenith-black relative z-10">
+            {t('home.worldNews.title', 'Мировые новости')}
+          </h2>
+          <div className="w-32 h-4 bg-zenith-crimson mt-8" />
+        </motion.div>
 
         {loading && (
-          <div className="text-center text-gray-500 py-8">{t('common.loading')}</div>
+          <div className="text-center py-20">
+            <div className="inline-block w-12 h-12 border-4 border-zenith-black/10 border-t-zenith-crimson rounded-full animate-spin" />
+          </div>
         )}
         {!loading && error && (
-          <div className="text-center text-red-500 py-8">{error}</div>
+          <div className="text-center text-zenith-crimson py-8 font-bold text-xl uppercase tracking-widest">{error}</div>
         )}
 
         {!loading && !error && worldNews.length === 0 && (
-          <div className="text-center text-gray-500 py-8">{t('home.worldNews.noMaterials')}</div>
+          <div className="text-center text-zenith-black/40 py-8 font-bold text-xl uppercase tracking-widest">{t('home.worldNews.noMaterials')}</div>
         )}
 
         {!loading && !error && worldNews.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:auto-rows-[1fr]">
-            {worldNews.map((news, index) => (
-              <a key={news.href} href={news.href} target="_blank" rel="noreferrer" className={`group ${index === 1 ? 'lg:row-span-2' : ''}`}>
-                <article className="group cursor-pointer h-full">
-                  <div className="bg-white rounded-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
-                    <div className={`${index === 1 ? 'h-56 md:h-72 lg:h-[28rem]' : 'h-56'} relative overflow-hidden`}>
-                      {news.img ? (
-                        <img 
-                          src={proxied(news.img)} 
-                          alt={news.title} 
-                          className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-[1.02]"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const fallback = target.parentElement?.querySelector('.fallback-bg') as HTMLElement;
-                            if (fallback) fallback.style.display = 'block';
-                          }}
-                        />
-                      ) : null}
-                      <div 
-                        className="fallback-bg absolute inset-0 bg-gradient-to-br from-orange-500 to-red-500"
-                        style={{ display: news.img ? 'none' : 'block' }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                    </div>
-                    <div className="p-5 flex-1 flex flex-col">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-2 text-gray-500">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 0 0 2-2v-8H3v8a2 2 0 0 0 2 2Z" />
-                          </svg>
-                          <span className="text-xs md:text-sm font-medium">{formatDate(news.date, i18n.language)}</span>
-                        </div>
-                        <div className="px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500">{t('home.worldNews.tagWorld', '🌍 World')}</div>
-                      </div>
-                      <h3 className={`font-bold text-gray-900 leading-snug mb-2 break-words whitespace-normal ${index === 1 ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'}`}>{news.title}</h3>
-                      {news.preview && (
-                        <p className={`text-gray-600 leading-relaxed ${index === 1 ? 'text-base md:text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>{news.preview}</p>
-                      )}
-                      <div className="mt-4 flex items-center space-x-2 text-primary-blue transition-all duration-300">
-                        <span className="text-sm font-semibold">{t('common.readMore')}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 gap-6 min-h-[800px]">
+            {worldNews.slice(0, 4).map((news, index) => (
+              <motion.a
+                key={news.href}
+                href={news.href}
+                target="_blank"
+                rel="noreferrer"
+                className={`bento-card group relative flex flex-col ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+              >
+                <div className="absolute inset-0 scanlines opacity-50 z-10 pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-zenith-black via-zenith-black/80 to-transparent z-20" />
+
+                <div className="absolute inset-0 overflow-hidden">
+                  {news.img ? (
+                    <img
+                      src={proxied(news.img)}
+                      alt={news.title}
+                      className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-zenith-black" />
+                  )}
+                </div>
+
+                <div className="relative z-30 mt-auto p-8 md:p-12">
+                  <div className="flex items-center space-x-4 mb-6">
+                    <span className="px-4 py-1 bg-zenith-crimson text-white text-xs font-black uppercase tracking-[0.2em]">
+                      {t('home.worldNews.tagWorld', 'World')}
+                    </span>
+                    <span className="text-white/60 text-xs font-bold uppercase tracking-widest">
+                      {formatDate(news.date, i18n.language)}
+                    </span>
                   </div>
-                </article>
-              </a>
+
+                  <h3 className={`font-black font-display text-white uppercase tracking-tight leading-tight group-hover:text-zenith-crimson transition-colors duration-300 ${index === 0 ? 'text-4xl md:text-6xl' : 'text-2xl md:text-3xl'}`}>
+                    {news.title}
+                  </h3>
+
+                  {index === 0 && news.preview && (
+                    <p className="mt-6 text-white/70 text-lg font-medium leading-relaxed line-clamp-3">
+                      {news.preview}
+                    </p>
+                  )}
+
+                  <div className="mt-8 flex items-center space-x-4 group-hover:translate-x-2 transition-transform duration-300">
+                    <span className="text-sm font-black text-white uppercase tracking-widest">{t('common.readMore')}</span>
+                    <ArrowRight className="w-5 h-5 text-zenith-crimson" />
+                  </div>
+                </div>
+              </motion.a>
             ))}
           </div>
         )}
 
-        {/* CTA: Смотреть все новости */}
         {!loading && !error && (
-          <div className="text-center mt-12">
-            <a 
-              href="/blog#world-news" 
-              className="inline-flex items-center px-6 py-3 bg-primary-blue text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md hover:shadow-lg"
+          <div className="text-center mt-20">
+            <motion.a
+              href="/blog#world-news"
+              className="inline-block px-12 py-6 bg-zenith-black text-white font-black uppercase tracking-[0.3em] text-xl hover:bg-zenith-crimson transition-colors duration-500 shadow-2xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <span>{t('home.worldNews.viewAll')}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </a>
+              {t('home.worldNews.viewAll')}
+            </motion.a>
           </div>
         )}
       </div>
     </section>
   );
-}
+};
 
 export default BusinessNewsSection;

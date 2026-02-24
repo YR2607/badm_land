@@ -304,7 +304,7 @@ function Pu(e, n, t, r) {
   var l = q.hasOwnProperty(n) ? q[n] : null;
   (l !== null ? l.type !== 0 : r || !(2 < n.length) || n[0] !== "o" && n[0] !== "O" || n[1] !== "n" && n[1] !== "N") && (Ta(n, t, l, r) && (t = null), r || l === null ? za(n) && (t === null ? e.removeAttribute(n) : e.setAttribute(n, "" + t)) : l.mustUseProperty ? e[l.propertyName] = t === null ? l.type === 3 ? !1 : "" : t : (n = l.attributeName, r = l.attributeNamespace, t === null ? e.removeAttribute(n) : (l = l.type, t = l === 3 || l === 4 && t === !0 ? "" : "" + t, r ? e.setAttributeNS(r, n, t) : e.setAttribute(n, t))));
 }
-var Ke = Na.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED, Gt = Symbol.for("react.element"), Ln = Symbol.for("react.portal"), Mn = Symbol.for("react.fragment"), Tu = Symbol.for("react.strict_mode"), Il = Symbol.for("react.profiler"), _o = Symbol.for("react.provider"), zo = Symbol.for("react.context"), Lu = Symbol.for("react.forward_ref"), Ol = Symbol.for("react.suspense"), jl = Symbol.for("react.suspense_list"), Mu = Symbol.for("react.memo"), $e = Symbol.for("react.lazy"), Po = Symbol.for("react.offscreen"), wi = Symbol.iterator;
+var Ke = Na.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED, Gt = /* @__PURE__ */ Symbol.for("react.element"), Ln = /* @__PURE__ */ Symbol.for("react.portal"), Mn = /* @__PURE__ */ Symbol.for("react.fragment"), Tu = /* @__PURE__ */ Symbol.for("react.strict_mode"), Il = /* @__PURE__ */ Symbol.for("react.profiler"), _o = /* @__PURE__ */ Symbol.for("react.provider"), zo = /* @__PURE__ */ Symbol.for("react.context"), Lu = /* @__PURE__ */ Symbol.for("react.forward_ref"), Ol = /* @__PURE__ */ Symbol.for("react.suspense"), jl = /* @__PURE__ */ Symbol.for("react.suspense_list"), Mu = /* @__PURE__ */ Symbol.for("react.memo"), $e = /* @__PURE__ */ Symbol.for("react.lazy"), Po = /* @__PURE__ */ Symbol.for("react.offscreen"), wi = Symbol.iterator;
 function ut(e) {
   return e === null || typeof e != "object" ? null : (e = wi && e[wi] || e["@@iterator"], typeof e == "function" ? e : null);
 }
@@ -2858,7 +2858,6 @@ function ec(e, n, t) {
         return;
       }
     } catch {
-    } finally {
     }
     t = _s(e, n, l, r), t !== null && (l = le(), Te(t, e, r, l), $s(t, n, r));
   }
@@ -3814,14 +3813,7 @@ function wu(e) {
   var n = e.ref;
   if (n !== null) {
     var t = e.stateNode;
-    switch (e.tag) {
-      case 5:
-        e = t;
-        break;
-      default:
-        e = t;
-    }
-    typeof n == "function" ? n(e) : n.current = e;
+    e.tag, e = t, typeof n == "function" ? n(e) : n.current = e;
   }
 }
 function ia(e) {
@@ -5168,13 +5160,7 @@ function tl(e, n, t, r) {
   return t = wa(t), n.context === null ? n.context = t : n.pendingContext = t, n = Ae(u, i), n.payload = { element: e }, r = r === void 0 ? null : r, r !== null && (n.callback = r), e = rn(l, n, i), e !== null && (Te(e, l, i, u), mr(e, l, i)), i;
 }
 function Qr(e) {
-  if (e = e.current, !e.child) return null;
-  switch (e.child.tag) {
-    case 5:
-      return e.child.stateNode;
-    default:
-      return e.child.stateNode;
-  }
+  return e = e.current, e.child ? (e.child.tag === 5, e.child.stateNode) : null;
 }
 function So(e, n) {
   if (e = e.memoizedState, e !== null && e.dehydrated !== null) {
