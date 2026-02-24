@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight } from 'lucide-react';
+import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight, Sparkles, Star } from 'lucide-react';
 import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchAllFounders, fetchTrainers, fetchAboutTabs, fetchAboutStrategy, type CmsAboutStrategy, fetchAboutRoadmap, type CmsAboutRoadmap } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import SEO from '../components/SEO';
@@ -378,18 +378,18 @@ const About: FC = () => {
               {heroData && (
                 <>
                   {heroData?.badge?.text && (
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
-                      <Trophy className="w-4 h-4 text-yellow-300" />
-                      <span className="text-sm font-medium">{heroData.badge.text}</span>
+                    <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-bold mb-8">
+                      <Sparkles className="w-4 h-4" />
+                      <span>{heroData.badge.text}</span>
                     </div>
                   )}
                   {heroData?.title && (
-                    <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+                    <h1 className="text-6xl md:text-[6.5rem] lg:text-[10rem] font-black font-display text-white mb-8 uppercase tracking-tighter leading-[0.8] drop-shadow-[0_10px_30px_rgba(220,38,38,0.3)]">
                       {heroData.title}
                     </h1>
                   )}
                   {heroData?.subtitle && (
-                    <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
+                    <p className="text-xl md:text-3xl max-w-4xl mx-auto text-gray-400 font-medium leading-tight mb-16 uppercase tracking-tight">
                       {heroData.subtitle}
                     </p>
                   )}
@@ -397,35 +397,38 @@ const About: FC = () => {
               )}
 
               {/* Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 bg-white/5 backdrop-blur-md rounded-[3rem] p-10 border border-white/10 max-w-5xl mx-auto">
                 <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                  <div className="text-5xl md:text-6xl font-extrabold font-display text-zenith-crimson mb-2 tracking-tighter">120+</div>
+                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">120+</div>
                   <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.participants')}</div>
                 </motion.div>
 
                 <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                  <div className="text-5xl md:text-6xl font-extrabold font-display text-zenith-crimson mb-2 tracking-tighter">1+</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.experience')}</div>
+                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">15+</div>
+                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.tournaments')}</div>
                 </motion.div>
 
                 <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
-                  <div className="text-5xl md:text-6xl font-extrabold font-display text-zenith-crimson mb-2 tracking-tighter">15+</div>
-                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.tournaments')}</div>
+                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">1+</div>
+                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('about.stats.experience')}</div>
                 </motion.div>
               </div>
             </div>
@@ -464,28 +467,32 @@ const About: FC = () => {
               </h2>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
               <motion.div
-                className="relative bg-white p-8 rounded-3xl shadow-lg border border-gray-100"
-                initial={{ opacity: 0, x: -20 }}
+                className="relative bg-white p-12 rounded-[3rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border-2 border-transparent hover:border-zenith-crimson/20 transition-all duration-500 overflow-hidden"
+                initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
+                whileHover={{ y: -8 }}
               >
-                <div className="absolute -left-1 top-10 w-2 h-1/2 bg-zenith-crimson rounded-full" />
-                <p className="text-xl text-gray-700 leading-relaxed font-medium">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-crimson/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                <div className="text-5xl font-black font-display text-zenith-crimson/20 mb-8 uppercase tracking-tighter">01</div>
+                <p className="text-xl text-gray-700 leading-relaxed font-bold">
                   {strategyData?.mission?.text1 || t('about.strategy.mission.text1')}
                 </p>
               </motion.div>
               <motion.div
-                className="relative bg-white p-8 rounded-3xl shadow-lg border border-gray-100"
-                initial={{ opacity: 0, x: 20 }}
+                className="relative bg-zenith-black p-12 rounded-[3rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.2)] border-2 border-transparent hover:border-zenith-crimson/30 transition-all duration-500 overflow-hidden"
+                initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
+                whileHover={{ y: -8 }}
               >
-                <div className="absolute -left-1 top-10 w-2 h-1/2 bg-zenith-black rounded-full" />
-                <p className="text-xl text-gray-700 leading-relaxed font-medium">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-crimson/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                <div className="text-5xl font-black font-display text-white/20 mb-8 uppercase tracking-tighter">02</div>
+                <p className="text-xl text-white/90 leading-relaxed font-bold">
                   {strategyData?.mission?.text2 || t('about.strategy.mission.text2')}
                 </p>
               </motion.div>
@@ -500,41 +507,41 @@ const About: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="text-center mb-12">
+            <div className="text-center mb-16">
               <h3 className="text-4xl md:text-5xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter">
                 {strategyData?.currentState?.title || t('about.strategy.currentState.title')}
               </h3>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-medium">
+              <p className="text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed font-bold uppercase tracking-wide">
                 {strategyData?.currentState?.intro || t('about.strategy.currentState.intro')}
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-x-16 gap-y-8 mb-16">
+            <div className="grid md:grid-cols-2 gap-8 mb-16">
               {(strategyData?.currentState?.points || (t('about.strategy.currentState.points', { returnObjects: true }) as string[])).map((point: string, i: number) => (
                 <motion.div
                   key={i}
-                  className="flex items-start gap-4 group"
+                  className="flex items-center gap-6 p-6 bg-white rounded-3xl border border-gray-100 shadow-sm"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
                 >
-                  <div className="relative mt-1.5 shrink-0 flex items-center justify-center">
-                    <div className="w-3 h-3 bg-zenith-crimson rounded-none rotate-45 group-hover:scale-125 transition-transform duration-300" />
+                  <div className="w-12 h-12 shrink-0 bg-zenith-black text-white flex items-center justify-center rounded-2xl">
+                    <span className="font-black text-xl">#</span>
                   </div>
-                  <span className="text-lg text-gray-800 font-medium leading-relaxed">{point}</span>
+                  <span className="text-lg text-zenith-black font-bold">{point}</span>
                 </motion.div>
               ))}
             </div>
 
             <motion.div
-              className="relative max-w-4xl mx-auto bg-zenith-black p-8 rounded-3xl"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              className="relative max-w-4xl mx-auto bg-zenith-black p-12 rounded-[3rem] shadow-2xl border-b-8 border-zenith-crimson"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
-              <p className="text-xl text-white leading-relaxed text-center px-4 font-bold uppercase tracking-wide">
+              <p className="text-2xl text-white leading-relaxed text-center font-black uppercase tracking-tight">
                 {strategyData?.currentState?.conclusion || t('about.strategy.currentState.conclusion')}
               </p>
             </motion.div>
@@ -543,7 +550,7 @@ const About: FC = () => {
       </section>
 
       {/* Strategic Goals */}
-      <section className="py-20 bg-zenith-white relative overflow-hidden">
+      <section className="py-32 bg-white relative overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -551,25 +558,32 @@ const About: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-6xl font-black font-display text-zenith-black mb-16 text-center uppercase tracking-tighter">
-              {strategyData?.goals?.title || t('about.strategy.goals.title')}
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="text-center mb-24">
+              <h2 className="text-6xl md:text-[7rem] font-black font-display text-zenith-black mb-6 text-center uppercase tracking-tighter leading-none">
+                {strategyData?.goals?.title || t('about.strategy.goals.title')}
+              </h2>
+              <div className="w-48 h-2 bg-zenith-crimson mx-auto rounded-full" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {(strategyData?.goals?.items || (t('about.strategy.goals.items', { returnObjects: true }) as string[])).map((goal: string, i: number) => (
                 <motion.div
                   key={i}
-                  className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-200"
+                  className="group bg-zenith-white rounded-[2.5rem] p-10 shadow-sm hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-zenith-crimson/20 relative overflow-hidden"
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
-                  whileHover={{ y: -8 }}
+                  whileHover={{ y: -12 }}
                 >
-                  <div className="flex flex-col gap-6">
-                    <div className="text-6xl font-black font-display text-zenith-crimson opacity-20 leading-none">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-crimson/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-zenith-crimson/10 transition-colors pointer-events-none" />
+
+                  <div className="flex flex-col gap-8 h-full relative z-10">
+                    <div className="text-7xl font-black font-display text-zenith-black/5 group-hover:text-zenith-crimson/10 transition-colors leading-none tracking-tighter">
                       {String(i + 1).padStart(2, '0')}
                     </div>
-                    <p className="text-gray-900 leading-relaxed font-bold text-lg">{goal}</p>
+                    <p className="text-zenith-black leading-tight font-black text-2xl uppercase tracking-tight flex-grow">{goal}</p>
+                    <div className="w-12 h-1 bg-zenith-black/10 group-hover:bg-zenith-crimson/50 transition-colors rounded-full" />
                   </div>
                 </motion.div>
               ))}
@@ -1015,33 +1029,50 @@ const About: FC = () => {
       </section>
 
       {/* Expected Results Section */}
-      <section className="py-24 bg-zenith-white relative overflow-hidden">
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-zenith-crimson/5 blur-3xl rounded-full" />
+      <section className="py-32 bg-zenith-white relative overflow-hidden">
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-zenith-crimson/5 blur-3xl rounded-full" />
 
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            className="bg-zenith-black rounded-[3rem] p-10 md:p-16 relative overflow-hidden shadow-2xl"
-            initial={{ opacity: 0, y: 30 }}
+            className="bg-zenith-black rounded-[4rem] p-12 md:p-24 relative overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border-t-2 border-white/5"
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-zenith-crimson/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-zenith-crimson/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
             <div className="relative z-10">
-              <h2 className="text-4xl md:text-6xl font-black font-display text-white mb-12 text-center uppercase tracking-tighter">
-                {strategyData?.results?.title || t('about.strategy.results.title')}
-              </h2>
-              <div className="grid md:grid-cols-2 gap-6 mb-12">
+              <div className="text-center mb-20">
+                <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-zenith-crimson/30 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-black mb-8">
+                  <Star className="w-4 h-4" />
+                  <span>Прогноз развития</span>
+                </div>
+                <h2 className="text-5xl md:text-8xl font-black font-display text-white mb-8 uppercase tracking-tighter leading-none">
+                  {strategyData?.results?.title || t('about.strategy.results.title')}
+                </h2>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 lg:gap-10 mb-20">
                 {(strategyData?.results?.points || (t('about.strategy.results.points', { returnObjects: true }) as string[])).map((point: string, i: number) => (
-                  <div key={i} className="flex items-start gap-4 bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-zenith-crimson/30 transition-colors">
-                    <Trophy className="w-6 h-6 text-zenith-crimson flex-shrink-0 mt-0.5" />
-                    <span className="text-white font-medium text-lg leading-relaxed">{point}</span>
-                  </div>
+                  <motion.div
+                    key={i}
+                    className="flex items-center gap-6 bg-white/5 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/10 hover:border-zenith-crimson/50 transition-all duration-500 group"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                  >
+                    <div className="w-16 h-16 shrink-0 bg-white/10 rounded-[1.5rem] flex items-center justify-center group-hover:bg-zenith-crimson transition-colors duration-500">
+                      <Trophy className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-500" />
+                    </div>
+                    <span className="text-white font-bold text-xl leading-tight">{point}</span>
+                  </motion.div>
                 ))}
               </div>
-              <div className="text-center relative pt-8 mt-12 border-t border-white/10">
-                <p className="text-2xl md:text-3xl font-bold font-display text-zenith-crimson uppercase tracking-wide">
+              <div className="text-center relative pt-12 border-t-2 border-dashed border-white/10">
+                <p className="text-3xl md:text-5xl font-black font-display text-zenith-crimson uppercase tracking-tighter drop-shadow-[0_0_20px_rgba(220,38,38,0.5)]">
                   {strategyData?.results?.closing || t('about.strategy.closing')}
                 </p>
               </div>
