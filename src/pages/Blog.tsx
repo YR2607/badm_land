@@ -78,14 +78,14 @@ const Blog: FC = () => {
       }
     };
     load();
-    
+
     // Add interval for periodic CMS data updates
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') {
         load();
       }
     }, 30000); // Update every 30 seconds
-    
+
     const onFocus = () => load();
     const onVisibility = () => { if (document.visibilityState === 'visible') load(); };
     window.addEventListener('focus', onFocus);
@@ -211,264 +211,122 @@ const Blog: FC = () => {
   };
 
   const Empty: FC<{ text: string }> = ({ text }) => (
-    <motion.div className="text-center py-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
-      <div className="text-6xl mb-4">🗞️</div>
-      <h3 className="text-xl font-semibold text-gray-900 mb-2">{text}</h3>
+    <motion.div className="text-center py-24 bg-white rounded-[3rem] border border-dashed border-gray-200" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+      <div className="text-8xl mb-6">🗞️</div>
+      <h3 className="text-2xl font-black text-zenith-black mb-2 uppercase tracking-tight">{text}</h3>
     </motion.div>
   );
 
   return (
-    <div className="min-h-screen bg-white">
-      <SEO 
+    <div className="min-h-screen bg-zenith-white">
+      <SEO
         title={`Altius — ${t('navigation.news')}`}
         description={t('news.hero.subtitle')}
         image="https://altius.md/og-blog.jpg"
       />
-      <Breadcrumbs
-        items={[
-          { label: t('navigation.home'), path: '/' },
-          { label: t('navigation.news') }
-        ]}
-      />
-      <section className="relative overflow-hidden py-20 bg-gradient-to-br from-primary-blue via-primary-blue/95 to-indigo-700">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 relative z-20">
+        <Breadcrumbs
+          items={[
+            { label: t('navigation.home'), path: '/' },
+            { label: t('navigation.news') }
+          ]}
+        />
+      </div>
+      <section className="relative overflow-hidden py-24 bg-zenith-black">
         {/* Enhanced Badminton Court Background */}
         <div className="absolute inset-0">
           {/* Dynamic Court with Lighting Effects */}
-          <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 opacity-10">
             <svg viewBox="0 0 1200 600" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
               <defs>
-                {/* Gradient for court surface */}
                 <radialGradient id="courtGradient" cx="50%" cy="50%" r="70%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.15)"/>
-                  <stop offset="50%" stopColor="rgba(255,255,255,0.08)"/>
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.03)"/>
+                  <stop offset="0%" stopColor="rgba(220,38,38,0.15)" />
+                  <stop offset="50%" stopColor="rgba(220,38,38,0.05)" />
+                  <stop offset="100%" stopColor="rgba(220,38,38,0.01)" />
                 </radialGradient>
-                
-                {/* Glow effect for lines */}
                 <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                  <feMerge> 
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
-                
-                {/* Shadow filter */}
-                <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.3"/>
-                </filter>
               </defs>
-              
-              {/* Court Surface with gradient */}
-              <rect width="1200" height="600" fill="url(#courtGradient)"/>
-              
-              {/* Court Lines with glow effect */}
-              <g stroke="rgba(255,255,255,0.6)" strokeWidth="3" fill="none" filter="url(#glow)">
-                {/* Outer boundaries */}
-                <rect x="200" y="100" width="800" height="400" strokeWidth="4"/>
-                
-                {/* Center line */}
-                <line x1="600" y1="100" x2="600" y2="500" strokeWidth="3"/>
-                
-                {/* Service lines */}
-                <line x1="200" y1="240" x2="1000" y2="240"/>
-                <line x1="200" y1="360" x2="1000" y2="360"/>
-                
-                {/* Short service lines */}
-                <line x1="320" y1="100" x2="320" y2="500"/>
-                <line x1="880" y1="100" x2="880" y2="500"/>
-                
-                {/* Center service lines */}
-                <line x1="600" y1="240" x2="600" y2="360"/>
-              </g>
-              
-              {/* Enhanced Net with 3D effect */}
-              <g filter="url(#shadow)">
-                <line x1="600" y1="100" x2="600" y2="500" stroke="rgba(255,255,255,0.7)" strokeWidth="6"/>
-                <rect x="596" y="280" width="8" height="40" fill="rgba(255,255,255,0.8)" rx="2"/>
-                
-                {/* Net mesh pattern */}
-                <g stroke="rgba(255,255,255,0.3)" strokeWidth="1">
-                  <line x1="590" y1="120" x2="610" y2="120"/>
-                  <line x1="590" y1="140" x2="610" y2="140"/>
-                  <line x1="590" y1="160" x2="610" y2="160"/>
-                  <line x1="590" y1="180" x2="610" y2="180"/>
-                  <line x1="590" y1="200" x2="610" y2="200"/>
-                  <line x1="590" y1="220" x2="610" y2="220"/>
-                  <line x1="590" y1="240" x2="610" y2="240"/>
-                  <line x1="590" y1="260" x2="610" y2="260"/>
-                </g>
-              </g>
-              
-              {/* Spotlight effects */}
-              <g opacity="0.1">
-                <ellipse cx="400" cy="200" rx="150" ry="80" fill="rgba(255,255,255,0.3)"/>
-                <ellipse cx="800" cy="400" rx="150" ry="80" fill="rgba(255,255,255,0.3)"/>
+              <rect width="1200" height="600" fill="url(#courtGradient)" />
+              <g stroke="rgba(255,255,255,0.4)" strokeWidth="3" fill="none" filter="url(#glow)">
+                <rect x="200" y="100" width="800" height="400" strokeWidth="4" />
+                <line x1="600" y1="100" x2="600" y2="500" strokeWidth="3" />
+                <line x1="200" y1="240" x2="1000" y2="240" />
+                <line x1="200" y1="360" x2="1000" y2="360" />
               </g>
             </svg>
           </div>
-          
+
           {/* News & Media Elements */}
-          <div className="absolute top-16 left-8 md:top-20 md:left-16 w-14 h-14 md:w-18 md:h-18 opacity-30 animate-pulse">
+          <div className="absolute top-16 left-8 md:top-20 md:left-16 w-14 h-14 md:w-18 md:h-18 opacity-20">
             <svg viewBox="0 0 80 80" className="w-full h-full">
-              <defs>
-                <linearGradient id="newsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.8)"/>
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.4)"/>
-                </linearGradient>
-              </defs>
-              
-              {/* Newspaper/Magazine */}
-              <rect x="15" y="20" width="50" height="40" fill="url(#newsGradient)" rx="3"/>
-              <rect x="20" y="25" width="20" height="3" fill="rgba(255,255,255,0.6)" rx="1"/>
-              <rect x="20" y="30" width="35" height="2" fill="rgba(255,255,255,0.4)" rx="1"/>
-              <rect x="20" y="34" width="30" height="2" fill="rgba(255,255,255,0.4)" rx="1"/>
-              <rect x="20" y="38" width="25" height="2" fill="rgba(255,255,255,0.4)" rx="1"/>
-              
-              {/* Badminton racket on newspaper */}
-              <ellipse cx="50" cy="45" rx="8" ry="10" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
-              <rect x="47" y="55" width="6" height="8" fill="rgba(255,255,255,0.6)" rx="2"/>
+              <rect x="15" y="20" width="50" height="40" fill="rgba(255,255,255,0.8)" rx="3" />
+              <rect x="20" y="25" width="20" height="3" fill="rgba(255,255,255,0.6)" rx="1" />
             </svg>
           </div>
-          
-          {/* Flying Shuttlecock with Trail */}
-          <div className="absolute top-24 right-12 md:top-28 md:right-20 w-10 h-10 md:w-14 md:h-14 opacity-40">
-            <svg viewBox="0 0 50 50" className="w-full h-full animate-bounce" style={{animationDuration: '2.5s'}}>
-              <defs>
-                <radialGradient id="shuttleBlogGrad" cx="50%" cy="30%" r="60%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.9)"/>
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.3)"/>
-                </radialGradient>
-              </defs>
-              
-              {/* Motion trail */}
-              <g opacity="0.3">
-                <circle cx="22" cy="35" r="2" fill="rgba(255,255,255,0.4)"/>
-                <circle cx="18" cy="32" r="1.5" fill="rgba(255,255,255,0.3)"/>
-                <circle cx="14" cy="29" r="1" fill="rgba(255,255,255,0.2)"/>
-              </g>
-              
-              {/* Shuttlecock */}
-              <circle cx="25" cy="38" r="4" fill="url(#shuttleBlogGrad)"/>
-              <g fill="rgba(255,255,255,0.6)">
-                <path d="M25 34 L22 16 L25 20 L28 16 Z"/>
-                <path d="M21 35 L15 20 L21 23 L24 21 Z"/>
-                <path d="M29 35 L35 20 L29 23 L26 21 Z"/>
-                <path d="M19 37 L12 25 L19 28 L23 26 Z"/>
-                <path d="M31 37 L38 25 L31 28 L27 26 Z"/>
-              </g>
-            </svg>
-          </div>
-          
-          {/* Camera/Media Icon */}
-          <div className="absolute bottom-20 left-12 md:bottom-24 md:left-20 w-12 h-12 md:w-16 md:h-16 opacity-25 transform rotate-12 animate-pulse">
-            <svg viewBox="0 0 60 60" className="w-full h-full">
-              <defs>
-                <linearGradient id="cameraGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.7)"/>
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.3)"/>
-                </linearGradient>
-              </defs>
-              
-              {/* Camera Body */}
-              <rect x="10" y="20" width="40" height="25" fill="url(#cameraGradient)" rx="5"/>
-              <rect x="15" y="15" width="15" height="8" fill="url(#cameraGradient)" rx="2"/>
-              
-              {/* Lens */}
-              <circle cx="30" cy="32" r="8" fill="none" stroke="url(#cameraGradient)" strokeWidth="2"/>
-              <circle cx="30" cy="32" r="5" fill="rgba(255,255,255,0.2)"/>
-              
-              {/* Flash */}
-              <rect x="40" y="18" width="6" height="4" fill="url(#cameraGradient)" rx="1"/>
-              
-              {/* Badminton scene reflection in lens */}
-              <g opacity="0.4">
-                <ellipse cx="28" cy="30" rx="3" ry="4" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5"/>
-                <line x1="28" y1="34" x2="28" y2="36" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5"/>
-              </g>
-            </svg>
-          </div>
-          
+
           {/* Tournament Trophy */}
-          <div className="absolute bottom-16 right-16 md:bottom-20 md:right-24 w-10 h-10 md:w-14 md:h-14 opacity-20 animate-pulse" style={{animationDelay: '1s'}}>
+          <div className="absolute bottom-16 right-16 md:bottom-20 md:right-24 w-10 h-10 md:w-14 md:h-14 opacity-15">
             <svg viewBox="0 0 50 50" className="w-full h-full">
-              <defs>
-                <linearGradient id="trophyBlogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(255,215,0,0.8)"/>
-                  <stop offset="100%" stopColor="rgba(255,165,0,0.5)"/>
-                </linearGradient>
-              </defs>
-              
-              {/* Trophy */}
-              <path d="M12 15 Q12 12 15 12 L35 12 Q38 12 38 15 L38 25 Q38 30 33 30 L17 30 Q12 30 12 25 Z" fill="url(#trophyBlogGrad)"/>
-              <path d="M8 18 Q5 18 5 21 Q5 24 8 24" fill="none" stroke="url(#trophyBlogGrad)" strokeWidth="2"/>
-              <path d="M42 18 Q45 18 45 21 Q45 24 42 24" fill="none" stroke="url(#trophyBlogGrad)" strokeWidth="2"/>
-              <rect x="17" y="30" width="16" height="5" fill="url(#trophyBlogGrad)" rx="1"/>
-              <rect x="20" y="35" width="10" height="8" fill="url(#trophyBlogGrad)" rx="1"/>
-              
-              {/* News symbol on trophy */}
-              <text x="25" y="22" textAnchor="middle" fill="rgba(255,255,255,0.8)" fontSize="8" fontFamily="serif">📰</text>
+              <path d="M12 15 Q12 12 15 12 L35 12 Q38 12 38 15 L38 25 Q38 30 33 30 L17 30 Q12 30 12 25 Z" fill="rgba(220,38,38,0.5)" />
             </svg>
           </div>
-          
-          {/* Floating News Particles */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/3 left-1/5 w-1.5 h-1.5 bg-yellow-300/40 rounded-full animate-ping" style={{animationDelay: '0s'}}></div>
-            <div className="absolute top-1/2 right-1/5 w-1 h-1 bg-white/50 rounded-full animate-ping" style={{animationDelay: '1.5s'}}></div>
-            <div className="absolute bottom-1/3 left-2/5 w-2 h-2 bg-blue-300/30 rounded-full animate-ping" style={{animationDelay: '2.5s'}}></div>
-            <div className="absolute top-2/3 right-2/5 w-1 h-1 bg-yellow-200/50 rounded-full animate-ping" style={{animationDelay: '0.8s'}}></div>
-          </div>
-          
-          {/* Subtle Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-primary-blue/20 via-transparent to-transparent"></div>
         </div>
-        
+
         <div className="relative z-10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
-                <span className="text-lg">📰</span>
-                <span className="text-sm font-medium">{t('news.hero.badge')}</span>
+              <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-bold mb-8">
+                <Globe className="w-4 h-4" />
+                <span>{t('news.hero.badge')}</span>
               </div>
-              
-              <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+
+              <h1 className="text-6xl md:text-[6.5rem] lg:text-[10rem] font-black font-display text-white mb-8 uppercase tracking-tighter leading-[0.8] drop-shadow-[0_10px_30px_rgba(220,38,38,0.3)]">
                 {t('news.hero.title')}
               </h1>
-              
-              <p className="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-8">
+
+              <p className="text-xl md:text-3xl max-w-4xl mx-auto text-gray-400 font-medium leading-tight mb-16 uppercase tracking-tight">
                 {t('news.hero.subtitle')}
               </p>
-              
+
               {/* Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-                <motion.div 
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 bg-white/5 backdrop-blur-md rounded-[3rem] p-10 border border-white/10 max-w-5xl mx-auto">
+                <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                  <div className="text-4xl font-bold text-yellow-300 mb-2">50+</div>
-                  <div className="text-blue-100">{t('news.hero.stats.articles')}</div>
+                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">50+</div>
+                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('news.hero.stats.articles')}</div>
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                  <div className="text-4xl font-bold text-yellow-300 mb-2">20+</div>
-                  <div className="text-blue-100">{t('news.hero.stats.events')}</div>
+                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">20+</div>
+                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('news.hero.stats.events')}</div>
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
-                  <div className="text-4xl font-bold text-yellow-300 mb-2">5</div>
-                  <div className="text-blue-100">{t('news.hero.stats.categories')}</div>
+                  <div className="text-5xl md:text-7xl font-black font-display text-zenith-crimson mb-2 tracking-tighter">5</div>
+                  <div className="text-white/80 uppercase tracking-widest text-sm font-bold">{t('news.hero.stats.categories')}</div>
                 </motion.div>
               </div>
             </div>
@@ -476,17 +334,27 @@ const Blog: FC = () => {
         </div>
       </section>
 
-      <section ref={filtersRef as any} className="py-8 bg-white scroll-mt-28 md:scroll-mt-32">
+      <section ref={filtersRef as any} className="py-12 bg-zenith-white scroll-mt-28 md:scroll-mt-32">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
-            <motion.div className="relative flex-grow max-w-md" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input type="text" placeholder={t('news.searchPlaceholder')} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent" />
+          <div className="flex flex-col lg:flex-row gap-8 items-center justify-between bg-white p-6 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-gray-100">
+            <motion.div className="relative flex-grow max-w-xl w-full" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder={t('news.searchPlaceholder')}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-zenith-crimson/20 transition-all font-bold text-zenith-black placeholder:text-gray-400"
+              />
             </motion.div>
-            <motion.div className="flex flex-wrap gap-2" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
+            <motion.div className="flex flex-wrap gap-2 justify-center" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
               {categories.map((category) => (
-                <button key={category.value} onClick={() => setSelectedCategory(category.value)} className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${selectedCategory === category.value ? 'bg-primary-blue text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
-                  {category.icon}
+                <button
+                  key={category.value}
+                  onClick={() => setSelectedCategory(category.value)}
+                  className={`flex items-center space-x-2 px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all duration-300 ${selectedCategory === category.value ? 'bg-zenith-black text-white shadow-lg' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                >
+                  <span className={selectedCategory === category.value ? 'text-zenith-crimson' : ''}>{category.icon}</span>
                   <span>{category.label}</span>
                 </button>
               ))}
@@ -495,7 +363,7 @@ const Blog: FC = () => {
         </div>
       </section>
 
-      <section className="py-12">
+      <section className="py-12 pb-24">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Anchors for deep links */}
           <div ref={listTopRef} className="sr-only" id="all-news" />
@@ -511,18 +379,26 @@ const Blog: FC = () => {
           ) : filteredNews.length === 0 ? (
             <Empty text={t('news.noNews')} />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {pageItems.map((news, index) => {
                 const isExternal = (news as any)._external
                 const href = (news as any)._href
                 const Card = (
-                  <motion.article key={(news as any).id || index} className="bg-white rounded-3xl p-6 group transition-transform duration-300" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.05 }}>
-                    <div className="h-48 rounded-lg mb-4 overflow-hidden bg-gray-100">
+                  <motion.article
+                    key={(news as any).id || index}
+                    className="bg-white rounded-[2.5rem] p-8 group transition-all duration-500 border border-gray-100 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] hover:border-zenith-crimson/20"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.05 }}
+                    whileHover={{ y: -10 }}
+                  >
+                    <div className="h-64 rounded-[2rem] mb-8 overflow-hidden bg-gray-100 relative shadow-inner">
                       {news.image ? (
-                        <img 
-                          src={proxied(news.image)} 
-                          alt={news.title} 
-                          className="w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-[1.02]"
+                        <img
+                          src={proxied(news.image)}
+                          alt={news.title}
+                          className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-110"
                           style={{
                             filter: 'brightness(0.9) contrast(1.1)',
                           }}
@@ -534,27 +410,45 @@ const Blog: FC = () => {
                           }}
                         />
                       ) : null}
-                      <div className="fallback-bg w-full h-full bg-gradient-to-br from-gray-300 to-gray-400" style={{ display: news.image ? 'none' : 'block' }} />
+                      <div className="fallback-bg w-full h-full bg-zenith-black flex items-center justify-center" style={{ display: news.image ? 'none' : 'block' }}>
+                        <Globe className="w-12 h-12 text-white/20" />
+                      </div>
+
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-zenith-black/80 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
+                          {getCategoryLabel((news as any).category)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getCategoryColor((news as any).category)}`}>{getCategoryLabel((news as any).category)}</span>
-                      <span className="text-sm text-gray-500">{formatDate((news as any).date)}</span>
+
+                    <div className="mb-6 flex items-center justify-between border-b border-gray-50 pb-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-zenith-crimson animate-pulse" />
+                        <span className="text-xs font-black text-zenith-black/40 uppercase tracking-widest">{formatDate((news as any).date)}</span>
+                      </div>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-blue transition-colors break-words whitespace-normal leading-snug">{news.title}</h3>
-                    <p className="text-gray-600 mb-4">{(news as any).excerpt}</p>
-                    <div className="flex items-center justify-between">
-                      {(news as any).author && (<span className="text-sm text-gray-500">{(news as any).author}</span>)}
-                      <span className="flex items-center text-primary-blue group-hover:translate-x-2 transition-transform">
-                        <span className="mr-2 text-sm font-medium">{t('news.readMore')}</span>
-                        <ArrowRight size={16} />
+
+                    <h3 className="text-2xl md:text-3xl font-black text-zenith-black mb-4 group-hover:text-zenith-crimson transition-colors break-words whitespace-normal leading-[1.1] font-display uppercase tracking-tight">
+                      {news.title}
+                    </h3>
+
+                    <p className="text-gray-500 mb-8 line-clamp-2 font-medium leading-relaxed">{(news as any).excerpt}</p>
+
+                    <div className="flex items-center justify-between pt-6 border-t border-gray-50">
+                      {(news as any).author ? (
+                        <span className="text-[10px] font-black text-zenith-black/30 uppercase tracking-[0.2em]">{(news as any).author}</span>
+                      ) : <div />}
+                      <span className="flex items-center gap-2 text-zenith-black group-hover:text-zenith-crimson transition-all font-black text-xs uppercase tracking-widest">
+                        <span>{t('news.readMore')}</span>
+                        <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
                       </span>
                     </div>
                   </motion.article>
                 )
                 return isExternal ? (
-                  <a key={(news as any).id || index} href={href} target="_blank" rel="noreferrer">{Card}</a>
+                  <a key={(news as any).id || index} href={href} target="_blank" rel="noreferrer" className="block h-full">{Card}</a>
                 ) : (
-                  <div key={(news as any).id || index}>{Card}</div>
+                  <div key={(news as any).id || index} className="h-full">{Card}</div>
                 )
               })}
             </div>
@@ -564,21 +458,21 @@ const Blog: FC = () => {
 
       {/* Pagination Controls */}
       {filteredNews.length > pageSize && (
-        <section className="pb-16">
+        <section className="pb-24">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center justify-between gap-8 bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
               <button
-                className={`px-4 py-2 rounded-lg border text-sm font-medium ${page > 1 ? 'bg-white hover:bg-gray-50 border-gray-300 text-gray-900' : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'}`}
+                className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all ${page > 1 ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
                 onClick={() => page > 1 && setPage(p => Math.max(1, p - 1))}
                 disabled={page <= 1}
               >
                 ← {t('common.previous')}
               </button>
-              <div className="text-sm text-gray-600">
+              <div className="text-[10px] font-black text-zenith-black/40 uppercase tracking-[0.2em] hidden md:block">
                 {t('common.page')} {page} {t('common.of')} {totalPages} • {t('common.showing')} {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filteredNews.length)} {t('common.of')} {filteredNews.length}
               </div>
               <button
-                className={`px-4 py-2 rounded-lg border text-sm font-medium ${page < totalPages ? 'bg-white hover:bg-gray-50 border-gray-300 text-gray-900' : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'}`}
+                className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all ${page < totalPages ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
                 onClick={() => page < totalPages && setPage(p => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
               >
