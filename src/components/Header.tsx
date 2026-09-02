@@ -107,7 +107,7 @@ const Header: React.FC = () => {
                 </Link>
               ))}
               <div className="pt-8 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Language Select</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{t('navigation.languageSelect')}</span>
                 <LanguageSwitcher />
               </div>
             </div>

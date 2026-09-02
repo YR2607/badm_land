@@ -7,7 +7,8 @@
     "gallery": "Galerie",
     "contacts": "Contact",
     "news": "Știri",
-    "language": "Limba"
+    "language": "Limba",
+    "languageSelect": "Selectare limbă"
   },
   "hero": {
     "title": "ALTIUS",
@@ -52,26 +53,26 @@
       "title": "Antrenament Individual",
       "subtitle": "Abordare personală",
       "description": "Unu la unu cu antrenorul pentru eficiență maximă de învățare și progres rapid.",
-      "features": {
-        "program": "Program individual",
-        "schedule": "Program flexibil",
-        "attention": "100% atenția antrenorului",
-        "progress": "Progres rapid",
-        "analysis": "Analiză video a tehnicii"
-      },
+      "features": [
+        "Program individual",
+        "Program flexibil",
+        "100% atenția antrenorului",
+        "Progres rapid",
+        "Analiză video a tehnicii"
+      ],
       "badge": "Eficient"
     },
     "competition": {
       "title": "Pregătire pentru Competiții",
       "subtitle": "Pentru sportivi",
       "description": "Antrenament specializat pentru participarea la turnee și competiții de diferite niveluri.",
-      "features": {
-        "technical": "Măiestrie tehnică",
-        "tactical": "Pregătire tactică",
-        "psychological": "Stabilitate psihologică",
-        "sparring": "Practică de sparring",
-        "analysis": "Analiza jocului adversarilor"
-      },
+      "features": [
+        "Măiestrie tehnică",
+        "Pregătire tactică",
+        "Stabilitate psihologică",
+        "Practică de sparring",
+        "Analiza jocului adversarilor"
+      ],
       "badge": "Pro"
     },
     "pricing": {
@@ -167,19 +168,42 @@
     },
     "timeline": {
       "2024": {
-        "q1": { "title": "Lansarea Altius", "text": "Am deschis ușile și am avut primele înscrieri pentru adulți și adolescenți." },
-        "q2": { "title": "Formarea nucleului echipei", "text": "Am stabilizat orarul, am format primul grup al clubului și am pornit ratingul de bază." },
-        "q3": { "title": "Primele trofee", "text": "Membrii clubului au obținut locuri premiate la turnee locale." },
-        "q4": { "title": "Rezumatul sezonului", "text": "Am organizat finalul de sezon al clubului și am premiat cei mai buni sportivi și antrenori." }
+        "q1": {
+          "title": "Lansarea Altius",
+          "text": "Am deschis ușile și am avut primele înscrieri pentru adulți și adolescenți."
+        },
+        "q2": {
+          "title": "Formarea nucleului echipei",
+          "text": "Am stabilizat orarul, am format primul grup al clubului și am pornit ratingul de bază."
+        },
+        "q3": {
+          "title": "Primele trofee",
+          "text": "Membrii clubului au obținut locuri premiate la turnee locale."
+        },
+        "q4": {
+          "title": "Rezumatul sezonului",
+          "text": "Am organizat finalul de sezon al clubului și am premiat cei mai buni sportivi și antrenori."
+        }
       },
       "2025": {
-        "q1": { "title": "Școala de juniori", "text": "Am lansat grupe pentru copii, cantonamente-test și programe individuale." },
-        "q2": { "title": "Liga clubului", "text": "Meciuri interne regulate și mini-ligi pe niveluri." },
-        "q3": { "title": "Extinderea participării", "text": "Turnee în deplasare, parteneriate și sparring cu cluburi din regiune." },
-        "q4": { "title": "Altius Cup", "text": "Turneu deschis al clubului cu invitați și ceremonie festivă." }
+        "q1": {
+          "title": "Școala de juniori",
+          "text": "Am lansat grupe pentru copii, cantonamente-test și programe individuale."
+        },
+        "q2": {
+          "title": "Liga clubului",
+          "text": "Meciuri interne regulate și mini-ligi pe niveluri."
+        },
+        "q3": {
+          "title": "Extinderea participării",
+          "text": "Turnee în deplasare, parteneriate și sparring cu cluburi din regiune."
+        },
+        "q4": {
+          "title": "Altius Cup",
+          "text": "Turneu deschis al clubului cu invitați și ceremonie festivă."
+        }
       }
     },
-    
     "team": {
       "title": "Echipa Noastră",
       "subtitle": "Cunoaște antrenorii noștri profesioniști",
@@ -200,7 +224,10 @@
           "role": "Antrenor principal",
           "experience": "8 ani de experiență",
           "specialization": "Tehnică",
-          "achievements": ["CM la badminton", "Medaliată la campionatul regional"],
+          "achievements": [
+            "CM la badminton",
+            "Medaliată la campionatul regional"
+          ],
           "description": "Specializată în lucrul cu începătorii și dezvoltarea tehnicii corecte a loviturilor."
         },
         "1": {
@@ -208,7 +235,10 @@
           "role": "Antrenor de pregătire fizică",
           "experience": "6 ani de experiență",
           "specialization": "Pregătire fizică",
-          "achievements": ["Maestru al sportului", "Antrenor de fitness certificat"],
+          "achievements": [
+            "Maestru al sportului",
+            "Antrenor de fitness certificat"
+          ],
           "description": "Responsabil de pregătirea fizică și prevenirea accidentărilor."
         },
         "2": {
@@ -216,7 +246,10 @@
           "role": "Antrenor pentru copii",
           "experience": "5 ani de experiență",
           "specialization": "Lucru cu copiii",
-          "achievements": ["CM la badminton", "Studii pedagogice"],
+          "achievements": [
+            "CM la badminton",
+            "Studii pedagogice"
+          ],
           "description": "Se concentrează pe antrenarea copiilor 6–16 ani într-o atmosferă jucăușă."
         }
       }
@@ -351,10 +384,22 @@
       "inProgress": "În Progres",
       "planned": "Planificat",
       "items": {
-        "q3_2025": { "title": "Extinderea participării", "desc": "Deplasări la turnee, parteneriate și sparring cu cluburi regionale." },
-        "q4_2025": { "title": "Altius Cup", "desc": "Turneu deschis al clubului cu ceremonie și invitați." },
-        "q1_2026": { "title": "Academia U17", "desc": "Cantonamente regulate, teste, sprijin și calendar de competiții." },
-        "q2_2026": { "title": "Liga clubului 2.0", "desc": "Divizii pe niveluri, ratinguri, zile de meci și transmisiuni." }
+        "q3_2025": {
+          "title": "Extinderea participării",
+          "desc": "Deplasări la turnee, parteneriate și sparring cu cluburi regionale."
+        },
+        "q4_2025": {
+          "title": "Altius Cup",
+          "desc": "Turneu deschis al clubului cu ceremonie și invitați."
+        },
+        "q1_2026": {
+          "title": "Academia U17",
+          "desc": "Cantonamente regulate, teste, sprijin și calendar de competiții."
+        },
+        "q2_2026": {
+          "title": "Liga clubului 2.0",
+          "desc": "Divizii pe niveluri, ratinguri, zile de meci și transmisiuni."
+        }
       }
     }
   },
@@ -577,7 +622,9 @@
     "searchPlaceholder": "Căutare știri...",
     "readMore": "Citește mai mult",
     "loadingText": "Se încarcă...",
-    "noNews": "Nu există materiale încă"
+    "noNews": "Nu există materiale încă",
+    "author": "Autor",
+    "publishedOn": "Data publicării"
   },
   "footer": {
     "description": "Club profesional de badminton în Chișinău",
@@ -603,6 +650,12 @@
     "legal": {
       "privacy": "Politica de confidențialitate",
       "terms": "Termeni de utilizare"
+    },
+    "contactInfo": "Informații de contact",
+    "labels": {
+      "address": "Adresă",
+      "phone": "Telefon",
+      "workingHours": "Program de lucru"
     }
   },
   "common": {
@@ -618,16 +671,15 @@
     "previous": "Precedenta",
     "page": "Pagina",
     "of": "din",
-    "showing": "Se afișează"
-  }
-  ,
+    "showing": "Se afișează",
+    "notFound": "Pagina nu a fost găsită",
+    "backHome": "Pagina principală"
+  },
   "home": {
     "services": {
       "title": "Serviciile noastre",
-      "subtitle": "Antrenamente profesionale pentru toate nivelurile de pregătire",
-      "more": "Află mai multe",
-      "pricePlaceholder": "—",
-      "empty": "Secțiunea servicii nu este încă completată în CMS"
+      "subtitle": "Antrenament profesional pentru toate nivelurile",
+      "more": "Află mai mult"
     },
     "achievements": {
       "title": "Realizările noastre",
@@ -676,11 +728,6 @@
         }
       },
       "cta": "Devino parte din povestea noastră de succes!"
-    },
-    "services": {
-      "title": "Serviciile noastre",
-      "subtitle": "Antrenament profesional pentru toate nivelurile",
-      "more": "Află mai mult"
     },
     "worldNews": {
       "title": "Știri mondiale",

@@ -1,41 +1,62 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Globe } from 'lucide-react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { PortableText } from '@portabletext/react';
 import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
 import { proxied } from '../utils/blockFacebookImages';
-import { isCmsEnabled, sanityClient } from '../lib/cms';
-import groq from 'groq';
+import { isCmsEnabled, fetchPostBySlug } from '../lib/cms';
+
+const LOCALE_MAP: Record<string, string> = {
+  ru: 'ru-RU',
+  en: 'en-US',
+  ro: 'ro-RO',
+};
 
 const PostDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
-      if (!isCmsEnabled || !sanityClient || !slug) { setLoading(false); return; }
-      const query = groq`*[_type == "post" && slug.current == $slug][0]{
-        title,
-        excerpt,
-        body,
-        "image": mainImage.asset->url,
-        "date": coalesce(publishedAt, _createdAt),
-        category,
-        "author": author->name
-      }`;
-      const data = await sanityClient.fetch(query, { slug });
-      setPost(data || null);
-      setLoading(false);
+      setLoading(true);
+      setError(null);
+      if (!isCmsEnabled || !slug) { setLoading(false); return; }
+      try {
+        const data = await fetchPostBySlug(slug);
+        setPost(data || null);
+      } catch {
+        setError(t('common.error'));
+        setPost(null);
+      } finally {
+        setLoading(false);
+      }
     };
     load();
-  }, [slug]);
+  }, [slug, t]);
 
   if (loading) return <div className="min-h-screen bg-zenith-white flex items-center justify-center font-black uppercase tracking-widest text-zenith-black/20">{t('common.loading')}</div>;
-  if (!post) return <div className="min-h-screen bg-zenith-white flex items-center justify-center font-black uppercase tracking-widest text-zenith-crimson">{t('news.postNotFound', 'Материал не найден')}</div>;
+
+  if (error || !post) {
+    return (
+      <div className="min-h-screen bg-zenith-white flex flex-col items-center justify-center gap-6 px-4">
+        <p className="font-black uppercase tracking-widest text-zenith-crimson text-lg">{error || t('news.postNotFound', 'Материал не найден')}</p>
+        <Link to="/blog" className="px-8 py-4 bg-zenith-black text-white font-black uppercase tracking-widest text-xs rounded-full hover:bg-zenith-crimson transition-colors">
+          {t('news.backToList', 'Назад к новостям')}
+        </Link>
+      </div>
+    );
+  }
+
+  const locale = LOCALE_MAP[i18n.language] || 'ru-RU';
+  const formattedDate = post.date
+    ? new Date(post.date).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
+    : '';
 
   return (
     <div className="min-h-screen bg-zenith-white">
@@ -87,7 +108,7 @@ const PostDetail: React.FC = () => {
           >
             <img
               src={proxied(post.image)}
-              alt={post.title}
+              alt={post.imageAlt || post.title}
               className="w-full h-full object-cover"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -110,22 +131,22 @@ const PostDetail: React.FC = () => {
                 {post.author?.[0] || 'A'}
               </div>
               <div>
-                <div className="text-[10px] font-black text-zenith-black/40 uppercase tracking-widest mb-1">Автор</div>
+                <div className="text-[10px] font-black text-zenith-black/40 uppercase tracking-widest mb-1">{t('news.author', 'Автор')}</div>
                 <div className="font-black text-zenith-black uppercase tracking-tight">{post.author || 'Altius Team'}</div>
               </div>
             </div>
             <div className="w-px h-12 bg-gray-100" />
             <div>
-              <div className="text-[10px] font-black text-zenith-black/40 uppercase tracking-widest mb-1">Дата публикации</div>
+              <div className="text-[10px] font-black text-zenith-black/40 uppercase tracking-widest mb-1">{t('news.publishedOn', 'Дата публикации')}</div>
               <div className="font-black text-zenith-black uppercase tracking-tight">
-                {new Date(post.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}
+                {formattedDate}
               </div>
             </div>
           </div>
 
-          <div className="prose prose-2xl prose-p:font-medium prose-p:text-gray-700 prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter max-w-none">
-            {post.excerpt && <p className="text-3xl text-zenith-black leading-tight font-black mb-12 uppercase tracking-tight">{post.excerpt}</p>}
-            {/* If body is portable text, you can render via @portabletext/react later */}
+          <div className="prose prose-lg max-w-none prose-p:font-medium prose-p:text-gray-700 prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:text-zenith-black">
+            {post.excerpt && <p className="text-2xl text-zenith-black leading-tight font-black mb-12 uppercase tracking-tight">{post.excerpt}</p>}
+            {post.content && <PortableText value={post.content} />}
           </div>
         </div>
       </div>

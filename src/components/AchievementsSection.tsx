@@ -1,7 +1,7 @@
-import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Medal, Star, Award, Crown, Target, Heart, Zap } from 'lucide-react';
+import { Trophy, Medal, Target, Zap } from 'lucide-react';
 
 interface AchievementsSectionProps {
   cmsData?: {
@@ -63,7 +63,30 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
     }
   ];
 
-  const achievements = defaultAchievements;
+  // Use CMS achievements when available, otherwise fall back to defaults
+  const achievements = (cmsData?.achievements && cmsData.achievements.length > 0)
+    ? cmsData.achievements.map((a, index) => {
+        const iconMap: Record<string, JSX.Element> = {
+          trophy: <Trophy className="w-12 h-12" />,
+          medal: <Medal className="w-10 h-10" />,
+          target: <Target className="w-10 h-10" />,
+          zap: <Zap className="w-10 h-10" />,
+        };
+        const classMap = [
+          "md:col-span-2 md:row-span-2 bg-zenith-crimson text-white",
+          "md:col-span-2 bg-white text-zenith-black",
+          "md:col-span-1 bg-white text-zenith-black",
+          "md:col-span-1 bg-zenith-black text-white",
+        ];
+        return {
+          icon: iconMap[a.icon?.toLowerCase()] || <Trophy className="w-12 h-12" />,
+          title: a.title,
+          count: a.count,
+          description: a.description,
+          className: classMap[index % classMap.length],
+        };
+      })
+    : defaultAchievements;
 
   return (
     <section className="py-32 bg-zenith-white overflow-hidden">
@@ -135,10 +158,9 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
               {t('home.achievements.subtitle', 'Мы прошли длинный путь от маленькой секции до ведущего клуба страны, воспитав сотни чемпионов.')}
             </p>
           </div>
-          <motion.button
-            className="group relative px-12 py-6 bg-zenith-crimson text-white font-black uppercase tracking-widest text-xl overflow-hidden"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <Link
+            to="/about"
+            className="group relative px-12 py-6 bg-zenith-crimson text-white font-black uppercase tracking-widest text-xl overflow-hidden inline-block"
           >
             <span className="relative z-10">{t('common.more', 'Узнать больше')}</span>
             <motion.div
@@ -150,7 +172,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
             <span className="absolute inset-0 flex items-center justify-center text-zenith-black font-black uppercase tracking-widest text-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
               {t('common.more', 'Узнать больше')}
             </span>
-          </motion.button>
+          </Link>
         </motion.div>
       </div>
     </section>

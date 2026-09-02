@@ -237,12 +237,12 @@ export async function fetchPosts(): Promise<CmsPost[]> {
   }
 }
 
-export async function fetchPostBySlug(slug: string): Promise<CmsPost | null> {
+export async function fetchPostBySlug(slug: string): Promise<any | null> {
   const cacheKey = `post-${slug}`;
 
   // В development режиме пропускаем кэш для получения свежих данных
   if (process.env.NODE_ENV !== 'development') {
-    const cached = cmsCache.get<CmsPost>(cacheKey);
+    const cached = cmsCache.get<any>(cacheKey);
     if (cached) {
       return cached;
     }
@@ -255,29 +255,13 @@ export async function fetchPostBySlug(slug: string): Promise<CmsPost | null> {
         title,
         slug,
         excerpt,
-        body,
-        publishedAt,
+        content,
+        date,
         featured,
-        mainImage {
-          asset->{
-            _id,
-            url
-          },
-          alt
-        },
-        author->{
-          name,
-          image {
-            asset->{
-              _id,
-              url
-            }
-          }
-        },
-        categories[]->{
-          title,
-          slug
-        }
+        "image": image.asset->url,
+        "imageAlt": image.alt,
+        "author": author->name,
+        "category": select(defined(category->slug.current) => category->slug.current, defined(category) => category, "news")
       }
     `, { slug });
 

@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@portabletext/react": "^3.2.4",
     "@sanity/client": "^6.29.1",
+    "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",

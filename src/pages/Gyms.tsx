@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { GymCardSkeleton } from '../components/Skeletons';
 import InnerHero from '../components/InnerHero';
 import SEO from '../components/SEO';
-import { Sparkles } from 'lucide-react';
 
 const Gyms: FC = () => {
   const { t, i18n } = useTranslation();

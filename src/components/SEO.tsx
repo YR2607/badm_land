@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface SEOProps {
   title?: string;
@@ -13,6 +14,12 @@ interface SEOProps {
   modifiedTime?: string;
 }
 
+const LOCALE_MAP: Record<string, string> = {
+  ru: 'ru_RU',
+  en: 'en_US',
+  ro: 'ro_RO',
+};
+
 const SEO = ({
   title = 'Altius - Бадминтонный клуб в Кишиневе',
   description = 'Профессиональный бадминтонный клуб Altius в Кишиневе. Тренировки для детей и взрослых, индивидуальные и групповые занятия, участие в турнирах.',
@@ -25,24 +32,29 @@ const SEO = ({
   modifiedTime,
 }: SEOProps) => {
   const location = useLocation();
+  const { i18n } = useTranslation();
   const currentUrl = url || `https://altius.md${location.pathname}`;
   const siteName = 'Altius Badminton Club';
+  const currentLocale = LOCALE_MAP[i18n.language] || 'ru_RU';
 
   useEffect(() => {
     // Update document title
     document.title = title;
 
+    // Update <html lang> to match the active language
+    document.documentElement.lang = i18n.language || 'ru';
+
     // Update or create meta tags
     const updateMetaTag = (name: string, content: string, isProperty = false) => {
       const attribute = isProperty ? 'property' : 'name';
       let element = document.querySelector(`meta[${attribute}="${name}"]`);
-      
+
       if (!element) {
         element = document.createElement('meta');
         element.setAttribute(attribute, name);
         document.head.appendChild(element);
       }
-      
+
       element.setAttribute('content', content);
     };
 
@@ -58,7 +70,7 @@ const SEO = ({
     updateMetaTag('og:url', currentUrl, true);
     updateMetaTag('og:type', type, true);
     updateMetaTag('og:site_name', siteName, true);
-    updateMetaTag('og:locale', 'ru_RU', true);
+    updateMetaTag('og:locale', currentLocale, true);
     updateMetaTag('og:locale:alternate', 'en_US', true);
     updateMetaTag('og:locale:alternate', 'ro_RO', true);
 
@@ -89,7 +101,7 @@ const SEO = ({
     }
     canonical.setAttribute('href', currentUrl);
 
-  }, [title, description, image, currentUrl, type, keywords, author, publishedTime, modifiedTime]);
+  }, [title, description, image, currentUrl, type, keywords, author, publishedTime, modifiedTime, i18n.language, currentLocale]);
 
   return null;
 };

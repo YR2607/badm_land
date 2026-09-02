@@ -1,6 +1,7 @@
 import { FC, useEffect, useMemo, useState } from 'react'
 import { fetchClubEmbeds } from '../lib/cms'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
 // Normalize date to locale format
 const formatDate = (dateString?: string | null, locale: string = 'ru') => {
@@ -271,15 +272,15 @@ const CmsEmbedsSection: FC = () => {
         
         {/* Show all news button */}
         <div className="text-center mt-12">
-          <a 
-            href="/blog#club-news" 
+          <Link
+            to="/blog#club-news"
             className="inline-flex items-center px-6 py-3 bg-primary-blue text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md hover:shadow-lg"
           >
             <span>{t('home.embeds.viewAll')}</span>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

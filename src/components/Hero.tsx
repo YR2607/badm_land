@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Award, Trophy, Star } from 'lucide-react';
+import { Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface HeroProps {
@@ -99,7 +99,7 @@ const Hero = ({ cmsData }: HeroProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 1, ease: [0.22, 1, 0.36, 1] }}
           >
-            {cmsData?.title}
+            {cmsData?.title || t('hero.title', 'ALTIUS')}
           </motion.h1>
           {cmsData?.subtitle && (
             <motion.div

@@ -85,16 +85,13 @@ const Blog: FC = () => {
       if (document.visibilityState === 'visible') {
         load();
       }
-    }, 30000); // Update every 30 seconds
+    }, 120000); // Update every 2 minutes
 
-    const onFocus = () => load();
     const onVisibility = () => { if (document.visibilityState === 'visible') load(); };
-    window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
       alive = false;
       clearInterval(interval);
-      window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);

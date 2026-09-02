@@ -1,7 +1,8 @@
 import { FC, useState, useEffect } from 'react';
-import { Sparkles, ChevronDown, Phone, ArrowRight } from 'lucide-react';
+import { ChevronDown, Phone, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
 import InnerHero from '../components/InnerHero';
 import SEO from '../components/SEO';
@@ -129,16 +130,17 @@ const Services: FC = () => {
               {t('services.gyms.subtitle')}
             </p>
 
-            <motion.a
-              href="/gyms"
+            <motion.div
               className="inline-flex items-center gap-3 px-10 py-5 bg-zenith-black text-white font-black rounded-full hover:bg-zenith-crimson transition-all duration-300 shadow-xl hover:shadow-[0_10px_40px_-10px_rgba(220,38,38,0.5)] uppercase tracking-widest text-sm"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="text-2xl">🏸</span>
-              {t('services.gyms.viewAll')}
-              <ArrowRight className="w-5 h-5" />
-            </motion.a>
+              <Link to="/gyms" className="inline-flex items-center gap-3">
+                <span className="text-2xl">🏸</span>
+                {t('services.gyms.viewAll')}
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </motion.section>
@@ -235,14 +237,14 @@ const Services: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               className="inline-flex items-center justify-center px-10 py-5 bg-zenith-crimson text-white font-black rounded-full hover:bg-red-700 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(220,38,38,0.5)] hover:shadow-[0_0_60px_-15px_rgba(220,38,38,0.7)] uppercase tracking-widest text-sm hover:-translate-y-1"
             >
               {t('services.cta.contact')}
-            </a>
+            </Link>
             <a
-              href="tel:+37322000000"
+              href="tel:+37360123456"
               className="inline-flex items-center justify-center px-10 py-5 bg-transparent border-2 border-white/20 text-white font-black rounded-full hover:bg-white/10 hover:border-white transition-all duration-300 uppercase tracking-widest text-sm group"
             >
               <Phone className="w-5 h-5 mr-3 group-hover:animate-bounce" />

@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube } from 'lucide-react';
+import { MapPin, Phone, Clock, Facebook, Instagram, Youtube } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
+const SOCIAL_LINKS = {
+  facebook: 'https://www.facebook.com/profile.php?id=61562124174747',
+  instagram: 'https://www.instagram.com/',
+  youtube: 'https://www.youtube.com/@Badminton_4Life',
+  tiktok: 'https://www.tiktok.com/@badmintonmoldova',
+};
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
@@ -30,14 +37,17 @@ const Footer: React.FC = () => {
 
             <div className="relative z-10 flex flex-wrap gap-4">
               {[
-                { icon: <Facebook size={24} />, label: 'FB', color: 'hover:bg-[#1877F2]' },
-                { icon: <Instagram size={24} />, label: 'IG', color: 'hover:bg-[#E4405F]' },
-                { icon: <Youtube size={24} />, label: 'YT', color: 'hover:bg-[#FF0000]' },
-                { icon: <div className="w-6 h-6"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.9 2h2.4c.2 1.4 1 2.7 2.2 3.6a7 7 0 0 0 2.5 1v2.3a9.2 9.2 0 0 1-4.7-1.5v6.5c0 3-2.4 5.5-5.5 5.5S5.3 17 5.3 14c0-3 2.4-5.4 5.4-5.4c.3 0 .6 0 .9.1v2.5a3 3 0 1 0 2.3 2.9V2z" /></svg></div>, label: 'TK', color: 'hover:bg-black hover:ring-1 hover:ring-white/50' }
+                { icon: <Facebook size={24} />, href: SOCIAL_LINKS.facebook, label: 'Facebook', color: 'hover:bg-[#1877F2]' },
+                { icon: <Instagram size={24} />, href: SOCIAL_LINKS.instagram, label: 'Instagram', color: 'hover:bg-[#E4405F]' },
+                { icon: <Youtube size={24} />, href: SOCIAL_LINKS.youtube, label: 'YouTube', color: 'hover:bg-[#FF0000]' },
+                { icon: <div className="w-6 h-6"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.9 2h2.4c.2 1.4 1 2.7 2.2 3.6a7 7 0 0 0 2.5 1v2.3a9.2 9.2 0 0 1-4.7-1.5v6.5c0 3-2.4 5.5-5.5 5.5S5.3 17 5.3 14c0-3 2.4-5.4 5.4-5.4c.3 0 .6 0 .9.1v2.5a3 3 0 1 0 2.3 2.9V2z" /></svg></div>, href: SOCIAL_LINKS.tiktok, label: 'TikTok', color: 'hover:bg-black hover:ring-1 hover:ring-white/50' }
               ].map((social, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
                   className={`w-16 h-16 bg-white/5 backdrop-blur-md rounded-2xl flex items-center justify-center transition-all duration-300 ${social.color} hover:scale-110`}
                 >
                   {social.icon}
@@ -49,7 +59,7 @@ const Footer: React.FC = () => {
           {/* Navigation Block */}
           <div className="md:col-span-6 lg:col-span-3 bg-white border border-gray-100 rounded-[2.5rem] p-10 md:p-12 flex flex-col justify-between">
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zenith-black/30 mb-10">Navigation</h3>
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zenith-black/30 mb-10">{t('footer.quickLinks')}</h3>
               <ul className="space-y-4">
                 {[
                   { path: '/', label: t('navigation.home') },
@@ -73,14 +83,14 @@ const Footer: React.FC = () => {
             <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-black/5 rotate-45 translate-x-12 -translate-y-12" />
 
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zenith-black/30 mb-10">Contact Info</h3>
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zenith-black/30 mb-10">{t('footer.contactInfo', 'Контактная информация')}</h3>
               <ul className="space-y-8">
                 <li className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-zenith-black rounded-xl flex items-center justify-center text-white shrink-0">
                     <MapPin size={20} />
                   </div>
                   <div>
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">Address</span>
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.address', 'Адрес')}</span>
                     <span className="text-lg font-bold text-zenith-black">{t('footer.contact.address', 'Chișinău, str. Example 123')}</span>
                   </div>
                 </li>
@@ -89,7 +99,7 @@ const Footer: React.FC = () => {
                     <Phone size={20} />
                   </div>
                   <div>
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">Phone</span>
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.phone', 'Телефон')}</span>
                     <span className="text-lg font-bold text-zenith-black">{t('footer.contact.phone', '+373 60 123 456')}</span>
                   </div>
                 </li>
@@ -98,7 +108,7 @@ const Footer: React.FC = () => {
                     <Clock size={20} />
                   </div>
                   <div>
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">Working Hours</span>
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.workingHours', 'Часы работы')}</span>
                     <div className="text-lg font-bold text-zenith-black leading-tight">
                       <div>{t('footer.contact.hours.weekdays', 'Mon-Fri: 06:00-22:00')}</div>
                       <div>{t('footer.contact.hours.weekends', 'Sat-Sun: 08:00-20:00')}</div>
@@ -115,14 +125,6 @@ const Footer: React.FC = () => {
           <p className="text-zenith-black/40 text-xs font-black uppercase tracking-widest mb-4 md:mb-0">
             © {new Date().getFullYear()} Altius Badminton Club. {t('footer.allRightsReserved')}
           </p>
-          <div className="flex space-x-8">
-            <Link to="/privacy" className="text-zenith-black/40 hover:text-zenith-crimson text-xs font-black uppercase tracking-widest transition-colors">
-              {t('footer.legal.privacy', 'Privacy Policy')}
-            </Link>
-            <Link to="/terms" className="text-zenith-black/40 hover:text-zenith-crimson text-xs font-black uppercase tracking-widest transition-colors">
-              {t('footer.legal.terms', 'Terms of Use')}
-            </Link>
-          </div>
         </div>
       </div>
     </footer>

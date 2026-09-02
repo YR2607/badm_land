@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight, Sparkles, Star } from 'lucide-react';
+import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight, Star } from 'lucide-react';
 import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchAllFounders, fetchTrainers, fetchAboutTabs, fetchAboutStrategy, type CmsAboutStrategy, fetchAboutRoadmap, type CmsAboutRoadmap } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import SEO from '../components/SEO';
