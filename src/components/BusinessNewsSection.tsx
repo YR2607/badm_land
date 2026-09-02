@@ -69,7 +69,7 @@ const BusinessNewsSection: FC = () => {
           <h2 className="text-8xl md:text-[12rem] font-black font-display leading-[0.8] tracking-tighter uppercase text-zenith-black opacity-10 absolute -top-10 left-0 pointer-events-none select-none">
             Global
           </h2>
-          <h2 className="text-5xl md:text-8xl font-black font-display leading-tight-impact tracking-tighter uppercase text-zenith-black relative z-10">
+          <h2 className="text-4xl md:text-8xl font-black font-display leading-tight-impact tracking-tighter uppercase text-zenith-black relative z-10 break-words [overflow-wrap:anywhere]">
             {t('home.worldNews.title', 'Мировые новости')}
           </h2>
           <div className="w-32 h-4 bg-zenith-crimson mt-8" />
@@ -127,7 +127,7 @@ const BusinessNewsSection: FC = () => {
                     </span>
                   </div>
 
-                  <h3 className={`font-black font-display text-white uppercase tracking-tight leading-tight group-hover:text-zenith-crimson transition-colors duration-300 ${index === 0 ? 'text-4xl md:text-6xl' : 'text-2xl md:text-3xl'}`}>
+                  <h3 className={`font-black font-display text-white uppercase tracking-tight leading-tight group-hover:text-zenith-crimson transition-colors duration-300 break-words [overflow-wrap:anywhere] ${index === 0 ? 'text-3xl md:text-5xl' : 'text-xl md:text-2xl'}`}>
                     {news.title}
                   </h3>
 

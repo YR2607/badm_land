@@ -148,7 +148,7 @@ const Contact: FC = () => {
                       )}
                     </div>
 
-                    <h3 className="text-3xl font-black text-zenith-black mb-2 uppercase tracking-tight group-hover:text-zenith-crimson transition-colors">{g.name}</h3>
+                    <h3 className="text-xl md:text-3xl font-black text-zenith-black mb-2 uppercase tracking-tight group-hover:text-zenith-crimson transition-colors break-words [overflow-wrap:anywhere]">{g.name}</h3>
                     {(g.hasChildren || g.hasAdults) && (
                       <div className="flex flex-wrap gap-2 mb-8">
                         {g.hasChildren && <span className="text-[10px] font-black text-zenith-crimson uppercase tracking-widest">{t('gyms.tags.children')}</span>}

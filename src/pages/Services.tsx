@@ -125,7 +125,7 @@ const Services: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="text-5xl md:text-7xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter">{t('services.gyms.title')}</h2>
+            <h2 className="text-4xl md:text-7xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter break-words [overflow-wrap:anywhere]">{t('services.gyms.title')}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-12 font-medium">
               {t('services.gyms.subtitle')}
             </p>
@@ -161,7 +161,7 @@ const Services: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="text-6xl md:text-8xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter leading-none">{t('services.faq.title')}</h2>
+            <h2 className="text-4xl md:text-6xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter leading-none break-words [overflow-wrap:anywhere]">{t('services.faq.title')}</h2>
             <div className="w-24 h-2 bg-zenith-crimson mx-auto mb-8 rounded-full" />
             <p className="text-xl text-gray-500 font-bold uppercase tracking-widest">{t('services.faq.subtitle')}</p>
           </motion.div>
@@ -213,7 +213,7 @@ const Services: FC = () => {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.h2
-            className="text-5xl md:text-7xl font-black font-display mb-8 uppercase tracking-tighter"
+            className="text-4xl md:text-6xl font-black font-display mb-8 uppercase tracking-tighter break-words [overflow-wrap:anywhere]"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

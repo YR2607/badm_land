@@ -47,7 +47,7 @@ const InnerHero: FC<InnerHeroProps> = ({ title, subtitle, children }) => {
                                 {subtitle}
                             </span>
                         )}
-                        <h1 className="text-6xl md:text-[8rem] lg:text-[10rem] font-black font-display leading-[0.8] tracking-tighter uppercase text-white mb-4">
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-display leading-[0.85] tracking-tighter uppercase text-white mb-4 break-words [overflow-wrap:anywhere]">
                             {title}
                         </h1>
                     </motion.div>

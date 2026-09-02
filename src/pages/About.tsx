@@ -234,7 +234,7 @@ const About: FC = () => {
                   <span>Наша миссия</span>
                 </div>
               </motion.div>
-              <h2 className="text-5xl md:text-7xl font-black font-display text-zenith-black uppercase tracking-tighter mb-6">
+              <h2 className="text-4xl md:text-7xl font-black font-display text-zenith-black uppercase tracking-tighter mb-6 break-words [overflow-wrap:anywhere]">
                 {strategyData?.mission?.title || t('about.strategy.mission.title')}
               </h2>
             </div>
@@ -280,7 +280,7 @@ const About: FC = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <div className="text-center mb-16">
-              <h3 className="text-4xl md:text-5xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter">
+              <h3 className="text-3xl md:text-5xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter break-words [overflow-wrap:anywhere]">
                 {strategyData?.currentState?.title || t('about.strategy.currentState.title')}
               </h3>
               <p className="text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed font-bold uppercase tracking-wide">
@@ -331,7 +331,7 @@ const About: FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="text-center mb-24">
-              <h2 className="text-6xl md:text-[7rem] font-black font-display text-zenith-black mb-6 text-center uppercase tracking-tighter leading-none">
+              <h2 className="text-4xl md:text-[7rem] font-black font-display text-zenith-black mb-6 text-center uppercase tracking-tighter leading-none break-words [overflow-wrap:anywhere]">
                 {strategyData?.goals?.title || t('about.strategy.goals.title')}
               </h2>
               <div className="w-48 h-2 bg-zenith-crimson mx-auto rounded-full" />
@@ -471,7 +471,7 @@ const About: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{roadmapData?.title || t('about.roadmap.title')}</h3>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center break-words [overflow-wrap:anywhere]">{roadmapData?.title || t('about.roadmap.title')}</h3>
             <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
               {roadmapData?.subtitle || t('about.roadmap.subtitle')}
             </p>
@@ -551,7 +551,7 @@ const About: FC = () => {
                                 )}
                               </span>
                             </div>
-                            <h4 className="text-xl font-black font-display text-zenith-black mb-4 group-hover:text-zenith-crimson transition-colors uppercase tracking-tight">
+                            <h4 className="text-lg md:text-xl font-black font-display text-zenith-black mb-4 group-hover:text-zenith-crimson transition-colors uppercase tracking-tight break-words [overflow-wrap:anywhere]">
                               {r.title}
                             </h4>
                             {r.points && r.points.length > 0 ? (
@@ -622,7 +622,7 @@ const About: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-5xl md:text-7xl font-black font-display text-zenith-black mb-4 uppercase tracking-tighter">
+            <h2 className="text-4xl md:text-7xl font-black font-display text-zenith-black mb-4 uppercase tracking-tighter break-words [overflow-wrap:anywhere]">
               {t('about.team.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
@@ -639,7 +639,7 @@ const About: FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <h3 className="text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter">{t('about.team.founder')}</h3>
+                <h3 className="text-3xl md:text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter break-words [overflow-wrap:anywhere]">{t('about.team.founder')}</h3>
 
                 <div className="grid grid-cols-1 gap-12">
                   {cmsData.teamSection.leaders.map((leader: any, idx: number) => (
@@ -680,7 +680,7 @@ const About: FC = () => {
                             <span className="text-xs font-bold text-zenith-crimson uppercase tracking-widest">{leader.role}</span>
                           </div>
 
-                          <h4 className="text-5xl lg:text-7xl font-black text-zenith-black mb-6 font-display uppercase tracking-tighter leading-[0.9]">
+                          <h4 className="text-4xl lg:text-7xl font-black text-zenith-black mb-6 font-display uppercase tracking-tighter leading-[0.9] break-words [overflow-wrap:anywhere]">
                             {leader.name}
                           </h4>
 
@@ -731,7 +731,7 @@ const About: FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <h3 className="text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter">{t('about.team.coaches')}</h3>
+                <h3 className="text-3xl md:text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter break-words [overflow-wrap:anywhere]">{t('about.team.coaches')}</h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {(cmsData?.teamSection?.coaches || []).map((coach: any, index: number) => (
@@ -760,7 +760,7 @@ const About: FC = () => {
 
                       {/* Content */}
                       <div className="text-center relative z-10">
-                        <h4 className="text-2xl font-black font-display text-zenith-black mb-2 uppercase tracking-tight">{coach.name}</h4>
+                        <h4 className="text-xl md:text-2xl font-black font-display text-zenith-black mb-2 uppercase tracking-tight break-words [overflow-wrap:anywhere]">{coach.name}</h4>
                         <p className="text-zenith-crimson font-bold mb-6 text-sm uppercase tracking-widest">{coach.role}</p>
 
                         <div className="flex flex-wrap justify-center gap-2 mb-6">
@@ -825,7 +825,7 @@ const About: FC = () => {
                   <Star className="w-4 h-4" />
                   <span>Прогноз развития</span>
                 </div>
-                <h2 className="text-5xl md:text-8xl font-black font-display text-white mb-8 uppercase tracking-tighter leading-none">
+                <h2 className="text-4xl md:text-8xl font-black font-display text-white mb-8 uppercase tracking-tighter leading-none break-words [overflow-wrap:anywhere]">
                   {strategyData?.results?.title || t('about.strategy.results.title')}
                 </h2>
               </div>
@@ -848,7 +848,7 @@ const About: FC = () => {
                 ))}
               </div>
               <div className="text-center relative pt-12 border-t-2 border-dashed border-white/10">
-                <p className="text-3xl md:text-5xl font-black font-display text-zenith-crimson uppercase tracking-tighter drop-shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                <p className="text-2xl md:text-5xl font-black font-display text-zenith-crimson uppercase tracking-tighter drop-shadow-[0_0_20px_rgba(220,38,38,0.5)] break-words [overflow-wrap:anywhere]">
                   {strategyData?.results?.closing || t('about.strategy.closing')}
                 </p>
               </div>

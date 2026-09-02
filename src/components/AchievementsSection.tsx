@@ -101,7 +101,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
           <h2 className="text-8xl md:text-[12rem] font-black font-display leading-[0.8] tracking-tighter uppercase text-zenith-black opacity-10 absolute -top-10 left-0 pointer-events-none select-none">
             Impact
           </h2>
-          <h2 className="text-5xl md:text-8xl font-black font-display leading-tight-impact tracking-tighter uppercase text-zenith-black relative z-10">
+          <h2 className="text-4xl md:text-8xl font-black font-display leading-tight-impact tracking-tighter uppercase text-zenith-black relative z-10 break-words [overflow-wrap:anywhere]">
             {cmsData?.title || t('home.achievements.title', 'Наши достижения')}
           </h2>
           <div className="w-32 h-4 bg-zenith-crimson mt-8" />
@@ -128,13 +128,13 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
               </div>
 
               <div>
-                <div className="text-7xl md:text-9xl font-black font-display tracking-tighter mb-4 leading-none">
+                <div className="text-5xl md:text-7xl font-black font-display tracking-tighter mb-4 leading-none break-words [overflow-wrap:anywhere]">
                   {item.count}
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-tight mb-4">
+                <h3 className="text-xl md:text-2xl font-bold uppercase tracking-tight mb-4">
                   {item.title}
                 </h3>
-                <p className="text-lg opacity-80 font-medium leading-relaxed max-w-md">
+                <p className="text-base md:text-lg opacity-80 font-medium leading-relaxed max-w-md">
                   {item.description}
                 </p>
               </div>
@@ -151,7 +151,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
           transition={{ duration: 1 }}
         >
           <div className="max-w-2xl">
-            <h3 className="text-4xl md:text-6xl font-black font-display uppercase tracking-tight leading-none mb-8">
+            <h3 className="text-3xl md:text-5xl font-black font-display uppercase tracking-tight leading-none mb-8 break-words [overflow-wrap:anywhere]">
               {t('home.achievements.timeline.title', 'История успеха')}
             </h3>
             <p className="text-xl md:text-2xl opacity-70 font-medium leading-relaxed">

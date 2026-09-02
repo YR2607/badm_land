@@ -78,7 +78,7 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
                   )}
                 </div>
 
-                <h3 className="text-3xl md:text-4xl font-black font-display uppercase tracking-tight mb-6 text-zenith-black group-hover:text-zenith-crimson transition-colors duration-300">
+                <h3 className="text-2xl md:text-3xl font-black font-display uppercase tracking-tight mb-6 text-zenith-black group-hover:text-zenith-crimson transition-colors duration-300 break-words [overflow-wrap:anywhere]">
                   {service.title}
                 </h3>
 
