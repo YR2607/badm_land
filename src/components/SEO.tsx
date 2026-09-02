@@ -67,6 +67,8 @@ const SEO = ({
     updateMetaTag('og:title', title, true);
     updateMetaTag('og:description', description, true);
     updateMetaTag('og:image', image, true);
+    updateMetaTag('og:image:width', '1200', true);
+    updateMetaTag('og:image:height', '630', true);
     updateMetaTag('og:url', currentUrl, true);
     updateMetaTag('og:type', type, true);
     updateMetaTag('og:site_name', siteName, true);
