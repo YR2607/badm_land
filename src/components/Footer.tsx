@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Clock, Facebook, Instagram, Youtube } from 'lucide-react';
+import { MapPin, Phone, Clock, Facebook, Youtube } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const SOCIAL_LINKS = {
   facebook: 'https://www.facebook.com/profile.php?id=61562124174747',
-  instagram: 'https://www.instagram.com/',
   youtube: 'https://www.youtube.com/@Badminton_4Life',
   tiktok: 'https://www.tiktok.com/@badmintonmoldova',
 };
@@ -38,7 +37,6 @@ const Footer: React.FC = () => {
             <div className="relative z-10 flex flex-wrap gap-4">
               {[
                 { icon: <Facebook size={24} />, href: SOCIAL_LINKS.facebook, label: 'Facebook', color: 'hover:bg-[#1877F2]' },
-                { icon: <Instagram size={24} />, href: SOCIAL_LINKS.instagram, label: 'Instagram', color: 'hover:bg-[#E4405F]' },
                 { icon: <Youtube size={24} />, href: SOCIAL_LINKS.youtube, label: 'YouTube', color: 'hover:bg-[#FF0000]' },
                 { icon: <div className="w-6 h-6"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.9 2h2.4c.2 1.4 1 2.7 2.2 3.6a7 7 0 0 0 2.5 1v2.3a9.2 9.2 0 0 1-4.7-1.5v6.5c0 3-2.4 5.5-5.5 5.5S5.3 17 5.3 14c0-3 2.4-5.4 5.4-5.4c.3 0 .6 0 .9.1v2.5a3 3 0 1 0 2.3 2.9V2z" /></svg></div>, href: SOCIAL_LINKS.tiktok, label: 'TikTok', color: 'hover:bg-black hover:ring-1 hover:ring-white/50' }
               ].map((social, i) => (

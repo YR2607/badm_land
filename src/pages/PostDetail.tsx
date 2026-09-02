@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { PortableText } from '@portabletext/react';
 import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
+import JsonLd from '../components/JsonLd';
 import { proxied } from '../utils/blockFacebookImages';
 import { isCmsEnabled, fetchPostBySlug } from '../lib/cms';
 
@@ -69,6 +70,28 @@ const PostDetail: React.FC = () => {
         publishedTime={post.date}
         modifiedTime={post.date}
       />
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": post.title,
+        "description": post.excerpt || '',
+        "image": post.image || 'https://altius.md/og-post.jpg',
+        "datePublished": post.date,
+        "dateModified": post.date,
+        "author": {
+          "@type": "Organization",
+          "name": post.author || 'Altius Badminton Club'
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Altius Badminton Club",
+          "logo": "https://altius.md/altLGOO.jpg"
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": `https://altius.md/blog/${slug}`
+        }
+      }} />
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 relative z-20">
         <Breadcrumbs
           items={[

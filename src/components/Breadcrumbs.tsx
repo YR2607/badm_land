@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronRight, Home } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import JsonLd from './JsonLd';
 
 interface BreadcrumbItem {
   label: string;
@@ -62,7 +63,21 @@ const Breadcrumbs = ({ items, className = '', isDark = false }: BreadcrumbsProps
     return null;
   }
 
+  // BreadcrumbList structured data for SEO
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": breadcrumbItems.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": item.label,
+      ...(item.path ? { "item": `https://altius.md${item.path}` } : {})
+    }))
+  };
+
   return (
+    <>
+    <JsonLd data={breadcrumbSchema} />
     <nav
       aria-label={t('breadcrumbs.navigation', 'Навигационная цепочка')}
       className={`${isDark ? 'bg-transparent' : 'bg-white border-b border-gray-100'} ${className}`}
@@ -106,6 +121,7 @@ const Breadcrumbs = ({ items, className = '', isDark = false }: BreadcrumbsProps
         </ol>
       </div>
     </nav>
+    </>
   );
 };
 

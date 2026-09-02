@@ -7,6 +7,7 @@ import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import SEO from '../components/SEO';
 import Breadcrumbs from '../components/Breadcrumbs';
 import InnerHero from '../components/InnerHero';
+import JsonLd from '../components/JsonLd';
 
 const About: FC = () => {
   const { t, i18n } = useTranslation();
@@ -190,6 +191,18 @@ const About: FC = () => {
         description={t('about.hero.subtitle')}
         image="https://altius.md/og-about.jpg"
       />
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": `Altius — ${t('navigation.about')}`,
+        "url": "https://altius.md/about",
+        "description": t('about.hero.subtitle'),
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Altius Badminton Club",
+          "url": "https://altius.md/"
+        }
+      }} />
       <InnerHero
         title={t('navigation.about')}
         subtitle={t('about.hero.subtitle')}

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { GymCardSkeleton } from '../components/Skeletons';
 import InnerHero from '../components/InnerHero';
 import SEO from '../components/SEO';
+import JsonLd from '../components/JsonLd';
 
 const Gyms: FC = () => {
   const { t, i18n } = useTranslation();
@@ -106,6 +107,23 @@ const Gyms: FC = () => {
 
   return (
     <div className="min-h-screen bg-zenith-white">
+      <SEO
+        title={`Altius — ${t('navigation.gyms')}`}
+        description={t('gyms.hero.subtitle', 'Современные залы с профессиональным оборудованием')}
+        image="https://altius.md/og-gyms.jpg"
+      />
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": `Altius — ${t('navigation.gyms')}`,
+        "url": "https://altius.md/gyms",
+        "description": t('gyms.hero.subtitle', 'Современные залы с профессиональным оборудованием'),
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Altius Badminton Club",
+          "url": "https://altius.md/"
+        }
+      }} />
       <InnerHero
         title={heroData?.title || t('navigation.gyms')}
         subtitle={heroData?.subtitle || t('gyms.hero.subtitle')}

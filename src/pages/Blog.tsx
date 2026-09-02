@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
 import InnerHero from '../components/InnerHero';
+import JsonLd from '../components/JsonLd';
 import { NewsCardSkeleton } from '../components/Skeletons';
 
 type BwfItem = { title: string; href: string; img?: string; preview?: string; date?: string };
@@ -222,6 +223,17 @@ const Blog: FC = () => {
         description={t('news.hero.subtitle')}
         image="https://altius.md/og-blog.jpg"
       />
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Altius News",
+        "url": "https://altius.md/blog",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Altius Badminton Club",
+          "logo": "https://altius.md/altLGOO.jpg"
+        }
+      }} />
 
       <InnerHero
         title={t('navigation.news')}

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
 import InnerHero from '../components/InnerHero';
 import SEO from '../components/SEO';
+import JsonLd from '../components/JsonLd';
 
 const getSections = (t: any) => [
   { id: 'hall', title: t('gallery.sections.hall'), gradient: 'from-blue-500 to-blue-600' },
@@ -183,6 +184,18 @@ const Gallery: FC = () => {
         description={t('gallery.subtitle')}
         image="https://altius.md/og-gallery.jpg"
       />
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": `Altius — ${t('navigation.gallery')}`,
+        "url": "https://altius.md/gallery",
+        "description": t('gallery.subtitle'),
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Altius Badminton Club",
+          "url": "https://altius.md/"
+        }
+      }} />
 
       <InnerHero
         title={t('navigation.gallery')}

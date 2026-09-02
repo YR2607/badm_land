@@ -658,7 +658,8 @@
     "services": {
       "title": "Our Services",
       "subtitle": "Professional training for all levels",
-      "more": "Learn more"
+      "more": "Learn more",
+      "features": "Features"
     },
     "achievements": {
       "title": "Our Achievements",

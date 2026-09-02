@@ -101,7 +101,28 @@ const SEO = ({
     }
     canonical.setAttribute('href', currentUrl);
 
-  }, [title, description, image, currentUrl, type, keywords, author, publishedTime, modifiedTime, i18n.language, currentLocale]);
+    // Hreflang alternate tags for multilingual SEO
+    const basePath = location.pathname;
+    const hreflangs: Record<string, string> = {
+      'ru': `https://altius.md${basePath}`,
+      'en': `https://altius.md${basePath}`,
+      'ro': `https://altius.md${basePath}`,
+      'x-default': `https://altius.md${basePath}`,
+    };
+
+    // Remove existing hreflang tags
+    document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
+
+    // Add hreflang tags
+    Object.entries(hreflangs).forEach(([hreflang, href]) => {
+      const link = document.createElement('link');
+      link.setAttribute('rel', 'alternate');
+      link.setAttribute('hreflang', hreflang);
+      link.setAttribute('href', href);
+      document.head.appendChild(link);
+    });
+
+  }, [title, description, image, currentUrl, type, keywords, author, publishedTime, modifiedTime, i18n.language, currentLocale, location.pathname]);
 
   return null;
 };

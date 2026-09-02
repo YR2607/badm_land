@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Users, Star, UserCheck, Target, Calendar, Trophy, Clock, ArrowRight } from 'lucide-react';
+import { Users, Star, UserCheck, Target, Calendar, Trophy, Clock, ArrowRight, Zap, MapPin, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface ServicesSectionProps {
@@ -20,6 +20,23 @@ interface ServicesSectionProps {
 
 const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
   const { t } = useTranslation();
+
+  const iconMap: Record<string, LucideIcon> = {
+    'children': Users,
+    'kids': Users,
+    'individual': UserCheck,
+    'personal': UserCheck,
+    'group': Users,
+    'competition': Trophy,
+    'tournament': Trophy,
+    'court': MapPin,
+    'rental': MapPin,
+    'training': Target,
+    'zap': Zap,
+    'star': Star,
+    'calendar': Calendar,
+    'clock': Clock,
+  };
 
   const services = (cmsData?.services || []).map((s) => ({
     title: s.title,
@@ -70,12 +87,14 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
                   <div className="text-6xl md:text-7xl font-black font-display text-zenith-black/10 group-hover:text-zenith-crimson/20 transition-colors duration-500 leading-none tracking-tighter">
                     {String(index + 1).padStart(2, '0')}
                   </div>
-                  {service.icon && (
-                    <div className="w-16 h-16 rounded-2xl bg-zenith-black text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-zenith-crimson transition-all duration-500">
-                      {/* You can add dynamic icon rendering here if needed */}
-                      <ArrowRight className="w-8 h-8 opacity-50" />
-                    </div>
-                  )}
+                  {service.icon && (() => {
+                    const Icon = iconMap[service.icon?.toLowerCase() || ''] || Target;
+                    return (
+                      <div className="w-16 h-16 rounded-2xl bg-zenith-black text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-zenith-crimson transition-all duration-500">
+                        <Icon className="w-8 h-8" />
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <h3 className="text-2xl md:text-3xl font-black font-display uppercase tracking-tight mb-6 text-zenith-black group-hover:text-zenith-crimson transition-colors duration-300 break-words [overflow-wrap:anywhere]">
@@ -90,7 +109,7 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
                   <div className="mb-10">
                     <div className="text-sm font-black uppercase tracking-widest text-zenith-black/40 mb-5 pl-4 relative">
                       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-zenith-crimson/50" />
-                      Особенности
+                      {t('home.services.features', 'Особенности')}
                     </div>
                     <ul className="space-y-4">
                       {service.features.map((feature, fIndex) => (

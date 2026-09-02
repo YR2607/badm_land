@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
 import InnerHero from '../components/InnerHero';
 import SEO from '../components/SEO';
+import JsonLd from '../components/JsonLd';
 import { fetchServicesPage, CmsServicesPage, fetchServicesHero, type CmsHero, fetchHomePage, type CmsHomePage } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import ServicesSection from '../components/ServicesSection';
@@ -72,6 +73,18 @@ const Services: FC = () => {
         keywords="тренировки бадминтон, групповые занятия, индивидуальные тренировки, цены бадминтон, Кишинев"
         image="https://altius.md/og-services.jpg"
       />
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Услуги - Тренировки по бадминтону | Altius",
+        "url": "https://altius.md/services",
+        "description": "Групповые и индивидуальные тренировки по бадминтону в Кишиневе.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Altius Badminton Club",
+          "url": "https://altius.md/"
+        }
+      }} />
       <InnerHero
         title={heroData?.title || t('navigation.services')}
         subtitle={heroData?.subtitle || t('services.hero.subtitle', 'Групповые и индивидуальные тренировки')}
