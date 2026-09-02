@@ -4,7 +4,6 @@ import Hero from '../components/Hero';
 import BusinessNewsSection from '../components/BusinessNewsSection';
 import ServicesSection from '../components/ServicesSection';
 import AchievementsSection from '../components/AchievementsSection';
-import CmsEmbedsSection from '../components/CmsEmbedsSection';
 import SocialMediaHubLive from '../components/SocialMediaHubLive';
 import SEO from '../components/SEO';
 import JsonLd from '../components/JsonLd';
@@ -67,7 +66,6 @@ const Home: FC = () => {
       <Hero cmsData={cmsData?.hero} />
       <AchievementsSection cmsData={cmsData?.achievementsSection} />
       <ServicesSection cmsData={cmsData?.servicesSection} />
-      {/* <CmsEmbedsSection /> */}
       <SocialMediaHubLive />
       <BusinessNewsSection />
     </div>

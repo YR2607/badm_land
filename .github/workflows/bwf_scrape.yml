@@ -5,7 +5,7 @@ on:
     - cron: '0 */4 * * *'  # Run every 4 hours: 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC
   workflow_dispatch: {}
   push:
-    branches: [ main ]
+    branches: [ main, redesign ]
     paths:
       - 'scripts/bwf_scrape.py'
       - '.github/workflows/bwf_scrape.yml'
@@ -25,46 +25,21 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r scripts/requirements.txt
       - name: Run scraper
         env:
+          # Scraper works without proxy keys via cloudscraper; keys are optional fallbacks
           SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
           SCRAPINGBEE_KEY: ${{ secrets.SCRAPINGBEE_KEY }}
-          # Force proxy for all BWF domains to avoid Cloudflare blocks
-          BWF_FORCE_PROXY: '1'
-          # Use default mode to get full article data and latest news
           BWF_MODE: 'default'
-          # Enable verbose logging
           PYTHONUNBUFFERED: '1'
         run: |
           echo "Starting BWF scraper..."
-          echo "Checking proxy keys availability:"
-          if [ -n "$SCRAPERAPI_KEY" ]; then
-            echo "✓ SCRAPERAPI_KEY is available (length: ${#SCRAPERAPI_KEY})"
-          else
-            echo "✗ SCRAPERAPI_KEY is not set"
-          fi
-          if [ -n "$SCRAPINGBEE_KEY" ]; then
-            echo "✓ SCRAPINGBEE_KEY is available (length: ${#SCRAPINGBEE_KEY})"
-          else
-            echo "✗ SCRAPINGBEE_KEY is not set"
-          fi
-          echo "Running scraper with enhanced strategies..."
           python scripts/bwf_scrape.py
           echo "Scraper completed with exit code: $?"
       - name: Show scraped items count
         run: |
           python -c "import json; j=json.load(open('public/data/bwf_news.json','r',encoding='utf-8')); print('items:', len(j.get('items') or [])); print('first_titles:', [it.get('title') for it in (j.get('items') or [])][:3])"
-      - name: Diagnostics (unique images)
-        run: |
-          python - <<'PY'
-          import json
-          j=json.load(open('public/data/bwf_news.json','r',encoding='utf-8'))
-          imgs=[(it.get('img') or '') for it in (j.get('items') or [])]
-          uniq=list(dict.fromkeys(imgs))
-          print('unique_images_count:', len([u for u in uniq if u]))
-          print('sample_images:', uniq[:10])
-          PY
       - name: Upload scraped JSON artifact
         uses: actions/upload-artifact@v4
         with:
@@ -74,13 +49,11 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          
-          # Check if file was actually updated
+
           if [ -f "public/data/bwf_news.json" ]; then
             echo "BWF news file exists, checking for changes..."
             git add public/data/bwf_news.json
-            
-            # Only commit if there are actual changes
+
             if git diff --staged --quiet; then
               echo "No changes to BWF news data"
             else
@@ -93,7 +66,3 @@ jobs:
             echo "ERROR: BWF news file not found!"
             exit 1
           fi
-      - name: Note about Vercel auto-deploy
-        run: |
-          echo "Vercel will automatically deploy when we push to main branch"
-          echo "No need for manual deploy hook to avoid double deployment"
