@@ -68,17 +68,17 @@ const Services: FC = () => {
   return (
     <div className="min-h-screen bg-zenith-white">
       <SEO
-        title="Услуги - Тренировки по бадминтону | Altius"
-        description="Групповые и индивидуальные тренировки по бадминтону в Кишиневе. Программы для детей и взрослых, подготовка к соревнованиям. Цены от 200 MDL/месяц."
-        keywords="тренировки бадминтон, групповые занятия, индивидуальные тренировки, цены бадминтон, Кишинев"
+        title={cmsData?.seo?.metaTitle || "Услуги - Тренировки по бадминтону | Altius"}
+        description={cmsData?.seo?.metaDescription || "Групповые и индивидуальные тренировки по бадминтону в Кишиневе. Программы для детей и взрослых, подготовка к соревнованиям."}
+        keywords={cmsData?.seo?.keywords || "тренировки бадминтон, групповые занятия, индивидуальные тренировки, цены бадминтон, Кишинев"}
         image="https://altius.md/og-services.jpg"
       />
       <JsonLd data={{
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "Услуги - Тренировки по бадминтону | Altius",
+        "name": cmsData?.seo?.metaTitle || "Услуги - Тренировки по бадминтону | Altius",
         "url": "https://altius.md/services",
-        "description": "Групповые и индивидуальные тренировки по бадминтону в Кишиневе.",
+        "description": cmsData?.seo?.metaDescription || "Групповые и индивидуальные тренировки по бадминтону в Кишиневе.",
         "isPartOf": {
           "@type": "WebSite",
           "name": "Altius Badminton Club",
@@ -90,30 +90,16 @@ const Services: FC = () => {
         subtitle={heroData?.subtitle || t('services.hero.subtitle', 'Групповые и индивидуальные тренировки')}
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10">
-          <div className="text-center group">
-            <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
-              500+
+          {(heroData?.statistics || []).map((stat, i) => (
+            <div key={i} className={`text-center group ${(heroData?.statistics || []).length % 2 !== 0 && i === (heroData?.statistics || []).length - 1 ? 'col-span-2' : ''}`}>
+              <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
+                {stat.number}
+              </div>
+              <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
+                {stat.description}
+              </div>
             </div>
-            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
-              {t('services.hero.stats.students')}
-            </div>
-          </div>
-          <div className="text-center group">
-            <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
-              15+
-            </div>
-            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
-              {t('services.hero.stats.experience')}
-            </div>
-          </div>
-          <div className="text-center group col-span-2">
-            <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
-              3
-            </div>
-            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
-              {t('services.hero.stats.formats')}
-            </div>
-          </div>
+          ))}
         </div>
       </InnerHero>
 
@@ -257,7 +243,7 @@ const Services: FC = () => {
               {t('services.cta.contact')}
             </Link>
             <a
-              href="tel:+37360123456"
+              href="tel:+37369509892"
               className="inline-flex items-center justify-center px-10 py-5 bg-transparent border-2 border-white/20 text-white font-black rounded-full hover:bg-white/10 hover:border-white transition-all duration-300 uppercase tracking-widest text-sm group"
             >
               <Phone className="w-5 h-5 mr-3 group-hover:animate-bounce" />

@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Award, Users, MapPin, Clock, Target, Heart, Trophy, ArrowRight, Star } from 'lucide-react';
+import { Award, Users, MapPin, Clock, Trophy, ArrowRight, Star } from 'lucide-react';
 import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchAllFounders, fetchTrainers, fetchAboutTabs, fetchAboutStrategy, type CmsAboutStrategy, fetchAboutRoadmap, type CmsAboutRoadmap } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import SEO from '../components/SEO';
@@ -110,40 +110,17 @@ const About: FC = () => {
     }
   };
 
-  const stats = [
-    { number: '1+', label: t('about.stats.experience'), icon: <Clock className="w-6 h-6" />, color: 'from-primary-blue to-blue-600', description: t('about.stats.experienceDesc') },
-    { number: '120+', label: t('about.stats.participants'), icon: <Users className="w-6 h-6" />, color: 'from-primary-yellow to-yellow-600', description: t('about.stats.participantsDesc') },
-    { number: '4', label: t('about.stats.courts'), icon: <MapPin className="w-6 h-6" />, color: 'from-primary-orange to-red-600', description: t('about.stats.courtsDesc') },
-    { number: '15+', label: t('about.stats.tournaments'), icon: <Award className="w-6 h-6" />, color: 'from-primary-blue to-blue-700', description: t('about.stats.tournamentsDesc') }
-  ];
+  // Stats from CMS (heroData.statistics or cmsData.statsSection), fallback to i18n labels
+  const cmsStats = heroData?.statistics || cmsData?.statsSection?.stats || [];
+  const stats = cmsStats.map((s, i) => ({
+    number: s.number,
+    label: s.description,
+    icon: i === 0 ? <Clock className="w-6 h-6" /> : i === 1 ? <Users className="w-6 h-6" /> : i === 2 ? <MapPin className="w-6 h-6" /> : <Award className="w-6 h-6" />,
+    color: i === 0 ? 'from-primary-blue to-blue-600' : i === 1 ? 'from-primary-yellow to-yellow-600' : i === 2 ? 'from-primary-orange to-red-600' : 'from-primary-blue to-blue-700',
+    description: s.description
+  }));
 
-
-
-  const values = [
-    { icon: <Target className="w-8 h-8" />, title: t('about.values.professionalism'), description: t('about.values.professionalismDesc') },
-    { icon: <Heart className="w-8 h-8" />, title: t('about.values.friendliness'), description: t('about.values.friendlinessDesc') },
-    { icon: <Award className="w-8 h-8" />, title: t('about.values.results'), description: t('about.values.resultsDesc') }
-  ];
-
-  const timeline: Array<{ year: string; title: string; text: string }> = [
-    { year: '2024 Q1', title: t('about.timeline.2024.q1.title'), text: t('about.timeline.2024.q1.text') },
-    { year: '2024 Q2', title: t('about.timeline.2024.q2.title'), text: t('about.timeline.2024.q2.text') },
-    { year: '2024 Q3', title: t('about.timeline.2024.q3.title'), text: t('about.timeline.2024.q3.text') },
-    { year: '2024 Q4', title: t('about.timeline.2024.q4.title'), text: t('about.timeline.2024.q4.text') },
-    { year: '2025 Q1', title: t('about.timeline.2025.q1.title'), text: t('about.timeline.2025.q1.text') },
-    { year: '2025 Q2', title: t('about.timeline.2025.q2.title'), text: t('about.timeline.2025.q2.text') },
-    { year: '2025 Q3', title: t('about.timeline.2025.q3.title'), text: t('about.timeline.2025.q3.text') },
-    { year: '2025 Q4', title: t('about.timeline.2025.q4.title'), text: t('about.timeline.2025.q4.text') }
-  ];
-
-  const roadmap: Array<{ tag: string; title: string; desc: string; status: 'done' | 'progress' | 'planned' }> = [
-    { tag: '2025 Q3', title: t('about.roadmap.items.q3_2025.title'), desc: t('about.roadmap.items.q3_2025.desc'), status: 'done' },
-    { tag: '2025 Q4', title: t('about.roadmap.items.q4_2025.title'), desc: t('about.roadmap.items.q4_2025.desc'), status: 'progress' },
-    { tag: '2026 Q1', title: t('about.roadmap.items.q1_2026.title'), desc: t('about.roadmap.items.q1_2026.desc'), status: 'planned' },
-    { tag: '2026 Q2', title: t('about.roadmap.items.q2_2026.title'), desc: t('about.roadmap.items.q2_2026.desc'), status: 'planned' },
-  ];
-
-  // CMS-driven overrides (placed after defaults to avoid use-before-declaration)
+  // CMS-driven history timeline
   const cmsTimeline: Array<{ year: string; title: string; text: string }> | undefined = cmsData?.historySection?.timeline?.map(it => ({
     year: it.year,
     title: it.title,
@@ -152,7 +129,7 @@ const About: FC = () => {
   const cmsShowAllByDefault = cmsData?.historySection?.showAllByDefault;
   const effectiveTimeline = cmsTimeline || [];
 
-  // Roadmap data from CMS or fallback to translations
+  // Roadmap data from CMS
   const effectiveRoadmap = roadmapData?.items?.map((item) => ({
     tag: item.tag,
     title: item.title,
@@ -187,16 +164,16 @@ const About: FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <SEO
-        title={`Altius — ${t('navigation.about')}`}
-        description={t('about.hero.subtitle')}
+        title={cmsData?.seo?.metaTitle || `Altius — ${t('navigation.about')}`}
+        description={cmsData?.seo?.metaDescription || heroData?.subtitle || t('about.hero.subtitle')}
         image="https://altius.md/og-about.jpg"
       />
       <JsonLd data={{
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": `Altius — ${t('navigation.about')}`,
+        "name": cmsData?.seo?.metaTitle || `Altius — ${t('navigation.about')}`,
         "url": "https://altius.md/about",
-        "description": t('about.hero.subtitle'),
+        "description": cmsData?.seo?.metaDescription || heroData?.subtitle || t('about.hero.subtitle'),
         "isPartOf": {
           "@type": "WebSite",
           "name": "Altius Badminton Club",
@@ -204,8 +181,8 @@ const About: FC = () => {
         }
       }} />
       <InnerHero
-        title={t('navigation.about')}
-        subtitle={t('about.hero.subtitle')}
+        title={heroData?.title || t('navigation.about')}
+        subtitle={heroData?.subtitle || t('about.hero.subtitle')}
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10">
           {stats.map((stat, i) => (
@@ -244,7 +221,7 @@ const About: FC = () => {
               >
                 <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-zenith-crimson/20 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-bold">
                   <Trophy className="w-4 h-4" />
-                  <span>Наша миссия</span>
+                  <span>{t('about.strategy.mission.badge', 'Наша миссия')}</span>
                 </div>
               </motion.div>
               <h2 className="text-4xl md:text-7xl font-black font-display text-zenith-black uppercase tracking-tighter mb-6 break-words [overflow-wrap:anywhere]">
@@ -836,7 +813,7 @@ const About: FC = () => {
               <div className="text-center mb-20">
                 <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-zenith-crimson/30 bg-zenith-crimson/10 text-zenith-crimson uppercase tracking-widest text-xs font-black mb-8">
                   <Star className="w-4 h-4" />
-                  <span>Прогноз развития</span>
+                  <span>{t('about.strategy.results.badge', 'Прогноз развития')}</span>
                 </div>
                 <h2 className="text-4xl md:text-8xl font-black font-display text-white mb-8 uppercase tracking-tighter leading-none break-words [overflow-wrap:anywhere]">
                   {strategyData?.results?.title || t('about.strategy.results.title')}

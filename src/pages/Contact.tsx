@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
-import { fetchPageBySlug, isCmsEnabled, CmsPage, fetchContactHero, type CmsHero, fetchContactInfo, type CmsContactInfo, fetchContactGymsCards, type CmsContactGymCard } from '../lib/cms';
+import { isCmsEnabled, fetchContactHero, type CmsHero, fetchContactInfo, type CmsContactInfo, fetchContactGymsCards, type CmsContactGymCard } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
@@ -11,20 +11,17 @@ import InnerHero from '../components/InnerHero';
 
 const Contact: FC = () => {
   const { t, i18n } = useTranslation();
-  const [page, setPage] = useState<CmsPage | null>(null);
   const [heroData, setHeroData] = useState<CmsHero | null>(null);
   const [contactCms, setContactCms] = useState<CmsContactInfo | null>(null);
   const [contactGyms, setContactGyms] = useState<CmsContactGymCard[]>([]);
   useEffect(() => {
     (async () => {
       if (!isCmsEnabled) return;
-      const [data, hero, contactInfo, gymsCards] = await Promise.all([
-        fetchPageBySlug('contact'),
+      const [hero, contactInfo, gymsCards] = await Promise.all([
         fetchContactHero(i18n.language as string),
         fetchContactInfo(),
         fetchContactGymsCards(i18n.language as string)
       ]);
-      if (data) setPage(addCmsDevMarkers(data));
       if (hero) setHeroData(addCmsDevMarkers(hero));
       if (contactInfo) setContactCms(addCmsDevMarkers(contactInfo));
       if (gymsCards?.length) setContactGyms(addCmsDevMarkers(gymsCards));

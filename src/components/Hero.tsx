@@ -123,6 +123,25 @@ const Hero = ({ cmsData }: HeroProps) => {
               {cmsData.description}
             </motion.p>
           )}
+          {cmsData?.statistics && cmsData.statistics.length > 0 && (
+            <motion.div
+              className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10 max-w-5xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.8 }}
+            >
+              {cmsData.statistics.map((stat, i) => (
+                <div key={i} className="text-center group">
+                  <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
+                    {stat.number}
+                  </div>
+                  <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
+                    {stat.description}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          )}
 
 
         </motion.div>

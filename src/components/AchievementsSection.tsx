@@ -32,61 +32,30 @@ interface AchievementsSectionProps {
 const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
   const { t } = useTranslation();
 
-  const defaultAchievements = [
-    {
-      icon: <Trophy className="w-12 h-12" />,
-      title: t('home.achievements.items.champions.title'),
-      count: '15',
-      description: t('home.achievements.items.champions.description'),
-      className: "md:col-span-2 md:row-span-2 bg-zenith-crimson text-white"
-    },
-    {
-      icon: <Medal className="w-10 h-10" />,
-      title: t('home.achievements.items.medals.title'),
-      count: '47',
-      description: t('home.achievements.items.medals.description'),
-      className: "md:col-span-2 bg-white text-zenith-black"
-    },
-    {
-      icon: <Target className="w-10 h-10" />,
-      title: t('home.achievements.items.athletes.title'),
-      count: '500+',
-      description: t('home.achievements.items.athletes.description'),
-      className: "md:col-span-1 bg-white text-zenith-black"
-    },
-    {
-      icon: <Zap className="w-10 h-10" />,
-      title: t('home.achievements.items.years.title'),
-      count: '15',
-      description: t('home.achievements.items.years.description'),
-      className: "md:col-span-1 bg-zenith-black text-white"
-    }
+  const iconMap: Record<string, JSX.Element> = {
+    trophy: <Trophy className="w-12 h-12" />,
+    medal: <Medal className="w-10 h-10" />,
+    target: <Target className="w-10 h-10" />,
+    zap: <Zap className="w-10 h-10" />,
+  };
+  const classMap = [
+    "md:col-span-2 md:row-span-2 bg-zenith-crimson text-white",
+    "md:col-span-2 bg-white text-zenith-black",
+    "md:col-span-1 bg-white text-zenith-black",
+    "md:col-span-1 bg-zenith-black text-white",
   ];
 
-  // Use CMS achievements when available, otherwise fall back to defaults
-  const achievements = (cmsData?.achievements && cmsData.achievements.length > 0)
-    ? cmsData.achievements.map((a, index) => {
-        const iconMap: Record<string, JSX.Element> = {
-          trophy: <Trophy className="w-12 h-12" />,
-          medal: <Medal className="w-10 h-10" />,
-          target: <Target className="w-10 h-10" />,
-          zap: <Zap className="w-10 h-10" />,
-        };
-        const classMap = [
-          "md:col-span-2 md:row-span-2 bg-zenith-crimson text-white",
-          "md:col-span-2 bg-white text-zenith-black",
-          "md:col-span-1 bg-white text-zenith-black",
-          "md:col-span-1 bg-zenith-black text-white",
-        ];
-        return {
-          icon: iconMap[a.icon?.toLowerCase()] || <Trophy className="w-12 h-12" />,
-          title: a.title,
-          count: a.count,
-          description: a.description,
-          className: classMap[index % classMap.length],
-        };
-      })
-    : defaultAchievements;
+  const achievements = (cmsData?.achievements ?? []).map((a, index) => ({
+    icon: iconMap[a.icon?.toLowerCase()] || <Trophy className="w-12 h-12" />,
+    title: a.title,
+    count: a.count,
+    description: a.description,
+    className: classMap[index % classMap.length],
+  }));
+
+  if (!cmsData?.achievements || cmsData.achievements.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-32 bg-zenith-white overflow-hidden">

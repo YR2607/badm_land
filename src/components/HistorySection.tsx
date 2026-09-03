@@ -27,53 +27,8 @@ const iconMap = {
   Star
 };
 
-const defaultMilestones = [
-  {
-    year: '2010',
-    title: 'Основание клуба',
-    description: 'Создание первого профессионального бадминтонного клуба в Кишиневе',
-    icon: 'Star',
-    image: undefined
-  },
-  {
-    year: '2012',
-    title: 'Первые победы',
-    description: 'Наши спортсмены завоевали первые медали на национальных чемпионатах',
-    icon: 'Trophy',
-    image: undefined
-  },
-  {
-    year: '2015',
-    title: 'Расширение клуба',
-    description: 'Открытие второго зала и увеличение количества тренеров',
-    icon: 'Users',
-    image: undefined
-  },
-  {
-    year: '2018',
-    title: 'Международное признание',
-    description: 'Участие в международных турнирах и обмен опытом с зарубежными клубами',
-    icon: 'Trophy',
-    image: undefined
-  },
-  {
-    year: '2020',
-    title: 'Современные технологии',
-    description: 'Внедрение современного оборудования и онлайн-тренировок',
-    icon: 'Star',
-    image: undefined
-  },
-  {
-    year: '2024',
-    title: 'Сегодня',
-    description: 'Более 500 активных спортсменов и 3 современных зала в Кишиневе',
-    icon: 'Users',
-    image: undefined
-  }
-];
-
 const HistorySection = ({ cmsData }: HistorySectionProps) => {
-  const milestones = cmsData?.milestones || defaultMilestones;
+  const milestones = cmsData?.milestones;
 
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
@@ -92,15 +47,20 @@ const HistorySection = ({ cmsData }: HistorySectionProps) => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {cmsData?.title || 'История развития клуба'}
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {cmsData?.subtitle || 'Путь от небольшого клуба до ведущего центра бадминтона в Молдове'}
-          </p>
+          {cmsData?.title && (
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              {cmsData.title}
+            </h2>
+          )}
+          {cmsData?.subtitle && (
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              {cmsData.subtitle}
+            </p>
+          )}
         </motion.div>
 
         {/* Timeline */}
+        {milestones && milestones.length > 0 ? (
         <div className="relative">
           {/* Timeline Line */}
           <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-primary-blue via-primary-yellow to-primary-orange h-full hidden md:block"></div>
@@ -150,6 +110,9 @@ const HistorySection = ({ cmsData }: HistorySectionProps) => {
             })}
           </div>
         </div>
+        ) : (
+          <p className="text-center text-gray-500">История скоро будет добавлена.</p>
+        )}
       </div>
     </section>
   );

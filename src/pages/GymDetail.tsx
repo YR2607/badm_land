@@ -71,7 +71,7 @@ const GymDetail: FC = () => {
           "@type": "SportsActivityLocation",
           "name": gym.name,
           "url": `https://altius.md/gyms/${slug}`,
-          "telephone": gym.phone || "+373 60 123 456",
+          ...(gym.phone && { "telephone": gym.phone }),
           "address": gym.address ? {
             "@type": "PostalAddress",
             "streetAddress": gym.address,
