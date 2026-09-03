@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { fetchFooter, isCmsEnabled } from '../lib/cms';
 
 interface HeroProps {
   cmsData?: {
@@ -18,6 +19,14 @@ const Hero = ({ cmsData }: HeroProps) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const finishedRef = useRef<boolean>(false);
+  const [heroVideo, setHeroVideo] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isCmsEnabled) return;
+    fetchFooter().then(data => {
+      if (data?.heroVideo) setHeroVideo(data.heroVideo);
+    });
+  }, []);
 
   useEffect(() => {
     const node = sectionRef.current;
@@ -62,7 +71,7 @@ const Hero = ({ cmsData }: HeroProps) => {
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover video-shift-mobile"
-          src="/jump.MP4"
+          src={heroVideo || "/jump.MP4"}
           autoPlay
           muted
           playsInline

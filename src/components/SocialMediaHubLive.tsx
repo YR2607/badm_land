@@ -2,11 +2,12 @@ import { FC, useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
+import { fetchFooter, isCmsEnabled } from '../lib/cms'
 
 type Platform = 'tiktok' | 'youtube' | 'facebook'
 
-// Social channel config
-const SOCIAL_CONFIG = {
+// Default social config (used as fallback when CMS has no data)
+const DEFAULT_SOCIAL_CONFIG = {
   tiktok: {
     name: 'TikTok',
     handle: '@badmintonmoldova',
@@ -26,6 +27,42 @@ const SOCIAL_CONFIG = {
     pageId: '61562124174747'
   }
 }
+
+// Module-level mutable config — updated by SocialMediaHubLive when CMS data loads
+let SOCIAL_CONFIG = DEFAULT_SOCIAL_CONFIG;
+
+// Hook to fetch CMS social config and update module-level variable
+const useSocialConfig = () => {
+  const [, forceUpdate] = useState(0);
+
+  useEffect(() => {
+    if (!isCmsEnabled) return;
+    fetchFooter().then(data => {
+      if (!data?.socialMedia) return;
+      const s = data.socialMedia;
+      SOCIAL_CONFIG = {
+        tiktok: {
+          ...SOCIAL_CONFIG.tiktok,
+          handle: s.tiktokUsername ? `@${s.tiktokUsername}` : SOCIAL_CONFIG.tiktok.handle,
+          url: s.tiktok || SOCIAL_CONFIG.tiktok.url,
+          username: s.tiktokUsername || SOCIAL_CONFIG.tiktok.username
+        },
+        youtube: {
+          ...SOCIAL_CONFIG.youtube,
+          handle: s.youtubeHandle ? `@${s.youtubeHandle.replace(/^@/, '')}` : SOCIAL_CONFIG.youtube.handle,
+          url: s.youtube || SOCIAL_CONFIG.youtube.url,
+          channelUrl: s.youtube || SOCIAL_CONFIG.youtube.channelUrl
+        },
+        facebook: {
+          ...SOCIAL_CONFIG.facebook,
+          url: s.facebook || SOCIAL_CONFIG.facebook.url,
+          pageId: s.facebookPageId || SOCIAL_CONFIG.facebook.pageId
+        }
+      };
+      forceUpdate(n => n + 1);
+    });
+  }, []);
+};
 
 // Platform icons
 const TikTokIcon: FC<{ className?: string }> = ({ className }) => (
@@ -390,6 +427,7 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
 
 const SocialMediaHubLive: FC = () => {
   const { t } = useTranslation()
+  useSocialConfig()
   const sectionRef = useRef<HTMLElement>(null)
   const [isVisible, setIsVisible] = useState(false)
 

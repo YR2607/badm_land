@@ -2,7 +2,7 @@ import { defineType, defineField } from 'sanity'
 
 export default defineType({
   name: 'footer',
-  title: 'Футер',
+  title: 'Футер и настройки сайта',
   type: 'document',
   fieldsets: [
     { name: 'ru', title: 'Русский' },
@@ -10,6 +10,27 @@ export default defineType({
     { name: 'ro', title: 'Română' },
   ],
   fields: [
+    // --- Brand settings ---
+    defineField({
+      name: 'brandName',
+      title: 'Название бренда',
+      type: 'string',
+      description: 'Используется в шапке, футере, SEO. По умолчанию: Altius'
+    }),
+    defineField({
+      name: 'logo',
+      title: 'Логотип',
+      type: 'image',
+      description: 'Логотип для шапки и футера'
+    }),
+    defineField({
+      name: 'heroVideo',
+      title: 'Видео для Hero-секции главной',
+      type: 'string',
+      description: 'Путь к видео файлу, например /jump.MP4'
+    }),
+
+    // --- Footer description ---
     defineField({
       name: 'description',
       title: 'Описание (RU)',
@@ -28,6 +49,8 @@ export default defineType({
       type: 'text',
       fieldset: 'ro'
     }),
+
+    // --- Quick links ---
     defineField({
       name: 'quickLinks',
       title: 'Быстрые ссылки',
@@ -48,17 +71,25 @@ export default defineType({
         ]
       }]
     }),
+
+    // --- Social media ---
     defineField({
       name: 'socialMedia',
       title: 'Социальные сети',
       type: 'object',
       fields: [
-        { name: 'facebook', title: 'Facebook', type: 'url' },
+        { name: 'facebook', title: 'Facebook URL', type: 'url' },
+        { name: 'facebookPageId', title: 'Facebook Page ID', type: 'string', description: 'ID страницы для embed (цифры из URL)' },
         { name: 'instagram', title: 'Instagram', type: 'url' },
         { name: 'telegram', title: 'Telegram', type: 'string' },
-        { name: 'youtube', title: 'YouTube', type: 'url' }
+        { name: 'youtube', title: 'YouTube URL', type: 'url' },
+        { name: 'youtubeHandle', title: 'YouTube Handle', type: 'string', description: 'Например @Badminton_4Life' },
+        { name: 'tiktok', title: 'TikTok URL', type: 'url' },
+        { name: 'tiktokUsername', title: 'TikTok Username', type: 'string', description: 'Например badmintonmoldova' }
       ]
     }),
+
+    // --- Contact info ---
     defineField({
       name: 'contact',
       title: 'Контактная информация',

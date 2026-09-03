@@ -2,26 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Clock, Facebook, Youtube } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { fetchContactInfo, isCmsEnabled, type CmsContactInfo } from '../lib/cms';
+import { fetchContactInfo, fetchFooter, isCmsEnabled, type CmsContactInfo } from '../lib/cms';
 
-const SOCIAL_LINKS = {
+const DEFAULT_SOCIAL = {
   facebook: 'https://www.facebook.com/profile.php?id=61562124174747',
   youtube: 'https://www.youtube.com/@Badminton_4Life',
   tiktok: 'https://www.tiktok.com/@badmintonmoldova',
 };
 
 const Footer: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [contactCms, setContactCms] = useState<CmsContactInfo | null>(null);
+  const [footerCms, setFooterCms] = useState<any>(null);
 
   useEffect(() => {
     if (!isCmsEnabled) return;
     fetchContactInfo().then(data => { if (data) setContactCms(data); });
-  }, []);
+    fetchFooter(i18n.language).then(data => { if (data) setFooterCms(data); });
+  }, [i18n.language]);
 
   const cmsContacts = contactCms?.contacts || [];
   const cmsAddress = cmsContacts.find(c => c.type === 'address')?.value;
   const cmsPhone = cmsContacts.find(c => c.type === 'phone')?.value;
+
+  const brandName = footerCms?.brandName || 'Altius';
+  const logoUrl = footerCms?.logo || '/altLGOO.jpg';
+  const description = footerCms?.description || t('footer.description');
+  const social = footerCms?.socialMedia || {};
+  const workingHours = footerCms?.contact?.workingHours;
+
+  const socialLinks = [
+    { icon: <Facebook size={24} />, href: social.facebook || DEFAULT_SOCIAL.facebook, label: 'Facebook', color: 'hover:bg-[#1877F2]' },
+    { icon: <Youtube size={24} />, href: social.youtube || DEFAULT_SOCIAL.youtube, label: 'YouTube', color: 'hover:bg-[#FF0000]' },
+    { icon: <div className="w-6 h-6"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.9 2h2.4c.2 1.4 1 2.7 2.2 3.6a7 7 0 0 0 2.5 1v2.3a9.2 9.2 0 0 1-4.7-1.5v6.5c0 3-2.4 5.5-5.5 5.5S5.3 17 5.3 14c0-3 2.4-5.4 5.4-5.4c.3 0 .6 0 .9.1v2.5a3 3 0 1 0 2.3 2.9V2z" /></svg></div>, href: social.tiktok || DEFAULT_SOCIAL.tiktok, label: 'TikTok', color: 'hover:bg-black hover:ring-1 hover:ring-white/50' }
+  ].filter(s => s.href);
 
   return (
     <footer className="bg-zenith-white pt-24 pb-12">
@@ -35,23 +49,19 @@ const Footer: React.FC = () => {
             <div className="relative z-10">
               <Link to="/" className="flex items-center space-x-4 mb-10">
                 <img
-                  src="/altLGOO.jpg"
-                  alt="Altius"
+                  src={logoUrl}
+                  alt={brandName}
                   className="h-14 w-14 rounded-2xl object-cover"
                 />
-                <span className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter">Altius</span>
+                <span className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter">{brandName}</span>
               </Link>
               <p className="text-xl md:text-2xl text-white/60 font-medium max-w-md leading-relaxed mb-12">
-                {t('footer.description')}
+                {description}
               </p>
             </div>
 
             <div className="relative z-10 flex flex-wrap gap-4">
-              {[
-                { icon: <Facebook size={24} />, href: SOCIAL_LINKS.facebook, label: 'Facebook', color: 'hover:bg-[#1877F2]' },
-                { icon: <Youtube size={24} />, href: SOCIAL_LINKS.youtube, label: 'YouTube', color: 'hover:bg-[#FF0000]' },
-                { icon: <div className="w-6 h-6"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.9 2h2.4c.2 1.4 1 2.7 2.2 3.6a7 7 0 0 0 2.5 1v2.3a9.2 9.2 0 0 1-4.7-1.5v6.5c0 3-2.4 5.5-5.5 5.5S5.3 17 5.3 14c0-3 2.4-5.4 5.4-5.4c.3 0 .6 0 .9.1v2.5a3 3 0 1 0 2.3 2.9V2z" /></svg></div>, href: SOCIAL_LINKS.tiktok, label: 'TikTok', color: 'hover:bg-black hover:ring-1 hover:ring-white/50' }
-              ].map((social, i) => (
+              {socialLinks.map((social, i) => (
                 <a
                   key={i}
                   href={social.href}
@@ -124,8 +134,14 @@ const Footer: React.FC = () => {
                   <div>
                     <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.workingHours', 'Часы работы')}</span>
                     <div className="text-lg font-bold text-zenith-black leading-tight">
-                      <div>{t('footer.contact.hours.weekdays')}</div>
-                      <div>{t('footer.contact.hours.weekends')}</div>
+                      {workingHours ? (
+                        <div className="whitespace-pre-line">{workingHours}</div>
+                      ) : (
+                        <>
+                          <div>{t('footer.contact.hours.weekdays')}</div>
+                          <div>{t('footer.contact.hours.weekends')}</div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </li>
@@ -137,7 +153,7 @@ const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="mt-12 flex flex-col md:flex-row justify-between items-center px-10">
           <p className="text-zenith-black/40 text-xs font-black uppercase tracking-widest mb-4 md:mb-0">
-            © {new Date().getFullYear()} Altius Badminton Club. {t('footer.allRightsReserved')}
+            © {new Date().getFullYear()} {brandName} Badminton Club. {t('footer.allRightsReserved')}
           </p>
         </div>
       </div>

@@ -4,13 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
+import { fetchFooter, isCmsEnabled } from '../lib/cms';
 
 const Header: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === '/';
   const [scrolled, setScrolled] = useState(false);
+  const [brand, setBrand] = useState<{ name: string; logo: string } | null>(null);
+
+  useEffect(() => {
+    if (!isCmsEnabled) return;
+    fetchFooter(i18n.language).then(data => {
+      if (data) setBrand({ name: data.brandName || 'Altius', logo: data.logo || '/altLGOO.jpg' });
+    });
+  }, [i18n.language]);
 
   useEffect(() => {
     if (!isHome) { setScrolled(true); return; }
@@ -19,6 +28,9 @@ const Header: React.FC = () => {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, [isHome]);
+
+  const brandName = brand?.name || 'Altius';
+  const logoUrl = brand?.logo || '/altLGOO.jpg';
 
   const navItems = [
     { path: '/', label: t('navigation.home') },
@@ -39,8 +51,8 @@ const Header: React.FC = () => {
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
               <img
-                src="/altLGOO.jpg"
-                alt="Altius"
+                src={logoUrl}
+                alt={brandName}
                 className="h-10 w-10 rounded-xl object-cover shadow-lg group-hover:scale-110 transition-transform duration-300"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
@@ -48,7 +60,7 @@ const Header: React.FC = () => {
               />
               <div className="absolute inset-0 rounded-xl ring-1 ring-black/5" />
             </div>
-            <span className={`text-3xl font-display font-black uppercase tracking-tighter transition-colors duration-300 ${isHome && !scrolled ? 'text-white' : 'text-zenith-black'}`}>Altius</span>
+            <span className={`text-3xl font-display font-black uppercase tracking-tighter transition-colors duration-300 ${isHome && !scrolled ? 'text-white' : 'text-zenith-black'}`}>{brandName}</span>
           </Link>
 
           <nav className="hidden xl:flex items-center space-x-10">

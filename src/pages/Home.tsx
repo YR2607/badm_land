@@ -49,16 +49,17 @@ const Home: FC = () => {
   return (
     <div>
       <SEO 
-        title="Altius - Бадминтонный клуб в Кишиневе | Профессиональные тренировки"
-        description="Профессиональный бадминтонный клуб Altius в Кишиневе. Тренировки для детей и взрослых, индивидуальные и групповые занятия, участие в турнирах. 15+ лет опыта, 500+ учеников."
-        keywords="бадминтон Кишинев, badminton Chisinau, спортивный клуб, тренировки бадминтон, детский бадминтон, взрослый бадминтон, Altius"
+        title={cmsData?.seo?.metaTitle || "Altius - Бадминтонный клуб в Кишиневе | Профессиональные тренировки"}
+        description={cmsData?.seo?.metaDescription || "Профессиональный бадминтонный клуб Altius в Кишиневе. Тренировки для детей и взрослых, индивидуальные и групповые занятия, участие в турнирах. 15+ лет опыта, 500+ учеников."}
+        keywords={cmsData?.seo?.keywords || "бадминтон Кишинев, badminton Chisinau, спортивный клуб, тренировки бадминтон, детский бадминтон, взрослый бадминтон, Altius"}
         image="https://altius.md/og-home.jpg"
       />
       <JsonLd
         data={{
           "@context": "https://schema.org",
           "@type": "Organization",
-          "name": "Altius Badminton Club",
+          "name": cmsData?.seo?.metaTitle || "Altius Badminton Club",
+          "description": cmsData?.seo?.metaDescription || "Профессиональный бадминтонный клуб Altius в Кишиневе. Тренировки для детей и взрослых, индивидуальные и групповые занятия, участие в турнирах. 15+ лет опыта, 500+ учеников.",
           "url": "https://altius.md/",
           "logo": "https://altius.md/altLGOO.jpg"
         }}

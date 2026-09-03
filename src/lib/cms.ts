@@ -1164,6 +1164,9 @@ export async function fetchFooter(lang: string = 'ru'): Promise<any> {
   try {
     const data = await client.fetch(
       groq`*[_type == "footer"][0]{
+        brandName,
+        "logo": logo.asset->url,
+        heroVideo,
         "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
         quickLinks[]{
           "label": select($lang=="en" && defined(label_en)=>label_en, $lang=="ro" && defined(label_ro)=>label_ro, label),
