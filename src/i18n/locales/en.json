@@ -7,96 +7,15 @@
     "gallery": "Gallery",
     "contacts": "Contacts",
     "news": "News",
-    "language": "Language",
     "languageSelect": "Language Select"
   },
   "hero": {
     "title": "ALTIUS",
-    "subtitle": "We create future champions and popularize badminton in Moldova.",
-    "description": "Our club is a place where everyone can find their path to success.",
-    "joinButton": "Join Us",
-    "learnMoreButton": "Watch Video",
-    "badge": "Professional club since 2010",
     "scrollDown": "Scroll down"
-  },
-  "stats": {
-    "members": "Members",
-    "trainers": "Trainers",
-    "courts": "Courts",
-    "years": "Years of Experience"
   },
   "services": {
     "hero": {
-      "badge": "Professional Training",
-      "title": "Our Services",
-      "subtitle": "Choose the right training format to achieve your goals",
-      "stats": {
-        "students": "500+ students",
-        "experience": "15+ years experience",
-        "formats": "3 training formats"
-      }
-    },
-    "groupTraining": {
-      "title": "Group Training",
-      "subtitle": "For beginners and amateurs",
-      "description": "Classes in groups of up to 8 people with experienced coaches. Suitable for all skill levels.",
-      "features": [
-        "Learning basic techniques",
-        "Tactical skills",
-        "Physical preparation",
-        "Game practice",
-        "Friendly atmosphere"
-      ],
-      "badge": "Popular"
-    },
-    "individual": {
-      "title": "Individual Training",
-      "subtitle": "Personal approach",
-      "description": "One-on-one sessions with a coach for maximum progress and individual attention.",
-      "features": [
-        "Personal training program",
-        "Individual approach",
-        "Flexible schedule",
-        "Quick progress",
-        "Technical analysis"
-      ],
-      "badge": "Effective"
-    },
-    "competition": {
-      "title": "Competition Training",
-      "subtitle": "For advanced players",
-      "description": "Intensive training for tournament preparation and competitive play.",
-      "features": [
-        "Tournament preparation",
-        "Advanced techniques",
-        "Tactical training",
-        "Mental preparation",
-        "Competition experience"
-      ],
-      "badge": "Professional"
-    },
-    "pricing": {
-      "title": "Pricing",
-      "subtitle": "Choose your plan",
-      "monthly": "Monthly",
-      "perMonth": "per month",
-      "perSession": "per session",
-      "perSessionShort": "per session",
-      "annual": "Annual",
-      "currency": "lei",
-      "save": "Save 20%",
-      "mostPopular": "Most Popular",
-      "getStarted": "Get Started",
-      "features": "What's included:",
-      "priority": {
-        "low": "Low",
-        "medium": "Medium",
-        "high": "High"
-      }
-    },
-    "comparison": {
-      "title": "Format Comparison",
-      "subtitle": "Choose the optimal option for you"
+      "subtitle": "Choose the right training format to achieve your goals"
     },
     "gyms": {
       "title": "Our Gyms",
@@ -109,92 +28,20 @@
     },
     "cta": {
       "title": "Ready to start?",
-      "subtitle": "Join our badminton community today",
-      "button": "Start Training"
+      "subtitle": "Join our badminton community today"
     }
   },
   "about": {
     "hero": {
-      "badge": "About ALTIUS",
-      "title": "Professional Badminton Club",
-      "subtitle": "We have been developing badminton in Moldova since 2010",
-      "description": "Our mission is to make badminton accessible to everyone and help each player reach their potential"
-    },
-    "stats": {
-      "experience": "15+",
-      "experienceDesc": "Years of Experience",
-      "participants": "500+",
-      "participantsDesc": "Happy Students",
-      "courts": "3",
-      "courtsDesc": "Modern Courts",
-      "tournaments": "50+",
-      "tournamentsDesc": "Tournaments Organized"
-    },
-    "values": {
-      "title": "Our Values",
-      "subtitle": "What makes us special",
-      "professionalism": "Professionalism",
-      "professionalismDesc": "High-quality training with certified coaches and modern equipment",
-      "friendliness": "Friendly Atmosphere",
-      "friendlinessDesc": "Welcoming environment for players of all ages and skill levels",
-      "results": "Focus on Results",
-      "resultsDesc": "Individual approach to each student to achieve maximum progress"
+      "subtitle": "We have been developing badminton in Moldova since 2010"
     },
     "team": {
       "title": "Our Team",
       "subtitle": "Meet our professional coaches",
-      "emptySection": "Coaches section is not filled in CMS",
-      "experience": "Experience",
-      "specialization": "Specialization",
       "founder": "Founder and Head Coach",
-      "masterSport": "Master of Sport",
-      "founderName": "Alexey Petrov",
-      "founderRole": "Head Coach and Club Founder",
-      "founderExp1": "15+ years of coaching experience",
-      "founderExp2": "Master of Sport in Badminton",
-      "founderExp3": "Trained over 500 students",
-      "founderDesc1": "Alexey founded ALTIUS in 2010 with the vision to develop badminton in Moldova. His professional approach and dedication have helped hundreds of students achieve their goals.",
-      "founderDesc2": "Under his leadership, the club has become one of Chisinau's leading training centers, known for high-quality coaching and a friendly atmosphere.",
-      "founderQuote": "Every student is unique. Our goal is to help everyone reach their full potential in badminton.",
-      "coaches": "Our Coaches",
-      "defaults": {
-        "0": {
-          "name": "Elena Petrova",
-          "role": "Head Coach",
-          "experience": "8 years experience",
-          "specialization": "Technique",
-          "achievements": [
-            "Candidate Master of Sport",
-            "Regional championship medalist"
-          ],
-          "description": "Specializes in beginners and developing proper stroke technique."
-        },
-        "1": {
-          "name": "Dmitry Kozlov",
-          "role": "Strength & Conditioning Coach",
-          "experience": "6 years experience",
-          "specialization": "Physical training",
-          "achievements": [
-            "Master of Sport",
-            "Certified fitness coach"
-          ],
-          "description": "Responsible for physical conditioning and injury prevention."
-        },
-        "2": {
-          "name": "Anna Smirnova",
-          "role": "Kids Coach",
-          "experience": "5 years experience",
-          "specialization": "Working with children",
-          "achievements": [
-            "Candidate Master of Sport",
-            "Pedagogical education"
-          ],
-          "description": "Focuses on training children 6–16 with a fun and engaging atmosphere."
-        }
-      }
+      "coaches": "Our Coaches"
     },
     "strategy": {
-      "title": "ALTIUS Badminton Club Development Strategy 2025 – 2030",
       "mission": {
         "title": "Introduction and Club Mission",
         "text1": "ALTIUS is a modern badminton club created to develop the sport at all levels: from children's first steps to international victories of professionals. Our mission is to make badminton a mass, accessible and prestigious sport in Moldova, forming a strong community of athletes, coaches and fans.",
@@ -221,77 +68,6 @@
           "Build a sustainable ecosystem of partners, sponsors and educational programs"
         ]
       },
-      "roadmap": {
-        "title": "Development Roadmap by Year",
-        "2025": {
-          "title": "Scaling Start and Systematization",
-          "points": [
-            "Conduct internal club audit: strengths, needs, infrastructure",
-            "Develop and implement unified training methodology for all ages",
-            "Create Altius Academy — educational program for children and coaches",
-            "Launch 2–3 regional badminton popularization programs (masterclasses, open days)",
-            "Start annual Super Liga Altius with rating system and final awards"
-          ]
-        },
-        "2026": {
-          "title": "Growth and Regional Expansion",
-          "points": [
-            "Open branches or partner schools in 2 new cities",
-            "Organize the first international youth tournament under ALTIUS brand",
-            "Launch online platform with training materials and workouts",
-            "Create promotion and marketing team (content, social media, website, PR)",
-            "Start cooperation with 3–5 schools and sports centers across the country"
-          ]
-        },
-        "2027": {
-          "title": "National Leadership",
-          "points": [
-            "Altius becomes the main training center for the national team",
-            "Conducting series of national tournaments under club brand",
-            "Creating scouting system: regular selection of talented children across the country",
-            "Launch 'Badminton in Every School' program — implementing sections in educational institutions",
-            "Formation of the first professional club team for international leagues"
-          ]
-        },
-        "2028": {
-          "title": "International Recognition",
-          "points": [
-            "Regular participation of club athletes in international tournaments and European youth championships",
-            "Organization of own international tournament in Chisinau",
-            "Creation of training base with infrastructure for camps",
-            "Development of internship and experience exchange program with European clubs and federations"
-          ]
-        },
-        "2029": {
-          "title": "Sustainability and Influence Stage",
-          "points": [
-            "Altius — main badminton center of Moldova with branches in 5+ cities",
-            "Graduation of first European/World champion athletes",
-            "Formation of own coaching center and certification program",
-            "Reaching cooperation level with international federations and brands",
-            "Altius becomes not just a club, but a full-fledged academy and national-scale brand"
-          ]
-        }
-      },
-      "marketing": {
-        "title": "Marketing and Brand",
-        "points": [
-          "Create unique style and positioning of ALTIUS as a symbol of growth and strength",
-          "Maintain active social media presence, publishing athlete achievements, success stories and useful tips",
-          "Launch club merchandise line (uniforms, accessories, equipment)",
-          "Create inspiring content: videos, interviews, mini-documentaries about athletes",
-          "Organize club celebrations and events for parents, partners and athletes"
-        ]
-      },
-      "partnerships": {
-        "title": "Partnerships and Sustainability",
-        "points": [
-          "Establish strategic partnerships with badminton federation, schools and universities",
-          "Attract corporate sponsors from sports and education sectors",
-          "Implement membership and subscription model for stable income",
-          "Seek grants and international sports support programs"
-        ]
-      },
       "results": {
         "title": "Expected Results by 2030",
         "points": [
@@ -313,44 +89,6 @@
       "collapse": "Collapse",
       "development": "Club Development"
     },
-    "timeline": {
-      "2024": {
-        "q1": {
-          "title": "Altius Launch",
-          "text": "Opened our doors and held the first intakes for adults and teens."
-        },
-        "q2": {
-          "title": "Core team formation",
-          "text": "Stabilized the schedule, formed the first club group and started the base rating."
-        },
-        "q3": {
-          "title": "First trophies",
-          "text": "Club members won prizes at local tournaments."
-        },
-        "q4": {
-          "title": "Season summary",
-          "text": "Held the club year final and awarded the best players and coaches."
-        }
-      },
-      "2025": {
-        "q1": {
-          "title": "Junior school",
-          "text": "Launched kids groups, test camps and individual programs."
-        },
-        "q2": {
-          "title": "Club league",
-          "text": "Regular internal matches and level-based mini leagues."
-        },
-        "q3": {
-          "title": "Expanding participation",
-          "text": "Away tournaments, partnerships and sparring with regional clubs."
-        },
-        "q4": {
-          "title": "Altius Cup",
-          "text": "Open club tournament with guests and an award ceremony."
-        }
-      }
-    },
     "roadmap": {
       "title": "Development Plans",
       "subtitle": "Our goals for the coming years",
@@ -359,144 +97,21 @@
       "swipeHint": "Swipe to navigate",
       "done": "Done",
       "inProgress": "In Progress",
-      "planned": "Planned",
-      "items": {
-        "q3_2025": {
-          "title": "Expanding participation",
-          "desc": "Trips to tournaments, partnerships and sparring with regional clubs."
-        },
-        "q4_2025": {
-          "title": "Altius Cup",
-          "desc": "Open club tournament with a ceremony and invited guests."
-        },
-        "q1_2026": {
-          "title": "U17 Academy",
-          "desc": "Regular camps, tests, support and a competition calendar."
-        },
-        "q2_2026": {
-          "title": "Club league 2.0",
-          "desc": "Tiered divisions, ratings, match days and live streams."
-        }
-      }
+      "planned": "Planned"
     }
   },
   "contact": {
-    "title": "Contact",
-    "subtitle": "Get in touch with us",
     "openMap": "Open Map",
-    "heroTitle": "Contact Us",
-    "heroSubtitle": "We are always ready to answer your questions",
     "heroDescription": "Call, write or visit us at any of our gyms",
-    "hero": {
-      "badge": "Contact Us",
-      "title": "Contact Us",
-      "subtitle": "We are always ready to answer your questions and help you start training",
-      "stats": {
-        "support": "Support",
-        "locations": "Locations",
-        "response": "Response"
-      }
-    },
     "info": {
-      "address": {
-        "title": "Address",
-        "content": "Chisinau, Malaya Malian str. 24\nHall №1 - main"
-      },
-      "phone": {
-        "title": "Phone",
-        "content": "+373 60 123 456\n+373 60 234 567"
-      },
-      "email": {
-        "title": "Email",
-        "content": "info@altius.md\ntraining@altius.md"
-      },
-      "hours": {
-        "title": "Working Hours",
-        "content": "Mon-Fri: 08:00 - 22:00\nSat-Sun: 09:00 - 20:00"
-      },
-      "title": "Useful Information",
-      "location": {
-        "title": "Gym Selection",
-        "description": "Choose the nearest gym for convenient training"
-      },
-      "booking": {
-        "title": "Training Booking",
-        "description": "Call in advance to book group and individual sessions"
-      },
-      "schedule": {
-        "title": "Schedule",
-        "description": "Current schedule is always available by phone and on the website"
-      }
-    },
-    "locations": {
-      "badge": "Our Locations",
-      "title": "Where to Find Us",
-      "subtitle": "3 modern gyms in different districts of Chisinau"
-    },
-    "gyms": {
-      "gym1": {
-        "name": "Malaya Malian Gym",
-        "type": "Main Gym",
-        "badge": "Main",
-        "address": "Malaya Malian str. 24",
-        "description": "Main gym with professional equipment",
-        "hours": "Mon-Sun: 08:00 - 22:00"
-      },
-      "gym2": {
-        "name": "31 August Gym",
-        "type": "Family Gym",
-        "badge": "Family",
-        "address": "31 August 1989 str. 15",
-        "description": "Family training gym with children's playground",
-        "hours": "Mon-Sun: 09:00 - 21:00"
-      },
-      "gym3": {
-        "name": "Ion Creanga Gym",
-        "type": "Premium Gym",
-        "badge": "Premium",
-        "address": "Ion Creanga str. 1",
-        "description": "Premium gym with additional services",
-        "hours": "Mon-Sun: 07:00 - 23:00"
-      },
-      "features": {
-        "kids": "Kids Groups",
-        "adults": "Adult Groups",
-        "parking": "Parking",
-        "playground": "Playground",
-        "cafeteria": "Cafeteria",
-        "advanced": "Advanced Level",
-        "sauna": "Sauna"
-      },
-      "openMap": "Open on Map"
-    },
-    "phone": "Phone",
-    "email": "Email",
-    "address": "Address",
-    "workingHours": "Working Hours",
-    "sendMessage": "Send Message",
-    "name": "Name",
-    "message": "Message",
-    "subject": "Subject",
-    "send": "Send",
-    "contactForm": "Contact Form",
-    "getInTouch": "Get in Touch",
-    "visitUs": "Visit Us",
-    "callUs": "Call Us",
-    "emailUs": "Email Us"
+      "title": "Useful Information"
+    }
   },
   "gyms": {
-    "title": "Our Gyms",
-    "subtitle": "Modern facilities in different districts of the city",
-    "heroTitle": "Sports Halls",
     "heroSubtitle": "Modern halls with professional equipment",
-    "heroDescription": "3 halls in different districts of Chisinau for your convenience",
     "hero": {
-      "badge": "Professional Facilities",
-      "title": "Our Gyms",
       "subtitle": "Modern facilities with professional equipment in different districts of Chisinau",
       "stats": {
-        "facilities": "Facilities",
-        "courts": "Courts",
         "locations": "Districts"
       }
     },
@@ -516,14 +131,6 @@
     "schedule": {
       "title": "Schedule"
     },
-    "pricing": {
-      "title": "Pricing",
-      "childrenGroups": "Children Groups",
-      "adultGroups": "Adult Groups",
-      "monthly": "Monthly subscription",
-      "single": "Single session",
-      "trial": "Trial session"
-    },
     "loading": "Loading gyms...",
     "trainers": {
       "title": "Gym Trainers"
@@ -539,27 +146,14 @@
       "address": "Address",
       "phone": "Phone",
       "email": "Email",
-      "signUp": "Sign up for training",
       "openMap": "Open map"
-    },
-    "fallback": {
-      "byArrangement": "By arrangement",
-      "flexibleSchedule": "Flexible schedule tailored to your needs",
-      "weekdayDaily": "Daily weekday training",
-      "improvementGroup": "Improvement group",
-      "intensiveTraining": "Intensive training for competition preparation",
-      "trainingForAdults": "Training for adult badminton enthusiasts"
     }
   },
   "gallery": {
     "title": "Gallery",
     "subtitle": "Photos of our club, coaches, training and tournaments",
-    "heroTitle": "Club Gallery",
-    "heroSubtitle": "See our halls and training atmosphere",
-    "heroDescription": "Photos from training, tournaments and daily club life",
     "sections": {
       "hall": "Halls",
-      "trainings": "Training Sessions",
       "tournaments": "Tournaments"
     },
     "other": "Other",
@@ -568,26 +162,18 @@
     "searchTournament": "Search tournaments...",
     "allYears": "All Years",
     "reset": "Reset Filters",
-    "close": "Close",
     "photo": "Photos",
     "video": "Videos",
     "photosComingSoon": "Photos coming soon",
     "videosComingSoon": "Videos coming soon",
-    "showMore": "Show More",
-    "previous": "Previous",
-    "next": "Next"
+    "showMore": "Show More"
   },
   "news": {
-    "title": "News & Events",
-    "subtitle": "Follow the latest news from our club and world badminton events",
     "hero": {
       "badge": "News & Media",
-      "title": "News & Events",
       "subtitle": "Follow the latest news from our club and world badminton events",
       "stats": {
-        "articles": "Articles",
-        "events": "Events",
-        "categories": "Categories"
+        "articles": "Articles"
       }
     },
     "categories": {
@@ -598,7 +184,6 @@
     },
     "searchPlaceholder": "Search news...",
     "readMore": "Read More",
-    "loadingText": "Loading...",
     "noNews": "No materials yet",
     "postNotFound": "Post not found",
     "backToList": "Back to news",
@@ -608,25 +193,12 @@
   "footer": {
     "description": "Professional badminton club in Chisinau",
     "quickLinks": "Quick Links",
-    "followUs": "Follow Us",
-    "socialMedia": "Social Media",
-    "social": {
-      "facebook": "Facebook",
-      "instagram": "Instagram",
-      "youtube": "YouTube",
-      "tiktok": "TikTok"
-    },
     "allRightsReserved": "All rights reserved",
     "contact": {
-      "email": "info@altius.md",
       "hours": {
         "weekdays": "Mon-Fri: 06:00-22:00",
         "weekends": "Sat-Sun: 08:00-20:00"
       }
-    },
-    "legal": {
-      "privacy": "Privacy Policy",
-      "terms": "Terms of Use"
     },
     "contactInfo": "Contact Info",
     "labels": {
@@ -640,10 +212,6 @@
     "error": "Failed to load data",
     "retry": "Try again",
     "readMore": "Read more",
-    "close": "Close",
-    "save": "Save",
-    "cancel": "Cancel",
-    "submit": "Submit",
     "next": "Next",
     "previous": "Previous",
     "page": "Page",
@@ -655,111 +223,25 @@
   "home": {
     "services": {
       "title": "Our Services",
-      "subtitle": "Professional training for all levels",
-      "more": "Learn more",
       "features": "Features"
     },
     "achievements": {
       "title": "Our Achievements",
       "subtitle": "Over the years we have achieved impressive results and nurtured many talented athletes",
-      "items": {
-        "champions": {
-          "title": "Moldova Champions",
-          "description": "Our students became national champions"
-        },
-        "medals": {
-          "title": "Tournament Medals",
-          "description": "Medals won at national competitions"
-        },
-        "athletes": {
-          "title": "Active Athletes",
-          "description": "Regularly training in our club"
-        },
-        "years": {
-          "title": "Years of Successful Work",
-          "description": "Developing badminton in Moldova since 2010"
-        }
-      },
       "timeline": {
-        "title": "Club Development History",
-        "defaults": {
-          "2010": {
-            "title": "Club Founded",
-            "description": "Opened the first hall with 4 courts"
-          },
-          "2015": {
-            "title": "Expansion",
-            "description": "Opened the second hall, grew to 200 members"
-          },
-          "2018": {
-            "title": "International Recognition",
-            "description": "First medals at international tournaments"
-          },
-          "2020": {
-            "title": "Training Center",
-            "description": "Official status as a regional training center"
-          },
-          "2024": {
-            "title": "Modernization",
-            "description": "Complete upgrade of equipment and infrastructure"
-          }
-        }
-      },
-      "cta": "Become part of our success story!"
+        "title": "Club Development History"
+      }
     },
     "worldNews": {
       "title": "World News",
       "noMaterials": "No materials",
       "viewAll": "View all news",
       "tagWorld": "🌍 World"
-    },
-    "embeds": {
-      "title": "Club News and Events",
-      "noMaterials": "No materials",
-      "badgeEvent": "🎫 Event",
-      "badgeClub": "🏸 Club",
-      "viewAll": "Show all news"
-    },
-    "bwf": {
-      "title": "BWF — World News",
-      "subtitle": "Automatically collected news from bwfbadminton.com",
-      "loading": "Loading BWF news...",
-      "noMaterials": "No materials",
-      "noData": "No BWF news data",
-      "error": "Failed to load BWF news",
-      "readOn": "Read on bwfbadminton.com →"
-    },
-    "events": {
-      "title": "Events",
-      "noItems": "No events yet",
-      "badge": "🎫 Event",
-      "viewAll": "All events"
-    },
-    "ubf": {
-      "title": "News & Events",
-      "subtitle1": "Follow the latest club news and world badminton events.",
-      "subtitle2": "Stay up to date with all key happenings in our sports community.",
-      "clubTitle": "Club News",
-      "worldTitle": "World News",
-      "eventsTitle": "Events",
-      "ctaTitle": "Don't miss important events!",
-      "ctaSubtitle": "Subscribe to our newsletter to get updates on tournaments, masterclasses and club news.",
-      "btnAllNews": "All news",
-      "btnCalendar": "Events calendar"
-    },
-    "clubNews": {
-      "title": "Club News",
-      "badge": "🏸 Club",
-      "readOnFb": "Read on Facebook"
     }
   },
   "socialHub": {
     "badge": "We're on social media",
     "title": "Live: Altius on Social Media",
-    "subtitle": "Follow our training sessions, tournaments and club news",
-    "followUs": "Follow us on",
-    "subscribe": "Subscribe",
-    "noContent": "Content coming soon",
-    "openOn": "Open on"
+    "subtitle": "Follow our training sessions, tournaments and club news"
   }
 }
