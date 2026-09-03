@@ -25,16 +25,14 @@ const STATIC_PAGES = [
 const HREFLANGS = ['ru', 'en', 'ro', 'x-default']
 
 function urlEntry(loc: string, priority: string, changefreq: string, lastmod?: string): string {
-  const hreflangs = HREFLANGS.map(h =>
-    `    <xhtml:link rel="alternate" hreflang="${h}" href="${loc}"/>`
-  ).join('\n')
-
+  // Note: hreflang entries omitted — site uses same URL for all languages (no /ru/, /en/, /ro/ prefixes).
+  // Hreflang pointing to the same URL for every language is ignored by Google and adds noise.
+  // To re-enable: implement language-specific URL paths first, then add xhtml:link entries here.
   return `  <url>
     <loc>${loc}</loc>
     ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
-${hreflangs}
   </url>`
 }
 

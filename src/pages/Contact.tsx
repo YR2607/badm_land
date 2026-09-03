@@ -54,11 +54,17 @@ const Contact: FC = () => {
           "@type": "SportsActivityLocation",
           "name": "Altius Badminton Club",
           "url": "https://altius.md/contact",
-          "telephone": (contactCms?.contacts || []).find(c => c.type === 'phone')?.value || "+373 60 123 456",
-          "email": (contactCms?.contacts || []).find(c => c.type === 'email')?.value || "info@altius.md",
+          ...((contactCms?.contacts || []).find(c => c.type === 'phone')?.value && {
+            "telephone": (contactCms?.contacts || []).find(c => c.type === 'phone')?.value
+          }),
+          ...((contactCms?.contacts || []).find(c => c.type === 'email')?.value && {
+            "email": (contactCms?.contacts || []).find(c => c.type === 'email')?.value
+          }),
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": (contactCms?.contacts || []).find(c => c.type === 'address')?.value || "Chișinău, str. Example 123",
+            ...((contactCms?.contacts || []).find(c => c.type === 'address')?.value && {
+              "streetAddress": (contactCms?.contacts || []).find(c => c.type === 'address')?.value
+            }),
             "addressLocality": "Chișinău",
             "addressCountry": "MD"
           }

@@ -639,8 +639,6 @@
     },
     "allRightsReserved": "Toate drepturile rezervate",
     "contact": {
-      "address": "Chișinău, str. Exemplu 123",
-      "phone": "+373 60 123 456",
       "email": "info@altius.md",
       "hours": {
         "weekdays": "Lun-Vin: 06:00-22:00",

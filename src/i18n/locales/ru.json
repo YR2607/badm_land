@@ -650,8 +650,6 @@
     },
     "allRightsReserved": "Все права защищены",
     "contact": {
-      "address": "Кишинев, ул. Пример 123",
-      "phone": "+373 60 123 456",
       "email": "info@altius.md",
       "hours": {
         "weekdays": "Пн-Пт: 06:00-22:00",

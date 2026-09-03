@@ -5,6 +5,14 @@
       "production": true
     }
   },
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.altius.md" }],
+      "destination": "https://altius.md/:path*",
+      "permanent": true
+    }
+  ],
   "routes": [
     { "handle": "filesystem" },
     { "src": "^/api/(.*)$", "dest": "/api/$1" },

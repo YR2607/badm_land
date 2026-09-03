@@ -103,26 +103,9 @@ const SEO = ({
     }
     canonical.setAttribute('href', currentUrl);
 
-    // Hreflang alternate tags for multilingual SEO
-    const basePath = location.pathname;
-    const hreflangs: Record<string, string> = {
-      'ru': `https://altius.md${basePath}`,
-      'en': `https://altius.md${basePath}`,
-      'ro': `https://altius.md${basePath}`,
-      'x-default': `https://altius.md${basePath}`,
-    };
-
-    // Remove existing hreflang tags
-    document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
-
-    // Add hreflang tags
-    Object.entries(hreflangs).forEach(([hreflang, href]) => {
-      const link = document.createElement('link');
-      link.setAttribute('rel', 'alternate');
-      link.setAttribute('hreflang', hreflang);
-      link.setAttribute('href', href);
-      document.head.appendChild(link);
-    });
+    // Note: hreflang removed — site uses same URL for all languages (no /ru/, /en/, /ro/ prefixes).
+    // Hreflang pointing to the same URL for every language is ignored by Google and adds noise.
+    // To re-enable: implement language-specific URL paths first, then add hreflang here.
 
   }, [title, description, image, currentUrl, type, keywords, author, publishedTime, modifiedTime, i18n.language, currentLocale, location.pathname]);
 

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Clock, Facebook, Youtube } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { fetchContactInfo, isCmsEnabled, type CmsContactInfo } from '../lib/cms';
 
 const SOCIAL_LINKS = {
   facebook: 'https://www.facebook.com/profile.php?id=61562124174747',
@@ -11,6 +12,17 @@ const SOCIAL_LINKS = {
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
+  const [contactCms, setContactCms] = useState<CmsContactInfo | null>(null);
+
+  useEffect(() => {
+    if (!isCmsEnabled) return;
+    fetchContactInfo().then(data => { if (data) setContactCms(data); });
+  }, []);
+
+  const cmsContacts = contactCms?.contacts || [];
+  const cmsAddress = cmsContacts.find(c => c.type === 'address')?.value;
+  const cmsPhone = cmsContacts.find(c => c.type === 'phone')?.value;
+
   return (
     <footer className="bg-zenith-white pt-24 pb-12">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,24 +95,28 @@ const Footer: React.FC = () => {
             <div>
               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zenith-black/30 mb-10">{t('footer.contactInfo', 'Контактная информация')}</h3>
               <ul className="space-y-8">
+                {cmsAddress && (
                 <li className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-zenith-black rounded-xl flex items-center justify-center text-white shrink-0">
                     <MapPin size={20} />
                   </div>
                   <div>
                     <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.address', 'Адрес')}</span>
-                    <span className="text-lg font-bold text-zenith-black">{t('footer.contact.address', 'Chișinău, str. Example 123')}</span>
+                    <span className="text-lg font-bold text-zenith-black">{cmsAddress}</span>
                   </div>
                 </li>
+                )}
+                {cmsPhone && (
                 <li className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-zenith-black rounded-xl flex items-center justify-center text-white shrink-0">
                     <Phone size={20} />
                   </div>
                   <div>
                     <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.phone', 'Телефон')}</span>
-                    <span className="text-lg font-bold text-zenith-black">{t('footer.contact.phone', '+373 60 123 456')}</span>
+                    <span className="text-lg font-bold text-zenith-black">{cmsPhone}</span>
                   </div>
                 </li>
+                )}
                 <li className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-zenith-black rounded-xl flex items-center justify-center text-white shrink-0">
                     <Clock size={20} />
@@ -108,8 +124,8 @@ const Footer: React.FC = () => {
                   <div>
                     <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.workingHours', 'Часы работы')}</span>
                     <div className="text-lg font-bold text-zenith-black leading-tight">
-                      <div>{t('footer.contact.hours.weekdays', 'Mon-Fri: 06:00-22:00')}</div>
-                      <div>{t('footer.contact.hours.weekends', 'Sat-Sun: 08:00-20:00')}</div>
+                      <div>{t('footer.contact.hours.weekdays')}</div>
+                      <div>{t('footer.contact.hours.weekends')}</div>
                     </div>
                   </div>
                 </li>
