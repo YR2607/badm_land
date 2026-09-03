@@ -75,30 +75,16 @@ const Contact: FC = () => {
         subtitle={heroData?.subtitle || t('contact.heroDescription')}
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10">
-          <div className="text-center group">
-            <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
-              24/7
+          {(heroData?.statistics || []).map((stat, i) => (
+            <div key={i} className={`text-center group ${i === (heroData?.statistics || []).length - 1 && (heroData?.statistics || []).length % 2 !== 0 ? 'col-span-2' : ''}`}>
+              <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
+                {stat.number}
+              </div>
+              <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
+                {stat.description}
+              </div>
             </div>
-            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
-              {t('contact.hero.stats.support')}
-            </div>
-          </div>
-          <div className="text-center group">
-            <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
-              3
-            </div>
-            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
-              {t('contact.hero.stats.locations')}
-            </div>
-          </div>
-          <div className="text-center group col-span-2">
-            <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
-              100%
-            </div>
-            <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
-              {t('contact.hero.stats.response')}
-            </div>
-          </div>
+          ))}
         </div>
       </InnerHero>
 
