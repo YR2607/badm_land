@@ -370,7 +370,7 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
               className="fb-page w-full max-w-full"
               data-href={SOCIAL_CONFIG.facebook.url}
               data-tabs="timeline"
-              data-width=""
+              data-width="700"
               data-height="650"
               data-small-header="true"
               data-adapt-container-width="true"
@@ -449,7 +449,7 @@ const SocialMediaHubLive: FC = () => {
               transition={{ duration: 0.8 }}
               className="flex flex-col lg:flex-row gap-10"
             >
-              <div className="w-full lg:w-[500px] xl:w-[600px] lg:flex-shrink-0">
+              <div className="w-full lg:w-[700px] xl:w-[750px] lg:flex-shrink-0">
                 <FacebookEmbed isActive={true} />
               </div>
               <div className="w-full lg:flex-1">
