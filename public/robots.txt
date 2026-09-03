@@ -1,12 +1,36 @@
 # robots.txt for Altius Badminton Club
 # https://altius.md
 
+# --- Search engines ---
 User-agent: *
 Allow: /
 
 # Disallow admin panel
 Disallow: /admin/
 Disallow: /admin
+
+# --- AI crawlers: allowed for search visibility, blocked for training ---
+# GPTBot (OpenAI training) — block training, allow ChatGPT-User for browsing
+User-agent: GPTBot
+Disallow: /
+
+# Google-Extended (Gemini training) — block training, Googlebot still crawls for search
+User-agent: Google-Extended
+Disallow: /
+
+# Bytespider (ByteDance training)
+User-agent: Bytespider
+Disallow: /
+
+# CCBot (Common Crawl training dataset)
+User-agent: CCBot
+Disallow: /
+
+# --- AI crawlers: allowed (search + citation) ---
+# ChatGPT-User (real-time browsing for citations) — allowed
+# ClaudeBot (Anthropic) — allowed for citations
+# PerplexityBot (search index) — allowed
+# Googlebot (search indexing) — allowed via * above
 
 # Sitemap location (dynamic, includes blog posts from Sanity)
 Sitemap: https://altius.md/api/sitemap
