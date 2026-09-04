@@ -125,7 +125,13 @@
     "info": {
       "title": "Informații utile"
     },
-    "emptySection": "Informațiile de contact nu sunt completate în CMS"
+    "emptySection": "Informațiile de contact nu sunt completate în CMS",
+    "labels": {
+      "address": "Adresă",
+      "phone": "Telefon",
+      "email": "Email",
+      "hours": "Program de lucru"
+    }
   },
   "gyms": {
     "heroSubtitle": "Săli moderne cu echipament profesional",

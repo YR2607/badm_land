@@ -125,7 +125,13 @@
     "info": {
       "title": "Useful Information"
     },
-    "emptySection": "Contact information is not filled in CMS"
+    "emptySection": "Contact information is not filled in CMS",
+    "labels": {
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "hours": "Working hours"
+    }
   },
   "gyms": {
     "heroSubtitle": "Modern halls with professional equipment",

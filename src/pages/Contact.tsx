@@ -31,7 +31,7 @@ const Contact: FC = () => {
 
   const contactInfo = (contactCms?.contacts || []).map((c) => ({
     icon: c.type === 'address' ? <MapPin className="w-6 h-6" aria-hidden="true" /> : c.type === 'phone' ? <Phone className="w-6 h-6" aria-hidden="true" /> : c.type === 'email' ? <Mail className="w-6 h-6" aria-hidden="true" /> : <Clock className="w-6 h-6" aria-hidden="true" />,
-    title: c.label,
+    title: t(`contact.labels.${c.type}`, c.label),
     content: c.value,
     color: c.type === 'address' ? 'from-primary-blue to-blue-600' : c.type === 'phone' ? 'from-primary-orange to-orange-600' : c.type === 'email' ? 'from-primary-yellow to-yellow-600' : 'from-gray-600 to-gray-800'
   })) as Array<{ icon: JSX.Element; title: string; content: string; color: string }>;
