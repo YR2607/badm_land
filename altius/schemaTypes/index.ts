@@ -10,16 +10,13 @@ import homePage from './homePage'
 import aboutPage from './aboutPage'
 import servicesPage from './servicesPage'
 import gymsPage from './gymsPage'
-import contactPage from './contactPage'
 import gym from './gym'
 import trainer from './trainer'
 import founder from './founder'
-import member from './member'
 import heroSection from './heroSection'
 
 // Singletons (live — used by frontend)
 import servicesHero from './singletons/servicesHero'
-import servicesList from './singletons/servicesList'
 import aboutHero from './singletons/aboutHero'
 import aboutTabs from './singletons/aboutTabs'
 import aboutStrategy from './singletons/aboutStrategy'
@@ -44,16 +41,13 @@ export const schemaTypes = [
   aboutPage,
   servicesPage,
   gymsPage,
-  contactPage,
   gym,
   trainer,
   founder,
-  member,
   heroSection,
 
   // Singletons
   servicesHero,
-  servicesList,
   aboutHero,
   aboutTabs,
   aboutStrategy,

@@ -4,7 +4,7 @@ export default defineType({
   name: 'gallerySection',
   title: 'Раздел галереи',
   type: 'document',
-  description: 'Секция галереи (Наш зал, Наши тренера, Наши тренировки)',
+  description: 'Секция галереи (Наш зал)',
   fields: [
     defineField({
       name: 'key',
@@ -13,8 +13,6 @@ export default defineType({
       options: {
         list: [
           { title: 'Наш зал', value: 'hall' },
-          { title: 'Наши тренера', value: 'coaches' },
-          { title: 'Наши тренировки', value: 'trainings' },
         ]
       },
       hidden: true,

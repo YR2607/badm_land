@@ -91,7 +91,7 @@ export default defineType({
           type: 'array',
           of: [{
             type: 'reference',
-            to: [{ type: 'founder' }, { type: 'member' }]
+            to: [{ type: 'founder' }]
           }]
         },
         {

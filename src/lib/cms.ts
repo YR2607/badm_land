@@ -26,7 +26,7 @@ export async function fetchGallerySections(): Promise<Record<string, string[]>> 
   if (!isCmsEnabled) return {};
   const query = groq`*[_type == "gallerySection"]{ key, "images": images[].asset->url }`;
   const list = await (await getClient()).fetch(query);
-  const result: Record<string, string[]> = { hall: [], coaches: [], trainings: [] };
+  const result: Record<string, string[]> = { hall: [] };
   (list || []).forEach((it: any) => {
     if (it?.key && result[it.key] !== undefined) {
       result[it.key] = it.images || [];

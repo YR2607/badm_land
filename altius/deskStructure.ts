@@ -28,24 +28,6 @@ const galleryGroup = (S: any) =>
                 .filter('_type == "gallerySection" && key == "hall"')
                 .apiVersion('2023-05-03')
             ),
-          S.listItem()
-            .title('Наши тренера')
-            .schemaType('gallerySection')
-            .child(
-              S.documentTypeList('gallerySection')
-                .title('Наши тренера')
-                .filter('_type == "gallerySection" && key == "coaches"')
-                .apiVersion('2023-05-03')
-            ),
-          S.listItem()
-            .title('Наши тренировки')
-            .schemaType('gallerySection')
-            .child(
-              S.documentTypeList('gallerySection')
-                .title('Наши тренировки')
-                .filter('_type == "gallerySection" && key == "trainings"')
-                .apiVersion('2023-05-03')
-            ),
           S.divider(),
           S.listItem()
             .title('🏆 Турниры')
@@ -93,7 +75,6 @@ const deskStructure = (S: any) =>
             .title('Услуги')
             .items([
               singleton(S, 'servicesHero', 'servicesHero', '🎯 Hero секция'),
-              singleton(S, 'servicesList', 'servicesList', '🏸 Список услуг'),
               singleton(S, 'servicesPage', 'servicesPage', '🔍 SEO + Доп. настройки'),
             ])
         ),
@@ -122,7 +103,6 @@ const deskStructure = (S: any) =>
               singleton(S, 'contactHero', 'contactHero', '🎯 Hero секция'),
               singleton(S, 'contactInfo', 'contactInfo', 'ℹ️ Информация'),
               singleton(S, 'contactGyms', 'contactGyms', '🏟️ Залы'),
-              singleton(S, 'contactPage', 'contactPage', '🔍 SEO + Доп. настройки'),
             ])
         ),
 
@@ -188,9 +168,6 @@ const deskStructure = (S: any) =>
               S.listItem()
                 .title('👑 Основатели')
                 .child(S.documentTypeList('founder').title('Основатели')),
-              S.listItem()
-                .title('👥 Участники команды')
-                .child(S.documentTypeList('member').title('Участники')),
             ])
         ),
 
