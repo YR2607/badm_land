@@ -1,6 +1,20 @@
+const singleton = (S: any, schemaType: string, documentId: string, title: string, icon?: string) =>
+  S.listItem()
+    .title(title)
+    .child(
+      S.document()
+        .schemaType(schemaType)
+        .documentId(documentId)
+        .views([
+          S.view.form()
+            .title('Редактировать')
+            .icon(() => '✏️')
+        ])
+    )
+
 const galleryGroup = (S: any) =>
   S.listItem()
-    .title('Галерея')
+    .title('🖼️ Галерея')
     .child(
       S.list()
         .title('Галерея')
@@ -13,9 +27,6 @@ const galleryGroup = (S: any) =>
                 .title('Наш зал')
                 .filter('_type == "gallerySection" && key == "hall"')
                 .apiVersion('2023-05-03')
-                .initialValueTemplates([
-                  S.initialValueTemplateItem('gallerySection-hall')
-                ])
             ),
           S.listItem()
             .title('Наши тренера')
@@ -25,9 +36,6 @@ const galleryGroup = (S: any) =>
                 .title('Наши тренера')
                 .filter('_type == "gallerySection" && key == "coaches"')
                 .apiVersion('2023-05-03')
-                .initialValueTemplates([
-                  S.initialValueTemplateItem('gallerySection-coaches')
-                ])
             ),
           S.listItem()
             .title('Наши тренировки')
@@ -37,63 +45,16 @@ const galleryGroup = (S: any) =>
                 .title('Наши тренировки')
                 .filter('_type == "gallerySection" && key == "trainings"')
                 .apiVersion('2023-05-03')
-                .initialValueTemplates([
-                  S.initialValueTemplateItem('gallerySection-trainings')
-                ])
             ),
-        ])
-    )
-
-const byTypeList = (S: any, type: string, title: string) =>
-  S.listItem().title(title).child(
-    S.documentTypeList(type).title(title)
-  )
-
-const draftsList = (S: any, type: string, title: string) =>
-  S.listItem().title(title).child(
-    S.documentList().title(title).filter('_type == $type && !_id in path("drafts.**") == false').params({ type }).apiVersion('2023-05-03')
-  )
-
-const featuredPosts = (S: any) =>
-  S.listItem()
-    .title('Избранные посты')
-    .child(
-      S.documentList()
-        .title('Избранные посты')
-        .filter('_type == "post" && featured == true')
-        .apiVersion('2023-05-03')
-    )
-
-const clubEmbeds = (S: any) =>
-  S.listItem()
-    .title('Новости клуба (встраиваемые)')
-    .child(
-      S.documentTypeList('clubEmbed').title('Новости клуба (встраиваемые)')
-    )
-
-const eventEmbeds = (S: any) =>
-  S.listItem()
-    .title('События (встраиваемые)')
-    .child(
-      S.documentTypeList('eventEmbed').title('События (встраиваемые)')
-    )
-
-const postsByCategory = (S: any) =>
-  S.listItem()
-    .title('Новости по категориям')
-    .child(
-      S.list()
-        .title('Категории')
-        .items([
-          S.listItem().title('Новости клуба').child(
-            S.documentList().title('Новости клуба').filter('_type == "post" && (category->slug.current == "news" || category == "news")').apiVersion('2023-05-03')
-          ),
-          S.listItem().title('Мировые новости').child(
-            S.documentList().title('Мировые новости').filter('_type == "post" && (category->slug.current == "world" || category == "world")').apiVersion('2023-05-03')
-          ),
-          S.listItem().title('События').child(
-            S.documentList().title('События').filter('_type == "post" && (category->slug.current == "event" || category == "event")').apiVersion('2023-05-03')
-          ),
+          S.divider(),
+          S.listItem()
+            .title('🏆 Турниры')
+            .schemaType('tournamentCategory')
+            .child(
+              S.documentTypeList('tournamentCategory')
+                .title('Турниры')
+                .apiVersion('2023-05-03')
+            ),
         ])
     )
 
@@ -101,231 +62,120 @@ const deskStructure = (S: any) =>
   S.list()
     .title('Контент сайта')
     .items([
-      // Основные страницы сайта
+      // ─── Основные страницы ───
       S.listItem()
-        .title('🏠 Главная страница')
+        .title('🏠 Главная')
         .child(
           S.document()
             .schemaType('homePage')
             .documentId('homePage')
-            .views([
-              S.view.form()
-                .title('Редактировать')
-                .icon(() => '✏️')
-            ])
+            .views([S.view.form().title('Редактировать').icon(() => '✏️')])
         ),
+
       S.listItem()
         .title('ℹ️ О клубе')
         .child(
           S.list()
             .title('О клубе')
             .items([
-              S.listItem()
-                .title('🎯 Hero секция')
-                .child(
-                  S.document()
-                    .schemaType('aboutHero')
-                    .documentId('aboutHero')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('📊 Статистика')
-                .child(
-                  S.document()
-                    .schemaType('aboutStats')
-                    .documentId('aboutStats')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('📋 Табы (Миссия, Тренеры, Залы)')
-                .child(
-                  S.document()
-                    .schemaType('aboutTabs')
-                    .documentId('aboutTabs')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('📅 История клуба')
-                .child(
-                  S.document()
-                    .schemaType('aboutHistory')
-                    .documentId('aboutHistory')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('🗺️ Планы развития')
-                .child(
-                  S.document()
-                    .schemaType('aboutRoadmap')
-                    .documentId('aboutRoadmap')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('🔍 SEO настройки')
-                .child(
-                  S.document()
-                    .schemaType('aboutPage')
-                    .documentId('aboutPage')
-                    .views([
-                      S.view.form()
-                        .title('Редактировать')
-                        .icon(() => '✏️')
-                    ])
-                ),
+              singleton(S, 'aboutHero', 'aboutHero', '🎯 Hero секция'),
+              singleton(S, 'aboutTabs', 'aboutTabs', '📋 Табы (Миссия, Тренеры, Залы)'),
+              singleton(S, 'aboutStrategy', 'aboutStrategy', '📊 Стратегия'),
+              singleton(S, 'aboutRoadmap', 'aboutRoadmap', '�️ Планы развития'),
+              singleton(S, 'aboutPage', 'aboutPage', '🔍 SEO + Доп. настройки'),
             ])
         ),
+
       S.listItem()
         .title('🏸 Услуги')
         .child(
           S.list()
             .title('Услуги')
             .items([
-              S.listItem()
-                .title('🎯 Hero секция')
-                .child(
-                  S.document()
-                    .schemaType('servicesHero')
-                    .documentId('servicesHero')
-                    .views([
-                      S.view.form().title('Редактировать').icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('🏸 Список услуг')
-                .child(
-                  S.document()
-                    .schemaType('servicesList')
-                    .documentId('servicesList')
-                    .views([
-                      S.view.form().title('Редактировать').icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('💰 Тарифы')
-                .child(
-                  S.document()
-                    .schemaType('servicesPricing')
-                    .documentId('servicesPricing')
-                    .views([
-                      S.view.form().title('Редактировать').icon(() => '✏️')
-                    ])
-                ),
-              S.listItem()
-                .title('🔍 SEO настройки')
-                .child(
-                  S.document()
-                    .schemaType('servicesSeo')
-                    .documentId('servicesSeo')
-                    .views([
-                      S.view.form().title('Редактировать').icon(() => '✏️')
-                    ])
-                ),
+              singleton(S, 'servicesHero', 'servicesHero', '🎯 Hero секция'),
+              singleton(S, 'servicesList', 'servicesList', '🏸 Список услуг'),
+              singleton(S, 'servicesPage', 'servicesPage', '🔍 SEO + Доп. настройки'),
             ])
         ),
+
       S.listItem()
-        .title('🏢 Спортзалы')
+        .title('� Спортзалы')
         .child(
           S.list()
             .title('Спортзалы')
             .items([
-              S.listItem()
-                .title('🎯 Hero секция')
-                .child(
-                  S.document()
-                    .schemaType('gymsHero')
-                    .documentId('gymsHero')
-                ),
+              singleton(S, 'gymsHero', 'gymsHero', '🎯 Hero секция'),
               S.divider(),
               S.listItem()
-                .title('🏢 Управление залами')
+                .title('� Управление залами')
                 .child(S.documentTypeList('gym').title('Залы')),
-              S.listItem()
-                .title('🔍 SEO настройки')
-                .child(
-                  S.document()
-                    .schemaType('gymsSeo')
-                    .documentId('gymsSeo')
-                ),
+              singleton(S, 'gymsPage', 'gymsPage', '🏷️ Лейблы страницы'),
             ])
         ),
+
       S.listItem()
         .title('☎️ Контакты')
         .child(
           S.list()
             .title('Контакты')
             .items([
-              S.listItem()
-                .title('🎯 Hero секция')
-                .child(
-                  S.document()
-                    .schemaType('contactHero')
-                    .documentId('contactHero')
-                ),
-              S.listItem()
-                .title('ℹ️ Информация')
-                .child(
-                  S.document()
-                    .schemaType('contactInfo')
-                    .documentId('contactInfo')
-                ),
-              S.listItem()
-                .title('🏟️ Залы')
-                .child(
-                  S.document()
-                    .schemaType('contactGyms')
-                    .documentId('contactGyms')
-                ),
-              S.listItem()
-                .title('🔍 SEO настройки')
-                .child(
-                  S.document()
-                    .schemaType('contactSeo')
-                    .documentId('contactSeo')
-                ),
+              singleton(S, 'contactHero', 'contactHero', '🎯 Hero секция'),
+              singleton(S, 'contactInfo', 'contactInfo', 'ℹ️ Информация'),
+              singleton(S, 'contactGyms', 'contactGyms', '🏟️ Залы'),
+              singleton(S, 'contactPage', 'contactPage', '🔍 SEO + Доп. настройки'),
             ])
         ),
+
       S.divider(),
 
-      // Медиа контент
+      // ─── Медиа ───
       S.listItem()
         .title('📰 Новости и блог')
         .child(
           S.list()
             .title('Новости')
             .items([
-              byTypeList(S, 'post', 'Все статьи'),
+              S.listItem()
+                .title('Все статьи')
+                .child(S.documentTypeList('post').title('Все статьи')),
               S.divider(),
-              clubEmbeds(S),
-              eventEmbeds(S),
-              featuredPosts(S),
-              postsByCategory(S),
+              S.listItem()
+                .title('Новости клуба (встраиваемые)')
+                .child(S.documentTypeList('clubEmbed').title('Новости клуба')),
+              S.listItem()
+                .title('Избранные посты')
+                .child(
+                  S.documentList()
+                    .title('Избранные посты')
+                    .filter('_type == "post" && featured == true')
+                    .apiVersion('2023-05-03')
+                ),
+              S.divider(),
+              S.listItem()
+                .title('По категориям')
+                .child(
+                  S.list()
+                    .title('Категории')
+                    .items([
+                      S.listItem().title('Новости клуба').child(
+                        S.documentList().title('Новости клуба').filter('_type == "post" && (category->slug.current == "news" || category == "news")').apiVersion('2023-05-03')
+                      ),
+                      S.listItem().title('Мировые новости').child(
+                        S.documentList().title('Мировые новости').filter('_type == "post" && (category->slug.current == "world" || category == "world")').apiVersion('2023-05-03')
+                      ),
+                      S.listItem().title('События').child(
+                        S.documentList().title('События').filter('_type == "post" && (category->slug.current == "event" || category == "event")').apiVersion('2023-05-03')
+                      ),
+                    ])
+                ),
             ])
         ),
+
       galleryGroup(S),
 
       S.divider(),
 
-      // Справочники
+      // ─── Команда ───
       S.listItem()
         .title('👥 Команда')
         .child(
@@ -336,20 +186,36 @@ const deskStructure = (S: any) =>
                 .title('👨‍🏫 Тренеры')
                 .child(S.documentTypeList('trainer').title('Тренеры')),
               S.listItem()
-                .title('👑 Основатель (старое)')
-                .child(S.documentTypeList('founder').title('Основатель')),
+                .title('👑 Основатели')
+                .child(S.documentTypeList('founder').title('Основатели')),
               S.listItem()
-                .title('👥 Все участники (новое)')
-                .child(S.documentTypeList('member').title('Участники команды')),
+                .title('👥 Участники команды')
+                .child(S.documentTypeList('member').title('Участники')),
             ])
         ),
 
       S.divider(),
 
-      // Настройки
-      S.listItem().title('Старые страницы').child(S.documentTypeList('page').title('Страницы')),
-      byTypeList(S, 'author', 'Авторы'),
-      byTypeList(S, 'category', 'Категории'),
+      // ─── Настройки сайта ───
+      S.listItem()
+        .title('⚙️ Настройки сайта')
+        .child(
+          S.list()
+            .title('Настройки')
+            .items([
+              singleton(S, 'footer', 'footer', '🦶 Footer (подвал)'),
+            ])
+        ),
+
+      S.divider(),
+
+      // ─── Справочники ───
+      S.listItem()
+        .title('📂 Авторы')
+        .child(S.documentTypeList('author').title('Авторы')),
+      S.listItem()
+        .title('🏷️ Категории')
+        .child(S.documentTypeList('category').title('Категории')),
     ])
 
 export default deskStructure
