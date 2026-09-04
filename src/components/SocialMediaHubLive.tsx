@@ -1,6 +1,5 @@
 import { FC, useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { fetchFooter, isCmsEnabled } from '../lib/cms'
 
@@ -454,13 +453,7 @@ const SocialMediaHubLive: FC = () => {
   return (
     <section ref={sectionRef} className="py-24 md:py-32 bg-zenith-white overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="mb-24 relative text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-        >
+        <div className="mb-24 relative text-center">
           <div className="inline-flex items-center gap-3 px-6 py-2 bg-zenith-black text-white rounded-full mb-8 font-black uppercase tracking-[0.3em] text-[10px] border border-white/10">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zenith-crimson opacity-75"></span>
@@ -478,33 +471,22 @@ const SocialMediaHubLive: FC = () => {
           <p className="text-gray-400 text-xl md:text-2xl max-w-3xl mx-auto font-bold uppercase tracking-tight">
             {t('socialHub.subtitle', 'Следите за нашими тренировками, турнирами и новостями клуба')}
           </p>
-        </motion.div>
+        </div>
 
         {isVisible && (
           <div className="space-y-16">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="flex flex-col lg:flex-row gap-10"
-            >
+            <div className="flex flex-col lg:flex-row gap-10">
               <div className="w-full lg:w-[700px] xl:w-[750px] lg:flex-shrink-0">
                 <FacebookEmbed isActive={true} />
               </div>
               <div className="w-full lg:flex-1">
                 <TikTokEmbed isActive={true} />
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
+            <div>
               <YouTubeEmbed isActive={true} />
-            </motion.div>
+            </div>
           </div>
         )}
       </div>

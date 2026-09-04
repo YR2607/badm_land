@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import LocalizedLink from './LocalizedLink';
 import { proxied } from '../utils/blockFacebookImages';
@@ -59,13 +58,7 @@ const BusinessNewsSection: FC = () => {
   return (
     <section id="business-news" className="py-32 bg-zenith-white">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="mb-24 relative"
-          initial={{ opacity: 0, x: -100 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div className="mb-24 relative">
           <h2 className="text-8xl md:text-[12rem] font-black font-display leading-[0.8] tracking-tighter uppercase text-zenith-black opacity-10 absolute -top-10 left-0 pointer-events-none select-none">
             {t('home.worldNews.decorative', 'GLOBAL')}
           </h2>
@@ -73,7 +66,7 @@ const BusinessNewsSection: FC = () => {
             {t('home.worldNews.title', 'Мировые новости')}
           </h2>
           <div className="w-32 h-4 bg-zenith-crimson mt-8" />
-        </motion.div>
+        </div>
 
         {loading && (
           <div className="text-center py-20">
@@ -91,16 +84,12 @@ const BusinessNewsSection: FC = () => {
         {!loading && !error && worldNews.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 gap-6 min-h-[800px]">
             {worldNews.slice(0, 4).map((news, index) => (
-              <motion.a
+              <a
                 key={news.href}
                 href={news.href}
                 target="_blank"
                 rel="noreferrer"
                 className={`bento-card group relative flex flex-col ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
               >
                 <div className="absolute inset-0 scanlines opacity-50 z-10 pointer-events-none" />
                 <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-zenith-black via-zenith-black/80 to-transparent z-20" />
@@ -142,25 +131,19 @@ const BusinessNewsSection: FC = () => {
                     <ArrowRight className="w-5 h-5 text-zenith-crimson" />
                   </div>
                 </div>
-              </motion.a>
+              </a>
             ))}
           </div>
         )}
 
         {!loading && !error && (
           <div className="text-center mt-20">
-            <motion.div
-              className="inline-block"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <LocalizedLink
+              to="/blog#world-news"
+              className="inline-block px-12 py-6 bg-zenith-black text-white font-black uppercase tracking-[0.3em] text-xl hover:bg-zenith-crimson transition-colors duration-500 shadow-2xl"
             >
-              <LocalizedLink
-                to="/blog#world-news"
-                className="inline-block px-12 py-6 bg-zenith-black text-white font-black uppercase tracking-[0.3em] text-xl hover:bg-zenith-crimson transition-colors duration-500 shadow-2xl"
-              >
-                {t('home.worldNews.viewAll')}
-              </LocalizedLink>
-            </motion.div>
+              {t('home.worldNews.viewAll')}
+            </LocalizedLink>
           </div>
         )}
       </div>

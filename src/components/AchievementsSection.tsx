@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import LocalizedLink from './LocalizedLink';
-import { motion } from 'framer-motion';
 import { Trophy, Medal, Target, Zap } from 'lucide-react';
 
 interface AchievementsSectionProps {
@@ -48,13 +47,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
   return (
     <section className="py-32 bg-zenith-white overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="mb-24 relative"
-          initial={{ opacity: 0, x: -100 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div className="mb-24 relative">
           <h2 className="text-8xl md:text-[12rem] font-black font-display leading-[0.8] tracking-tighter uppercase text-zenith-black opacity-10 absolute -top-10 left-0 pointer-events-none select-none">
             {t('home.achievements.decorative', 'IMPACT')}
           </h2>
@@ -62,18 +55,13 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
             {cmsData?.title || t('home.achievements.title', 'Наши достижения')}
           </h2>
           <div className="w-32 h-4 bg-zenith-crimson mt-8" />
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 min-h-[600px]">
           {achievements.map((item, index) => (
-            <motion.div
+            <div
               key={index}
-              className={`bento-card p-10 flex flex-col justify-between group cursor-default ${item.className}`}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              className={`bento-card p-10 flex flex-col justify-between group cursor-default transition-transform duration-300 hover:-translate-y-2.5 ${item.className}`}
             >
               <div className="flex justify-between items-start">
                 <div className="p-4 rounded-2xl bg-current/10 backdrop-blur-sm group-hover:scale-110 transition-transform duration-500">
@@ -95,17 +83,13 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
                   {item.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Timeline Bento CTA */}
-        <motion.div
+        <div
           className="mt-6 bento-card bg-zenith-black text-white p-12 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
         >
           <div className="max-w-2xl">
             <h3 className="text-3xl md:text-5xl font-black font-display uppercase tracking-tight leading-none mb-8 break-words [overflow-wrap:anywhere]">
@@ -117,20 +101,11 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
           </div>
           <LocalizedLink
             to="/about"
-            className="group relative px-12 py-6 bg-zenith-crimson text-white font-black uppercase tracking-widest text-xl overflow-hidden inline-block"
+            className="px-12 py-6 bg-zenith-crimson text-white font-black uppercase tracking-widest text-xl inline-block transition-colors duration-300 hover:bg-zenith-black"
           >
-            <span className="relative z-10">{t('common.more', 'Узнать больше')}</span>
-            <motion.div
-              className="absolute inset-0 bg-white"
-              initial={{ x: "-100%" }}
-              whileHover={{ x: 0 }}
-              transition={{ duration: 0.4, ease: "circOut" }}
-            />
-            <span className="absolute inset-0 flex items-center justify-center text-zenith-black font-black uppercase tracking-widest text-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-              {t('common.more', 'Узнать больше')}
-            </span>
+            {t('common.more', 'Узнать больше')}
           </LocalizedLink>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

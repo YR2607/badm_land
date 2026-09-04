@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Users, Star, UserCheck, Target, Calendar, Trophy, Clock, ArrowRight, Zap, MapPin, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -53,13 +52,7 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-zenith-black/5 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          className="mb-32 text-center md:text-right relative"
-          initial={{ opacity: 0, x: 100 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div className="mb-32 text-center md:text-right relative">
           <h2 className="text-[6rem] md:text-[14rem] font-black font-display leading-[0.75] tracking-tighter uppercase text-zenith-black opacity-[0.03] absolute -top-12 md:-top-24 right-0 pointer-events-none select-none w-full text-center md:text-right overflow-hidden">
             {t('home.services.decorative', 'OUR SERVICES')}
           </h2>
@@ -67,18 +60,13 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
             {cmsData?.title || t('home.services.title', 'Наши услуги')}
           </h2>
           <div className="w-24 md:w-48 h-2 md:h-4 bg-zenith-crimson mt-8 mx-auto md:ml-auto md:mr-0 rounded-full" />
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
           {services.map((service, index) => (
-            <motion.div
+            <div
               key={index}
-              className="group flex flex-col h-full bg-white rounded-[2.5rem] p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.15)] border-2 border-transparent hover:border-zenith-crimson/20 transition-all duration-500 relative overflow-hidden"
-              initial={{ opacity: 0, scale: 0.95, y: 30 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1, type: "spring", stiffness: 100 }}
-              whileHover={{ y: -8 }}
+              className="group flex flex-col h-full bg-white rounded-[2.5rem] p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.15)] border-2 border-transparent hover:border-zenith-crimson/20 transition-all duration-500 hover:-translate-y-2 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-crimson/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-zenith-crimson/10 transition-colors duration-500 pointer-events-none" />
 
@@ -126,15 +114,14 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
                   <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson uppercase tracking-tighter">
                     {service.price}
                   </div>
-                  <motion.div
-                    className="w-14 h-14 bg-zenith-black text-white flex items-center justify-center rounded-full group-hover:bg-zenith-crimson shadow-[0_10px_20px_-10px_rgba(0,0,0,0.3)] group-hover:shadow-[0_10px_20px_-10px_rgba(220,38,38,0.5)] transition-all duration-300"
-                    whileHover={{ scale: 1.1, rotate: -45 }}
+                  <div
+                    className="w-14 h-14 bg-zenith-black text-white flex items-center justify-center rounded-full group-hover:bg-zenith-crimson group-hover:scale-110 group-hover:-rotate-45 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.3)] group-hover:shadow-[0_10px_20px_-10px_rgba(220,38,38,0.5)] transition-all duration-300"
                   >
                     <ArrowRight className="w-6 h-6" />
-                  </motion.div>
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
