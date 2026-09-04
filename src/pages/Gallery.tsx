@@ -2,7 +2,7 @@ import { type FC, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
-import { Image as ImageIcon, Video as VideoIcon, X, ArrowLeft, ArrowRight, Trophy, Search, RotateCcw } from 'lucide-react';
+import { Image as ImageIcon, Video as VideoIcon, X, ArrowLeft, ArrowRight, Trophy, Search, RotateCcw, Maximize2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/Breadcrumbs';
 import InnerHero from '../components/InnerHero';
@@ -218,12 +218,12 @@ const Gallery: FC = () => {
                 </div>
               </div>
 
-              {/* Hall section — photo grid */}
+              {/* Photos section — masonry gallery */}
               {s.id !== 'tournaments' && (
                 loading ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {Array.from({ length: 8 }).map((_, i) => (
-                      <div key={i} className="aspect-square rounded-2xl bg-gray-100 animate-pulse" />
+                  <div className="columns-2 md:columns-3 lg:columns-4 gap-4 [&>*]:mb-4">
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <div key={i} className="break-inside-avoid rounded-2xl bg-gray-100 animate-pulse" style={{ height: `${200 + (i % 4) * 80}px` }} />
                     ))}
                   </div>
                 ) : (sectionImages[s.id] || []).length === 0 ? (
@@ -234,27 +234,40 @@ const Gallery: FC = () => {
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {(sectionImages[s.id] || []).map((src, i) => (
-                      <motion.div
-                        key={i}
-                        className={`relative group rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-2xl transition-shadow duration-500 ${i % 7 === 0 ? 'col-span-2 row-span-2' : ''}`}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: (i % 8) * 0.05 }}
-                        onClick={() => openLightbox([{ type: 'image', src, alt: s.title }], 0)}
-                      >
-                        <img
-                          src={src}
-                          alt={`${s.title} — ${t('gallery.title')}`}
-                          loading="lazy"
-                          className={`w-full ${i % 7 === 0 ? 'aspect-square md:aspect-auto md:h-full' : 'aspect-square'} object-cover transition-transform duration-700 group-hover:scale-110`}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-zenith-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      </motion.div>
-                    ))}
-                  </div>
+                  <>
+                    {/* Photo count */}
+                    <div className="mb-6 text-xs font-black uppercase tracking-widest text-gray-400">
+                      {(sectionImages[s.id] || []).length} {t('gallery.photo')}
+                    </div>
+                    {/* Masonry — natural photo proportions, no cropping */}
+                    <div className="columns-2 md:columns-3 lg:columns-4 gap-4">
+                      {(sectionImages[s.id] || []).map((src, i) => (
+                        <div
+                          key={i}
+                          className="relative group rounded-2xl overflow-hidden cursor-pointer mb-4 break-inside-avoid shadow-sm hover:shadow-2xl transition-shadow duration-500"
+                          onClick={() => openLightbox(
+                            (sectionImages[s.id] || []).map(p => ({ type: 'image' as const, src: p, alt: s.title })),
+                            i
+                          )}
+                        >
+                          <img
+                            src={src}
+                            alt={`${s.title} — ${t('gallery.title')} ${i + 1}`}
+                            loading="lazy"
+                            className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                          {/* Hover overlay with zoom icon */}
+                          <div className="absolute inset-0 bg-zenith-black/0 group-hover:bg-zenith-black/30 transition-colors duration-300 flex items-end justify-end p-4">
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center">
+                                <Maximize2 className="w-4 h-4 text-white" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )
               )}
 
@@ -420,7 +433,7 @@ const Gallery: FC = () => {
                       return (
                         <AnimatePresence>
                           <motion.div
-                            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-8"
+                            className="fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-8"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -535,25 +548,30 @@ const Gallery: FC = () => {
       {/* Lightbox */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-[100] bg-zenith-black/95 backdrop-blur-md flex items-center justify-center p-4"
+          className="fixed inset-0 z-[130] bg-zenith-black/95 backdrop-blur-md flex items-center justify-center p-4"
           role="dialog"
           aria-modal="true"
           onClick={closeLightbox}
         >
           <button
-            className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[110]"
+            className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[140]"
             onClick={closeLightbox}
           >
             <X className="w-5 h-5" />
           </button>
+
+          {/* Photo counter */}
+          <div className="absolute top-6 left-1/2 -translate-x-1/2 px-5 py-2.5 bg-white/10 backdrop-blur-md rounded-full text-sm font-bold text-white z-[140]">
+            {lightbox.index + 1} / {lightbox.items.length}
+          </div>
           <button
-            className="absolute left-4 md:left-12 w-14 h-14 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[110]"
+            className="absolute left-4 md:left-12 w-14 h-14 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[140]"
             onClick={(e) => { e.stopPropagation(); prevItem(); }}
           >
             <ArrowLeft className="w-7 h-7" />
           </button>
           <button
-            className="absolute right-4 md:right-12 w-14 h-14 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[110]"
+            className="absolute right-4 md:right-12 w-14 h-14 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[140]"
             onClick={(e) => { e.stopPropagation(); nextItem(); }}
           >
             <ArrowRight className="w-7 h-7" />
