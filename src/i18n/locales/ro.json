@@ -61,7 +61,8 @@
       "mission": {
         "title": "Introducere și Misiunea Clubului",
         "text1": "ALTIUS este un club modern de badminton, creat pentru dezvoltarea sportului la toate nivelurile: de la primii pași ai copiilor până la victoriile internaționale ale profesioniștilor. Misiunea noastră este de a face badmintonul un sport de masă, accesibil și prestigios în Moldova, formând o comunitate puternică de sportivi, antrenori și fani.",
-        "text2": "Credem că prin sport putem cultiva caracterul, disciplina și aspirația către rezultate înalte. Altius aspiră să devină centrul principal de dezvoltare a badmintonului în țară și unul dintre cluburile recunoscute din Europa de Est."
+        "text2": "Credem că prin sport putem cultiva caracterul, disciplina și aspirația către rezultate înalte. Altius aspiră să devină centrul principal de dezvoltare a badmintonului în țară și unul dintre cluburile recunoscute din Europa de Est.",
+        "badge": "Misiunea noastră"
       },
       "currentState": {
         "title": "Starea Actuală și Potențialul",
@@ -93,7 +94,8 @@
           "Program de pregătire a antrenorilor și propria academie",
           "Comunitate durabilă de părinți, antrenori, parteneri și absolvenți",
           "Altius devine brandul #1 în badmintonul din Moldova și un club cunoscut în Europa de Est"
-        ]
+        ],
+        "badge": "Prognoza de dezvoltare"
       },
       "closing": "Altius 2030 nu este doar un club. Este o mișcare care crește campioni, creează comunitate și modelează viitorul badmintonului în țară."
     },
@@ -122,7 +124,8 @@
     "heroDescription": "Sunați, scrieți sau vizitați-ne la oricare dintre sălile noastre",
     "info": {
       "title": "Informații utile"
-    }
+    },
+    "emptySection": "Informațiile de contact nu sunt completate în CMS"
   },
   "gyms": {
     "heroSubtitle": "Săli moderne cu echipament profesional",
@@ -204,7 +207,9 @@
     "readMore": "Citește mai mult",
     "noNews": "Nu există materiale încă",
     "author": "Autor",
-    "publishedOn": "Data publicării"
+    "publishedOn": "Data publicării",
+    "postNotFound": "Articolul nu a fost găsit",
+    "backToList": "Înapoi la știri"
   },
   "footer": {
     "description": "Club profesional de badminton în Chișinău",
@@ -236,13 +241,15 @@
     "showing": "Se afișează",
     "notFound": "Pagina nu a fost găsită",
     "backHome": "Pagina principală",
-    "adminRedirect": "Redirecționare către admin… Dacă nu s-a făcut automat, deschideți /admin/index.html"
+    "adminRedirect": "Redirecționare către admin… Dacă nu s-a făcut automat, deschideți /admin/index.html",
+    "more": "Află mai mult"
   },
   "home": {
     "services": {
       "title": "Serviciile noastre",
       "features": "Caracteristici",
-      "decorative": "SERVICIILE NOASTRE"
+      "decorative": "SERVICIILE NOASTRE",
+      "pricePlaceholder": "—"
     },
     "achievements": {
       "title": "Realizările noastre",
@@ -274,5 +281,12 @@
     "noContent": "Conținut indisponibil",
     "tiktokLabel": "TikTok",
     "facebookLabel": "Facebook"
+  },
+  "breadcrumbs": {
+    "navigation": "Navigare breadcrumbs",
+    "home": "Înapoi la pagina principală"
+  },
+  "accessibility": {
+    "skipToContent": "Sari la conținutul principal"
   }
 }

@@ -24,11 +24,27 @@
     },
     "faq": {
       "title": "Frequently Asked Questions",
-      "subtitle": "Everything you need to know about our services"
+      "subtitle": "Everything you need to know about our services",
+      "questions": {
+        "equipment": {
+          "a": "Rackets and shuttlecocks are provided by the club. You only need sports shoes and clothing.",
+          "q": "Do I need my own equipment?"
+        },
+        "howToSignUp": {
+          "a": "Call us by phone or fill out the form on the website. We will find a convenient time and hall.",
+          "q": "How to sign up for training?"
+        },
+        "trialSession": {
+          "a": "Yes, the first session can be attended for free to meet the coach and try the format.",
+          "q": "Is there a trial session?"
+        }
+      }
     },
     "cta": {
       "title": "Ready to start?",
-      "subtitle": "Join our badminton community today"
+      "subtitle": "Join our badminton community today",
+      "call": "Call us",
+      "contact": "Contact us"
     }
   },
   "about": {
@@ -45,7 +61,8 @@
       "mission": {
         "title": "Introduction and Club Mission",
         "text1": "ALTIUS is a modern badminton club created to develop the sport at all levels: from children's first steps to international victories of professionals. Our mission is to make badminton a mass, accessible and prestigious sport in Moldova, forming a strong community of athletes, coaches and fans.",
-        "text2": "We believe that through sport we can cultivate character, discipline and the pursuit of high results. Altius strives to become the leading badminton development center in the country and one of the recognized clubs in Eastern Europe."
+        "text2": "We believe that through sport we can cultivate character, discipline and the pursuit of high results. Altius strives to become the leading badminton development center in the country and one of the recognized clubs in Eastern Europe.",
+        "badge": "Our mission"
       },
       "currentState": {
         "title": "Current State and Potential",
@@ -77,7 +94,8 @@
           "Coach training program and own academy",
           "Sustainable community of parents, coaches, partners and alumni",
           "Altius becomes the #1 brand in Moldova badminton and a well-known club in Eastern Europe"
-        ]
+        ],
+        "badge": "Development forecast"
       },
       "closing": "Altius 2030 is not just a club. It's a movement that grows champions, creates community and shapes the future of badminton in the country."
     },
@@ -106,7 +124,8 @@
     "heroDescription": "Call, write or visit us at any of our gyms",
     "info": {
       "title": "Useful Information"
-    }
+    },
+    "emptySection": "Contact information is not filled in CMS"
   },
   "gyms": {
     "heroSubtitle": "Modern halls with professional equipment",
@@ -222,13 +241,15 @@
     "showing": "Showing",
     "notFound": "Page not found",
     "backHome": "Back to home",
-    "adminRedirect": "Redirecting to admin… If it didn't happen automatically, open /admin/index.html"
+    "adminRedirect": "Redirecting to admin… If it didn't happen automatically, open /admin/index.html",
+    "more": "Learn more"
   },
   "home": {
     "services": {
       "title": "Our Services",
       "features": "Features",
-      "decorative": "OUR SERVICES"
+      "decorative": "OUR SERVICES",
+      "pricePlaceholder": "—"
     },
     "achievements": {
       "title": "Our Achievements",
@@ -260,5 +281,12 @@
     "noContent": "No Content Found",
     "tiktokLabel": "TikTok",
     "facebookLabel": "Facebook"
+  },
+  "breadcrumbs": {
+    "navigation": "Breadcrumb navigation",
+    "home": "Back to home"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content"
   }
 }
