@@ -101,8 +101,8 @@ const Header: React.FC = () => {
         aria-hidden={!isMenuOpen}
         className={`xl:hidden bg-white border-b border-gray-100 shadow-2xl overflow-hidden transition-all duration-300 ease-out ${
           isMenuOpen
-            ? 'opacity-100 translate-y-0 visible'
-            : 'opacity-0 -translate-y-5 invisible pointer-events-none'
+            ? 'max-h-[600px] opacity-100'
+            : 'max-h-0 opacity-0'
         }`}
       >
         <div className="px-6 py-10 space-y-6">
