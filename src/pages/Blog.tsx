@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 import { fetchClubEmbeds } from '../lib/cms';
 import { proxied } from '../utils/blockFacebookImages';
 import { useTranslation } from 'react-i18next';
-import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
 import InnerHero from '../components/InnerHero';
 import JsonLd from '../components/JsonLd';
@@ -348,7 +347,7 @@ const Blog: FC = () => {
                     <div className="mb-6 flex items-center justify-between border-b border-gray-50 pb-4">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-zenith-crimson animate-pulse" />
-                        <span className="text-xs font-black text-zenith-black/40 uppercase tracking-widest">{formatDate((news as any).date)}</span>
+                        <span className="text-xs font-black text-zenith-black/70 uppercase tracking-widest">{formatDate((news as any).date)}</span>
                       </div>
                     </div>
 
@@ -360,7 +359,7 @@ const Blog: FC = () => {
 
                     <div className="flex items-center justify-between pt-6 border-t border-gray-50">
                       {(news as any).author ? (
-                        <span className="text-[10px] font-black text-zenith-black/30 uppercase tracking-[0.2em]">{(news as any).author}</span>
+                        <span className="text-[10px] font-black text-zenith-black/60 uppercase tracking-[0.2em]">{(news as any).author}</span>
                       ) : <div />}
                       <span className="flex items-center gap-2 text-zenith-black group-hover:text-zenith-crimson transition-all font-black text-xs uppercase tracking-widest">
                         <span>{t('news.readMore')}</span>

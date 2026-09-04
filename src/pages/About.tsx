@@ -2,10 +2,9 @@ import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Award, Users, MapPin, Clock, Trophy, ArrowRight, Star } from 'lucide-react';
-import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchFounder, fetchAllFounders, fetchTrainers, fetchAboutTabs, fetchAboutStrategy, type CmsAboutStrategy, fetchAboutRoadmap, type CmsAboutRoadmap } from '../lib/cms';
+import { fetchAboutPage, CmsAboutPage, fetchAboutHero, type CmsHero, fetchAllFounders, fetchTrainers, fetchAboutTabs, fetchAboutStrategy, type CmsAboutStrategy, fetchAboutRoadmap, type CmsAboutRoadmap } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import SEO from '../components/SEO';
-import Breadcrumbs from '../components/Breadcrumbs';
 import InnerHero from '../components/InnerHero';
 import JsonLd from '../components/JsonLd';
 
@@ -16,12 +15,12 @@ const About: FC = () => {
   const [strategyData, setStrategyData] = useState<CmsAboutStrategy | null>(null);
   const [roadmapData, setRoadmapData] = useState<CmsAboutRoadmap | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [isRoadmapScrolled, setIsRoadmapScrolled] = useState(false);
-  const VISIBLE_HISTORY_COUNT = 3;
 
   useEffect(() => {
     const loadCmsData = async () => {
@@ -66,6 +65,8 @@ const About: FC = () => {
         if (roadmap) setRoadmapData(addCmsDevMarkers(roadmap));
       } catch (error) {
         setError(t('common.error'));
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -120,14 +121,8 @@ const About: FC = () => {
     description: s.description
   }));
 
-  // CMS-driven history timeline
-  const cmsTimeline: Array<{ year: string; title: string; text: string }> | undefined = cmsData?.historySection?.timeline?.map(it => ({
-    year: it.year,
-    title: it.title,
-    text: it.text
-  }));
+  // CMS-driven history flag (default value for showAllHistory)
   const cmsShowAllByDefault = cmsData?.historySection?.showAllByDefault;
-  const effectiveTimeline = cmsTimeline || [];
 
   // Roadmap data from CMS
   const effectiveRoadmap = roadmapData?.items?.map((item) => ({
@@ -185,16 +180,22 @@ const About: FC = () => {
         subtitle={heroData?.subtitle || t('about.hero.subtitle')}
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10">
-          {stats.map((stat, i) => (
-            <div key={i} className="text-center group">
-              <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
-                {stat.number}
+          {loading ? (
+            [0, 1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse h-16 rounded-2xl bg-white/10" />
+            ))
+          ) : (
+            stats.map((stat, i) => (
+              <div key={i} className="text-center group">
+                <div className="text-3xl md:text-4xl font-black font-display text-zenith-crimson group-hover:scale-110 transition-transform duration-300">
+                  {stat.number}
+                </div>
+                <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
+                  {stat.label}
+                </div>
               </div>
-              <div className="text-[10px] text-white/50 uppercase tracking-widest font-black leading-tight">
-                {stat.label}
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </InnerHero>
 
@@ -377,83 +378,6 @@ const About: FC = () => {
             </p>
           </motion.div>
 
-          {/* History Section - TEMPORARILY COMMENTED */}
-          {/* <motion.div 
-            className="mb-20" 
-            initial={{ opacity: 0, y: 30 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }} 
-            transition={{ duration: 0.8 }}
-          >
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">{t('about.history.development')}</h3>
-            
-            {effectiveTimeline.length === 0 ? (
-              <div className="text-center text-gray-400 text-sm">{t('about.history.emptySection')}</div>
-            ) : (() => {
-              const getYear = (s: string) => (s.match(/\d{4}/)?.[0] || s);
-              const items = showAllHistory ? effectiveTimeline : effectiveTimeline.slice(0, VISIBLE_HISTORY_COUNT);
-              const groups: Record<string, typeof timeline> = {} as any;
-              items.forEach((it) => {
-                const y = getYear(it.year);
-                (groups[y] ||= []).push(it);
-              });
-              const ordered = Object.entries(groups);
-              
-              return (
-                <div className="space-y-12">
-                  {ordered.map(([year, list]) => (
-                    <div key={year}>
-                      <div className="relative mb-8">
-                        <div className="h-px bg-gradient-to-r from-transparent via-primary-blue/30 to-transparent" />
-                        <div className="absolute left-1/2 -translate-x-1/2 -top-4 px-6 py-2 rounded-full bg-primary-blue text-white text-lg font-bold shadow-lg">
-                          {year}
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {list.map((item, idx) => (
-                          <motion.div
-                            key={`${year}-${idx}`}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.2 }}
-                            transition={{ duration: 0.5, delay: idx * 0.1 }}
-                            className="group bg-white rounded-2xl p-6"
-                          >
-                            <div className="mb-3 inline-flex items-center gap-2">
-                              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-primary-blue/10 text-primary-blue">
-                                {item.year}
-                              </span>
-                            </div>
-                            <h4 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-primary-blue transition-colors">
-                              {item.title}
-                            </h4>
-                            <p className="text-gray-600 leading-relaxed text-sm">
-                              {item.text}
-                            </p>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-
-                  {timeline.length > VISIBLE_HISTORY_COUNT && (
-                    <div className="text-center pt-8">
-                      <motion.button
-                        onClick={() => setShowAllHistory((v) => !v)}
-                        className="px-8 py-3 rounded-full bg-primary-blue text-white font-medium hover:bg-primary-blue/90 transition-all duration-300 shadow-lg hover:shadow-xl"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        {showAllHistory ? t('about.history.collapse') : t('about.history.showAll')}
-                      </motion.button>
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
-          </motion.div> */}
-
           {/* Roadmap Section with Horizontal Scroll */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -469,7 +393,7 @@ const About: FC = () => {
             {/* Interactive Horizontal Scrollable Roadmap - Full Width */}
             <div className="relative -mx-4 sm:-mx-6 lg:-mx-8">
               {/* Scroll hint */}
-              {effectiveRoadmap.length === 0 ? (
+              {loading ? null : effectiveRoadmap.length === 0 ? (
                 <div className="text-center text-gray-400 text-sm px-4 sm:px-6 lg:px-8">{t('about.roadmap.emptySection')}</div>
               ) : (
                 <div className="flex items-center justify-center gap-2 mb-6 text-sm text-gray-500 px-4 sm:px-6 lg:px-8">
@@ -490,7 +414,13 @@ const About: FC = () => {
                 <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/90 via-white/60 to-transparent z-10 pointer-events-none" />
 
                 {/* Scrollable content */}
-                {effectiveRoadmap.length > 0 && (
+                {loading ? (
+                  <div className="flex gap-6 min-w-max pl-8 pr-24 overflow-hidden">
+                    {[0, 1, 2, 3].map((i) => (
+                      <div key={i} className="min-w-[320px] max-w-[350px] h-64 rounded-3xl bg-gray-100 animate-pulse" />
+                    ))}
+                  </div>
+                ) : effectiveRoadmap.length > 0 && (
                   <div
                     className="roadmap-scroll-container overflow-x-auto pb-4 scrollbar-hide scroll-smooth cursor-grab select-none"
                     style={{ scrollBehavior: 'smooth' }}
@@ -570,9 +500,11 @@ const About: FC = () => {
               {effectiveRoadmap.length > 0 && (
                 <div className="flex justify-center mt-8 gap-3">
                   {effectiveRoadmap.map((_, i) => (
-                    <div
+                    <button
                       key={i}
+                      type="button"
                       className="w-3 h-3 rounded-full bg-primary-blue/20 hover:bg-primary-blue/40 transition-colors cursor-pointer"
+                      aria-label={`${t('about.roadmap.planLabel')} ${i + 1}: ${effectiveRoadmap[i].title}`}
                       title={`${t('about.roadmap.planLabel')} ${i + 1}: ${effectiveRoadmap[i].title}`}
                       onClick={() => scrollToCard(i)}
                     />
@@ -619,6 +551,42 @@ const About: FC = () => {
               {t('about.team.subtitle')}
             </p>
           </motion.div>
+
+          {loading && (
+            <div aria-busy="true" aria-label={t('common.loading', 'Загрузка...')}>
+              {/* Founder/leaders skeleton */}
+              <div className="mb-20">
+                <div className="animate-pulse h-10 w-56 bg-gray-100 rounded-2xl mx-auto mb-12" />
+                <div className="grid grid-cols-1 gap-12">
+                  <div className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-gray-100">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                      <div className="lg:col-span-5">
+                        <div className="w-full max-w-[400px] aspect-[4/5] mx-auto rounded-3xl bg-gray-100 animate-pulse" />
+                      </div>
+                      <div className="lg:col-span-7 space-y-6">
+                        <div className="animate-pulse h-4 w-32 bg-gray-100 rounded-full" />
+                        <div className="animate-pulse h-12 w-3/4 bg-gray-100 rounded-2xl" />
+                        <div className="animate-pulse h-4 w-1/2 bg-gray-100 rounded-full" />
+                        <div className="animate-pulse h-4 w-2/3 bg-gray-100 rounded-full" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Coaches skeleton */}
+              <h3 className="text-3xl md:text-4xl font-black text-zenith-black mb-12 text-center uppercase tracking-tighter break-words [overflow-wrap:anywhere]">{t('about.team.coaches')}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className="bg-white rounded-[2rem] p-8 border border-gray-100">
+                    <div className="w-48 h-48 mx-auto rounded-[2rem] bg-gray-100 animate-pulse mb-8" />
+                    <div className="animate-pulse h-6 w-2/3 mx-auto bg-gray-100 rounded-full mb-4" />
+                    <div className="animate-pulse h-4 w-1/2 mx-auto bg-gray-100 rounded-full" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {
             (cmsData?.teamSection?.leaders && cmsData.teamSection.leaders.length > 0) && (

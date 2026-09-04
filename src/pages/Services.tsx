@@ -3,7 +3,6 @@ import { ChevronDown, Phone, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import Breadcrumbs from '../components/Breadcrumbs';
 import InnerHero from '../components/InnerHero';
 import SEO from '../components/SEO';
 import JsonLd from '../components/JsonLd';
@@ -17,6 +16,7 @@ const Services: FC = () => {
   const [heroData, setHeroData] = useState<CmsHero | null>(null);
   const [homeServicesSection, setHomeServicesSection] = useState<CmsHomePage['servicesSection'] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadCmsData = async () => {
@@ -35,6 +35,8 @@ const Services: FC = () => {
         }
       } catch (error) {
         setError(t('common.error'));
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -103,9 +105,22 @@ const Services: FC = () => {
         </div>
       </InnerHero>
 
-      {homeServicesSection && (
+      {loading ? (
+        <section className="py-32 bg-zenith-white relative overflow-hidden" aria-busy="true" aria-label={t('common.loading', 'Загрузка...')}>
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="mb-32 text-center md:text-right">
+              <div className="animate-pulse h-16 w-64 bg-gray-100 rounded-2xl mx-auto md:ml-auto md:mr-0" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="animate-pulse h-96 rounded-[2.5rem] bg-gray-100" />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : homeServicesSection ? (
         <ServicesSection cmsData={homeServicesSection} />
-      )}
+      ) : null}
 
       <motion.section
         className="py-24 bg-zenith-white relative overflow-hidden"
@@ -177,6 +192,7 @@ const Services: FC = () => {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  aria-expanded={openFaq === idx}
                   className="w-full px-10 py-8 text-left flex justify-between items-center transition-colors"
                 >
                   <span className={`font-black text-xl uppercase tracking-tight transition-colors ${openFaq === idx ? 'text-zenith-crimson' : 'text-zenith-black'}`}>{f.q}</span>

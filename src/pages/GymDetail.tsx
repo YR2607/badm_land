@@ -9,6 +9,10 @@ import Breadcrumbs from '../components/Breadcrumbs'
 import SEO from '../components/SEO'
 import JsonLd from '../components/JsonLd'
 
+// SEO/OG images must be absolute URLs — social crawlers don't resolve relative paths
+const toAbsoluteUrl = (url?: string): string | undefined =>
+  url ? (url.startsWith('http') ? url : `https://altius.md${url.startsWith('/') ? '' : '/'}${url}`) : undefined;
+
 const GymDetail: FC = () => {
   const { slug } = useParams<{ slug: string }>()
   const { t } = useTranslation()
@@ -63,7 +67,7 @@ const GymDetail: FC = () => {
       <SEO
         title={`${gym.name} | Altius`}
         description={gym.description || gym.badge || t('gyms.heroSubtitle', 'Современные залы с профессиональным оборудованием')}
-        image={gym.heroImage || (gym.gallery && gym.gallery[0]) || 'https://altius.md/og-gym.jpg'}
+        image={toAbsoluteUrl(gym.heroImage || (gym.gallery && gym.gallery[0])) || 'https://altius.md/og-gym.jpg'}
       />
       <JsonLd
         data={{
@@ -78,7 +82,7 @@ const GymDetail: FC = () => {
             "addressLocality": "Chișinău",
             "addressCountry": "MD"
           } : undefined,
-          "image": [gym.heroImage || (gym.gallery && gym.gallery[0])].filter(Boolean)
+          "image": [toAbsoluteUrl(gym.heroImage || (gym.gallery && gym.gallery[0]))].filter(Boolean)
         }}
       />
 

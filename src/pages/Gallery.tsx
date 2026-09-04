@@ -4,7 +4,6 @@ import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '.
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import { Image as ImageIcon, Video as VideoIcon, X, ArrowLeft, ArrowRight, Trophy, Search, RotateCcw, Maximize2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import Breadcrumbs from '../components/Breadcrumbs';
 import InnerHero from '../components/InnerHero';
 import SEO from '../components/SEO';
 import JsonLd from '../components/JsonLd';
@@ -183,7 +182,7 @@ const Gallery: FC = () => {
                   href={`#${s.id}`}
                   className={`inline-flex items-center gap-3 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${activeSection === s.id
                     ? 'bg-zenith-black text-white shadow-lg shadow-zenith-black/20'
-                    : 'text-gray-400 hover:text-zenith-crimson hover:bg-gray-50'
+                    : 'text-gray-600 hover:text-zenith-crimson hover:bg-gray-50'
                     }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -556,6 +555,7 @@ const Gallery: FC = () => {
           <button
             className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[140]"
             onClick={closeLightbox}
+            aria-label={t('gallery.close')}
           >
             <X className="w-5 h-5" />
           </button>
@@ -567,12 +567,14 @@ const Gallery: FC = () => {
           <button
             className="absolute left-4 md:left-12 w-14 h-14 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[140]"
             onClick={(e) => { e.stopPropagation(); prevItem(); }}
+            aria-label={t('gallery.prev')}
           >
             <ArrowLeft className="w-7 h-7" />
           </button>
           <button
             className="absolute right-4 md:right-12 w-14 h-14 bg-white/10 hover:bg-zenith-crimson text-white rounded-full flex items-center justify-center transition-all shadow-2xl z-[140]"
             onClick={(e) => { e.stopPropagation(); nextItem(); }}
+            aria-label={t('gallery.next')}
           >
             <ArrowRight className="w-7 h-7" />
           </button>

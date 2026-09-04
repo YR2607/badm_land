@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -75,10 +74,7 @@ const Header: React.FC = () => {
               >
                 {item.label}
                 {isActive(item.path) && (
-                  <motion.div
-                    layoutId="nav-underline"
-                    className="absolute -bottom-2 left-0 right-0 h-1 bg-zenith-crimson rounded-full"
-                  />
+                  <div className="absolute -bottom-2 left-0 right-0 h-1 bg-zenith-crimson rounded-full transition-all duration-300" />
                 )}
               </Link>
             ))}
@@ -99,33 +95,31 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.nav
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="xl:hidden bg-white border-b border-gray-100 shadow-2xl overflow-hidden"
-          >
-            <div className="px-6 py-10 space-y-6">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`block text-2xl font-black uppercase tracking-tighter transition-colors ${isActive(item.path) ? 'text-zenith-crimson' : 'text-zenith-black hover:text-zenith-crimson'}`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <div className="pt-8 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{t('navigation.languageSelect')}</span>
-                <LanguageSwitcher />
-              </div>
-            </div>
-          </motion.nav>
-        )}
-      </AnimatePresence>
+      <nav
+        aria-hidden={!isMenuOpen}
+        className={`xl:hidden bg-white border-b border-gray-100 shadow-2xl overflow-hidden transition-all duration-300 ease-out ${
+          isMenuOpen
+            ? 'opacity-100 translate-y-0 visible'
+            : 'opacity-0 -translate-y-5 invisible pointer-events-none'
+        }`}
+      >
+        <div className="px-6 py-10 space-y-6">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`block text-2xl font-black uppercase tracking-tighter transition-colors ${isActive(item.path) ? 'text-zenith-crimson' : 'text-zenith-black hover:text-zenith-crimson'}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className="pt-8 border-t border-gray-100 flex justify-between items-center">
+            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{t('navigation.languageSelect')}</span>
+            <LanguageSwitcher />
+          </div>
+        </div>
+      </nav>
     </header>
   );
 };

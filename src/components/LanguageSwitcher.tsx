@@ -1,6 +1,6 @@
 import { FC, useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDownIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+import { ChevronDown, Globe } from 'lucide-react';
 
 const languages = [
   { code: 'ro', name: 'Română', flag: '🇷🇴' },
@@ -39,10 +39,10 @@ const LanguageSwitcher: FC = () => {
         aria-label={i18n.t('navigation.languageSelect')}
         className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-blue transition-colors duration-200 rounded-lg hover:bg-gray-50"
       >
-        <GlobeAltIcon className="w-4 h-4" />
+        <Globe className="w-4 h-4" />
         <span className="hidden sm:inline">{currentLanguage.flag}</span>
         <span className="hidden md:inline">{currentLanguage.name}</span>
-        <ChevronDownIcon className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (

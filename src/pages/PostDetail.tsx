@@ -16,6 +16,10 @@ const LOCALE_MAP: Record<string, string> = {
   ro: 'ro-RO',
 };
 
+// SEO/OG images must be absolute URLs — social crawlers don't resolve relative paths
+const toAbsoluteUrl = (url?: string): string | undefined =>
+  url ? (url.startsWith('http') ? url : `https://altius.md${url.startsWith('/') ? '' : '/'}${url}`) : undefined;
+
 const PostDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { t, i18n } = useTranslation();
@@ -64,7 +68,7 @@ const PostDetail: React.FC = () => {
       <SEO
         title={post.title}
         description={post.excerpt || ''}
-        image={post.image || 'https://altius.md/og-post.jpg'}
+        image={toAbsoluteUrl(post.image) || 'https://altius.md/og-post.jpg'}
         type="article"
         author={post.author || 'Altius Badminton Club'}
         publishedTime={post.date}
@@ -75,7 +79,7 @@ const PostDetail: React.FC = () => {
         "@type": "Article",
         "headline": post.title,
         "description": post.excerpt || '',
-        "image": post.image || 'https://altius.md/og-post.jpg',
+        "image": toAbsoluteUrl(post.image) || 'https://altius.md/og-post.jpg',
         "datePublished": post.date,
         "dateModified": post.date,
         "author": {

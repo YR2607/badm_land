@@ -193,7 +193,10 @@
     "video": "Videoclipuri",
     "photosComingSoon": "Fotografiile vor fi disponibile în curând",
     "videosComingSoon": "Videoclipurile vor fi disponibile în curând",
-    "showMore": "Arată Mai Mult"
+    "showMore": "Arată Mai Mult",
+    "close": "Închide",
+    "prev": "Anterior",
+    "next": "Următor"
   },
   "news": {
     "hero": {
@@ -286,7 +289,8 @@
     "loadingPosts": "Se încarcă postările",
     "noContent": "Conținut indisponibil",
     "tiktokLabel": "TikTok",
-    "facebookLabel": "Facebook"
+    "facebookLabel": "Facebook",
+    "close": "Închide"
   },
   "breadcrumbs": {
     "navigation": "Navigare breadcrumbs",

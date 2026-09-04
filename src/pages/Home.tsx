@@ -13,6 +13,7 @@ const Home: FC = () => {
   const { t, i18n } = useTranslation();
   const [cmsData, setCmsData] = useState<CmsHomePage | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadCmsData = async () => {
@@ -24,6 +25,8 @@ const Home: FC = () => {
       } catch (error) {
         // Set error state for user feedback
         setError(t('common.error'));
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -64,11 +67,60 @@ const Home: FC = () => {
           "logo": "https://altius.md/altLGOO.jpg"
         }}
       />
-      <Hero cmsData={cmsData?.hero} />
-      <AchievementsSection cmsData={cmsData?.achievementsSection} />
-      <ServicesSection cmsData={cmsData?.servicesSection} />
-      <SocialMediaHubLive />
-      <BusinessNewsSection />
+      {loading ? (
+        <div aria-busy="true" aria-label={t('common.loading', 'Загрузка...')}>
+          {/* Hero skeleton */}
+          <section className="relative h-screen flex items-center justify-center overflow-hidden bg-zenith-black">
+            <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 text-center w-full">
+              <div className="animate-pulse h-6 w-48 bg-white/10 rounded-full mx-auto mb-12" />
+              <div className="animate-pulse h-28 md:h-40 w-3/4 max-w-4xl bg-white/10 rounded-2xl mx-auto mb-8" />
+              <div className="animate-pulse h-16 w-64 bg-zenith-crimson/20 rounded-2xl mx-auto mb-12 -skew-x-12" />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10 max-w-5xl mx-auto">
+                {[0, 1, 2, 3].map((i) => (
+                  <div key={i} className="animate-pulse h-16 rounded-2xl bg-white/10" />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Achievements skeleton */}
+          <section className="py-32 bg-zenith-white overflow-hidden">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="mb-24">
+                <div className="animate-pulse h-16 w-72 bg-gray-100 rounded-2xl" />
+                <div className="animate-pulse w-32 h-4 bg-zenith-crimson/20 mt-8" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 min-h-[600px]">
+                {[0, 1, 2, 3].map((i) => (
+                  <div key={i} className="animate-pulse h-72 rounded-[2.5rem] bg-gray-100" />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Services skeleton */}
+          <section className="py-32 bg-zenith-white relative overflow-hidden">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+              <div className="mb-32 text-center md:text-right">
+                <div className="animate-pulse h-16 w-64 bg-gray-100 rounded-2xl mx-auto md:ml-auto md:mr-0" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className="animate-pulse h-96 rounded-[2.5rem] bg-gray-100" />
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+      ) : (
+        <>
+          <Hero cmsData={cmsData?.hero} />
+          <AchievementsSection cmsData={cmsData?.achievementsSection} />
+          <ServicesSection cmsData={cmsData?.servicesSection} />
+          <SocialMediaHubLive />
+          <BusinessNewsSection />
+        </>
+      )}
     </div>
   );
 };

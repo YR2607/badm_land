@@ -111,7 +111,7 @@ const Footer: React.FC = () => {
                     <MapPin size={20} />
                   </div>
                   <div>
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.address', 'Адрес')}</span>
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/60 mb-1">{t('footer.labels.address', 'Адрес')}</span>
                     <span className="text-lg font-bold text-zenith-black">{cmsAddress}</span>
                   </div>
                 </li>
@@ -122,7 +122,7 @@ const Footer: React.FC = () => {
                     <Phone size={20} />
                   </div>
                   <div>
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.phone', 'Телефон')}</span>
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/60 mb-1">{t('footer.labels.phone', 'Телефон')}</span>
                     <span className="text-lg font-bold text-zenith-black">{cmsPhone}</span>
                   </div>
                 </li>
@@ -132,7 +132,7 @@ const Footer: React.FC = () => {
                     <Clock size={20} />
                   </div>
                   <div>
-                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/30 mb-1">{t('footer.labels.workingHours', 'Часы работы')}</span>
+                    <span className="block text-[10px] font-black uppercase tracking-widest text-zenith-black/60 mb-1">{t('footer.labels.workingHours', 'Часы работы')}</span>
                     <div className="text-lg font-bold text-zenith-black leading-tight">
                       {workingHours ? (
                         <div className="whitespace-pre-line">{workingHours}</div>

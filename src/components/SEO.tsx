@@ -76,6 +76,9 @@ const SEO = ({
     updateMetaTag('og:locale:alternate', 'en_US', true);
     updateMetaTag('og:locale:alternate', 'ro_RO', true);
 
+    // Remove stale property-based twitter tags (pre-fix duplicates)
+    document.querySelectorAll('meta[property^="twitter:"]').forEach(el => el.remove());
+
     // Twitter Card tags
     updateMetaTag('twitter:card', 'summary_large_image');
     updateMetaTag('twitter:title', title);

@@ -1,4 +1,3 @@
-import { createClient } from '@sanity/client';
 import { cmsCache } from './cache';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 
@@ -9,18 +8,24 @@ const dataset = import.meta.env.VITE_SANITY_DATASET as string | undefined;
 const apiVersion = import.meta.env.VITE_SANITY_API_VERSION as string | undefined;
 const useCdn = false; // Отключаем CDN для получения свежих данных
 
-const client = createClient({ projectId, dataset, apiVersion, useCdn });
+// Lazy-load @sanity/client to keep it out of the initial bundle
+let _client: any = null;
+async function getClient() {
+  if (_client) return _client;
+  const { createClient } = await import('@sanity/client');
+  _client = createClient({ projectId, dataset, apiVersion, useCdn });
+  return _client;
+}
 
-export { client };
 export const isCmsEnabled = Boolean(projectId && dataset && apiVersion);
 
 export type CmsImage = { url: string; alt?: string };
 export type CmsMedia = { type: 'image' | 'video'; url: string; alt?: string };
 
 export async function fetchGallerySections(): Promise<Record<string, string[]>> {
-  if (!client) return {};
+  if (!isCmsEnabled) return {};
   const query = groq`*[_type == "gallerySection"]{ key, "images": images[].asset->url }`;
-  const list = await client.fetch(query);
+  const list = await (await getClient()).fetch(query);
   const result: Record<string, string[]> = { hall: [], coaches: [], trainings: [] };
   (list || []).forEach((it: any) => {
     if (it?.key && result[it.key] !== undefined) {
@@ -43,7 +48,7 @@ export async function fetchContactInfo(): Promise<CmsContactInfo | null> {
     if (cached) return cached;
   }
   try {
-    const data = await client.fetch(groq`*[_type == "contactInfo"][0]{ title, description, contacts[]{ type, label, value, icon } }`);
+    const data = await (await getClient()).fetch(groq`*[_type == "contactInfo"][0]{ title, description, contacts[]{ type, label, value, icon } }`);
     if (data && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, data);
     return applyCmsDevMarkers(data || null);
   } catch {
@@ -106,7 +111,7 @@ export async function fetchGymsHero(lang: string = 'ru'): Promise<CmsHero | null
     if (cached) return cached;
   }
   try {
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "gymsHero"][0]{
         content{
           badge{icon, "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)},
@@ -132,7 +137,7 @@ export async function fetchContactHero(lang: string = 'ru'): Promise<CmsHero | n
     if (cached) return cached;
   }
   try {
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "contactHero"][0]{
         content{
           badge{icon, "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)},
@@ -162,7 +167,7 @@ export type TournamentCategoryCms = {
 };
 
 export async function fetchTournamentCategories(): Promise<TournamentCategoryCms[]> {
-  if (!client) return [];
+  if (!isCmsEnabled) return [];
   const query = groq`*[_type == "tournamentCategory"] | order(coalesce(year, 0) desc, _createdAt desc){
     "id": slug.current,
     name,
@@ -173,7 +178,7 @@ export async function fetchTournamentCategories(): Promise<TournamentCategoryCms
     "photos": photos[].asset->url,
     "videos": videos[].asset->url
   }`;
-  const list = await client.fetch(query);
+  const list = await (await getClient()).fetch(query);
   return (list || []).map((i: any) => ({
     id: i.id,
     name: i.name,
@@ -183,58 +188,6 @@ export async function fetchTournamentCategories(): Promise<TournamentCategoryCms
     photos: i.photos || [],
     videos: i.videos || [],
   }));
-}
-
-export type CmsPost = {
-  id: string;
-  title: string;
-  excerpt: string;
-  image?: string;
-  date: string;
-  category: 'news' | 'world' | 'event';
-  author?: string;
-  featured?: boolean;
-};
-
-export async function fetchPosts(): Promise<CmsPost[]> {
-  const cacheKey = 'posts';
-
-  // В development режиме пропускаем кэш для получения свежих данных
-  if (process.env.NODE_ENV !== 'development') {
-    const cached = cmsCache.get<CmsPost[]>(cacheKey);
-    if (cached) {
-      return cached;
-    }
-  }
-
-  try {
-    const posts = await client.fetch(`
-      *[_type == "post"] | order(coalesce(date, _createdAt) desc) {
-        "id": slug.current,
-        title,
-        excerpt,
-        "image": image.asset->url,
-        "date": coalesce(date, _createdAt),
-        // Возвращаем строковый слаг категории или строковое поле category, иначе 'news'
-        "category": select(defined(category->slug.current) => category->slug.current, defined(category) => category, "news"),
-        // Имя автора из ссылки или строковое поле author, иначе null
-        "author": select(defined(author->name) => author->name, defined(author) => author, null),
-        featured
-      }
-    `);
-
-    const result = posts || [];
-
-    // Кэшируем только в production с коротким TTL для динамического контента
-    if (process.env.NODE_ENV !== 'development') {
-      cmsCache.set(cacheKey, result, 2 * 60 * 1000); // 2 minutes
-    }
-
-    return result;
-  } catch (error) {
-    // silence console in dev to keep clean
-    return [];
-  }
 }
 
 export async function fetchPostBySlug(slug: string): Promise<any | null> {
@@ -249,7 +202,7 @@ export async function fetchPostBySlug(slug: string): Promise<any | null> {
   }
 
   try {
-    const post = await client.fetch(`
+    const post = await (await getClient()).fetch(`
       *[_type == "post" && slug.current == $slug][0] {
         _id,
         title,
@@ -275,66 +228,6 @@ export async function fetchPostBySlug(slug: string): Promise<any | null> {
     // silence console in dev
     return null;
   }
-}
-
-export type CmsPage = {
-  slug: string;
-  title: string;
-  heroTitle?: string;
-  heroSubtitle?: string;
-  heroImage?: string;
-  sections?: Array<{ heading?: string; body?: any[] }>;
-};
-
-export async function fetchPageBySlug(slug: string): Promise<CmsPage | null> {
-  const cacheKey = `page-${slug}`;
-
-  // В development режиме пропускаем кэш для получения свежих данных
-  if (process.env.NODE_ENV !== 'development') {
-    const cached = cmsCache.get<CmsPage>(cacheKey);
-    if (cached) {
-      return cached;
-    }
-  }
-
-  if (!client) return null;
-
-  try {
-    const query = groq`*[_type == "page" && slug.current == $slug][0]{
-      "slug": slug.current,
-      title,
-      heroTitle,
-      heroSubtitle,
-      "heroImage": heroImage.asset->url,
-      sections[]{ heading, body }
-    }`;
-    const page = await client.fetch(query, { slug });
-
-    // Кэшируем только в production
-    if (page && process.env.NODE_ENV !== 'development') {
-      cmsCache.set(cacheKey, page);
-    }
-
-    return page || null;
-  } catch (error) {
-    // silence console in dev
-    return null;
-  }
-}
-
-export type CmsAlbum = { id: string; title: string; sectionSlug: string; cover?: string; images: string[] };
-
-export async function fetchGalleryAlbums(): Promise<CmsAlbum[]> {
-  if (!client) return [];
-  const query = groq`*[_type == "galleryAlbum"] | order(_createdAt desc) {
-    "id": slug.current,
-    title,
-    "sectionSlug": section->slug.current,
-    "cover": cover.asset->url,
-    "images": images[].asset->url
-  }`;
-  const albums = await client.fetch(query);
-  return albums as CmsAlbum[];
 }
 
 export interface CmsHomePage {
@@ -397,7 +290,7 @@ export const fetchHomePage = async (lang: string = 'ru'): Promise<CmsHomePage | 
   }
 
   try {
-    const data = await client.fetch(`
+    const data = await (await getClient()).fetch(`
       *[_type == "homePage"][0] {
         title,
         hero {
@@ -571,7 +464,7 @@ export const fetchAboutPage = async (lang: string = 'ru'): Promise<CmsAboutPage 
   }
 
   try {
-    const data = await client.fetch(`
+    const data = await (await getClient()).fetch(`
       *[_type == "aboutPage"][0] {
         title,
         hero {
@@ -718,7 +611,7 @@ export const fetchServicesPage = async (lang: string = 'ru'): Promise<CmsService
   }
 
   try {
-    const data = await client.fetch(`
+    const data = await (await getClient()).fetch(`
       *[_type == "servicesPage"][0] {
         hero {
           "title": select($lang=="en" && defined(title_en)=>title_en, $lang=="ro" && defined(title_ro)=>title_ro, title),
@@ -817,7 +710,7 @@ export const fetchGyms = async (lang: string = 'ru'): Promise<CmsGym[]> => {
     }
   }
 
-  if (!client) return [];
+  if (!isCmsEnabled) return [];
 
   try {
     const query = groq`*[_type == "gym"] | order(_createdAt asc) {
@@ -868,7 +761,7 @@ export const fetchGyms = async (lang: string = 'ru'): Promise<CmsGym[]> => {
         "photo": photo.asset->url
       }
     }`;
-    const gyms = await client.fetch(query, { lang });
+    const gyms = await (await getClient()).fetch(query, { lang });
     const result = applyCmsDevMarkers(gyms || []);
 
     // Кэшируем только в production
@@ -894,7 +787,7 @@ export const fetchGymBySlug = async (slug: string, lang: string = 'ru'): Promise
     }
   }
 
-  if (!client) return null;
+  if (!isCmsEnabled) return null;
 
   try {
     const query = groq`*[_type == "gym" && slug.current == $slug][0] {
@@ -945,7 +838,7 @@ export const fetchGymBySlug = async (slug: string, lang: string = 'ru'): Promise
         "photo": photo.asset->url
       }
     }`;
-    const gym = await client.fetch(query, { slug, lang });
+    const gym = await (await getClient()).fetch(query, { slug, lang });
 
     // Кэшируем только в production
     if (gym && process.env.NODE_ENV !== 'development') {
@@ -959,12 +852,10 @@ export const fetchGymBySlug = async (slug: string, lang: string = 'ru'): Promise
   }
 };
 
-export const sanityClient = client;
-
 // --- Standalone fetchers for fallback usage ---
 export async function fetchTrainers(lang: string = 'ru'): Promise<CmsTrainer[]> {
   try {
-    const list = await client.fetch(
+    const list = await (await getClient()).fetch(
       groq`*[_type == "trainer"] | order(_createdAt asc) {
         "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
         role,
@@ -982,33 +873,9 @@ export async function fetchTrainers(lang: string = 'ru'): Promise<CmsTrainer[]> 
   }
 }
 
-export async function fetchFounder(lang: string = 'ru'): Promise<CmsFounder | null> {
-  try {
-    const data = await client.fetch(
-      groq`*[_type == "founder"][0]{
-        "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
-        "role": select($lang=="en" && defined(role_en)=>role_en, $lang=="ro" && defined(role_ro)=>role_ro, role),
-        experience,
-        "achievements": select($lang=="en" && defined(achievements_en)=>achievements_en, $lang=="ro" && defined(achievements_ro)=>achievements_ro, achievements),
-        "description": select($lang=="en" && defined(description_en)=>description_en, $lang=="ro" && defined(description_ro)=>description_ro, description),
-        "quote": select($lang=="en" && defined(quote_en)=>quote_en, $lang=="ro" && defined(quote_ro)=>quote_ro, quote),
-        stats[]{
-          "label": select($lang=="en" && defined(label_en)=>label_en, $lang=="ro" && defined(label_ro)=>label_ro, label),
-          value
-        },
-        "photo": photo.asset->url
-      }`,
-      { lang }
-    );
-    return data || null;
-  } catch {
-    return null;
-  }
-}
-
 export async function fetchAllFounders(lang: string = 'ru'): Promise<CmsFounder[]> {
   try {
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "founder"] | order(sortOrder asc, _createdAt asc) {
         "name": select($lang=="en" && defined(name_en)=>name_en, $lang=="ro" && defined(name_ro)=>name_ro, name),
         "role": select($lang=="en" && defined(role_en)=>role_en, $lang=="ro" && defined(role_ro)=>role_ro, role),
@@ -1041,7 +908,7 @@ export async function fetchClubEmbeds(): Promise<any[]> {
     }
   }
 
-  if (!client) return [];
+  if (!isCmsEnabled) return [];
 
   try {
     const query = groq`*[_type == "clubEmbed"] | order(publishedAt desc) {
@@ -1053,7 +920,7 @@ export async function fetchClubEmbeds(): Promise<any[]> {
       "cover": cover.asset->url,
       coverUrl
     }`;
-    const embeds = await client.fetch(query);
+    const embeds = await (await getClient()).fetch(query);
     const result = applyCmsDevMarkers(embeds || []);
 
     // Кэшируем только в production
@@ -1083,7 +950,7 @@ export async function fetchAboutHero(lang: string = 'ru'): Promise<CmsHero | nul
     if (cached) return cached;
   }
   try {
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "aboutHero"][0]{
         content{
           badge{icon, "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)},
@@ -1109,7 +976,7 @@ export async function fetchAboutTabs(lang: string = 'ru'): Promise<any> {
     if (cached) return cached;
   }
   try {
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "aboutTabs"][0]{
         "title": title,
         "subtitle": subtitle,
@@ -1130,31 +997,6 @@ export async function fetchAboutTabs(lang: string = 'ru'): Promise<any> {
   }
 }
 
-export async function fetchNavigation(lang: string = 'ru'): Promise<any> {
-  const cacheKey = `navigation-${lang}`;
-  if (process.env.NODE_ENV !== 'development') {
-    const cached = cmsCache.get<any>(cacheKey);
-    if (cached) return cached;
-  }
-  try {
-    const data = await client.fetch(
-      groq`*[_type == "navigation"][0]{
-        menuItems[]{
-          key,
-          "label": select($lang=="en" && defined(label_en)=>label_en, $lang=="ro" && defined(label_ro)=>label_ro, label),
-          path,
-          order
-        }
-      }`,
-      { lang }
-    );
-    if (data && process.env.NODE_ENV !== 'development') cmsCache.set(cacheKey, data);
-    return data || null;
-  } catch {
-    return null;
-  }
-}
-
 export async function fetchFooter(lang: string = 'ru'): Promise<any> {
   const cacheKey = `footer-${lang}`;
   if (process.env.NODE_ENV !== 'development') {
@@ -1162,7 +1004,7 @@ export async function fetchFooter(lang: string = 'ru'): Promise<any> {
     if (cached) return cached;
   }
   try {
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "footer"][0]{
         brandName,
         "logo": logo.asset->url,
@@ -1196,7 +1038,7 @@ export async function fetchServicesHero(lang: string = 'ru'): Promise<CmsHero | 
     if (cached) return cached;
   }
   try {
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "servicesHero"][0]{
         content{
           badge{icon, "text": select($lang=="en" && defined(text_en)=>text_en, $lang=="ro" && defined(text_ro)=>text_ro, text)},
@@ -1232,7 +1074,7 @@ export async function fetchGymsPageLabels(lang: string = 'ru'): Promise<CmsGymsP
     if (cached) return cached;
   }
   try {
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "gymsPage"][0]{
         labels{
           "signUpButton": select($lang=="en" && defined(signUpButton_en)=>signUpButton_en, $lang=="ro" && defined(signUpButton_ro)=>signUpButton_ro, signUpButton),
@@ -1284,7 +1126,7 @@ export async function fetchAboutStrategy(lang: string = 'ru'): Promise<CmsAboutS
   }
   try {
     const suffix = lang === 'ru' ? '' : `_${lang}`;
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "aboutStrategy"][0]{
         "mission": {
           "title": mission_title${suffix},
@@ -1339,7 +1181,7 @@ export async function fetchAboutRoadmap(lang: string = 'ru'): Promise<CmsAboutRo
   }
   try {
     const suffix = lang === 'ru' ? '' : `_${lang}`;
-    const data = await client.fetch(
+    const data = await (await getClient()).fetch(
       groq`*[_type == "aboutRoadmap"][0]{
         "title": title${suffix},
         "subtitle": subtitle${suffix},

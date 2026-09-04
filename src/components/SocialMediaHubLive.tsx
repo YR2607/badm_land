@@ -86,7 +86,6 @@ const FacebookIcon: FC<{ className?: string }> = ({ className }) => (
 // TikTok Embed Component - uses real TikTok embed
 const TikTokEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
   const { t } = useTranslation()
-  const containerRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -143,7 +142,7 @@ const TikTokEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
           </a>
         </div>
 
-        <div ref={containerRef} className="bg-white rounded-b-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] p-8 flex-1 flex flex-col justify-center border-x border-b border-gray-100">
+        <div className="bg-white rounded-b-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] p-8 flex-1 flex flex-col justify-center border-x border-b border-gray-100">
           {loading && (
             <div className="flex flex-col items-center justify-center gap-4 py-12">
               <div className="w-12 h-12 border-4 border-zenith-black/5 border-t-zenith-crimson rounded-full animate-spin" />
@@ -235,6 +234,7 @@ const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
           >
             <button
               onClick={() => setSelectedVideo(null)}
+              aria-label={t('socialHub.close')}
               className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-zenith-crimson transition-colors z-10"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

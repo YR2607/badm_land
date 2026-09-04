@@ -6,7 +6,6 @@ import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import JsonLd from '../components/JsonLd';
-import Breadcrumbs from '../components/Breadcrumbs';
 import InnerHero from '../components/InnerHero';
 
 const Contact: FC = () => {
@@ -14,17 +13,25 @@ const Contact: FC = () => {
   const [heroData, setHeroData] = useState<CmsHero | null>(null);
   const [contactCms, setContactCms] = useState<CmsContactInfo | null>(null);
   const [contactGyms, setContactGyms] = useState<CmsContactGymCard[]>([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
-      if (!isCmsEnabled) return;
-      const [hero, contactInfo, gymsCards] = await Promise.all([
-        fetchContactHero(i18n.language as string),
-        fetchContactInfo(),
-        fetchContactGymsCards(i18n.language as string)
-      ]);
-      if (hero) setHeroData(addCmsDevMarkers(hero));
-      if (contactInfo) setContactCms(addCmsDevMarkers(contactInfo));
-      if (gymsCards?.length) setContactGyms(addCmsDevMarkers(gymsCards));
+      if (!isCmsEnabled) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const [hero, contactInfo, gymsCards] = await Promise.all([
+          fetchContactHero(i18n.language as string),
+          fetchContactInfo(),
+          fetchContactGymsCards(i18n.language as string)
+        ]);
+        if (hero) setHeroData(addCmsDevMarkers(hero));
+        if (contactInfo) setContactCms(addCmsDevMarkers(contactInfo));
+        if (gymsCards?.length) setContactGyms(addCmsDevMarkers(gymsCards));
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [i18n.language]);
 
@@ -89,10 +96,13 @@ const Contact: FC = () => {
       <section className="py-24 bg-zenith-white">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" role="list" aria-label={t('contact.info.title', 'Полезная информация')}>
-            {contactInfo.length === 0 && (
+            {loading && [0, 1, 2].map((i) => (
+              <div key={i} className="animate-pulse rounded-[2.5rem] bg-gray-100 h-64" />
+            ))}
+            {!loading && contactInfo.length === 0 && (
               <div className="col-span-full text-center text-gray-400">{t('contact.emptySection')}</div>
             )}
-            {contactInfo.map((info, index) => (
+            {!loading && contactInfo.map((info, index) => (
               <motion.div
                 key={index}
                 className="group relative bg-white rounded-[2.5rem] p-10 text-center shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border-2 border-transparent hover:border-zenith-crimson/20 transition-all duration-500 overflow-hidden h-full"
@@ -122,7 +132,10 @@ const Contact: FC = () => {
       <section className="py-24 bg-zenith-white">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {contactGyms.map((g, idx) => (
+            {loading && [0, 1, 2].map((i) => (
+              <div key={i} className="animate-pulse rounded-[2.5rem] bg-gray-100 h-96" />
+            ))}
+            {!loading && contactGyms.map((g, idx) => (
               <motion.div key={g.id || idx} initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: idx * 0.1 }}>
                 <div className="h-full bg-white rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden flex flex-col group hover:border-zenith-crimson/20 transition-all duration-500">
                   <div className="p-10 flex flex-col h-full">

@@ -76,7 +76,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
           <div className="w-32 h-4 bg-zenith-crimson mt-8" />
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 min-h-[600px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 min-h-[600px]">
           {achievements.map((item, index) => (
             <motion.div
               key={index}

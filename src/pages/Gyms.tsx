@@ -1,6 +1,6 @@
 import { useState, useEffect, type FC } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Clock, ArrowLeft, CheckCircle, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fetchGyms, type CmsGym, fetchGymsHero, type CmsHero, fetchGymsPageLabels, type CmsGymsPageLabels } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
@@ -15,7 +15,6 @@ const Gyms: FC = () => {
   const [cmsGyms, setCmsGyms] = useState<CmsGym[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedGym, setSelectedGym] = useState<CmsGym | null>(null);
   const [filter, setFilter] = useState<'all' | 'children' | 'adults'>('all');
   const [heroData, setHeroData] = useState<CmsHero | null>(null);
   const [labels, setLabels] = useState<CmsGymsPageLabels | null>(null);
@@ -69,11 +68,6 @@ const Gyms: FC = () => {
     if (filter === 'adults') return gym.hasAdults;
     return true;
   });
-
-  const handleGymSelect = (gymId: string) => {
-    const gym = gyms.find(g => g.id === gymId);
-    setSelectedGym(gym || null);
-  };
 
   if (loading) {
     return (
@@ -167,20 +161,18 @@ const Gyms: FC = () => {
             </div>
           </div>
 
-          {/* Gym Selection or Detail View */}
-          {!selectedGym ? (
-            <>
+          {/* Gym Selection Cards */}
+          <>
               {/* Gym Selection Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                 {filteredGyms.map((gym, index) => (
                   <motion.div
                     key={gym.id}
-                    className="group relative bg-white rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.15)] border-2 border-transparent hover:border-zenith-crimson/20 overflow-hidden transition-all duration-500 cursor-pointer"
+                    className="group relative bg-white rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.15)] border-2 border-transparent hover:border-zenith-crimson/20 overflow-hidden transition-all duration-500"
                     initial={{ opacity: 0, scale: 0.95, y: 30 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1, type: "spring", stiffness: 100 }}
                     whileHover={{ y: -8 }}
-                    onClick={() => handleGymSelect(gym.id)}
                   >
 
                     <div className="relative h-64 overflow-hidden">
@@ -245,220 +237,6 @@ const Gyms: FC = () => {
                 </motion.div>
               )}
             </>
-          ) : (
-            /* Detailed Gym View */
-            selectedGym && (
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="space-y-12"
-              >
-                {/* Back Button */}
-                <button
-                  onClick={() => setSelectedGym(null)}
-                  className="flex items-center gap-3 text-zenith-black hover:text-zenith-crimson transition-all font-black uppercase tracking-widest text-xs group"
-                >
-                  <div className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center group-hover:border-zenith-crimson group-hover:bg-zenith-crimson group-hover:text-white transition-all">
-                    <ArrowLeft className="w-4 h-4" />
-                  </div>
-                  {t('gyms.backToSelection')}
-                </button>
-
-                {/* Gym Header */}
-                <div className="relative h-[400px] md:h-[500px] rounded-[3rem] overflow-hidden shadow-2xl border-2 border-white">
-                  <img
-                    src={selectedGym.heroImage || selectedGym.gallery?.[0] || '/images/gym-placeholder.jpg'}
-                    alt={selectedGym.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-zenith-black via-zenith-black/20 to-transparent" />
-                  <div className="absolute bottom-12 left-12 right-12 text-white">
-                    <div className="inline-block px-6 py-2 rounded-full bg-zenith-crimson text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-xl">
-                      {selectedGym.badge}
-                    </div>
-                    <h1 className="text-5xl md:text-7xl font-black font-display uppercase tracking-tighter mb-4 leading-none">{selectedGym.name}</h1>
-                    <p className="text-xl md:text-2xl text-gray-200 font-medium max-w-3xl leading-relaxed">{selectedGym.description}</p>
-                  </div>
-                </div>
-
-                {/* Main Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                  {/* Left Column - Schedule & Pricing */}
-                  <div className="lg:col-span-2 space-y-12">
-                    {/* Schedule */}
-                    <div className="bg-white rounded-[2.5rem] p-10 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-gray-100">
-                      <div className="flex items-center gap-4 mb-10">
-                        <div className="w-14 h-14 bg-zenith-black text-white flex items-center justify-center rounded-2xl shadow-lg">
-                          <Clock className="w-7 h-7" />
-                        </div>
-                        <h2 className="text-4xl font-black font-display text-zenith-black uppercase tracking-tight">
-                          {t('gyms.schedule.title')}
-                        </h2>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {selectedGym.schedule?.children && (
-                          <div className="p-8 rounded-[2rem] bg-gray-50 border-t-4 border-zenith-crimson/30 hover:bg-white transition-colors hover:shadow-xl group">
-                            <h3 className="text-xl font-black font-display text-zenith-black mb-4 uppercase tracking-tight flex items-center gap-3">
-                              <span className="text-2xl">👨‍👩‍👧‍👦</span>
-                              {selectedGym.schedule?.children?.title}
-                            </h3>
-                            <div className="text-3xl font-black font-display text-zenith-crimson mb-4 leading-none">
-                              {selectedGym.schedule?.children?.times}
-                            </div>
-                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">{selectedGym.schedule?.children?.details}</p>
-                          </div>
-                        )}
-
-                        {selectedGym.schedule?.adults && (
-                          <div className="p-8 rounded-[2rem] bg-gray-50 border-t-4 border-zenith-black hover:bg-white transition-colors hover:shadow-xl group">
-                            <h3 className="text-xl font-black font-display text-zenith-black mb-4 uppercase tracking-tight flex items-center gap-3">
-                              <span className="text-2xl">🏸</span>
-                              {selectedGym.schedule?.adults?.title}
-                            </h3>
-                            <div className="text-3xl font-black font-display text-zenith-black mb-4 leading-none">
-                              {selectedGym.schedule?.adults?.times}
-                            </div>
-                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">{selectedGym.schedule?.adults?.details}</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Gallery */}
-                    <div className="bg-white rounded-[2.5rem] p-10 md:p-12 shadow-[0_20px_50px_-12_rgba(0,0,0,0.05)] border border-gray-100">
-                      <h2 className="text-4xl font-black font-display text-zenith-black uppercase tracking-tight mb-10">
-                        {labels?.galleryTitle || t('gyms.gallery.title')}
-                      </h2>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {selectedGym.gallery?.map((photo, idx) => (
-                          <motion.div
-                            key={idx}
-                            className="aspect-[4/5] bg-gray-100 rounded-[2rem] overflow-hidden shadow-lg border-2 border-transparent hover:border-zenith-crimson transition-all"
-                            whileHover={{ scale: 1.03 }}
-                          >
-                            <img
-                              src={photo}
-                              alt={`${selectedGym.name} ${t('gyms.photoLabel')} ${idx + 1}`}
-                              className="w-full h-full object-cover"
-                            />
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column - Contact & Trainers */}
-                  <div className="space-y-12">
-                    {/* Contact Info */}
-                    <div className="bg-zenith-black rounded-[2.5rem] p-10 md:p-12 shadow-2xl relative overflow-hidden text-white">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-crimson/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-
-                      <div className="flex items-center gap-4 mb-10 relative z-10">
-                        <div className="w-12 h-12 bg-zenith-crimson text-white flex items-center justify-center rounded-xl shadow-lg shadow-zenith-crimson/20">
-                          <Phone className="w-5 h-5" />
-                        </div>
-                        <h2 className="text-2xl font-black font-display uppercase tracking-tight">
-                          {labels?.contactTitle || t('gyms.contact.title')}
-                        </h2>
-                      </div>
-
-                      <div className="space-y-8 relative z-10">
-                        <div className="flex items-start gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-1">
-                            <MapPin className="w-4 h-4 text-zenith-crimson" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">{t('gyms.contact.address')}</p>
-                            <p className="font-bold leading-tight">{selectedGym.address}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-1">
-                            <Phone className="w-4 h-4 text-zenith-crimson" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">{t('gyms.contact.phone')}</p>
-                            <a href={`tel:${selectedGym.phone}`} className="text-lg font-black font-display text-white hover:text-zenith-crimson transition-colors">
-                              {selectedGym.phone}
-                            </a>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-1">
-                            <ArrowRight className="w-4 h-4 text-zenith-crimson" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">{t('gyms.contact.email')}</p>
-                            <a href={`mailto:${selectedGym.email}`} className="font-bold hover:text-zenith-crimson transition-colors">
-                              {selectedGym.email}
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-
-                      <a
-                        href={selectedGym.mapUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-12 w-full bg-white text-zenith-black py-5 rounded-[1.5rem] font-black text-xs uppercase tracking-[0.2em] hover:bg-zenith-crimson hover:text-white transition-all duration-300 flex items-center justify-center gap-3 shadow-xl relative z-10"
-                      >
-                        <MapPin className="w-4 h-4" />
-                        {labels?.openMapButton || t('gyms.contact.openMap')}
-                      </a>
-                    </div>
-
-                    {/* Trainers */}
-                    <div className="bg-white rounded-[2.5rem] p-10 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-gray-100">
-                      <div className="flex items-center gap-4 mb-10">
-                        <div className="w-12 h-12 bg-gray-100 text-zenith-black flex items-center justify-center rounded-xl">
-                          <ArrowRight className="w-6 h-6 rotate-45" />
-                        </div>
-                        <h2 className="text-2xl font-black font-display text-zenith-black uppercase tracking-tight">
-                          {labels?.trainersTitle || t('gyms.trainers.title')}
-                        </h2>
-                      </div>
-
-                      <div className="space-y-6">
-                        {selectedGym.trainers?.map((trainer: any, idx: number) => (
-                          <div key={idx} className="flex items-center gap-5 p-5 bg-gray-50 rounded-2xl hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-gray-100 group">
-                            <img
-                              src={trainer.photo}
-                              alt={trainer.name}
-                              className="w-16 h-16 rounded-2xl object-cover shadow-lg group-hover:scale-110 transition-transform duration-500"
-                            />
-                            <div>
-                              <h3 className="font-black text-zenith-black text-lg uppercase tracking-tight">{trainer.name}</h3>
-                              <p className="text-[10px] font-black text-zenith-crimson uppercase tracking-widest leading-none mt-1">{trainer.experience}</p>
-                              <p className="text-xs text-gray-500 font-medium mt-1 uppercase tracking-tight">{trainer.specialization}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Features Bento */}
-                    <div className="bg-zenith-crimson rounded-[2.5rem] p-10 md:p-12 shadow-2xl shadow-zenith-crimson/20 text-white">
-                      <h2 className="text-2xl font-black font-display uppercase tracking-tight mb-8">
-                        {t('gyms.features.title')}
-                      </h2>
-                      <div className="grid grid-cols-1 gap-4">
-                        {selectedGym.features?.map((feature: string, idx: number) => (
-                          <div key={idx} className="flex items-center gap-4 py-3 border-b border-white/20 last:border-0">
-                            <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" />
-                            <span className="text-sm font-bold uppercase tracking-widest leading-tight">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )
-          )}
         </div>
       </section >
     </div >

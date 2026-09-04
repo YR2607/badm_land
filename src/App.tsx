@@ -1,7 +1,7 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import './i18n';
 
@@ -27,6 +27,23 @@ const PageLoader = () => (
 // 404 Not Found component
 const NotFound = () => {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="robots"]');
+    if (meta) { meta.setAttribute('content', 'noindex, nofollow'); }
+    else {
+      const m = document.createElement('meta');
+      m.name = 'robots';
+      m.content = 'noindex, nofollow';
+      document.head.appendChild(m);
+    }
+    return () => {
+      // restore to index,follow when leaving 404
+      const metaEl = document.querySelector('meta[name="robots"]');
+      if (metaEl) { metaEl.setAttribute('content', 'index, follow'); }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-zenith-white px-4">
       <div className="text-center">

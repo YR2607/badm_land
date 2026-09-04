@@ -75,6 +75,7 @@ const Hero = ({ cmsData }: HeroProps) => {
           autoPlay
           muted
           playsInline
+          aria-hidden="true"
         />
         <div className="absolute inset-0 bg-zenith-black/40" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70vh] md:h-[75vh]">
@@ -124,7 +125,7 @@ const Hero = ({ cmsData }: HeroProps) => {
           )}
           {cmsData?.description && (
             <motion.p
-              className="text-xl md:text-2xl text-zenith-black font-medium mb-12 max-w-4xl mx-auto leading-relaxed"
+              className="text-xl md:text-2xl text-white/90 font-medium mb-12 max-w-4xl mx-auto leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.8 }}

@@ -193,7 +193,10 @@
     "video": "Videos",
     "photosComingSoon": "Photos coming soon",
     "videosComingSoon": "Videos coming soon",
-    "showMore": "Show More"
+    "showMore": "Show More",
+    "close": "Close",
+    "prev": "Previous",
+    "next": "Next"
   },
   "news": {
     "hero": {
@@ -286,7 +289,8 @@
     "loadingPosts": "Loading Posts",
     "noContent": "No Content Found",
     "tiktokLabel": "TikTok",
-    "facebookLabel": "Facebook"
+    "facebookLabel": "Facebook",
+    "close": "Close"
   },
   "breadcrumbs": {
     "navigation": "Breadcrumb navigation",
