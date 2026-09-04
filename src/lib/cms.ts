@@ -243,26 +243,12 @@ export interface CmsHomePage {
     title: string;
     subtitle?: string;
     achievements: Array<{ title: string; count: string; description: string; icon: string; color: string }>;
-    timeline?: {
-      title: string;
-      milestones: Array<{ year: string; title: string; description: string }>;
-    };
-    callToAction?: {
-      text: string;
-      icon: string;
-    };
   };
   servicesSection?: {
     title: string;
     subtitle?: string;
     buttonText?: string;
     services: Array<{ title: string; description: string; features?: string[]; price: string; icon: string; color: string }>;
-  };
-  ctaSection?: {
-    title: string;
-    description: string;
-    buttonText: string;
-    buttonLink: string;
   };
   seo?: {
     metaTitle: string;
@@ -323,30 +309,7 @@ export const fetchHomePage = async (lang: string = 'ru'): Promise<CmsHomePage | 
             "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description),
             icon,
             color
-          },
-          timeline {
-            "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
-            milestones[] {
-              year,
-              "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
-              "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description)
-            }
-          },
-          callToAction {
-            "text": select($lang == "en" && defined(text_en) => text_en, $lang == "ro" && defined(text_ro) => text_ro, text),
-            icon
           }
-        },
-        newsSection { 
-          "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
-          "subtitle": select($lang == "en" && defined(subtitle_en) => subtitle_en, $lang == "ro" && defined(subtitle_ro) => subtitle_ro, subtitle),
-          enabled 
-        },
-        ctaSection { 
-          "title": select($lang == "en" && defined(title_en) => title_en, $lang == "ro" && defined(title_ro) => title_ro, title),
-          "description": select($lang == "en" && defined(description_en) => description_en, $lang == "ro" && defined(description_ro) => description_ro, description),
-          "buttonText": select($lang == "en" && defined(buttonText_en) => buttonText_en, $lang == "ro" && defined(buttonText_ro) => buttonText_ro, buttonText),
-          buttonLink 
         }
       }
     `, { lang });

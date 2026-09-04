@@ -14,18 +14,6 @@ interface AchievementsSectionProps {
       icon: string;
       color: string;
     }>;
-    timeline?: {
-      title: string;
-      milestones: Array<{
-        year: string;
-        title: string;
-        description: string;
-      }>;
-    };
-    callToAction?: {
-      text: string;
-      icon: string;
-    };
   };
 }
 

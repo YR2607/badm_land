@@ -42,7 +42,7 @@ const SEO = ({
     document.title = title;
 
     // Update <html lang> to match the active language
-    document.documentElement.lang = i18n.language || 'ru';
+    document.documentElement.lang = i18n.language || 'ro';
 
     // Update or create meta tags
     const updateMetaTag = (name: string, content: string, isProperty = false) => {
