@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import LocalizedLink from './LocalizedLink';
 import { motion } from 'framer-motion';
 import { Trophy, Medal, Target, Zap } from 'lucide-react';
 
@@ -115,7 +115,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
               {t('home.achievements.subtitle', 'Мы прошли длинный путь от маленькой секции до ведущего клуба страны, воспитав сотни чемпионов.')}
             </p>
           </div>
-          <Link
+          <LocalizedLink
             to="/about"
             className="group relative px-12 py-6 bg-zenith-crimson text-white font-black uppercase tracking-widest text-xl overflow-hidden inline-block"
           >
@@ -129,7 +129,7 @@ const AchievementsSection = ({ cmsData }: AchievementsSectionProps) => {
             <span className="absolute inset-0 flex items-center justify-center text-zenith-black font-black uppercase tracking-widest text-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
               {t('common.more', 'Узнать больше')}
             </span>
-          </Link>
+          </LocalizedLink>
         </motion.div>
       </div>
     </section>

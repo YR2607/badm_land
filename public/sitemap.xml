@@ -1,82 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  <!-- Home Page -->
+  <!-- Static fallback sitemap. Dynamic sitemap at /api/sitemap is canonical. -->
+
+  <!-- Home -->
   <url>
-    <loc>https://altius.md/</loc>
-    <lastmod>2026-09-02</lastmod>
+    <loc>https://altius.md/ro</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://altius.md/ro" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://altius.md/ru" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://altius.md/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://altius.md/ro" />
   </url>
 
-  <!-- About Page -->
+  <!-- About -->
   <url>
-    <loc>https://altius.md/about</loc>
-    <lastmod>2026-09-02</lastmod>
+    <loc>https://altius.md/ro/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://altius.md/ro/about" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://altius.md/ru/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://altius.md/en/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://altius.md/ro/about" />
   </url>
 
-  <!-- Services Page -->
+  <!-- Services -->
   <url>
-    <loc>https://altius.md/services</loc>
-    <lastmod>2026-09-02</lastmod>
+    <loc>https://altius.md/ro/services</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://altius.md/ro/services" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://altius.md/ru/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://altius.md/en/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://altius.md/ro/services" />
   </url>
 
-  <!-- Gyms Page -->
+  <!-- Gyms -->
   <url>
-    <loc>https://altius.md/gyms</loc>
-    <lastmod>2026-09-02</lastmod>
+    <loc>https://altius.md/ro/gyms</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://altius.md/ro/gyms" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://altius.md/ru/gyms" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://altius.md/en/gyms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://altius.md/ro/gyms" />
   </url>
 
-  <!-- Individual Gym Pages -->
+  <!-- Gallery -->
   <url>
-    <loc>https://altius.md/gyms/malaya-malian-24</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://altius.md/gyms/31-avgusta-1989</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://altius.md/gyms/ion-creanga-1</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Gallery Page -->
-  <url>
-    <loc>https://altius.md/gallery</loc>
-    <lastmod>2026-09-02</lastmod>
+    <loc>https://altius.md/ro/gallery</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://altius.md/ro/gallery" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://altius.md/ru/gallery" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://altius.md/en/gallery" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://altius.md/ro/gallery" />
   </url>
 
-  <!-- Blog/News Page -->
+  <!-- Blog -->
   <url>
-    <loc>https://altius.md/blog</loc>
-    <lastmod>2026-09-02</lastmod>
+    <loc>https://altius.md/ro/blog</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://altius.md/ro/blog" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://altius.md/ru/blog" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://altius.md/en/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://altius.md/ro/blog" />
   </url>
 
-  <!-- Contact Page -->
+  <!-- Contact -->
   <url>
-    <loc>https://altius.md/contact</loc>
-    <lastmod>2026-09-02</lastmod>
+    <loc>https://altius.md/ro/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://altius.md/ro/contact" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://altius.md/ru/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://altius.md/en/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://altius.md/ro/contact" />
   </url>
 
 </urlset>

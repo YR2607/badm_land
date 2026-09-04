@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import LocalizedLink from './LocalizedLink';
 import { proxied } from '../utils/blockFacebookImages';
 import { useTranslation } from 'react-i18next';
 
@@ -154,12 +154,12 @@ const BusinessNewsSection: FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Link
+              <LocalizedLink
                 to="/blog#world-news"
                 className="inline-block px-12 py-6 bg-zenith-black text-white font-black uppercase tracking-[0.3em] text-xl hover:bg-zenith-crimson transition-colors duration-500 shadow-2xl"
               >
                 {t('home.worldNews.viewAll')}
-              </Link>
+              </LocalizedLink>
             </motion.div>
           </div>
         )}

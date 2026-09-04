@@ -1,6 +1,7 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ChevronRight, Home } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import LocalizedLink from './LocalizedLink';
 import JsonLd from './JsonLd';
 
 interface BreadcrumbItem {
@@ -20,7 +21,10 @@ const Breadcrumbs = ({ items, className = '', isDark = false }: BreadcrumbsProps
 
   // Автоматическая генерация breadcrumbs из URL если items не переданы
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
-    const pathnames = location.pathname.split('/').filter(x => x);
+    // Strip lang prefix (e.g. /ro/about → about)
+    const pathnames = location.pathname
+      .split('/')
+      .filter(x => x && !['ro', 'ru', 'en'].includes(x));
 
     const breadcrumbs: BreadcrumbItem[] = [
       { label: t('navigation.home'), path: '/' }
@@ -58,8 +62,9 @@ const Breadcrumbs = ({ items, className = '', isDark = false }: BreadcrumbsProps
 
   const breadcrumbItems = items || generateBreadcrumbs();
 
-  // Не показываем breadcrumbs на главной странице
-  if (location.pathname === '/') {
+  // Не показываем breadcrumbs на главной странице (pathname is /:lang or /:lang/)
+  const pathWithoutLang = location.pathname.replace(/^\/(ro|ru|en)(?=\/|$)/, '') || '/';
+  if (pathWithoutLang === '/') {
     return null;
   }
 
@@ -98,14 +103,14 @@ const Breadcrumbs = ({ items, className = '', isDark = false }: BreadcrumbsProps
                 )}
 
                 {item.path && !isLast ? (
-                  <Link
+                  <LocalizedLink
                     to={item.path}
                     className={`flex items-center gap-1.5 transition-colors font-medium ${isDark ? 'text-white/60 hover:text-zenith-crimson' : 'text-gray-600 hover:text-primary-blue'}`}
                     aria-label={isFirst ? t('breadcrumbs.home', 'Вернуться на главную') : undefined}
                   >
                     {isFirst && <Home className="w-4 h-4" aria-hidden="true" />}
                     <span>{item.label}</span>
-                  </Link>
+                  </LocalizedLink>
                 ) : (
                   <span
                     className={`flex items-center gap-1.5 font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}

@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 import { ChevronDown, Phone, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import LocalizedLink from '../components/LocalizedLink';
 import InnerHero from '../components/InnerHero';
 import SEO from '../components/SEO';
 import JsonLd from '../components/JsonLd';
@@ -149,11 +149,11 @@ const Services: FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Link to="/gyms" className="inline-flex items-center gap-3">
+              <LocalizedLink to="/gyms" className="inline-flex items-center gap-3">
                 <span className="text-2xl">🏸</span>
                 {t('services.gyms.viewAll')}
                 <ArrowRight className="w-5 h-5" />
-              </Link>
+              </LocalizedLink>
             </motion.div>
           </motion.div>
         </div>
@@ -252,12 +252,12 @@ const Services: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <Link
+            <LocalizedLink
               to="/contact"
               className="inline-flex items-center justify-center px-10 py-5 bg-zenith-crimson text-white font-black rounded-full hover:bg-red-700 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(220,38,38,0.5)] hover:shadow-[0_0_60px_-15px_rgba(220,38,38,0.7)] uppercase tracking-widest text-sm hover:-translate-y-1"
             >
               {t('services.cta.contact')}
-            </Link>
+            </LocalizedLink>
             <a
               href="tel:+37369509892"
               className="inline-flex items-center justify-center px-10 py-5 bg-transparent border-2 border-white/20 text-white font-black rounded-full hover:bg-white/10 hover:border-white transition-all duration-300 uppercase tracking-widest text-sm group"

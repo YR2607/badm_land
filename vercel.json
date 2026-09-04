@@ -11,6 +11,51 @@
       "has": [{ "type": "host", "value": "www.altius.md" }],
       "destination": "https://altius.md/:path*",
       "permanent": true
+    },
+    {
+      "source": "/",
+      "destination": "/ro",
+      "permanent": false
+    },
+    {
+      "source": "/about",
+      "destination": "/ro/about",
+      "permanent": false
+    },
+    {
+      "source": "/gallery",
+      "destination": "/ro/gallery",
+      "permanent": false
+    },
+    {
+      "source": "/services",
+      "destination": "/ro/services",
+      "permanent": false
+    },
+    {
+      "source": "/gyms",
+      "destination": "/ro/gyms",
+      "permanent": false
+    },
+    {
+      "source": "/gyms/:slug",
+      "destination": "/ro/gyms/:slug",
+      "permanent": false
+    },
+    {
+      "source": "/contact",
+      "destination": "/ro/contact",
+      "permanent": false
+    },
+    {
+      "source": "/blog",
+      "destination": "/ro/blog",
+      "permanent": false
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/ro/blog/:slug",
+      "permanent": false
     }
   ],
   "routes": [

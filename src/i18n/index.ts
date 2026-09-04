@@ -18,10 +18,20 @@ const resources = {
   },
 };
 
-// Initialize with Romanian as default, only check localStorage
-const initI18n = async () => {
+// Initialize with Romanian as default.
+// Priority: URL path prefix > localStorage > 'ro'
+const detectLanguage = (): string => {
+  // Check URL path for lang prefix (e.g. /ro/about, /en, /ru/gyms)
+  if (typeof window !== 'undefined') {
+    const match = window.location.pathname.match(/^\/(ro|ru|en)(?=\/|$)/);
+    if (match) return match[1];
+  }
   const savedLanguage = localStorage.getItem('i18nextLng');
-  const defaultLanguage = savedLanguage && ['ro', 'ru', 'en'].includes(savedLanguage) ? savedLanguage : 'ro';
+  return savedLanguage && ['ro', 'ru', 'en'].includes(savedLanguage) ? savedLanguage : 'ro';
+};
+
+const initI18n = async () => {
+  const defaultLanguage = detectLanguage();
   
   await i18n
     .use(initReactI18next)

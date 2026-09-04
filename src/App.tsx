@@ -1,6 +1,9 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
+import LangGate from './components/LangGate';
+import LangRedirect from './components/LangRedirect';
+import LocalizedLink from './components/LocalizedLink';
 import { lazy, Suspense, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import './i18n';
@@ -53,12 +56,12 @@ const NotFound = () => {
         <p className="text-xl text-gray-500 font-medium mb-10 max-w-md mx-auto">
           {t('common.notFound', 'Страница не найдена')}
         </p>
-        <Link
+        <LocalizedLink
           to="/"
           className="inline-flex items-center px-10 py-5 bg-zenith-black text-white font-black rounded-full hover:bg-zenith-crimson transition-colors uppercase tracking-widest text-sm"
         >
           {t('common.backHome', 'На главную')}
-        </Link>
+        </LocalizedLink>
       </div>
     </div>
   );
@@ -77,17 +80,23 @@ function App() {
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/gyms" element={<Gyms />} />
-          <Route path="/gyms/:slug" element={<GymDetail />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<PostDetail />} />
+          {/* Language-prefixed routes */}
+          <Route path="/:lang" element={<LangGate />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="gallery" element={<Gallery />} />
+            <Route path="services" element={<Services />} />
+            <Route path="gyms" element={<Gyms />} />
+            <Route path="gyms/:slug" element={<GymDetail />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="blog/:slug" element={<PostDetail />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+          {/* Admin (no lang prefix) */}
           <Route path="/admin" element={<AdminRedirect />} />
-          <Route path="*" element={<NotFound />} />
+          {/* Redirect bare paths to lang-prefixed */}
+          <Route path="*" element={<LangRedirect />} />
         </Routes>
       </Suspense>
     </Layout>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Globe } from 'lucide-react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import LocalizedLink from '../components/LocalizedLink';
 import { useTranslation } from 'react-i18next';
 import { PortableText } from '@portabletext/react';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -51,9 +52,9 @@ const PostDetail: React.FC = () => {
     return (
       <div className="min-h-screen bg-zenith-white flex flex-col items-center justify-center gap-6 px-4">
         <p className="font-black uppercase tracking-widest text-zenith-crimson text-lg">{error || t('news.postNotFound', 'Материал не найден')}</p>
-        <Link to="/blog" className="px-8 py-4 bg-zenith-black text-white font-black uppercase tracking-widest text-xs rounded-full hover:bg-zenith-crimson transition-colors">
+        <LocalizedLink to="/blog" className="px-8 py-4 bg-zenith-black text-white font-black uppercase tracking-widest text-xs rounded-full hover:bg-zenith-crimson transition-colors">
           {t('news.backToList', 'Назад к новостям')}
-        </Link>
+        </LocalizedLink>
       </div>
     );
   }
@@ -107,7 +108,7 @@ const PostDetail: React.FC = () => {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-16">
-        <Link
+        <LocalizedLink
           to="/blog"
           className="inline-flex items-center gap-2 group text-zenith-black font-black uppercase tracking-widest text-xs mb-12 hover:text-zenith-crimson transition-colors"
         >
@@ -115,7 +116,7 @@ const PostDetail: React.FC = () => {
             ←
           </span>
           {t('news.backToList', 'Назад к новостям')}
-        </Link>
+        </LocalizedLink>
 
         <motion.h1
           className="text-5xl md:text-8xl font-black font-display text-zenith-black mb-12 uppercase tracking-tighter leading-[0.9]"

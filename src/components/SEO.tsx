@@ -35,7 +35,12 @@ const SEO = ({
   const { i18n } = useTranslation();
   const currentUrl = url || `https://altius.md${location.pathname}`;
   const siteName = 'Altius Badminton Club';
-  const currentLocale = LOCALE_MAP[i18n.language] || 'ru_RU';
+  const currentLocale = LOCALE_MAP[i18n.language] || 'ro_RO';
+
+  // Path without lang prefix for generating hreflang alternates
+  const pathWithoutLang = location.pathname.replace(/^\/(ro|ru|en)(?=\/|$)/, '') || '/';
+  const hreflangBase = 'https://altius.md';
+  const supportedLangs = ['ro', 'ru', 'en'];
 
   useEffect(() => {
     // Update document title
@@ -73,8 +78,10 @@ const SEO = ({
     updateMetaTag('og:type', type, true);
     updateMetaTag('og:site_name', siteName, true);
     updateMetaTag('og:locale', currentLocale, true);
-    updateMetaTag('og:locale:alternate', 'en_US', true);
-    updateMetaTag('og:locale:alternate', 'ro_RO', true);
+    // OG locale alternates — all languages except current
+    supportedLangs
+      .filter(l => l !== i18n.language)
+      .forEach(l => updateMetaTag('og:locale:alternate', LOCALE_MAP[l], true));
 
     // Remove stale property-based twitter tags (pre-fix duplicates)
     document.querySelectorAll('meta[property^="twitter:"]').forEach(el => el.remove());
@@ -106,11 +113,26 @@ const SEO = ({
     }
     canonical.setAttribute('href', currentUrl);
 
-    // Note: hreflang removed — site uses same URL for all languages (no /ru/, /en/, /ro/ prefixes).
-    // Hreflang pointing to the same URL for every language is ignored by Google and adds noise.
-    // To re-enable: implement language-specific URL paths first, then add hreflang here.
+    // Hreflang alternate tags — one URL per language
+    // Remove existing hreflang tags first
+    document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
 
-  }, [title, description, image, currentUrl, type, keywords, author, publishedTime, modifiedTime, i18n.language, currentLocale, location.pathname]);
+    const addHreflang = (hreflang: string, href: string) => {
+      const link = document.createElement('link');
+      link.setAttribute('rel', 'alternate');
+      link.setAttribute('hreflang', hreflang);
+      link.setAttribute('href', href);
+      document.head.appendChild(link);
+    };
+
+    supportedLangs.forEach(l => {
+      const altUrl = `${hreflangBase}/${l}${pathWithoutLang === '/' ? '' : pathWithoutLang}`;
+      addHreflang(l, altUrl);
+    });
+    // x-default points to the default language (ro)
+    addHreflang('x-default', `${hreflangBase}/ro${pathWithoutLang === '/' ? '' : pathWithoutLang}`);
+
+  }, [title, description, image, currentUrl, type, keywords, author, publishedTime, modifiedTime, i18n.language, currentLocale, location.pathname, pathWithoutLang]);
 
   return null;
 };

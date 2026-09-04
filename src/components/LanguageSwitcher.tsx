@@ -1,5 +1,6 @@
 import { FC, useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronDown, Globe } from 'lucide-react';
 
 const languages = [
@@ -10,13 +11,20 @@ const languages = [
 
 const LanguageSwitcher: FC = () => {
   const { i18n } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
   const handleLanguageChange = (langCode: string) => {
+    // Replace lang prefix in URL: /ro/about → /en/about
+    const pathWithoutLang = location.pathname.replace(/^\/(ro|ru|en)(?=\/|$)/, '') || '/';
+    const newPath = `/${langCode}${pathWithoutLang === '/' ? '' : pathWithoutLang}`;
+    navigate(`${newPath}${location.search}${location.hash}`);
     i18n.changeLanguage(langCode);
+    localStorage.setItem('i18nextLng', langCode);
     setIsOpen(false);
   };
 

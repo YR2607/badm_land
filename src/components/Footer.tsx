@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import LocalizedLink from './LocalizedLink';
 import { MapPin, Phone, Clock, Facebook, Youtube } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { fetchContactInfo, fetchFooter, isCmsEnabled, type CmsContactInfo } from '../lib/cms';
@@ -47,14 +47,14 @@ const Footer: React.FC = () => {
             <div className="absolute top-0 right-0 w-64 h-64 bg-zenith-crimson/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-zenith-crimson/30 transition-colors duration-700" />
 
             <div className="relative z-10">
-              <Link to="/" className="flex items-center space-x-4 mb-10">
+              <LocalizedLink to="/" className="flex items-center space-x-4 mb-10">
                 <img
                   src={logoUrl}
                   alt={brandName}
                   className="h-14 w-14 rounded-2xl object-cover"
                 />
                 <span className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter">{brandName}</span>
-              </Link>
+              </LocalizedLink>
               <p className="text-xl md:text-2xl text-white/60 font-medium max-w-md leading-relaxed mb-12">
                 {description}
               </p>
@@ -89,9 +89,9 @@ const Footer: React.FC = () => {
                   { path: '/contact', label: t('navigation.contacts') }
                 ].map((link) => (
                   <li key={link.path}>
-                    <Link to={link.path} className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-zenith-black hover:text-zenith-crimson transition-colors">
+                    <LocalizedLink to={link.path} className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-zenith-black hover:text-zenith-crimson transition-colors">
                       {link.label}
-                    </Link>
+                    </LocalizedLink>
                   </li>
                 ))}
               </ul>

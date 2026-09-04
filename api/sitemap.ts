@@ -10,30 +10,40 @@ const client = projectId
   : null
 
 const STATIC_PAGES = [
-  { loc: 'https://altius.md/', priority: '1.0', changefreq: 'daily' },
-  { loc: 'https://altius.md/about', priority: '0.9', changefreq: 'monthly' },
-  { loc: 'https://altius.md/services', priority: '0.9', changefreq: 'weekly' },
-  { loc: 'https://altius.md/gyms', priority: '0.9', changefreq: 'weekly' },
-  { loc: 'https://altius.md/gyms/malaya-malian-24', priority: '0.8', changefreq: 'weekly' },
-  { loc: 'https://altius.md/gyms/31-avgusta-1989', priority: '0.8', changefreq: 'weekly' },
-  { loc: 'https://altius.md/gyms/ion-creanga-1', priority: '0.8', changefreq: 'weekly' },
-  { loc: 'https://altius.md/gallery', priority: '0.7', changefreq: 'weekly' },
-  { loc: 'https://altius.md/blog', priority: '0.8', changefreq: 'daily' },
-  { loc: 'https://altius.md/contact', priority: '0.8', changefreq: 'monthly' },
+  { path: '', priority: '1.0', changefreq: 'daily' },
+  { path: '/about', priority: '0.9', changefreq: 'monthly' },
+  { path: '/services', priority: '0.9', changefreq: 'weekly' },
+  { path: '/gyms', priority: '0.9', changefreq: 'weekly' },
+  { path: '/gyms/malaya-malian-24', priority: '0.8', changefreq: 'weekly' },
+  { path: '/gyms/31-avgusta-1989', priority: '0.8', changefreq: 'weekly' },
+  { path: '/gyms/ion-creanga-1', priority: '0.8', changefreq: 'weekly' },
+  { path: '/gallery', priority: '0.7', changefreq: 'weekly' },
+  { path: '/blog', priority: '0.8', changefreq: 'daily' },
+  { path: '/contact', priority: '0.8', changefreq: 'monthly' },
 ]
 
-const HREFLANGS = ['ru', 'en', 'ro', 'x-default']
+const HREFLANGS = ['ro', 'ru', 'en']
+const DEFAULT_LANG = 'ro'
+const BASE_URL = 'https://altius.md'
 
-function urlEntry(loc: string, priority: string, changefreq: string, lastmod?: string): string {
-  // Note: hreflang entries omitted — site uses same URL for all languages (no /ru/, /en/, /ro/ prefixes).
-  // Hreflang pointing to the same URL for every language is ignored by Google and adds noise.
-  // To re-enable: implement language-specific URL paths first, then add xhtml:link entries here.
-  return `  <url>
+function urlEntry(path: string, priority: string, changefreq: string, lastmod?: string): string {
+  // Generate one <url> per language with xhtml:link hreflang alternates
+  const langEntries = HREFLANGS.map(lang => {
+    const loc = `${BASE_URL}/${lang}${path}`
+    const alternates = HREFLANGS
+      .map(l => `      <xhtml:link rel="alternate" hreflang="${l}" href="${BASE_URL}/${l}${path}" />`)
+      .join('\n')
+    const xDefault = `      <xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/${DEFAULT_LANG}${path}" />`
+    return `  <url>
     <loc>${loc}</loc>
     ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
+${alternates}
+${xDefault}
   </url>`
+  })
+  return langEntries.join('\n')
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -55,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       blogEntries = (posts as any[])
         .map(p => urlEntry(
-          `https://altius.md/blog/${p.slug}`,
+          `/blog/${p.slug}`,
           '0.7',
           'weekly',
           p.date ? new Date(p.date).toISOString().split('T')[0] : today

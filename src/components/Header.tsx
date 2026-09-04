@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import LocalizedLink from './LocalizedLink';
 import LanguageSwitcher from './LanguageSwitcher';
 import { fetchFooter, isCmsEnabled } from '../lib/cms';
+import { usePathWithoutLang } from '../hooks/usePathWithoutLang';
 
 const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
-  const isHome = location.pathname === '/';
+  const pathWithoutLang = usePathWithoutLang();
+  const isHome = pathWithoutLang === '/';
   const [scrolled, setScrolled] = useState(false);
   const [brand, setBrand] = useState<{ name: string; logo: string } | null>(null);
 
@@ -41,13 +43,13 @@ const Header: React.FC = () => {
     { path: '/contact', label: t('navigation.contacts') }
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => pathWithoutLang === path;
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${isHome ? (scrolled ? 'bg-white/80 backdrop-blur-2xl border-b border-gray-100 shadow-sm' : 'bg-transparent') : 'bg-white/80 backdrop-blur-2xl border-b border-gray-100 shadow-sm'}`}>
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          <Link to="/" className="flex items-center space-x-3 group">
+          <LocalizedLink to="/" className="flex items-center space-x-3 group">
             <div className="relative">
               <img
                 src={logoUrl}
@@ -60,11 +62,11 @@ const Header: React.FC = () => {
               <div className="absolute inset-0 rounded-xl ring-1 ring-black/5" />
             </div>
             <span className={`text-3xl font-display font-black uppercase tracking-tighter transition-colors duration-300 ${isHome && !scrolled ? 'text-white' : 'text-zenith-black'}`}>{brandName}</span>
-          </Link>
+          </LocalizedLink>
 
           <nav className="hidden xl:flex items-center space-x-10">
             {navItems.map((item) => (
-              <Link
+              <LocalizedLink
                 key={item.path}
                 to={item.path}
                 className={`relative text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 hover:text-zenith-crimson ${isActive(item.path)
@@ -76,7 +78,7 @@ const Header: React.FC = () => {
                 {isActive(item.path) && (
                   <div className="absolute -bottom-2 left-0 right-0 h-1 bg-zenith-crimson rounded-full transition-all duration-300" />
                 )}
-              </Link>
+              </LocalizedLink>
             ))}
           </nav>
 
@@ -105,14 +107,14 @@ const Header: React.FC = () => {
       >
         <div className="px-6 py-10 space-y-6">
           {navItems.map((item) => (
-            <Link
+            <LocalizedLink
               key={item.path}
               to={item.path}
               className={`block text-2xl font-black uppercase tracking-tighter transition-colors ${isActive(item.path) ? 'text-zenith-crimson' : 'text-zenith-black hover:text-zenith-crimson'}`}
               onClick={() => setIsMenuOpen(false)}
             >
               {item.label}
-            </Link>
+            </LocalizedLink>
           ))}
           <div className="pt-8 border-t border-gray-100 flex justify-between items-center">
             <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{t('navigation.languageSelect')}</span>

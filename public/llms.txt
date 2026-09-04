@@ -25,13 +25,13 @@
 - Pricing from 200 MDL/month
 
 ## Pages
-- [Home](https://altius.md/)
-- [About](https://altius.md/about)
-- [Services and pricing](https://altius.md/services)
-- [Gyms and locations](https://altius.md/gyms)
-- [Gallery](https://altius.md/gallery)
-- [Blog and news](https://altius.md/blog)
-- [Contact](https://altius.md/contact)
+- [Home](https://altius.md/ro)
+- [About](https://altius.md/ro/about)
+- [Services and pricing](https://altius.md/ro/services)
+- [Gyms and locations](https://altius.md/ro/gyms)
+- [Gallery](https://altius.md/ro/gallery)
+- [Blog and news](https://altius.md/ro/blog)
+- [Contact](https://altius.md/ro/contact)
 
 ## Social
 - Facebook: https://www.facebook.com/profile.php?id=61562124174747

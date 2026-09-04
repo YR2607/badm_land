@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import LocalizedLink from '../components/LocalizedLink'
 import { useTranslation } from 'react-i18next'
 import { MapPin, Phone, Mail, ArrowLeft, Clock, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -53,10 +54,10 @@ const GymDetail: FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error || t('news.postNotFound', 'Материал не найден')}</p>
-          <Link to="/gyms" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          <LocalizedLink to="/gyms" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             {t('gyms.backToSelection')}
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     )
@@ -108,13 +109,13 @@ const GymDetail: FC = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-zenith-black via-zenith-black/30 to-transparent" />
 
             <div className="absolute top-10 left-10 md:top-16 md:left-16 z-20">
-              <Link
+              <LocalizedLink
                 to="/gyms"
                 className="inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl hover:bg-white/20 transition-all text-white font-black uppercase tracking-widest text-[10px]"
               >
                 <ArrowLeft className="w-4 h-4" />
                 {t('gyms.backToSelection')}
-              </Link>
+              </LocalizedLink>
             </div>
 
             <div className="absolute bottom-12 left-10 right-10 md:bottom-20 md:left-16 md:right-16 text-white z-20">

@@ -1,5 +1,5 @@
 import { useState, useEffect, type FC } from 'react';
-import { Link } from 'react-router-dom';
+import LocalizedLink from '../components/LocalizedLink';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fetchGyms, type CmsGym, fetchGymsHero, type CmsHero, fetchGymsPageLabels, type CmsGymsPageLabels } from '../lib/cms';
@@ -211,7 +211,7 @@ const Gyms: FC = () => {
                       </div>
 
                       {/* Action Button */}
-                      <Link
+                      <LocalizedLink
                         to={`/gyms/${gym.slug}`}
                         className="block w-full bg-zenith-black text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-zenith-crimson transition-all duration-300 text-center shadow-lg group-hover:shadow-zenith-crimson/20"
                       >
@@ -219,7 +219,7 @@ const Gyms: FC = () => {
                           {t('gyms.moreDetails')}
                           <ArrowRight className="w-4 h-4" />
                         </span>
-                      </Link>
+                      </LocalizedLink>
                     </div>
                   </motion.div>
                 ))}
