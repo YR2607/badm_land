@@ -26,7 +26,7 @@ const SEO = ({
   image = 'https://altius.md/og-image.jpg',
   url,
   type = 'website',
-  keywords = 'бадминтон, Кишинев, спортивный клуб, тренировки, badminton, Chisinau, Moldova',
+  keywords = 'бадминтон Кишинев, бадминтонный клуб, секция бадминтона, тренировки по бадминтону, badminton Chisinau, badminton club Moldova, занятия бадминтоном, детский бадминтон',
   author = 'Altius Badminton Club',
   publishedTime,
   modifiedTime,

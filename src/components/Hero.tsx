@@ -102,6 +102,9 @@ const Hero = ({ cmsData }: HeroProps) => {
           >
             {cmsData?.title || t('hero.title', 'ALTIUS')}
           </h1>
+          <p className="sr-only">
+            {t('hero.seoH1', 'Бадминтонный клуб Altius в Кишиневе — профессиональные тренировки по бадминтону для детей и взрослых, секция бадминтона в Кишиневе')}
+          </p>
           {cmsData?.subtitle && (
             <div className="mb-8">
               <div className="inline-block px-8 py-4 bg-zenith-crimson text-white text-2xl md:text-3xl lg:text-5xl font-extrabold font-display uppercase tracking-tight transform -skew-x-12">
