@@ -15,8 +15,14 @@ type BwfItem = { title: string; href: string; img?: string; preview?: string; da
 
 // We rely only on automated feeds on this page
 
+const LOCALE_MAP: Record<string, string> = {
+  ru: 'ru-RU',
+  en: 'en-US',
+  ro: 'ro-RO',
+};
+
 const Blog: FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -188,7 +194,8 @@ const Blog: FC = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    const locale = LOCALE_MAP[i18n.language] || 'ru-RU';
+    return date.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   const getCategoryColor = (category: string) => {

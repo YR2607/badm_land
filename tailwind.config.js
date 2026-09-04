@@ -32,9 +32,9 @@ export default {
         }
       },
       fontFamily: {
-        'sans': ['"Exo 2"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        'display': ['Syne', 'Oswald', 'Impact', 'system-ui', 'sans-serif'],
-        'body': ['"Exo 2"', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        'sans': ['Archivo', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'display': ['Archivo', 'system-ui', 'sans-serif'],
+        'body': ['Archivo', 'ui-sans-serif', 'system-ui', 'sans-serif']
       },
       lineHeight: {
         'tight-impact': '0.85',

@@ -573,7 +573,7 @@ const About: FC = () => {
                     <div
                       key={i}
                       className="w-3 h-3 rounded-full bg-primary-blue/20 hover:bg-primary-blue/40 transition-colors cursor-pointer"
-                      title={`План ${i + 1}: ${effectiveRoadmap[i].title}`}
+                      title={`${t('about.roadmap.planLabel')} ${i + 1}: ${effectiveRoadmap[i].title}`}
                       onClick={() => scrollToCard(i)}
                     />
                   ))}

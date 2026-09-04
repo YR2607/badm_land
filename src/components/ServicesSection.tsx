@@ -61,7 +61,7 @@ const ServicesSection = ({ cmsData }: ServicesSectionProps) => {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
           <h2 className="text-[6rem] md:text-[14rem] font-black font-display leading-[0.75] tracking-tighter uppercase text-zenith-black opacity-[0.03] absolute -top-12 md:-top-24 right-0 pointer-events-none select-none w-full text-center md:text-right overflow-hidden">
-            OUR SERVICES
+            {t('home.services.decorative', 'OUR SERVICES')}
           </h2>
           <h2 className="text-5xl md:text-8xl font-black font-display leading-[0.9] tracking-tighter uppercase text-zenith-black relative z-10 break-words">
             {cmsData?.title || t('home.services.title', 'Наши услуги')}

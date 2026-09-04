@@ -153,7 +153,7 @@ const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="mt-12 flex flex-col md:flex-row justify-between items-center px-10">
           <p className="text-zenith-black/40 text-xs font-black uppercase tracking-widest mb-4 md:mb-0">
-            © {new Date().getFullYear()} {brandName} Badminton Club. {t('footer.allRightsReserved')}
+            © {new Date().getFullYear()} {brandName} {t('footer.badmintonClub')}. {t('footer.allRightsReserved')}
           </p>
         </div>
       </div>

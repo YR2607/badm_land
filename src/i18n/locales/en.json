@@ -84,7 +84,7 @@
     "history": {
       "title": "Our History",
       "subtitle": "The path from idea to leading badminton club",
-      "emptySection": "History section is not filled in CMS",
+      "emptySection": "History will be added soon.",
       "showAll": "Show All Events",
       "collapse": "Collapse",
       "development": "Club Development"
@@ -97,7 +97,8 @@
       "swipeHint": "Swipe to navigate",
       "done": "Done",
       "inProgress": "In Progress",
-      "planned": "Planned"
+      "planned": "Planned",
+      "planLabel": "Plan"
     }
   },
   "contact": {
@@ -109,6 +110,7 @@
   },
   "gyms": {
     "heroSubtitle": "Modern halls with professional equipment",
+    "photoLabel": "photo",
     "hero": {
       "subtitle": "Modern facilities with professional equipment in different districts of Chisinau",
       "stats": {
@@ -194,6 +196,7 @@
     "description": "Professional badminton club in Chisinau",
     "quickLinks": "Quick Links",
     "allRightsReserved": "All rights reserved",
+    "badmintonClub": "Badminton Club",
     "contact": {
       "hours": {
         "weekdays": "Mon-Fri: 06:00-22:00",
@@ -218,15 +221,18 @@
     "of": "of",
     "showing": "Showing",
     "notFound": "Page not found",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "adminRedirect": "Redirecting to admin… If it didn't happen automatically, open /admin/index.html"
   },
   "home": {
     "services": {
       "title": "Our Services",
-      "features": "Features"
+      "features": "Features",
+      "decorative": "OUR SERVICES"
     },
     "achievements": {
       "title": "Our Achievements",
+      "decorative": "IMPACT",
       "subtitle": "Over the years we have achieved impressive results and nurtured many talented athletes",
       "timeline": {
         "title": "Club Development History"
@@ -236,12 +242,23 @@
       "title": "World News",
       "noMaterials": "No materials",
       "viewAll": "View all news",
-      "tagWorld": "🌍 World"
+      "tagWorld": "🌍 World",
+      "decorative": "GLOBAL"
     }
   },
   "socialHub": {
     "badge": "We're on social media",
     "title": "Live: Altius on Social Media",
-    "subtitle": "Follow our training sessions, tournaments and club news"
+    "subtitle": "Follow our training sessions, tournaments and club news",
+    "tiktokTitle": "Badminton Moldova",
+    "youtubeTitle": "Badminton 4 Life",
+    "facebookTitle": "Altius Badminton Club",
+    "facebookSubtitle": "News & Community",
+    "subscribe": "SUBSCRIBE",
+    "loadingFeed": "Loading Feed",
+    "loadingPosts": "Loading Posts",
+    "noContent": "No Content Found",
+    "tiktokLabel": "TikTok",
+    "facebookLabel": "Facebook"
   }
 }

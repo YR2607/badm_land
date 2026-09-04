@@ -340,7 +340,7 @@ const Gyms: FC = () => {
                           >
                             <img
                               src={photo}
-                              alt={`${selectedGym.name} фото ${idx + 1}`}
+                              alt={`${selectedGym.name} ${t('gyms.photoLabel')} ${idx + 1}`}
                               className="w-full h-full object-cover"
                             />
                           </motion.div>

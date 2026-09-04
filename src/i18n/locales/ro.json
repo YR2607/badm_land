@@ -103,7 +103,7 @@
       "development": "Dezvoltarea Clubului",
       "showAll": "Arată Toate Evenimentele",
       "collapse": "Restrânge",
-      "emptySection": "Secțiunea istoriei nu este completată în CMS"
+      "emptySection": "Istoricul va fi adăugat în curând."
     },
     "roadmap": {
       "title": "Foaia de Parcurs pentru Dezvoltare",
@@ -113,7 +113,8 @@
       "swipeHint": "Glisează pentru a naviga",
       "done": "Finalizat",
       "inProgress": "În Progres",
-      "planned": "Planificat"
+      "planned": "Planificat",
+      "planLabel": "Plan"
     }
   },
   "contact": {
@@ -125,6 +126,7 @@
   },
   "gyms": {
     "heroSubtitle": "Săli moderne cu echipament profesional",
+    "photoLabel": "foto",
     "hero": {
       "subtitle": "Facilități moderne cu echipament profesional în diferite sectoare din Chișinău",
       "stats": {
@@ -208,6 +210,7 @@
     "description": "Club profesional de badminton în Chișinău",
     "quickLinks": "Link-uri rapide",
     "allRightsReserved": "Toate drepturile rezervate",
+    "badmintonClub": "Badminton Club",
     "contact": {
       "hours": {
         "weekdays": "Lun-Vin: 06:00-22:00",
@@ -232,15 +235,18 @@
     "of": "din",
     "showing": "Se afișează",
     "notFound": "Pagina nu a fost găsită",
-    "backHome": "Pagina principală"
+    "backHome": "Pagina principală",
+    "adminRedirect": "Redirecționare către admin… Dacă nu s-a făcut automat, deschideți /admin/index.html"
   },
   "home": {
     "services": {
       "title": "Serviciile noastre",
-      "features": "Caracteristici"
+      "features": "Caracteristici",
+      "decorative": "SERVICIILE NOASTRE"
     },
     "achievements": {
       "title": "Realizările noastre",
+      "decorative": "IMPACT",
       "subtitle": "De-a lungul anilor am obținut rezultate impresionante și am format mulți sportivi talentați",
       "timeline": {
         "title": "Istoria dezvoltării clubului"
@@ -250,12 +256,23 @@
       "title": "Știri mondiale",
       "noMaterials": "Nu există materiale",
       "viewAll": "Vezi toate știrile",
-      "tagWorld": "🌍 Lume"
+      "tagWorld": "🌍 Lume",
+      "decorative": "GLOBAL"
     }
   },
   "socialHub": {
     "badge": "Suntem pe rețelele sociale",
     "title": "Live: Altius pe rețelele sociale",
-    "subtitle": "Urmăriți antrenamentele, turneele și știrile clubului nostru"
+    "subtitle": "Urmăriți antrenamentele, turneele și știrile clubului nostru",
+    "tiktokTitle": "Badminton Moldova",
+    "youtubeTitle": "Badminton 4 Life",
+    "facebookTitle": "Altius Badminton Club",
+    "facebookSubtitle": "Știri și comunitate",
+    "subscribe": "ABONEAZĂ-TE",
+    "loadingFeed": "Se încarcă",
+    "loadingPosts": "Se încarcă postările",
+    "noContent": "Conținut indisponibil",
+    "tiktokLabel": "TikTok",
+    "facebookLabel": "Facebook"
   }
 }

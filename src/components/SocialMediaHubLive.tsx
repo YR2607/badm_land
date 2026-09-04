@@ -85,6 +85,7 @@ const FacebookIcon: FC<{ className?: string }> = ({ className }) => (
 
 // TikTok Embed Component - uses real TikTok embed
 const TikTokEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
+  const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(true)
 
@@ -125,7 +126,7 @@ const TikTokEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
               <TikTokIcon className="w-10 h-10 text-white" />
             </div>
             <div className="text-center md:text-left">
-              <h3 className="text-2xl font-black text-white uppercase tracking-tight">Badminton Moldova</h3>
+              <h3 className="text-2xl font-black text-white uppercase tracking-tight">{t('socialHub.tiktokTitle')}</h3>
               <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">{SOCIAL_CONFIG.tiktok.handle}</p>
             </div>
           </div>
@@ -137,7 +138,7 @@ const TikTokEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
             className="inline-flex items-center gap-3 px-8 py-4 bg-white text-zenith-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-zenith-crimson hover:text-white transition-all shadow-xl hover:shadow-zenith-crimson/20"
           >
             <TikTokIcon className="w-5 h-5" />
-            TikTok
+            {t('socialHub.tiktokLabel')}
             <ArrowRight size={16} />
           </a>
         </div>
@@ -146,7 +147,7 @@ const TikTokEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
           {loading && (
             <div className="flex flex-col items-center justify-center gap-4 py-12">
               <div className="w-12 h-12 border-4 border-zenith-black/5 border-t-zenith-crimson rounded-full animate-spin" />
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Loading Feed</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">{t('socialHub.loadingFeed')}</p>
             </div>
           )}
 
@@ -259,7 +260,7 @@ const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
               <YouTubeIcon className="w-10 h-10" />
             </div>
             <div className="text-center md:text-left">
-              <h3 className="text-3xl font-black text-white uppercase tracking-tight">Badminton 4 Life</h3>
+              <h3 className="text-3xl font-black text-white uppercase tracking-tight">{t('socialHub.youtubeTitle')}</h3>
               <p className="text-gray-500 text-sm font-black uppercase tracking-widest">{SOCIAL_CONFIG.youtube.handle}</p>
             </div>
           </div>
@@ -271,7 +272,7 @@ const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
             className="inline-flex items-center gap-3 px-10 py-5 bg-zenith-crimson text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:scale-105 transition-all shadow-[0_20px_40px_rgba(220,38,38,0.3)]"
           >
             <YouTubeIcon className="w-5 h-5" />
-            SUBSCRIBE
+            {t('socialHub.subscribe')}
           </a>
         </div>
 
@@ -323,7 +324,7 @@ const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
               </div>
             </>
           ) : (
-            <div className="text-center py-20 uppercase tracking-widest font-black text-gray-300">No Content Found</div>
+            <div className="text-center py-20 uppercase tracking-widest font-black text-gray-300">{t('socialHub.noContent')}</div>
           )}
         </div>
       </div>
@@ -332,6 +333,7 @@ const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
 }
 
 const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
+  const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
   const [sdkLoaded, setSdkLoaded] = useState(false)
 
@@ -377,8 +379,8 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
               <FacebookIcon className="w-10 h-10 text-white" />
             </div>
             <div className="text-center md:text-left">
-              <h3 className="text-2xl font-black text-white uppercase tracking-tight">Altius Badminton Club</h3>
-              <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">News & Community</p>
+              <h3 className="text-2xl font-black text-white uppercase tracking-tight">{t('socialHub.facebookTitle')}</h3>
+              <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">{t('socialHub.facebookSubtitle')}</p>
             </div>
           </div>
 
@@ -389,7 +391,7 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
             className="inline-flex items-center gap-3 px-8 py-4 bg-white text-zenith-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-zenith-crimson hover:text-white transition-all shadow-xl hover:shadow-zenith-crimson/20"
           >
             <FacebookIcon className="w-5 h-5" />
-            Facebook
+            {t('socialHub.facebookLabel')}
             <ArrowRight size={16} />
           </a>
         </div>
@@ -398,7 +400,7 @@ const FacebookEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
           {!sdkLoaded && (
             <div className="flex flex-col items-center justify-center gap-4 p-12">
               <div className="w-12 h-12 border-4 border-zenith-black/5 border-t-zenith-crimson rounded-full animate-spin" />
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Loading Posts</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">{t('socialHub.loadingPosts')}</p>
             </div>
           )}
 

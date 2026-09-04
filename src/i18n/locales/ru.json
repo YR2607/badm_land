@@ -55,12 +55,13 @@
       "swipeHint": "Свайпните для навигации",
       "done": "Выполнено",
       "inProgress": "В процессе",
-      "planned": "Запланировано"
+      "planned": "Запланировано",
+      "planLabel": "План"
     },
     "history": {
       "title": "Наша история",
       "subtitle": "Путь от идеи до ведущего бадминтон‑клуба",
-      "emptySection": "Секция истории не заполнена в CMS",
+      "emptySection": "История скоро будет добавлена.",
       "showAll": "Показать все события",
       "collapse": "Свернуть",
       "development": "Развитие клуба"
@@ -125,6 +126,7 @@
   },
   "gyms": {
     "heroSubtitle": "Современные залы с профессиональным оборудованием",
+    "photoLabel": "фото",
     "hero": {
       "subtitle": "Современные залы с профессиональным оборудованием в разных районах Кишинева",
       "stats": {
@@ -210,6 +212,7 @@
     "description": "Профессиональный бадминтон клуб в Кишиневе",
     "quickLinks": "Быстрые ссылки",
     "allRightsReserved": "Все права защищены",
+    "badmintonClub": "Badminton Club",
     "contact": {
       "hours": {
         "weekdays": "Пн-Пт: 06:00-22:00",
@@ -234,15 +237,18 @@
     "of": "из",
     "showing": "Показано",
     "notFound": "Страница не найдена",
-    "backHome": "На главную"
+    "backHome": "На главную",
+    "adminRedirect": "Перенаправление в админку… Если не произошло автоматически, откройте /admin/index.html"
   },
   "home": {
     "services": {
       "title": "Наши услуги",
-      "features": "Особенности"
+      "features": "Особенности",
+      "decorative": "НАШИ УСЛУГИ"
     },
     "achievements": {
       "title": "Наши достижения",
+      "decorative": "IMPACT",
       "subtitle": "За годы работы мы достигли впечатляющих результатов и воспитали множество талантливых спортсменов",
       "timeline": {
         "title": "История развития клуба"
@@ -252,12 +258,23 @@
       "title": "Мировые новости",
       "noMaterials": "Нет материалов",
       "viewAll": "Смотреть все новости",
-      "tagWorld": "🌍 Мир"
+      "tagWorld": "🌍 Мир",
+      "decorative": "МИР"
     }
   },
   "socialHub": {
     "badge": "Мы в соцсетях",
     "title": "Live: Altius в соцсетях",
-    "subtitle": "Следите за нашими тренировками, турнирами и новостями клуба"
+    "subtitle": "Следите за нашими тренировками, турнирами и новостями клуба",
+    "tiktokTitle": "Badminton Moldova",
+    "youtubeTitle": "Badminton 4 Life",
+    "facebookTitle": "Altius Badminton Club",
+    "facebookSubtitle": "Новости и сообщество",
+    "subscribe": "ПОДПИСАТЬСЯ",
+    "loadingFeed": "Загрузка ленты",
+    "loadingPosts": "Загрузка постов",
+    "noContent": "Контент не найден",
+    "tiktokLabel": "TikTok",
+    "facebookLabel": "Facebook"
   }
 }

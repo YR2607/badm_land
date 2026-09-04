@@ -67,7 +67,7 @@ const BusinessNewsSection: FC = () => {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
           <h2 className="text-8xl md:text-[12rem] font-black font-display leading-[0.8] tracking-tighter uppercase text-zenith-black opacity-10 absolute -top-10 left-0 pointer-events-none select-none">
-            Global
+            {t('home.worldNews.decorative', 'GLOBAL')}
           </h2>
           <h2 className="text-4xl md:text-8xl font-black font-display leading-tight-impact tracking-tighter uppercase text-zenith-black relative z-10 break-words [overflow-wrap:anywhere]">
             {t('home.worldNews.title', 'Мировые новости')}

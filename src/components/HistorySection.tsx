@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Calendar, Trophy, Users, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface HistorySectionProps {
   cmsData?: {
@@ -28,6 +29,7 @@ const iconMap = {
 };
 
 const HistorySection = ({ cmsData }: HistorySectionProps) => {
+  const { t } = useTranslation();
   const milestones = cmsData?.milestones;
 
   return (
@@ -111,7 +113,7 @@ const HistorySection = ({ cmsData }: HistorySectionProps) => {
           </div>
         </div>
         ) : (
-          <p className="text-center text-gray-500">История скоро будет добавлена.</p>
+          <p className="text-center text-gray-500">{t('about.history.emptySection')}</p>
         )}
       </div>
     </section>

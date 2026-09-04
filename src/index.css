@@ -13,7 +13,7 @@
   }
 
   body {
-    font-family: 'Exo 2', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif;
     line-height: 1.7;
     letter-spacing: -0.01em;
     color: #0A0A0A;
@@ -39,15 +39,15 @@
   h4,
   h5,
   h6 {
-    font-family: 'Syne', system-ui, sans-serif;
+    font-family: 'Archivo', system-ui, sans-serif;
     font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 0.85;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
     text-transform: uppercase;
   }
 
   p {
-    font-family: 'Exo 2', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif;
     letter-spacing: -0.005em;
   }
 }
