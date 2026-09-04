@@ -1,7 +1,6 @@
 import { useState, useEffect, type FC } from 'react';
 import LocalizedLink from '../components/LocalizedLink';
 import { ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { fetchGyms, type CmsGym, fetchGymsHero, type CmsHero, fetchGymsPageLabels, type CmsGymsPageLabels } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import { useTranslation } from 'react-i18next';
@@ -165,14 +164,10 @@ const Gyms: FC = () => {
           <>
               {/* Gym Selection Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                {filteredGyms.map((gym, index) => (
-                  <motion.div
+                {filteredGyms.map((gym) => (
+                  <div
                     key={gym.id}
-                    className="group relative bg-white rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.15)] border-2 border-transparent hover:border-zenith-crimson/20 overflow-hidden transition-all duration-500"
-                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1, type: "spring", stiffness: 100 }}
-                    whileHover={{ y: -8 }}
+                    className="group relative bg-white rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_-10px_rgba(220,38,38,0.15)] border-2 border-transparent hover:border-zenith-crimson/20 overflow-hidden transition-all duration-500 hover:-translate-y-2"
                   >
 
                     <div className="relative h-64 overflow-hidden">
@@ -221,20 +216,17 @@ const Gyms: FC = () => {
                         </span>
                       </LocalizedLink>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
               {filteredGyms.length === 0 && (
-                <motion.div
+                <div
                   className="text-center py-12"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
                 >
                   <div className="text-6xl mb-4">🏸</div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('gyms.noGymsFound')}</h3>
                   <p className="text-gray-600">{t('gyms.tryChangeFilter')}</p>
-                </motion.div>
+                </div>
               )}
             </>
         </div>

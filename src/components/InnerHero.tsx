@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import { motion } from 'framer-motion';
 import Breadcrumbs from './Breadcrumbs';
 
 interface InnerHeroProps {
@@ -36,11 +35,8 @@ const InnerHero: FC<InnerHeroProps> = ({ title, subtitle, children }) => {
                 </div>
 
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
-                    <motion.div
+                    <div
                         className="max-w-4xl"
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     >
                         {subtitle && (
                             <span className="block text-xs md:text-sm font-black uppercase tracking-[0.4em] text-zenith-crimson mb-6">
@@ -50,17 +46,14 @@ const InnerHero: FC<InnerHeroProps> = ({ title, subtitle, children }) => {
                         <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-display leading-[0.85] tracking-tighter uppercase text-white mb-4 break-words [overflow-wrap:anywhere]">
                             {title}
                         </h1>
-                    </motion.div>
+                    </div>
 
                     {children && (
-                        <motion.div
+                        <div
                             className="flex-shrink-0"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3, duration: 0.8 }}
                         >
                             {children}
-                        </motion.div>
+                        </div>
                     )}
                 </div>
             </div>

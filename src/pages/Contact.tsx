@@ -1,5 +1,4 @@
 import { type FC, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { isCmsEnabled, fetchContactHero, type CmsHero, fetchContactInfo, type CmsContactInfo, fetchContactGymsCards, type CmsContactGymCard } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
@@ -103,15 +102,10 @@ const Contact: FC = () => {
               <div className="col-span-full text-center text-gray-400">{t('contact.emptySection')}</div>
             )}
             {!loading && contactInfo.map((info, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="group relative bg-white rounded-[2.5rem] p-10 text-center shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border-2 border-transparent hover:border-zenith-crimson/20 transition-all duration-500 overflow-hidden h-full"
+                className="group relative bg-white rounded-[2.5rem] p-10 text-center shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border-2 border-transparent hover:border-zenith-crimson/20 transition-all duration-500 overflow-hidden h-full hover:-translate-y-3"
                 role="listitem"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -12 }}
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-zenith-crimson/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-zenith-crimson/10 transition-colors pointer-events-none" />
 
@@ -122,7 +116,7 @@ const Contact: FC = () => {
                 <p className="text-lg text-gray-500 font-bold leading-relaxed whitespace-pre-line group-hover:text-zenith-black transition-colors">{info.content}</p>
 
                 <div className="mt-8 w-12 h-1 bg-gray-100 group-hover:bg-zenith-crimson/50 mx-auto rounded-full transition-colors" />
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -136,7 +130,7 @@ const Contact: FC = () => {
               <div key={i} className="animate-pulse rounded-[2.5rem] bg-gray-100 h-96" />
             ))}
             {!loading && contactGyms.map((g, idx) => (
-              <motion.div key={g.id || idx} initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: idx * 0.1 }}>
+              <div key={g.id || idx}>
                 <div className="h-full bg-white rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden flex flex-col group hover:border-zenith-crimson/20 transition-all duration-500">
                   <div className="p-10 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-8">
@@ -193,7 +187,7 @@ const Contact: FC = () => {
                     </button>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

@@ -1,5 +1,4 @@
 import { type FC, useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { fetchGallerySections, fetchTournamentCategories, isCmsEnabled } from '../lib/cms';
 import { addCmsDevMarkers } from '../utils/cmsDevMarker';
 import { Image as ImageIcon, Video as VideoIcon, X, ArrowLeft, ArrowRight, Trophy, Search, RotateCcw, Maximize2 } from 'lucide-react';
@@ -352,11 +351,10 @@ const Gallery: FC = () => {
                           {cats.map((cat: any) => {
                             const preview = (cat.photos || []).slice(0, 3);
                             return (
-                              <motion.button
+                              <button
                                 key={cat.id}
-                                className="group relative rounded-3xl text-left overflow-hidden bg-white border border-gray-100 hover:border-zenith-crimson/20 transition-all shadow-sm hover:shadow-2xl hover:shadow-zenith-crimson/10 duration-500"
+                                className="group relative rounded-3xl text-left overflow-hidden bg-white border border-gray-100 hover:border-zenith-crimson/20 transition-all shadow-sm hover:shadow-2xl hover:shadow-zenith-crimson/10 duration-500 hover:-translate-y-1.5"
                                 onClick={() => openOverlay(cat.id)}
-                                whileHover={{ y: -6 }}
                               >
                                 {/* Cover image */}
                                 <div className="aspect-[4/3] overflow-hidden bg-gray-50 relative">
@@ -414,7 +412,7 @@ const Gallery: FC = () => {
                                     </div>
                                   )}
                                 </div>
-                              </motion.button>
+                              </button>
                             );
                           })}
                         </div>
@@ -430,18 +428,10 @@ const Gallery: FC = () => {
                       const canMore = visible < cat.photos.length;
                       const activeTab = (tabByCat[cat.id] ?? 'photo');
                       return (
-                        <AnimatePresence>
-                          <motion.div
-                            className="fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-8"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                          >
+                        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-8">
                             <div className="absolute inset-0 bg-zenith-black/80 backdrop-blur-xl" onClick={closeOverlay} />
-                            <motion.div
+                            <div
                               className="relative z-10 w-full h-full max-w-[1600px] bg-zenith-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col"
-                              initial={{ scale: 0.95, y: 30 }}
-                              animate={{ scale: 1, y: 0 }}
                             >
                               {/* Header */}
                               <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white">
@@ -484,12 +474,9 @@ const Gallery: FC = () => {
                                     <>
                                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                         {photos.map((src: string, i: number) => (
-                                          <motion.div
+                                          <div
                                             key={i}
                                             className={`relative group rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-shadow duration-300 ${i % 9 === 0 ? 'col-span-2 row-span-2' : ''}`}
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: Math.min(i * 0.03, 0.5) }}
                                             onClick={() => openLightbox(cat.photos.map((p: string) => ({ type: 'image' as const, src: p, alt: cat.name })), i)}
                                           >
                                             <img
@@ -499,7 +486,7 @@ const Gallery: FC = () => {
                                               className={`w-full ${i % 9 === 0 ? 'aspect-square lg:aspect-auto lg:h-full' : 'aspect-square'} object-cover transition-transform duration-500 group-hover:scale-110`}
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-zenith-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                          </motion.div>
+                                          </div>
                                         ))}
                                       </div>
                                       {canMore && (
@@ -531,9 +518,8 @@ const Gallery: FC = () => {
                                   )
                                 )}
                               </div>
-                            </motion.div>
-                          </motion.div>
-                        </AnimatePresence>
+                            </div>
+                          </div>
                       );
                     })()}
                   </>
@@ -579,11 +565,9 @@ const Gallery: FC = () => {
             <ArrowRight className="w-7 h-7" />
           </button>
           <div className="max-w-7xl w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
+            <div
               key={lightbox.index}
-              className="relative w-full h-full flex items-center justify-center"
+              className="relative w-full h-full flex items-center justify-center animate-[lightboxIn_0.2s_ease-out]"
             >
               {lightbox.items[lightbox.index].type === 'image' ? (
                 <img
@@ -596,7 +580,7 @@ const Gallery: FC = () => {
                   <video src={lightbox.items[lightbox.index].src} className="w-full" controls autoPlay />
                 </div>
               )}
-            </motion.div>
+            </div>
           </div>
         </div>
       )}

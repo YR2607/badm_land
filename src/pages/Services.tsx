@@ -1,6 +1,5 @@
 import { FC, useState, useEffect } from 'react';
 import { ChevronDown, Phone, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import LocalizedLink from '../components/LocalizedLink';
 import InnerHero from '../components/InnerHero';
@@ -122,73 +121,51 @@ const Services: FC = () => {
         <ServicesSection cmsData={homeServicesSection} />
       ) : null}
 
-      <motion.section
+      <section
         className="py-24 bg-zenith-white relative overflow-hidden"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
       >
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-zenith-crimson/5 blur-3xl rounded-full" />
 
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
+          <div
             className="text-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
           >
             <h2 className="text-4xl md:text-7xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter break-words [overflow-wrap:anywhere]">{t('services.gyms.title')}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-12 font-medium">
               {t('services.gyms.subtitle')}
             </p>
 
-            <motion.div
-              className="inline-flex items-center gap-3 px-10 py-5 bg-zenith-black text-white font-black rounded-full hover:bg-zenith-crimson transition-all duration-300 shadow-xl hover:shadow-[0_10px_40px_-10px_rgba(220,38,38,0.5)] uppercase tracking-widest text-sm"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <div
+              className="inline-flex items-center gap-3 px-10 py-5 bg-zenith-black text-white font-black rounded-full hover:bg-zenith-crimson transition-all duration-300 shadow-xl hover:shadow-[0_10px_40px_-10px_rgba(220,38,38,0.5)] uppercase tracking-widest text-sm hover:scale-105 active:scale-95"
             >
               <LocalizedLink to="/gyms" className="inline-flex items-center gap-3">
                 <span className="text-2xl">🏸</span>
                 {t('services.gyms.viewAll')}
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* FAQ SECTION */}
-      <motion.section
+      <section
         className="py-32 bg-zenith-white relative overflow-hidden"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
+          <div
             className="text-center mb-24"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
           >
             <h2 className="text-4xl md:text-6xl font-black font-display text-zenith-black mb-6 uppercase tracking-tighter leading-none break-words [overflow-wrap:anywhere]">{t('services.faq.title')}</h2>
             <div className="w-24 h-2 bg-zenith-crimson mx-auto mb-8 rounded-full" />
             <p className="text-xl text-gray-500 font-bold uppercase tracking-widest">{t('services.faq.subtitle')}</p>
-          </motion.div>
+          </div>
 
           <div className="space-y-6">
             {faqs.map((f, idx) => (
-              <motion.div
+              <div
                 key={idx}
                 className={`rounded-[2rem] overflow-hidden transition-all duration-500 border-2 ${openFaq === idx ? 'bg-white shadow-2xl border-zenith-crimson/20 -translate-y-1' : 'bg-white border-gray-100 hover:border-zenith-crimson/20'}`}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -208,49 +185,33 @@ const Services: FC = () => {
                     <p className="text-lg text-gray-600 leading-relaxed font-medium">{f.a}</p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* CTA SECTION */}
-      <motion.section
+      <section
         className="py-24 bg-zenith-black text-white relative overflow-hidden"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
       >
         {/* Dynamic background elements */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-zenith-crimson/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-zenith-crimson/5 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <motion.h2
+          <h2
             className="text-4xl md:text-6xl font-black font-display mb-8 uppercase tracking-tighter break-words [overflow-wrap:anywhere]"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
           >
             {t('services.cta.title')}
-          </motion.h2>
-          <motion.p
+          </h2>
+          <p
             className="text-xl md:text-2xl text-gray-400 font-medium mb-12 max-w-2xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
           >
             {t('services.cta.subtitle')}
-          </motion.p>
-          <motion.div
+          </p>
+          <div
             className="flex flex-col sm:flex-row gap-6 justify-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
           >
             <LocalizedLink
               to="/contact"
@@ -265,9 +226,9 @@ const Services: FC = () => {
               <Phone className="w-5 h-5 mr-3 group-hover:animate-bounce" />
               {t('services.cta.call')}
             </a>
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
     </div>
   );
 };

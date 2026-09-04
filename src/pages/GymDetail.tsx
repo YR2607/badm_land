@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import LocalizedLink from '../components/LocalizedLink'
 import { useTranslation } from 'react-i18next'
 import { MapPin, Phone, Mail, ArrowLeft, Clock, CheckCircle } from 'lucide-react'
-import { motion } from 'framer-motion'
 import { fetchGymBySlug, type CmsGym } from '../lib/cms'
 import { addCmsDevMarkers } from '../utils/cmsDevMarker'
 import Breadcrumbs from '../components/Breadcrumbs'
@@ -119,11 +118,7 @@ const GymDetail: FC = () => {
             </div>
 
             <div className="absolute bottom-12 left-10 right-10 md:bottom-20 md:left-16 md:right-16 text-white z-20">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-              >
+              <div>
                 {gym.badge && (
                   <div className="inline-block px-6 py-2 rounded-full bg-zenith-crimson text-[10px] font-black uppercase tracking-[0.2em] mb-8 shadow-[0_0_20px_rgba(220,38,38,0.5)]">
                     {gym.badge}
@@ -137,7 +132,7 @@ const GymDetail: FC = () => {
                     {gym.description}
                   </p>
                 )}
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
@@ -215,13 +210,12 @@ const GymDetail: FC = () => {
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {gym.gallery.map((src, idx) => (
-                      <motion.div
+                      <div
                         key={idx}
-                        className="aspect-[4/5] bg-gray-100 rounded-[2rem] overflow-hidden shadow-lg border-2 border-transparent hover:border-zenith-crimson transition-all"
-                        whileHover={{ scale: 1.03 }}
+                        className="aspect-[4/5] bg-gray-100 rounded-[2rem] overflow-hidden shadow-lg border-2 border-transparent hover:border-zenith-crimson transition-all hover:scale-[1.03]"
                       >
                         <img src={src} alt={`${gym.name} ${idx + 1}`} className="w-full h-full object-cover" />
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 </div>

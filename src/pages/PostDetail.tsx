@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Globe } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import LocalizedLink from '../components/LocalizedLink';
@@ -118,21 +117,15 @@ const PostDetail: React.FC = () => {
           {t('news.backToList', 'Назад к новостям')}
         </LocalizedLink>
 
-        <motion.h1
+        <h1
           className="text-5xl md:text-8xl font-black font-display text-zenith-black mb-12 uppercase tracking-tighter leading-[0.9]"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
         >
           {post.title}
-        </motion.h1>
+        </h1>
 
         {post.image && (
-          <motion.div
+          <div
             className="w-full aspect-[21/9] rounded-[3rem] overflow-hidden bg-gray-100 mb-16 relative shadow-2xl"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
           >
             <img
               src={proxied(post.image)}
@@ -149,7 +142,7 @@ const PostDetail: React.FC = () => {
             <div className="fallback-bg w-full h-full bg-zenith-black flex items-center justify-center" style={{ display: 'none' }}>
               <Globe className="w-16 h-16 text-white/20" />
             </div>
-          </motion.div>
+          </div>
         )}
 
         <div className="max-w-4xl mx-auto">

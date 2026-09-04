@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Calendar, Trophy, Users, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -42,12 +41,8 @@ const HistorySection = ({ cmsData }: HistorySectionProps) => {
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Header */}
-        <motion.div 
+        <div 
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
         >
           {cmsData?.title && (
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -59,7 +54,7 @@ const HistorySection = ({ cmsData }: HistorySectionProps) => {
               {cmsData.subtitle}
             </p>
           )}
-        </motion.div>
+        </div>
 
         {/* Timeline */}
         {milestones && milestones.length > 0 ? (
@@ -73,13 +68,9 @@ const HistorySection = ({ cmsData }: HistorySectionProps) => {
               const isEven = index % 2 === 0;
 
               return (
-                <motion.div
+                <div
                   key={index}
                   className={`relative flex items-center ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-                  initial={{ opacity: 0, x: isEven ? -50 : 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
                   {/* Content Card */}
                   <div className={`w-full md:w-5/12 ${isEven ? 'md:pr-8' : 'md:pl-8'}`}>
@@ -107,7 +98,7 @@ const HistorySection = ({ cmsData }: HistorySectionProps) => {
 
                   {/* Timeline Dot */}
                   <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white border-4 border-primary-blue rounded-full z-10"></div>
-                </motion.div>
+                </div>
               );
             })}
           </div>

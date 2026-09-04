@@ -1,5 +1,4 @@
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Globe, Search, Filter, ArrowRight } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { fetchClubEmbeds } from '../lib/cms';
@@ -216,10 +215,10 @@ const Blog: FC = () => {
   };
 
   const Empty: FC<{ text: string }> = ({ text }) => (
-    <motion.div className="text-center py-24 bg-white rounded-[3rem] border border-dashed border-gray-200" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+    <div className="text-center py-24 bg-white rounded-[3rem] border border-dashed border-gray-200">
       <div className="text-8xl mb-6">🗞️</div>
       <h3 className="text-2xl font-black text-zenith-black mb-2 uppercase tracking-tight">{text}</h3>
-    </motion.div>
+    </div>
   );
 
   return (
@@ -260,7 +259,7 @@ const Blog: FC = () => {
       <section ref={filtersRef as any} className="py-12 bg-zenith-white scroll-mt-28 md:scroll-mt-32">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8 items-center justify-between bg-white p-6 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-gray-100">
-            <motion.div className="relative flex-grow max-w-xl w-full" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+            <div className="relative flex-grow max-w-xl w-full">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
@@ -269,8 +268,8 @@ const Blog: FC = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-zenith-crimson/20 transition-all font-bold text-zenith-black placeholder:text-gray-400"
               />
-            </motion.div>
-            <motion.div className="flex flex-wrap gap-2 justify-center" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
+            </div>
+            <div className="flex flex-wrap gap-2 justify-center">
               {categories.map((category) => (
                 <button
                   key={category.value}
@@ -281,7 +280,7 @@ const Blog: FC = () => {
                   <span>{category.label}</span>
                 </button>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -307,14 +306,9 @@ const Blog: FC = () => {
                 const isExternal = (news as any)._external
                 const href = (news as any)._href
                 const Card = (
-                  <motion.article
+                  <article
                     key={(news as any).id || index}
-                    className="bg-white rounded-[2.5rem] p-8 group transition-all duration-500 border border-gray-100 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] hover:border-zenith-crimson/20"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.05 }}
-                    whileHover={{ y: -10 }}
+                    className="bg-white rounded-[2.5rem] p-8 group transition-all duration-500 border border-gray-100 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] hover:border-zenith-crimson/20 hover:-translate-y-[10px]"
                   >
                     <div className="h-64 rounded-[2rem] mb-8 overflow-hidden bg-gray-100 relative shadow-inner">
                       {news.image ? (
@@ -366,7 +360,7 @@ const Blog: FC = () => {
                         <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
                       </span>
                     </div>
-                  </motion.article>
+                  </article>
                 )
                 return isExternal ? (
                   <a key={(news as any).id || index} href={href} target="_blank" rel="noreferrer" className="block h-full">{Card}</a>
