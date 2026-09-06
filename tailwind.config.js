@@ -9,7 +9,7 @@ export default {
       colors: {
         zenith: {
           white: '#FAFAFA',
-          black: '#0A0A0A',
+          black: '#2D2D2D',
           crimson: '#DC2626',
         },
         primary: {
