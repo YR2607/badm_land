@@ -15,60 +15,57 @@
     {
       "source": "/",
       "destination": "/ro",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/about",
       "destination": "/ro/about",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/gallery",
       "destination": "/ro/gallery",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/services",
       "destination": "/ro/services",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/gyms",
       "destination": "/ro/gyms",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/gyms/:slug",
       "destination": "/ro/gyms/:slug",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/contact",
       "destination": "/ro/contact",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/blog",
       "destination": "/ro/blog",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/blog/:slug",
       "destination": "/ro/blog/:slug",
-      "permanent": false
+      "permanent": true
     }
   ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "^/api/(.*)$", "dest": "/api/$1" },
-    { "src": "^/data/(.*)$", "dest": "/data/$1" },
-    { "src": "^/assets/(.*)$", "dest": "/assets/$1" },
-    { "src": "^/static/(.*)$", "dest": "/admin/static/$1" },
-    { "src": "^/vendor/(.*)$", "dest": "/admin/vendor/$1" },
-    { "src": "^/manifest\\.webmanifest$", "dest": "/admin/manifest.webmanifest" },
-    { "src": "^/favicon\\.(ico|svg)$", "dest": "/admin/favicon.$1" },
-    { "src": "^/admin$", "dest": "/admin/index.html" },
-    { "src": "^/admin/.*$", "dest": "/admin/index.html" },
-    { "src": ".*", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/static/:path*", "destination": "/admin/static/:path*" },
+    { "source": "/vendor/:path*", "destination": "/admin/vendor/:path*" },
+    { "source": "/manifest.webmanifest", "destination": "/admin/manifest.webmanifest" },
+    { "source": "/favicon.ico", "destination": "/admin/favicon.ico" },
+    { "source": "/favicon.svg", "destination": "/admin/favicon.svg" },
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/admin/:path*", "destination": "/admin/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

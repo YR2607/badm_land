@@ -77,7 +77,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const staticEntries = STATIC_PAGES.map(p =>
-    urlEntry(p.loc, p.priority, p.changefreq, today)
+    urlEntry(p.path, p.priority, p.changefreq, today)
   ).join('\n')
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
