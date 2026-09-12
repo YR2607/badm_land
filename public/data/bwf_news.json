@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-09-12T08:20:18.904527+00:00",
+  "scraped_at": "2026-09-12T14:50:31.838537+00:00",
   "items": [
+    {
+      "title": "Cheah Stays Close to Badminton",
+      "href": "https://bwfbadminton.com/news-single/2026/09/12/cheah-stays-close-to-badminton/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/20220824_1550_WorldChampionships2022_BPRS6458-1280x550.jpg",
+      "preview": "",
+      "date": "2026-09-12T00:00:00+00:00"
+    },
     {
       "title": "Humans of Shuttle Time: Haydee Amada San Lucas Poveda",
       "href": "https://bwfbadminton.com/news-single/2026/09/11/humans-of-shuttle-time-haydee-amada-san-lucas-poveda/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Pict-5_-HAYDEE-AMADA-SAN-LUCAS-POVEDA_-ECU.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Pict-5_-HAYDEE-AMADA-SAN-LUCAS-POVEDA_-ECU-400x310.jpg",
       "preview": "",
       "date": "2026-09-11T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/08/cr_20231020_1923_DenmarkOpen2023_BPYN4616.jpg",
       "preview": "Monday, August 31, 2026 TEXT BY BWF STAFF | BADMINTONPHOTO",
       "date": "2026-08-31T00:00:00+00:00"
-    },
-    {
-      "title": "Rwanda Project Creates Lasting Impact",
-      "href": "https://bwfbadminton.com/news-single/2026/08/30/rwanda-project-creates-lasting-impact/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/08/Rwanda11-400x310.jpg",
-      "preview": "",
-      "date": "2026-08-30T00:00:00+00:00"
     }
   ]
 }
