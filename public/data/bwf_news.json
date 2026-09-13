@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-09-13T08:46:40.693539+00:00",
+  "scraped_at": "2026-09-13T15:29:00.562058+00:00",
   "items": [
+    {
+      "title": "Behind the Mic, Matsuyama Finds Reprieve",
+      "href": "https://bwfbadminton.com/news-single/2026/09/13/behind-the-mic-matsuyama-finds-reprieve/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/20260105_1651_MalaysiaOpen2026_BPYL0184-1280x550.jpg",
+      "preview": "",
+      "date": "2026-09-13T00:00:00+00:00"
+    },
     {
       "title": "Cheah Stays Close to Badminton",
       "href": "https://bwfbadminton.com/news-single/2026/09/12/cheah-stays-close-to-badminton/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/20220824_1550_WorldChampionships2022_BPRS6458-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/20220824_1550_WorldChampionships2022_BPRS6458-400x310.jpg",
       "preview": "",
       "date": "2026-09-12T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20191110_1449_FuzhouChinaOpen2019_BPYL51801.jpg",
       "preview": "Tuesday, September 1, 2026 TEXT BY PREM KUMAR | BADMINTONPHOTO",
       "date": "2026-09-01T00:00:00+00:00"
-    },
-    {
-      "title": "China Masters: Opening Round Treats Await",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/08/31/china-masters-opening-round-treats-await/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/08/cr_20231020_1923_DenmarkOpen2023_BPYN4616.jpg",
-      "preview": "Monday, August 31, 2026 TEXT BY BWF STAFF | BADMINTONPHOTO",
-      "date": "2026-08-31T00:00:00+00:00"
     }
   ]
 }
