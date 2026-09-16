@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-09-16T02:49:18.699400+00:00",
+  "scraped_at": "2026-09-16T08:59:50.956911+00:00",
   "items": [
+    {
+      "title": "‘I Want to be a Legend’",
+      "href": "https://bwfbadminton.com/news-single/2026/09/16/i-want-to-be-a-legend/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/cr_20260905_1051_ChinaMasters2026_BPGE0322-1280x550.jpg",
+      "preview": "",
+      "date": "2026-09-16T00:00:00+00:00"
+    },
     {
       "title": "The Week in Quotes",
       "href": "https://bwfbadminton.com/news-single/2026/09/15/the-week-in-quotes-128/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/cr_20190122_2149_IndonesiaMasters2019_BPRS4675-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/cr_20190122_2149_IndonesiaMasters2019_BPRS4675-400x310.jpg",
       "preview": "",
       "date": "2026-09-15T00:00:00+00:00"
     },
@@ -132,13 +139,6 @@
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/09/02/china-masters-liu-hsu-tame-world-champs/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20260902_1150_ChinaMasters2026_BPGE2715.jpg",
       "preview": "Wednesday, September 2, 2026 TEXT BY PREM KUMAR | GOH EAN JIE/BADMINTONPHOTO",
-      "date": "2026-09-02T00:00:00+00:00"
-    },
-    {
-      "title": "Where To Watch: LI-NING China Masters 2026",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/09/02/where-to-watch-li-ning-china-masters-2026/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2024/11/0.-HSBC-BWF-World-Tour-Inside-Page.jpg",
-      "preview": "Wednesday, September 2, 2026",
       "date": "2026-09-02T00:00:00+00:00"
     }
   ]
