@@ -1,10 +1,24 @@
 {
-  "scraped_at": "2026-09-18T02:39:54.286519+00:00",
+  "scraped_at": "2026-09-18T08:40:09.888188+00:00",
   "items": [
+    {
+      "title": "Humans of Shuttle Time: Ricardo Flores Gómez",
+      "href": "https://bwfbadminton.com/news-single/2026/09/18/humans-of-shuttle-time-ricardo-flores-gomez/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Pict.-2_-Ricardo-Flores-Gomez_-MEX-400x310.jpeg",
+      "preview": "",
+      "date": "2026-09-18T00:00:00+00:00"
+    },
+    {
+      "title": "Michelle Li: The Iconic Journey Continues",
+      "href": "https://bwfworldchampionships.bwfbadminton.com/news-single/2026/09/18/michelle-li-continuing-to-inspire/",
+      "img": "https://bwfworldchampionships.bwfbadminton.com/wp-content/uploads/2026/09/20260820_1507_WorldChampionships2026_BPJS2898.jpg",
+      "preview": "Friday, September 18, 2026 TEXT BY DEV SUKUMAR | BADMINTONPHOTO",
+      "date": "2026-09-18T00:00:00+00:00"
+    },
     {
       "title": "History Watch: Two Museums, Two Approaches",
       "href": "https://bwfbadminton.com/news-single/2026/09/17/history-watch-two-museums-two-approaches/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Maywald-Museum5-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Maywald-Museum5-400x310.jpg",
       "preview": "",
       "date": "2026-09-17T00:00:00+00:00"
     },
@@ -126,20 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20260904_1323_ChinaMasters2026_BPGE1173.jpg",
       "preview": "Friday, September 4, 2026 TEXT BY PREM KUMAR | GOH EAN JIE/BADMINTONPHOTO",
       "date": "2026-09-04T00:00:00+00:00"
-    },
-    {
-      "title": "AirBadminton to Make Historic World Games Debut in 2029",
-      "href": "https://bwfbadminton.com/news-single/2026/09/04/airbadminton-to-make-historic-world-games-debut-in-2029/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/20251212_2101_AirBadmintonWorldCup2025_BPJV5294-1280x550.jpg",
-      "preview": "",
-      "date": "2026-09-04T00:00:00+00:00"
-    },
-    {
-      "title": "China Masters: Underdogs Deliver Upset Bonanza",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/09/03/china-masters-underdogs-deliver-upset-bonanza/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/1806733PK.jpeg",
-      "preview": "Thursday, September 3, 2026 TEXT BY PREM KUMAR | LIANG JING & GOH EAN JIE/BADMINTONPHOTO",
-      "date": "2026-09-03T00:00:00+00:00"
     }
   ]
 }
