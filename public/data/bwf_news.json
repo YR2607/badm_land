@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2026-09-19T08:27:11.347548+00:00",
+  "scraped_at": "2026-09-19T15:10:26.942919+00:00",
   "items": [
+    {
+      "title": "Challenging Perceptions in Para badminton",
+      "href": "https://bwfbadminton.com/news-single/2026/09/19/challenging-perceptions-in-para-badminton/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Wales4-1280x550.jpg",
+      "preview": "",
+      "date": "2026-09-19T00:00:00+00:00"
+    },
     {
       "title": "Humans of Shuttle Time: Ricardo Flores Gómez",
       "href": "https://bwfbadminton.com/news-single/2026/09/18/humans-of-shuttle-time-ricardo-flores-gomez/",
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20260904_2139_ChinaMasters2026_BPGE7765.jpg",
       "preview": "Saturday, September 5, 2026 TEXT BY PREM KUMAR | GOH EAN JIE & LIANG JING/BADMINTONPHOTO",
       "date": "2026-09-05T00:00:00+00:00"
-    },
-    {
-      "title": "China Masters: Hirota/Sakuramoto Finding Their Stride",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/09/04/china-masters-hirota-sakuramoto-finding-their-stride/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20260904_1323_ChinaMasters2026_BPGE1173.jpg",
-      "preview": "Friday, September 4, 2026 TEXT BY PREM KUMAR | GOH EAN JIE/BADMINTONPHOTO",
-      "date": "2026-09-04T00:00:00+00:00"
     }
   ]
 }
