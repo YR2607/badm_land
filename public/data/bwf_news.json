@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-09-21T02:57:39.469544+00:00",
+  "scraped_at": "2026-09-21T09:32:08.751032+00:00",
   "items": [
+    {
+      "title": "Africa AirBadminton: Benin, Burkina Faso Impress",
+      "href": "https://bwfbadminton.com/news-single/2026/09/21/africa-airbadminton-benin-burkina-faso-impress/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Africa-AirBadminton_Benin-1280x550.jpg",
+      "preview": "",
+      "date": "2026-09-21T00:00:00+00:00"
+    },
     {
       "title": "Asian Games: Smooth Start for Malaysia",
       "href": "https://bwfbadminton.com/news-single/2026/09/20/asian-games-smooth-start-for-malaysia/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/05/20260521_1435_MalaysiaMasters2026_BPYL5877-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/05/20260521_1435_MalaysiaMasters2026_BPYL5877-400x310.jpg",
       "preview": "",
       "date": "2026-09-20T00:00:00+00:00"
     },
@@ -132,13 +139,6 @@
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/09/05/china-masters-teammates-lee-gunawan-in-historic-final/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20260905_2036_ChinaMasters2026_BPGE2922.jpg",
       "preview": "Saturday, September 5, 2026 TEXT BY PREM KUMAR | GOH EAN JIE & LIANG JING/BADMINTONPHOTO",
-      "date": "2026-09-05T00:00:00+00:00"
-    },
-    {
-      "title": "China Masters: Miyazaki Refuses to Blink, Defies Wang",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/09/05/china-masters-miyazaki-refuses-to-blink-defies-wang/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20260905_1248_ChinaMasters2026_BPGE2708.jpg",
-      "preview": "Saturday, September 5, 2026 TEXT BY PREM KUMAR | GOH EAN JIE/BADMINTONPHOTO",
       "date": "2026-09-05T00:00:00+00:00"
     }
   ]
