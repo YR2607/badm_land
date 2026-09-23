@@ -245,8 +245,24 @@ const META = {
 const LOCALE_TAG = { ro: 'ro_RO', ru: 'ru_RU', en: 'en_US' };
 const LANGS = ['ro', 'ru', 'en'];
 
+// Localized labels for the static nav/footer injected into prerendered HTML.
+// These mirror src/i18n/locales/*.json navigation labels.
+const NAV_LABELS = {
+  ro: { '': 'Acasă', '/about': 'Despre', '/services': 'Servicii', '/gyms': 'Săli', '/gallery': 'Galerie', '/blog': 'Știri', '/contact': 'Contact' },
+  ru: { '': 'Главная', '/about': 'О нас', '/services': 'Услуги', '/gyms': 'Залы', '/gallery': 'Галерея', '/blog': 'Новости', '/contact': 'Контакты' },
+  en: { '': 'Home', '/about': 'About', '/services': 'Services', '/gyms': 'Gyms', '/gallery': 'Gallery', '/blog': 'News', '/contact': 'Contact' },
+};
+
+const GYM_LABELS = {
+  ro: { '/gyms/malaya-malian-24': 'Sala Malaya Malyan 24', '/gyms/31-avgusta-1989': 'Sala 31 August 1989', '/gyms/ion-creanga-1': 'Sala Ion Creangă 1' },
+  ru: { '/gyms/malaya-malian-24': 'Зал Малая Малян 24', '/gyms/31-avgusta-1989': 'Зал 31 Августа 1989', '/gyms/ion-creanga-1': 'Зал Ион Крянэ 1' },
+  en: { '/gyms/malaya-malian-24': 'Gym Malaya Malyan 24', '/gyms/31-avgusta-1989': 'Gym 31 August 1989', '/gyms/ion-creanga-1': 'Gym Ion Creanga 1' },
+};
+
+const FOOTER_NAP = 'str. Ion Creangă 1/2, Chișinău, MD-2069 · +373 69 509 892';
+
 function escapeHtml(s) {
-  return String(s || '').replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function generate(lang, pagePath, overrides = {}) {
@@ -312,11 +328,46 @@ function generate(lang, pagePath, overrides = {}) {
     `<link rel="canonical" href="${canonical}" />\n${hreflangs}\n${xDefault}`
   );
 
-  // Inject visible body content into <div id="root"> for crawlers.
-  // React will replace this on hydration, so it's safe.
-  // Content is hidden visually but visible to crawlers via noscript-style approach.
-  // Actually, we inject it INSIDE #root — React hydration replaces it cleanly.
-  const bodyContent = `    <h1>${h1}</h1>\n    <p>${body}</p>`;
+  // Inject a static SEO skeleton into <div id="root"> for crawlers.
+  // React createRoot() replaces this content on client render, so it's safe.
+  // The skeleton gives non-JS crawlers the full internal link graph
+  // (nav + footer), localized content and NAP — not just a bare H1.
+  const navLinks = Object.entries(NAV_LABELS[lang])
+    .map(([p, label]) => `        <li><a href="${BASE}/${lang}${p}">${escapeHtml(label)}</a></li>`)
+    .join('\n');
+
+  const langSwitch = LANGS
+    .filter(l => l !== lang)
+    .map(l => `        <li><a href="${BASE}/${l}${pathPart}" hreflang="${l}">${l.toUpperCase()}</a></li>`)
+    .join('\n');
+
+  const footerLinks = Object.entries({ ...NAV_LABELS[lang], ...GYM_LABELS[lang] })
+    .map(([p, label]) => `        <li><a href="${BASE}/${lang}${p}">${escapeHtml(label)}</a></li>`)
+    .join('\n');
+
+  const bodyContent = `
+    <header>
+      <nav aria-label="Main navigation">
+        <ul>
+${navLinks}
+        </ul>
+      </nav>
+      <nav aria-label="Language">
+        <ul>
+${langSwitch}
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>${h1}</h1>
+      <p>${body}</p>
+    </main>
+    <footer>
+      <ul>
+${footerLinks}
+      </ul>
+      <address>${FOOTER_NAP}</address>
+    </footer>`;
   html = html.replace(
     /<div id="root"><\/div>/,
     `<div id="root" data-prerendered="true">${bodyContent}</div>`

@@ -33,4 +33,4 @@ Disallow: /
 # Googlebot (search indexing) — allowed via * above
 
 # Sitemap location (dynamic, includes blog posts from Sanity)
-Sitemap: https://altius.md/api/sitemap
+Sitemap: https://altius.md/sitemap.xml

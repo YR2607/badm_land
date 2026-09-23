@@ -50,8 +50,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Content-Type', 'application/xml')
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400')
 
-  const today = new Date().toISOString().split('T')[0]
-
   let blogEntries = ''
 
   if (client) {
@@ -68,7 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           `/blog/${p.slug}`,
           '0.7',
           'weekly',
-          p.date ? new Date(p.date).toISOString().split('T')[0] : today
+          p.date ? new Date(p.date).toISOString().split('T')[0] : undefined
         ))
         .join('\n')
     } catch {
@@ -76,8 +74,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
+  // No lastmod for static pages: a fabricated "today" date makes Google
+  // distrust the whole sitemap. Only real post dates are emitted above.
   const staticEntries = STATIC_PAGES.map(p =>
-    urlEntry(p.path, p.priority, p.changefreq, today)
+    urlEntry(p.path, p.priority, p.changefreq)
   ).join('\n')
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
