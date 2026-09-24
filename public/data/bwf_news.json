@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-09-24T16:18:01.864488+00:00",
+  "scraped_at": "2026-09-24T22:55:15.066390+00:00",
   "items": [
+    {
+      "title": "Asian Games: Indonesia Break Gold Medal Drought",
+      "href": "https://bwfbadminton.com/news-single/2026/09/24/asian-games-indonesia-break-gold-medal-drought/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/ainagoc_ag_ph23_260924_00845-opq3031236908-1280x550.jpg",
+      "preview": "",
+      "date": "2026-09-24T00:00:00+00:00"
+    },
     {
       "title": "Asian Games: Indonesia Earn Title Shot",
       "href": "https://bwfbadminton.com/news-single/2026/09/23/asian-games-indonesia-earn-title-shot/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/ainagoc_ag_ph19_260923_03303-opq3031184317-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/ainagoc_ag_ph19_260923_03303-opq3031184317-400x310.jpg",
       "preview": "",
       "date": "2026-09-23T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20260906_1719_ChinaMasters2026_BPLJ1224.jpg",
       "preview": "Monday, September 7, 2026 TEXT BY PREM KUMAR | LIANG JING & GOH EAN JIE/BADMINTONPHOTO",
       "date": "2026-09-07T00:00:00+00:00"
-    },
-    {
-      "title": "China Masters: Super 750 Glory at First Asking",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/09/06/china-masters-super-750-glory-at-first-asking/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20260906_1619_ChinaMasters2026_BPGE1313.jpg",
-      "preview": "Sunday, September 6, 2026 TEXT BY PREM KUMAR | GOH EAN JIE/BADMINTONPHOTO",
-      "date": "2026-09-06T00:00:00+00:00"
     }
   ]
 }
