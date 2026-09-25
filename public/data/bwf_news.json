@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-09-25T09:16:26.765034+00:00",
+  "scraped_at": "2026-09-25T16:18:18.584091+00:00",
   "items": [
+    {
+      "title": "Asian Games: Defending Champs Tumble Out",
+      "href": "https://bwfbadminton.com/news-single/2026/09/25/asian-games-defending-champs-tumble-out/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/20240630_1244_USOpen2024_BPYL1688-1280x550.jpg",
+      "preview": "",
+      "date": "2026-09-25T00:00:00+00:00"
+    },
     {
       "title": "Asian Games: Indonesia Break Gold Medal Drought",
       "href": "https://bwfbadminton.com/news-single/2026/09/24/asian-games-indonesia-break-gold-medal-drought/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/ainagoc_ag_ph23_260924_00845-opq3031236908-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/ainagoc_ag_ph23_260924_00845-opq3031236908-400x310.jpg",
       "preview": "",
       "date": "2026-09-24T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Leani-Ratri-Oktila_F-400x310.jpg",
       "preview": "",
       "date": "2026-09-08T00:00:00+00:00"
-    },
-    {
-      "title": "China Masters: Gunawan Sets Sights Higher",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/09/07/china-masters-gunawan-sets-sights-higher/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/09/cr_20260906_1719_ChinaMasters2026_BPLJ1224.jpg",
-      "preview": "Monday, September 7, 2026 TEXT BY PREM KUMAR | LIANG JING & GOH EAN JIE/BADMINTONPHOTO",
-      "date": "2026-09-07T00:00:00+00:00"
     }
   ]
 }
