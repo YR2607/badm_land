@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-09-29T10:18:51.698747+00:00",
+  "scraped_at": "2026-09-29T17:27:32.348324+00:00",
   "items": [
+    {
+      "title": "Asian Games: Vitidsarn, An Reign Supreme",
+      "href": "https://bwfbadminton.com/news-single/2026/09/29/asian-games-vitidsarn-an-reign-supreme/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/ainagac_ag_ph06_20260929_09817-opq3031660067PK-1280x550.jpg",
+      "preview": "",
+      "date": "2026-09-29T00:00:00+00:00"
+    },
     {
       "title": "Asian Games: Indonesia Strike Twice, High for Loh",
       "href": "https://bwfbadminton.com/news-single/2026/09/28/asian-games-indonesia-strike-twice-high-for-loh/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/ainagoc_ag_ph46_260928_00646-opq3031586582PK-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/ainagoc_ag_ph46_260928_00646-opq3031586582PK-400x310.jpg",
       "preview": "",
       "date": "2026-09-28T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/20220824_1550_WorldChampionships2022_BPRS6458-400x310.jpg",
       "preview": "",
       "date": "2026-09-12T00:00:00+00:00"
-    },
-    {
-      "title": "Humans of Shuttle Time: Haydee Amada San Lucas Poveda",
-      "href": "https://bwfbadminton.com/news-single/2026/09/11/humans-of-shuttle-time-haydee-amada-san-lucas-poveda/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Pict-5_-HAYDEE-AMADA-SAN-LUCAS-POVEDA_-ECU-400x310.jpg",
-      "preview": "",
-      "date": "2026-09-11T00:00:00+00:00"
     }
   ]
 }
