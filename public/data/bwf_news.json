@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-10-02T03:33:56.192380+00:00",
+  "scraped_at": "2026-10-02T10:14:05.369460+00:00",
   "items": [
+    {
+      "title": "Humans of Shuttle Time: Joshua Muguluma Richard",
+      "href": "https://bwfbadminton.com/news-single/2026/10/02/humans-of-shuttle-time-joshua-muguluma-richard/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/IMG-20260315-WA0081-1280x550.jpg",
+      "preview": "",
+      "date": "2026-10-02T00:00:00+00:00"
+    },
     {
       "title": "Take-Off Time for Senegal Badminton",
       "href": "https://bwfbadminton.com/news-single/2026/10/02/take-off-time-for-senegal-badminton/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/YEN06460-1-1280x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/YEN06460-1-400x310.jpg",
       "preview": "",
       "date": "2026-10-02T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/Maywald-Museum5-400x310.jpg",
       "preview": "",
       "date": "2026-09-17T00:00:00+00:00"
-    },
-    {
-      "title": "‘I Want to be a Legend’",
-      "href": "https://bwfbadminton.com/news-single/2026/09/16/i-want-to-be-a-legend/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/cr_20260905_1051_ChinaMasters2026_BPGE0322-400x310.jpg",
-      "preview": "",
-      "date": "2026-09-16T00:00:00+00:00"
     }
   ]
 }
