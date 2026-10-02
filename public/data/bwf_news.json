@@ -1,10 +1,17 @@
 {
-  "scraped_at": "2026-10-01T23:38:20.047764+00:00",
+  "scraped_at": "2026-10-02T03:33:56.192380+00:00",
   "items": [
+    {
+      "title": "Take-Off Time for Senegal Badminton",
+      "href": "https://bwfbadminton.com/news-single/2026/10/02/take-off-time-for-senegal-badminton/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/YEN06460-1-1280x550.jpg",
+      "preview": "",
+      "date": "2026-10-02T00:00:00+00:00"
+    },
     {
       "title": "A Course, a Coach, and a Winning Team",
       "href": "https://bwfbadminton.com/news-single/2026/10/01/a-course-a-coach-and-a-winning-team/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/South-Africa_Dillan2-1268x550.jpg",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/South-Africa_Dillan2-400x310.jpg",
       "preview": "",
       "date": "2026-10-01T00:00:00+00:00"
     },
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/cr_20260905_1051_ChinaMasters2026_BPGE0322-400x310.jpg",
       "preview": "",
       "date": "2026-09-16T00:00:00+00:00"
-    },
-    {
-      "title": "The Week in Quotes",
-      "href": "https://bwfbadminton.com/news-single/2026/09/15/the-week-in-quotes-128/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/09/cr_20190122_2149_IndonesiaMasters2019_BPRS4675-400x310.jpg",
-      "preview": "",
-      "date": "2026-09-15T00:00:00+00:00"
     }
   ]
 }
