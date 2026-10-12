@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2026-10-12T11:33:14.557426+00:00",
+  "scraped_at": "2026-10-12T20:43:46.535319+00:00",
   "items": [
+    {
+      "title": "World Juniors: ‘Ukrainian Badminton is Still Alive’",
+      "href": "https://bwfbadminton.com/news-single/2026/10/12/world-juniors-ukrainian-badminton-is-still-alive/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/20261012_1324_WorldJuniorChampionships2026_BPPF1436-1280x550.jpg",
+      "preview": "",
+      "date": "2026-10-12T00:00:00+00:00"
+    },
     {
       "title": "Arctic Open: Free Mind Propels Blichfeldt",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/12/arctic-open-free-mind-propels-blichfeldt/",
@@ -133,13 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/YEN06460-1-400x310.jpg",
       "preview": "",
       "date": "2026-10-02T00:00:00+00:00"
-    },
-    {
-      "title": "A Course, a Coach, and a Winning Team",
-      "href": "https://bwfbadminton.com/news-single/2026/10/01/a-course-a-coach-and-a-winning-team/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/South-Africa_Dillan2-400x310.jpg",
-      "preview": "",
-      "date": "2026-10-01T00:00:00+00:00"
     }
   ]
 }
