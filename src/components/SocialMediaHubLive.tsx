@@ -292,6 +292,8 @@ const YouTubeEmbed: FC<{ isActive: boolean }> = ({ isActive }) => {
                     <img
                       src={video.thumbnail}
                       alt={video.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover/video:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-zenith-black/90 via-zenith-black/20 to-transparent" />

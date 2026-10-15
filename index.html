@@ -104,10 +104,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Fonts: self-hosted variable Archivo (latin subsets) — no render-blocking Google Fonts request.
+         Cyrillic glyphs fall back to system-ui, same as before (Google Fonts has no Archivo Cyrillic subset). -->
+    <link rel="preload" href="/fonts/archivo-vf-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/archivo-vf-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Warm connections for runtime data/image CDNs -->
+    <link rel="preconnect" href="https://ctgwxc8c.api.sanity.io">
+    <link rel="preconnect" href="https://images.weserv.nl">
 
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3MRB42JR2X"></script>

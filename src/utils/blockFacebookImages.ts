@@ -1,13 +1,18 @@
-export const proxied = (url: string | undefined): string => {
+// Routes remote images through images.weserv.nl (free CDN proxy).
+// BWF news photos are multi-MB originals (up to 5MB, ~5000px) shown in
+// ~400-800px cards — the proxy resizes and re-encodes them to WebP.
+export const proxied = (url: string | undefined, width?: number): string => {
   if (!url) return '';
+  if (url.includes('images.weserv.nl')) return url;
 
-  const isFacebook = url.includes('fbcdn.net') || url.includes('facebook.com');
-  const isProxied = url.includes('images.weserv.nl');
+  const needsProxy =
+    url.includes('fbcdn.net') ||
+    url.includes('facebook.com') ||
+    url.includes('bwfbadminton.com');
 
-  if (isFacebook && !isProxied) {
-    const cleanUrl = url.startsWith('http') ? url : `https:${url}`;
-    return `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&output=jpg&q=85`;
-  }
+  if (!needsProxy) return url;
 
-  return url;
+  const cleanUrl = url.startsWith('http') ? url : `https:${url}`;
+  const w = width ? `&w=${width}` : '';
+  return `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&output=webp&q=80${w}`;
 };

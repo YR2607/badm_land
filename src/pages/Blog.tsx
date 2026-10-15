@@ -313,8 +313,10 @@ const Blog: FC = () => {
                     <div className="h-64 rounded-[2rem] mb-8 overflow-hidden bg-gray-100 relative shadow-inner">
                       {news.image ? (
                         <img
-                          src={proxied(news.image)}
+                          src={proxied(news.image, 600)}
                           alt={news.title}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-110"
                           style={{
                             filter: 'brightness(0.9) contrast(1.1)',

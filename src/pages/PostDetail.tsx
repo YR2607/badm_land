@@ -128,7 +128,7 @@ const PostDetail: React.FC = () => {
             className="w-full aspect-[21/9] rounded-[3rem] overflow-hidden bg-gray-100 mb-16 relative shadow-2xl"
           >
             <img
-              src={proxied(post.image)}
+              src={proxied(post.image, 1200)}
               alt={post.imageAlt || post.title}
               className="w-full h-full object-cover"
               onError={(e) => {

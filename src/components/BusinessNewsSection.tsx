@@ -97,8 +97,10 @@ const BusinessNewsSection: FC = () => {
                 <div className="absolute inset-0 overflow-hidden">
                   {news.img ? (
                     <img
-                      src={proxied(news.img)}
+                      src={proxied(news.img, 800)}
                       alt={news.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
                     />
                   ) : (
