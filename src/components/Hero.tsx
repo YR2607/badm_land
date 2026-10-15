@@ -2,6 +2,22 @@ import { useEffect, useRef, useState } from 'react';
 import { Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { fetchFooter, isCmsEnabled } from '../lib/cms';
+import JsonLd from './JsonLd';
+
+const VIDEO_SEO: Record<string, { name: string; description: string }> = {
+  ro: {
+    name: 'Antrenament de badminton — clubul Altius',
+    description: 'Video: antrenament de badminton în sala clubului Altius din Chișinău.',
+  },
+  ru: {
+    name: 'Тренировка по бадминтону — клуб Altius',
+    description: 'Видео: тренировка по бадминтону в зале клуба Altius в Кишиневе.',
+  },
+  en: {
+    name: 'Badminton training at Altius club',
+    description: 'Video: badminton training session at the Altius club gym in Chisinau.',
+  },
+};
 
 interface HeroProps {
   cmsData?: {
@@ -14,7 +30,7 @@ interface HeroProps {
 }
 
 const Hero = ({ cmsData }: HeroProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const finishedRef = useRef<boolean>(false);
@@ -64,13 +80,28 @@ const Hero = ({ cmsData }: HeroProps) => {
     };
   }, []);
 
+  const videoSeo = VIDEO_SEO[i18n.language] || VIDEO_SEO.en;
+  const videoUrl = heroVideo || '/jump.MP4';
+  const videoSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: videoSeo.name,
+    description: videoSeo.description,
+    thumbnailUrl: 'https://altius.md/jump-poster.jpg',
+    uploadDate: '2026-09-04',
+    duration: 'PT2S',
+    contentUrl: videoUrl.startsWith('http') ? videoUrl : `https://altius.md${videoUrl}`,
+  };
+
   return (
     <section ref={sectionRef} className="relative h-screen flex items-center justify-center overflow-hidden bg-zenith-white">
+      <JsonLd data={videoSchema} />
       <div className="absolute inset-0 scanlines">
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover video-shift-mobile"
-          src={heroVideo || "/jump.MP4"}
+          src={videoUrl}
+          poster={heroVideo ? undefined : '/jump-poster.jpg'}
           autoPlay
           muted
           playsInline

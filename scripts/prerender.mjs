@@ -245,6 +245,24 @@ const META = {
 const LOCALE_TAG = { ro: 'ro_RO', ru: 'ru_RU', en: 'en_US' };
 const LANGS = ['ro', 'ru', 'en'];
 
+// VideoObject schema for the hero video on the homepage.
+// Lets Google treat jump.MP4 as indexable video content (GSC:
+// "video is not the main content" fix) and supplies a thumbnail.
+const VIDEO_META = {
+  ro: {
+    name: 'Antrenament de badminton — clubul Altius',
+    desc: 'Video: antrenament de badminton în sala clubului Altius din Chișinău.',
+  },
+  ru: {
+    name: 'Тренировка по бадминтону — клуб Altius',
+    desc: 'Видео: тренировка по бадминтону в зале клуба Altius в Кишиневе.',
+  },
+  en: {
+    name: 'Badminton training at Altius club',
+    desc: 'Video: badminton training session at the Altius club gym in Chisinau.',
+  },
+};
+
 // Localized labels for the static nav/footer injected into prerendered HTML.
 // These mirror src/i18n/locales/*.json navigation labels.
 const NAV_LABELS = {
@@ -344,6 +362,25 @@ function generate(lang, pagePath, overrides = {}) {
   const footerLinks = Object.entries({ ...NAV_LABELS[lang], ...GYM_LABELS[lang] })
     .map(([p, label]) => `        <li><a href="${BASE}/${lang}${p}">${escapeHtml(label)}</a></li>`)
     .join('\n');
+
+  // Homepage: inject VideoObject JSON-LD into <head> so crawlers that
+  // don't execute JS still see the video markup.
+  if (pagePath === '') {
+    const videoLd = {
+      '@context': 'https://schema.org',
+      '@type': 'VideoObject',
+      name: VIDEO_META[lang].name,
+      description: VIDEO_META[lang].desc,
+      thumbnailUrl: `${BASE}/jump-poster.jpg`,
+      uploadDate: '2026-09-04',
+      duration: 'PT2S',
+      contentUrl: `${BASE}/jump.MP4`,
+    };
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json">${JSON.stringify(videoLd)}</script>\n  </head>`
+    );
+  }
 
   const bodyContent = `
     <header>

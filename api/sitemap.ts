@@ -10,7 +10,7 @@ const client = projectId
   : null
 
 const STATIC_PAGES = [
-  { path: '', priority: '1.0', changefreq: 'daily' },
+  { path: '', priority: '1.0', changefreq: 'daily', video: true },
   { path: '/about', priority: '0.9', changefreq: 'monthly' },
   { path: '/services', priority: '0.9', changefreq: 'weekly' },
   { path: '/gyms', priority: '0.9', changefreq: 'weekly' },
@@ -26,7 +26,37 @@ const HREFLANGS = ['ro', 'ru', 'en']
 const DEFAULT_LANG = 'ro'
 const BASE_URL = 'https://altius.md'
 
-function urlEntry(path: string, priority: string, changefreq: string, lastmod?: string): string {
+// Hero video metadata for the <video:video> sitemap block on homepages.
+// Helps Google index jump.MP4 (GSC: "video is not the main content" fix).
+const VIDEO_META: Record<string, { title: string; desc: string }> = {
+  ro: {
+    title: 'Antrenament de badminton — clubul Altius',
+    desc: 'Video: antrenament de badminton în sala clubului Altius din Chișinău.',
+  },
+  ru: {
+    title: 'Тренировка по бадминтону — клуб Altius',
+    desc: 'Видео: тренировка по бадминтону в зале клуба Altius в Кишиневе.',
+  },
+  en: {
+    title: 'Badminton training at Altius club',
+    desc: 'Video: badminton training session at the Altius club gym in Chisinau.',
+  },
+}
+
+function videoEntry(lang: string): string {
+  const v = VIDEO_META[lang] || VIDEO_META.en
+  return `    <video:video>
+      <video:thumbnail_loc>${BASE_URL}/jump-poster.jpg</video:thumbnail_loc>
+      <video:title>${v.title}</video:title>
+      <video:description>${v.desc}</video:description>
+      <video:content_loc>${BASE_URL}/jump.MP4</video:content_loc>
+      <video:duration>2</video:duration>
+      <video:publication_date>2026-09-04</video:publication_date>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>`
+}
+
+function urlEntry(path: string, priority: string, changefreq: string, lastmod?: string, video = false): string {
   // Generate one <url> per language with xhtml:link hreflang alternates
   const langEntries = HREFLANGS.map(lang => {
     const loc = `${BASE_URL}/${lang}${path}`
@@ -39,7 +69,7 @@ function urlEntry(path: string, priority: string, changefreq: string, lastmod?: 
     ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
-${alternates}
+${video ? `${videoEntry(lang)}\n` : ''}${alternates}
 ${xDefault}
   </url>`
   })
@@ -77,12 +107,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // No lastmod for static pages: a fabricated "today" date makes Google
   // distrust the whole sitemap. Only real post dates are emitted above.
   const staticEntries = STATIC_PAGES.map(p =>
-    urlEntry(p.path, p.priority, p.changefreq)
+    urlEntry(p.path, p.priority, p.changefreq, undefined, 'video' in p && p.video)
   ).join('\n')
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 
 ${staticEntries}
 ${blogEntries}
