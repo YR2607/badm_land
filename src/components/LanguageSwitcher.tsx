@@ -9,7 +9,12 @@ const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
 ];
 
-const LanguageSwitcher: FC = () => {
+interface LanguageSwitcherProps {
+  inline?: boolean;
+  onSelect?: () => void;
+}
+
+const LanguageSwitcher: FC<LanguageSwitcherProps> = ({ inline = false, onSelect }) => {
   const { i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -26,6 +31,7 @@ const LanguageSwitcher: FC = () => {
     i18n.changeLanguage(langCode);
     localStorage.setItem('i18nextLng', langCode);
     setIsOpen(false);
+    onSelect?.();
   };
 
   // Close on Escape key
@@ -37,6 +43,31 @@ const LanguageSwitcher: FC = () => {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen]);
+
+  // Inline variant for the mobile menu: all languages visible, no dropdown
+  // (an absolute-positioned dropdown would be clipped by the menu's overflow-hidden).
+  if (inline) {
+    return (
+      <div className="flex flex-wrap gap-1.5" role="listbox" aria-label={i18n.t('navigation.languageSelect')}>
+        {languages.map((language) => (
+          <button
+            key={language.code}
+            onClick={() => handleLanguageChange(language.code)}
+            role="option"
+            aria-selected={currentLanguage.code === language.code}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${
+              currentLanguage.code === language.code
+                ? 'bg-zenith-crimson text-white'
+                : 'bg-gray-100 text-zenith-black hover:bg-zenith-black hover:text-white'
+            }`}
+          >
+            <span className="text-base leading-none">{language.flag}</span>
+            <span>{language.name}</span>
+          </button>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="relative" ref={containerRef}>

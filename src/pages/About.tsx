@@ -705,12 +705,12 @@ const About: FC = () => {
                 {(strategyData?.results?.points || (t('about.strategy.results.points', { returnObjects: true }) as string[])).map((point: string, i: number) => (
                   <div
                     key={i}
-                    className="flex items-center gap-6 bg-white/5 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/10 hover:border-zenith-crimson/50 transition-all duration-500 group"
+                    className="flex items-center gap-6 bg-white/5 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/10 hover:border-zenith-crimson/50 transition-all duration-500 group min-w-0"
                   >
                     <div className="w-16 h-16 shrink-0 bg-white/10 rounded-[1.5rem] flex items-center justify-center group-hover:bg-zenith-crimson transition-colors duration-500">
                       <Trophy className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-500" />
                     </div>
-                    <span className="text-white font-bold text-xl leading-tight">{point}</span>
+                    <span className="text-white font-bold text-xl leading-tight min-w-0 break-words [overflow-wrap:anywhere]">{point}</span>
                   </div>
                 ))}
               </div>

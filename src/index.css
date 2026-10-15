@@ -10,6 +10,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #FAFAFA;
+    overflow-x: clip;
   }
 
   body {
@@ -18,6 +19,7 @@
     letter-spacing: -0.01em;
     color: #0A0A0A;
     position: relative;
+    overflow-x: clip;
   }
 
   body::before {
@@ -62,6 +64,7 @@
     letter-spacing: -0.03em;
     line-height: 0.9;
     text-transform: uppercase;
+    overflow-wrap: anywhere;
   }
 
   p {

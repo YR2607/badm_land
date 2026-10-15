@@ -378,9 +378,9 @@ const Blog: FC = () => {
         filteredNews.length > pageSize && (
           <section className="pb-24">
             <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between gap-8 bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
+              <div className="flex items-center justify-between gap-3 sm:gap-8 bg-white p-4 sm:p-6 rounded-[2rem] border border-gray-100 shadow-sm">
                 <button
-                  className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all ${page > 1 ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
+                  className={`px-4 sm:px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all ${page > 1 ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
                   onClick={() => page > 1 && setPage(p => Math.max(1, p - 1))}
                   disabled={page <= 1}
                 >
@@ -390,7 +390,7 @@ const Blog: FC = () => {
                   {t('common.page')} {page} {t('common.of')} {totalPages} • {t('common.showing')} {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filteredNews.length)} {t('common.of')} {filteredNews.length}
                 </div>
                 <button
-                  className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all ${page < totalPages ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
+                  className={`px-4 sm:px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all ${page < totalPages ? 'bg-zenith-black text-white hover:bg-zenith-crimson' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
                   onClick={() => page < totalPages && setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page >= totalPages}
                 >

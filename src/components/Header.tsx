@@ -99,13 +99,13 @@ const Header: React.FC = () => {
 
       <nav
         aria-hidden={!isMenuOpen}
-        className={`xl:hidden bg-white border-b border-gray-100 shadow-2xl overflow-hidden transition-all duration-300 ease-out ${
+        className={`xl:hidden bg-white border-b border-gray-100 shadow-2xl overflow-x-hidden overflow-y-auto transition-all duration-300 ease-out ${
           isMenuOpen
-            ? 'max-h-[600px] opacity-100'
+            ? 'max-h-[calc(100dvh-5rem)] opacity-100'
             : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="px-6 py-10 space-y-6">
+        <div className="px-6 py-8 space-y-5">
           {navItems.map((item) => (
             <LocalizedLink
               key={item.path}
@@ -116,9 +116,9 @@ const Header: React.FC = () => {
               {item.label}
             </LocalizedLink>
           ))}
-          <div className="pt-8 border-t border-gray-100 flex justify-between items-center">
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{t('navigation.languageSelect')}</span>
-            <LanguageSwitcher />
+          <div className="pt-6 border-t border-gray-100 space-y-3">
+            <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400">{t('navigation.languageSelect')}</span>
+            <LanguageSwitcher inline onSelect={() => setIsMenuOpen(false)} />
           </div>
         </div>
       </nav>

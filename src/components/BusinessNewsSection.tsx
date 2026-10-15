@@ -56,7 +56,7 @@ const BusinessNewsSection: FC = () => {
   }, []);
 
   return (
-    <section id="business-news" className="py-32 bg-zenith-white">
+    <section id="business-news" className="py-32 bg-zenith-white overflow-hidden">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-24 relative">
           <h2 className="text-8xl md:text-[12rem] font-black font-display leading-[0.8] tracking-tighter uppercase text-zenith-black opacity-10 absolute -top-10 left-0 pointer-events-none select-none">
