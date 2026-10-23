@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2026-10-23T16:15:56.758032+00:00",
+  "scraped_at": "2026-10-23T22:49:34.181571+00:00",
   "items": [
+    {
+      "title": "French Open: Akechi on Dream Run",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/24/french-open-akechi-on-dream-run/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/10/cr_20261023_1331_FrenchOpen2026_BPLN0712.jpg",
+      "preview": "Saturday, October 24, 2026 TEXT BY DIANNE PIERRE | LUCAS NOYON & RAPHAEL SACHETAT/BADMINTONPHOTO",
+      "date": "2026-10-24T00:00:00+00:00"
+    },
     {
       "title": "Badminton for a Better World",
       "href": "https://bwfbadminton.com/news-single/2026/10/23/badminton-for-a-better-world/",
@@ -23,13 +30,6 @@
       "date": "2026-10-22T00:00:00+00:00"
     },
     {
-      "title": "Euro AirBadminton: Solid Outing for Greece",
-      "href": "https://bwfbadminton.com/news-single/2026/10/21/euro-airbadminton-solid-outing-for-greece/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/A7409784PK-400x310.jpg",
-      "preview": "",
-      "date": "2026-10-21T00:00:00+00:00"
-    },
-    {
       "title": "Where to Watch: YONEX French Open 2026",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/21/where-to-watch-yonex-french-open-2026/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2024/11/0.-HSBC-BWF-World-Tour-Inside-Page.jpg",
@@ -41,6 +41,13 @@
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/21/french-open-toma-unblocks-view/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/10/20261020_1222_FrenchOpen2026_BPLN0060.jpg",
       "preview": "Wednesday, October 21, 2026 TEXT BY DIANNE PIERRE | LUCAS NOYON/BADMINTONPHOTO",
+      "date": "2026-10-21T00:00:00+00:00"
+    },
+    {
+      "title": "Euro AirBadminton: Solid Outing for Greece",
+      "href": "https://bwfbadminton.com/news-single/2026/10/21/euro-airbadminton-solid-outing-for-greece/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/A7409784PK-400x310.jpg",
+      "preview": "",
       "date": "2026-10-21T00:00:00+00:00"
     },
     {
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/10/20261014_1438_DenmarkOpen2026_BPYS3583_FI.jpg",
       "preview": "Thursday, October 15, 2026 TEXT BY DIANNE PIERRE | /YANG SHAOCHEN & YOHAN NONOTTE/BADMINTONPHOTO",
       "date": "2026-10-15T00:00:00+00:00"
-    },
-    {
-      "title": "Where To Watch: VICTOR Denmark Open 2026",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/14/where-to-watch-victor-denmark-open-2026/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2024/11/0.-HSBC-BWF-World-Tour-Inside-Page.jpg",
-      "preview": "Wednesday, October 14, 2026",
-      "date": "2026-10-14T00:00:00+00:00"
     }
   ]
 }
