@@ -1,6 +1,13 @@
 {
-  "scraped_at": "2026-10-25T15:23:49.159150+00:00",
+  "scraped_at": "2026-10-25T18:40:18.977533+00:00",
   "items": [
+    {
+      "title": "French Open: Pop Goes the 80-Year Wait!",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/25/french-open-pop-goes-the-80-year-wait/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/10/20261025_1648_FrenchOpen2026_BPLN2001.jpg",
+      "preview": "Sunday, October 25, 2026 TEXT BY DIANNE PIERRE | LUCAS NOYON& RAPHAEL SACHETAT/BADMINTONPHOTO",
+      "date": "2026-10-25T00:00:00+00:00"
+    },
     {
       "title": "French Open: Ubaidillah Bursts Lanier Bubble",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/25/french-open-ubaidillah-bursts-lanier-bubble/",
@@ -23,17 +30,17 @@
       "date": "2026-10-24T00:00:00+00:00"
     },
     {
-      "title": "Badminton for a Better World",
-      "href": "https://bwfbadminton.com/news-single/2026/10/23/badminton-for-a-better-world/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/20261014_1433_WorldJuniorChampionships2026_BPPF7842A-400x310.jpg",
-      "preview": "",
-      "date": "2026-10-23T00:00:00+00:00"
-    },
-    {
       "title": "French Open: Unheralded Challengers Shine",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/23/french-open-unheralded-heroes-shine/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/10/20261022_1306_FrenchOpen2026_BPYN9586.jpg",
       "preview": "Friday, October 23, 2026 TEXT BY DIANNE PIERRE | RAPHAEL SACHETAT & YOHAN NONOTTE/BADMINTONPHOTO",
+      "date": "2026-10-23T00:00:00+00:00"
+    },
+    {
+      "title": "Badminton for a Better World",
+      "href": "https://bwfbadminton.com/news-single/2026/10/23/badminton-for-a-better-world/",
+      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/20261014_1433_WorldJuniorChampionships2026_BPPF7842A-400x310.jpg",
+      "preview": "",
       "date": "2026-10-23T00:00:00+00:00"
     },
     {
@@ -133,13 +140,6 @@
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/10/20261015_1242_DenmarkOpen2026_BPYS4960.jpg",
       "preview": "Friday, October 16, 2026 TEXT BY PREM KUMAR & DIANNE PIERRE | YANG SHAOCHEN/BADMINTONPHOTO",
       "date": "2026-10-16T00:00:00+00:00"
-    },
-    {
-      "title": "World Juniors: Crafty Khangurra, Tenacious Ip into Semis",
-      "href": "https://bwfbadminton.com/news-single/2026/10/15/world-juniors-crafty-khangurra-tenacious-ip-secure-medal/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/10/20261015_1553_WorldJuniorChampionships2026_BPPF8390-400x310.jpg",
-      "preview": "",
-      "date": "2026-10-15T00:00:00+00:00"
     }
   ]
 }
