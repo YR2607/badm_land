@@ -1,11 +1,25 @@
 {
-  "scraped_at": "2026-11-18T05:30:48.223752+00:00",
+  "scraped_at": "2026-11-18T16:52:58.374801+00:00",
   "items": [
+    {
+      "title": "Hong Kong Open: Kidambi Plays Kingmaker",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/18/hong-kong-open-kidambi-plays-kingmaker/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/11/cr_20261111_2110_KumamotoMastersJapan2026_BPTE6100.jpg",
+      "preview": "Wednesday, November 18, 2026",
+      "date": "2026-11-18T00:00:00+00:00"
+    },
+    {
+      "title": "Where to Watch: LI-NING Hong Kong Open 2026",
+      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/18/where-to-watch-li-ning-hong-kong-open-2026/",
+      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2024/11/0.-HSBC-BWF-World-Tour-Inside-Page.jpg",
+      "preview": "Wednesday, November 18, 2026",
+      "date": "2026-11-18T00:00:00+00:00"
+    },
     {
       "title": "Smashing Stats: Hong Kong Open 2026",
       "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/18/smashing-stats-hong-kong-open-2026/",
       "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/11/cr_20071130_1955_HongKongOpen2007_BPAC4065.jpg",
-      "preview": "Wednesday, November 18, 2026",
+      "preview": "Wednesday, November 18, 2026 TEXT BY PREM KUMAR | BADMINTONPHOTO",
       "date": "2026-11-18T00:00:00+00:00"
     },
     {
@@ -126,20 +140,6 @@
       "img": "https://bwfbadminton.com/wp-content/uploads/2026/11/Riyan-Malhan3-400x310.jpg",
       "preview": "",
       "date": "2026-11-04T00:00:00+00:00"
-    },
-    {
-      "title": "Korea Open: Shida Begins Afresh",
-      "href": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/03/korea-open-shida-begins-afresh/",
-      "img": "https://bwfworldtour.bwfbadminton.com/wp-content/uploads/2026/11/20261103_1922_KoreaOpen2026_BPJS2694_FI.jpg",
-      "preview": "Tuesday, November 3, 2026 TEXT BY DIANNE PIERRE | JNANESH SALIAN/BADMINTONPHOTO",
-      "date": "2026-11-03T00:00:00+00:00"
-    },
-    {
-      "title": "Youth Olympics: Platform for a Breakout Performance",
-      "href": "https://bwfbadminton.com/news-single/2026/11/03/youth-olympics-platform-for-a-breakout-performance/",
-      "img": "https://bwfbadminton.com/wp-content/uploads/2026/11/20261008_1536_WorldJuniorMixedTeamChampionships2026_BPRS8380-400x310.jpg",
-      "preview": "",
-      "date": "2026-11-03T00:00:00+00:00"
     }
   ]
 }
